@@ -1,0 +1,11 @@
+ffmpeg version 0.10.9-7:0.10.9-1~raring1
+built on Oct  4 2013 06:42:21 with gcc 4.7.3
+configuration: --arch=amd64 --disable-stripping --enable-pthreads --enable-runtime-cpudetect --extra-version='7:0.10.9-1~raring1' --libdir=/usr/lib/x86_64-linux-gnu --prefix=/usr --enable-bzlib --enable-libdc1394 --enable-libfreetype --enable-frei0r --enable-gnutls --enable-libgsm --enable-libmp3lame --enable-librtmp --enable-libopencv --enable-libopenjpeg --enable-libpulse --enable-libschroedinger --enable-libspeex --enable-libtheora --enable-vaapi --enable-vdpau --enable-libvorbis --enable-libvpx --enable-zlib --enable-gpl --enable-postproc --enable-libcdio --enable-x11grab --enable-libx264 --shlibdir=/usr/lib/x86_64-linux-gnu --enable-shared --disable-static
+libavutil      51. 35.100 / 51. 35.100
+libavcodec     53. 61.100 / 53. 61.100
+libavformat    53. 32.100 / 53. 32.100
+libavdevice    53.  4.100 / 53.  4.100
+libavfilter     2. 61.100 /  2. 61.100
+libswscale      2.  1.100 /  2.  1.100
+libswresample   0.  6.100 /  0.  6.100
+libpostproc    52.  0.100 / 52.  0.100
