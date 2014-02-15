@@ -1,7 +1,5 @@
 package net.bramp.ffmpeg;
 
-import static org.junit.Assert.*;
-
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -11,8 +9,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
-import net.bramp.ffmpeg.info.FFmpegProbeResult;
 import net.bramp.ffmpeg.job.FFmpegJob;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 import org.junit.Test;
 

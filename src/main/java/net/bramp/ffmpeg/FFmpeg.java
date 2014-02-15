@@ -29,15 +29,18 @@ public class FFmpeg {
 
 	final static Logger LOG = LoggerFactory.getLogger(FFmpeg.class);
 
-	public final static Fraction FPS_30    = Fraction.getFraction(30, 1);
-	public final static Fraction FPS_29_97 = Fraction.getFraction(30000, 1001);
-	public final static Fraction FPS_24    = Fraction.getFraction(24, 1);
-	public final static Fraction FPS_23976 = Fraction.getFraction(24000, 1001);
+	public final static Fraction FPS_30     = Fraction.getFraction(30, 1);
+	public final static Fraction FPS_29_97  = Fraction.getFraction(30000, 1001);
+	public final static Fraction FPS_24     = Fraction.getFraction(24, 1);
+	public final static Fraction FPS_23_976 = Fraction.getFraction(24000, 1001);
 
+    final static Pattern CODECS_REGEX = Pattern.compile("^ ([ D][ E][VAS][ S][ D][ T]) (\\S+)\\s+(.*)$");
+    final static Pattern FORMATS_REGEX = Pattern.compile("^ ([ D][ E]) (\\S+)\\s+(.*)$");
+
+    /**
+     * Path to FFmpeg (e.g. /usr/bin/ffmpeg)
+     */
 	final String path;
-
-	final static Pattern CODECS_REGEX = Pattern.compile("^ ([ D][ E][VAS][ S][ D][ T]) (\\S+)\\s+(.*)$");
-	final static Pattern FORMATS_REGEX = Pattern.compile("^ ([ D][ E]) (\\S+)\\s+(.*)$");
 
 	/**
 	 * Function to run FFmpeg. We define it like this so we can swap it out (during testing)
@@ -89,8 +92,7 @@ public class FFmpeg {
 				if (!m.matches())
 					continue;
 
-				// TODO Parse m.group(1) containing the flags
-				codecs.add( new Codec(m.group(2), m.group(3), 0) );				
+				codecs.add( new Codec(m.group(2), m.group(3), m.group(1)) );
 			}
 
 			codecs = ImmutableList.copyOf(codecs);
@@ -111,8 +113,7 @@ public class FFmpeg {
 				if (!m.matches())
 					continue;
 
-				// TODO Parse m.group(1) containing the flags
-				formats.add( new Format(m.group(2), m.group(3), 0) );				
+				formats.add( new Format(m.group(2), m.group(3), m.group(1)) );
 			}
 
 			formats = ImmutableList.copyOf(formats);

@@ -2,38 +2,46 @@ package net.bramp.ffmpeg.builder;
 
 import java.util.List;
 
-import net.bramp.ffmpeg.info.FFmpegProbeResult;
+import net.bramp.ffmpeg.options.AudioEncodingOptions;
+import net.bramp.ffmpeg.options.EncodingOptions;
+import net.bramp.ffmpeg.options.VideoEncodingOptions;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.math.Fraction;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
 public class FFmpegOutputBuilder implements Cloneable {
 
-	final static String DEVNULL = SystemUtils.IS_OS_WINDOWS ? "NUL" : "/dev/null";
-	
+	final private static String DEVNULL = SystemUtils.IS_OS_WINDOWS ? "NUL" : "/dev/null";
+
 	final FFmpegBuilder parent;
 
-	private String filename;
-	private String format;
+	/**
+	 * Output filename
+	 */
+	public String filename;
 
-	private long targetSize = 0; // in bytes
+	public String format;
 
-	private boolean video_enabled   = true;
-	private boolean audio_enabled   = true;
-	private boolean subtitle_enabled = true;
+	public boolean audio_enabled = true;
+	public String audio_codec;
+	public int audio_channels;
+	public int audio_sample_rate;
+	public int audio_bit_rate;
+	
+	public boolean video_enabled = true;
+	public String video_codec;
+	public Fraction video_frame_rate;
+	public int video_width;
+	public int video_height;
+	public int video_bit_rate;
 
-	private String audio_codec;
-	private int audio_channels;
-	private int audio_sample_rate;
-	private int audio_bit_rate = 0;
+	public boolean subtitle_enabled = true;
 
-	private String video_codec;
-	private Fraction video_frame_rate;
-	private int video_width;
-	private int video_height;
-	private int video_bit_rate = 0;
+	public long targetSize = 0; // in bytes
 
 	protected FFmpegOutputBuilder(FFmpegBuilder parent, String filename) {
 		this.parent = parent;
@@ -56,7 +64,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 	}
 	
 	public FFmpegOutputBuilder setFilename(String filename) {
-		this.filename = filename;
+		this.filename = Preconditions.checkNotNull(filename);
 		return this;
 	}
 	
@@ -65,19 +73,19 @@ public class FFmpegOutputBuilder implements Cloneable {
 	}
 	
 	public FFmpegOutputBuilder setFormat(String format) {
-		this.format = format;
+		this.format = Preconditions.checkNotNull(format);
 		return this;
 	}
 
 	public FFmpegOutputBuilder setVideoCodec(String codec) {
 		this.video_enabled = true;
-		this.video_codec = codec;
+		this.video_codec = Preconditions.checkNotNull(codec);
 		return this;
 	}
 	
 	public FFmpegOutputBuilder setVideoFramerate(Fraction frame_rate) {
 		this.video_enabled = true;
-		this.video_frame_rate = frame_rate;
+		this.video_frame_rate = Preconditions.checkNotNull(frame_rate);
 		return this;
 	}
 	
@@ -86,37 +94,61 @@ public class FFmpegOutputBuilder implements Cloneable {
 	}
 
 	public FFmpegOutputBuilder setVideoResolution(int width, int height) {
+		Preconditions.checkArgument(width > 0 && height > 0, "Both width and height must be greater than zero");
+
 		this.video_enabled = true;
 		this.video_width = width;
 		this.video_height = height;
 		return this;
 	}
 
-	public FFmpegOutputBuilder setAudio(String audio_codec, int audio_channels, int audio_sample_rate) {
-		this.audio_enabled   = true;
-		this.audio_codec    = audio_codec;
-		this.audio_channels = audio_channels;
-		this.audio_sample_rate = audio_sample_rate;
+	public FFmpegOutputBuilder setAudioCodec(String codec) {
+		this.audio_enabled  = true;
+		this.audio_codec    = Preconditions.checkNotNull(codec);
 		return this;
 	}
-	
+
+	public FFmpegOutputBuilder setAudioChannels(int channels) {
+		Preconditions.checkArgument(channels > 0);
+		this.audio_enabled   = true;
+		this.audio_channels  = channels;
+		return this;
+	}
+
+	public FFmpegOutputBuilder setAudioRate(int sample_rate) {
+		Preconditions.checkArgument(sample_rate > 0);
+		this.audio_enabled   = true;
+		this.audio_sample_rate = sample_rate;
+		return this;
+	}
+
 	/**
 	 * Target output file size (in bytes)
 	 * @param targetSize
 	 * @return
 	 */
 	public FFmpegOutputBuilder setTargetSize(long targetSize) {
+		Preconditions.checkArgument(targetSize > 0);
 		this.targetSize = targetSize;
 		return this;
 	}
 	
 	public FFmpegOutputBuilder setVideoBitrate(int bit_rate) {
+		Preconditions.checkArgument(bit_rate > 0);
 		this.video_bit_rate = bit_rate;
 		return this;
 	}
 
 	public FFmpegBuilder done() {
 		return parent;
+	}
+
+	protected EncodingOptions buildOptions() {
+		return new EncodingOptions(
+			format, 
+			new AudioEncodingOptions(audio_enabled, audio_codec, audio_channels, audio_sample_rate, audio_bit_rate),
+			new VideoEncodingOptions(video_enabled, video_codec, video_frame_rate, video_width, video_height, video_bit_rate)
+		);
 	}
 
 	protected List<String> build(int pass) {
@@ -148,6 +180,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 		}
 
 		if (video_enabled) {
+
 			if (video_codec != null) {
 				args.add("-vcodec").add(video_codec);
 			}
@@ -200,7 +233,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 
 		return args.build();
 	}
-	
+
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();

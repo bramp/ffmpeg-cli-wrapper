@@ -3,22 +3,35 @@ package net.bramp.ffmpeg.info;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
+/**
+ * Information about supported Format
+ * @author bramp
+ *
+ */
 public class Format {
-	final String shortName;
+	final String name;
 	final String longName;
 
-	public Format(String shortName, String longName) {
-		this(shortName, longName, 0);
-	}
+    final boolean canDemux;
+    final boolean canMux;
 
-	public Format(String shortName, String longName, int flags) {
-		this.shortName = Preconditions.checkNotNull(shortName);
-		this.longName  = Preconditions.checkNotNull(longName);
+	public Format(String name, String longName, String flags) {
+		this.name = Preconditions.checkNotNull(name).trim();
+		this.longName  = Preconditions.checkNotNull(longName).trim();
+
+        /*
+         D. = Demuxing supported
+         .E = Muxing supported
+         */
+        Preconditions.checkNotNull(flags);
+        Preconditions.checkArgument(flags.length() == 2, "Format flags is invalid '{}'", flags);
+        canDemux = flags.charAt(0) == 'D';
+        canMux   = flags.charAt(1) == 'E';
 	}
 
 	@Override
 	public String toString() {
-		return shortName + " " + longName;
+		return name + " " + longName;
 	}
 	
 	@Override
@@ -28,7 +41,25 @@ public class Format {
 		}
 
 		Format that = (Format) obj;
-		return Objects.equal(this.shortName, that.shortName) && 
-			Objects.equal(this.longName, that.longName);
+		return Objects.equal(this.name, that.name) &&
+                Objects.equal(this.longName, that.longName) &&
+                (this.canMux == that.canMux) &&
+                (this.canDemux == that.canDemux);
 	}
+
+    public String getName() {
+        return name;
+    }
+
+    public String getLongName() {
+        return longName;
+    }
+
+    public boolean getCanDemux() {
+        return canDemux;
+    }
+
+    public boolean getCanMux() {
+        return canMux;
+    }
 }

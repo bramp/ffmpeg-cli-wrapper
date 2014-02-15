@@ -1,4 +1,4 @@
-package net.bramp.ffmpeg.info;
+package net.bramp.ffmpeg.probe;
 
 import java.util.Map;
 

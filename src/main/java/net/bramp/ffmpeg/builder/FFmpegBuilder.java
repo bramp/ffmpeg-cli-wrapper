@@ -3,7 +3,7 @@ package net.bramp.ffmpeg.builder;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.bramp.ffmpeg.info.FFmpegProbeResult;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

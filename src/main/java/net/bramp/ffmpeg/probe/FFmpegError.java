@@ -1,4 +1,4 @@
-package net.bramp.ffmpeg.info;
+package net.bramp.ffmpeg.probe;
 
 public class FFmpegError {
 	public int code;

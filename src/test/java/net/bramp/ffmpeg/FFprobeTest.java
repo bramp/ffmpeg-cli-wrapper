@@ -1,6 +1,6 @@
 package net.bramp.ffmpeg;
 
-import net.bramp.ffmpeg.info.FFmpegProbeResult;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 import org.junit.Before;
 import org.junit.Test;

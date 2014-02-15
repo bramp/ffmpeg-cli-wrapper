@@ -1,4 +1,4 @@
-package net.bramp.ffmpeg.info;
+package net.bramp.ffmpeg.probe;
 
 import java.util.Map;
 
@@ -6,11 +6,11 @@ import org.apache.commons.lang3.math.Fraction;
 
 public class FFmpegStream {
 	
-	enum CodecType {
-		video,
-		audio,
+	public enum CodecType {
+		VIDEO,
+		AUDIO,
 	};
-	
+
 	public int index;
 	public String codec_name;
 	public String codec_long_name;
@@ -21,7 +21,7 @@ public class FFmpegStream {
 	public String codec_tag;
 	
 	public int width, height;
-	
+
 	public int has_b_frames;
 	
 	public String sample_aspect_ratio;

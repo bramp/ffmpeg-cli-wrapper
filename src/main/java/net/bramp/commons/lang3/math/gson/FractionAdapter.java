@@ -1,4 +1,4 @@
-package net.bramp.ffmpeg.gson;
+package net.bramp.commons.lang3.math.gson;
 
 import java.io.IOException;
 
@@ -9,6 +9,12 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
+/**
+ * GSON TypeAdapter for Apache Commons Math Fraction Object
+ *
+ * @author bramp
+ *
+ */
 public class FractionAdapter extends TypeAdapter<Fraction> {
 
 	public Fraction read(JsonReader reader) throws IOException {

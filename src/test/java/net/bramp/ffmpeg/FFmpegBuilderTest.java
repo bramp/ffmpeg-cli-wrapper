@@ -6,12 +6,16 @@ import static org.junit.Assert.assertThat;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 
 import org.junit.Test;
 
+/**
+ * -psnr
+ * @author bramp
+ *
+ */
 public class FFmpegBuilderTest {
 
 	public FFmpegBuilderTest() throws IOException {}
@@ -24,7 +28,9 @@ public class FFmpegBuilderTest {
 			.overrideOutputFiles(true)
 			.addOutput("output")
 				.setFormat("mp4")
-				.setAudio("aac", 1, 48000)
+				.setAudioCodec("aac")
+				.setAudioChannels(1)
+				.setAudioRate(48000)
 				.setVideoCodec("libx264")
 				.setVideoFramerate(FFmpeg.FPS_30)
 				.setVideoResolution(320, 240)

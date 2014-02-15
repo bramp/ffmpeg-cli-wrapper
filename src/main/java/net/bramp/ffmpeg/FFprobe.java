@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import net.bramp.ffmpeg.gson.FractionAdapter;
-import net.bramp.ffmpeg.info.FFmpegProbeResult;
+import net.bramp.commons.lang3.math.gson.FractionAdapter;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 import org.apache.commons.lang3.math.Fraction;
 
