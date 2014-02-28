@@ -51,6 +51,32 @@ public class FFmpegOutputBuilder implements Cloneable {
 		this.filename = filename;
 	}
 
+    public FFmpegOutputBuilder useOptions(EncodingOptions opts) {
+        this.format = opts.format;
+        useOptions(opts.getAudio());
+        useOptions(opts.getVideo());
+        return this;
+    }
+
+    public FFmpegOutputBuilder useOptions(AudioEncodingOptions opts) {
+        audio_enabled     = opts.enabled;
+        audio_codec       = opts.codec;
+        audio_channels    = opts.channels;
+        audio_sample_rate = opts.sample_rate;
+        audio_bit_rate    = opts.bit_rate;
+        return this;
+    }
+
+    public FFmpegOutputBuilder useOptions(VideoEncodingOptions opts) {
+        video_enabled    = opts.enabled;
+        video_codec      = opts.codec;
+        video_frame_rate = opts.frame_rate;
+        video_width      = opts.width;
+        video_height     = opts.height;
+        video_bit_rate   = opts.bit_rate;
+        return this;
+    }
+
 	public FFmpegOutputBuilder disableVideo() {
 		this.video_enabled = false;
 		return this;
