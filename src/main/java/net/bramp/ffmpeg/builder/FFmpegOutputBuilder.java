@@ -44,6 +44,8 @@ public class FFmpegOutputBuilder implements Cloneable {
 
 	public boolean subtitle_enabled = true;
 
+    public FFmpegBuilder.Strict strict = FFmpegBuilder.Strict.NORMAL;
+
 	public long targetSize = 0; // in bytes
 
 	protected FFmpegOutputBuilder(FFmpegBuilder parent, String filename) {
@@ -168,6 +170,12 @@ public class FFmpegOutputBuilder implements Cloneable {
 		return this;
 	}
 
+    public FFmpegOutputBuilder setStrict(FFmpegBuilder.Strict strict) {
+        Preconditions.checkNotNull(strict);
+        this.strict = strict;
+        return this;
+    }
+
 	public FFmpegBuilder done() {
 		return parent;
 	}
@@ -203,6 +211,10 @@ public class FFmpegOutputBuilder implements Cloneable {
 				audio_bit_rate = totalBitRate;
 			}
 		}
+
+        if (strict != FFmpegBuilder.Strict.NORMAL) {
+            args.add("-strict").add(strict.toString());
+        }
 
 		if (format != null) {
 			args.add("-f").add(format);

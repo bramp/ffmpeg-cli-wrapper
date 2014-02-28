@@ -21,6 +21,14 @@ public class FFmpegBuilder {
 
 	final static Logger LOG = LoggerFactory.getLogger(FFmpegBuilder.class);
 
+    public enum Strict {
+        VERY,        // strictly conform to a older more strict version of the spec or reference software
+        STRICT,      // strictly conform to all the things in the spec no matter what consequences
+        NORMAL,
+        UNOFFICAL,   // allow unofficial extensions
+        EXPERIMENTAL // allow non standardized experimental things
+    }
+
 	// Global Settings
 	boolean override = true;
 	int pass = 0;
