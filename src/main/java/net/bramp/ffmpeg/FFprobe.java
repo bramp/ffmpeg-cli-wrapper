@@ -1,6 +1,7 @@
 package net.bramp.ffmpeg;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -31,7 +32,7 @@ public class FFprobe {
 	/**
 	 * Function to run FFmpeg. We define it like this so we can swap it out (during testing)
 	 */
-	static Function<List<String>, BufferedReader> runFunc = new RunProcessFunction();
+	static ProcessFunction runFunc = new RunProcessFunction();
 
 	public FFprobe() {
 		this.path = "ffprobe";
@@ -51,7 +52,7 @@ public class FFprobe {
 		return path;
 	}
 
-	public FFmpegProbeResult probe(String mediaPath) {
+	public FFmpegProbeResult probe(String mediaPath) throws IOException {
 		ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
 
 		args.add(path)
@@ -66,7 +67,7 @@ public class FFprobe {
 
 			.add(mediaPath);
 
-		BufferedReader reader = runFunc.apply(args.build());
+		BufferedReader reader = runFunc.run(args.build());
 		return gson.fromJson(reader, FFmpegProbeResult.class);
 	}
 }

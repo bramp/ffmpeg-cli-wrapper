@@ -13,6 +13,9 @@ import org.apache.commons.lang3.math.Fraction;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
+/**
+ * Builds a representation of a single output/encoding setting
+ */
 public class FFmpegOutputBuilder implements Cloneable {
 
 	final private static String DEVNULL = SystemUtils.IS_OS_WINDOWS ? "NUL" : "/dev/null";

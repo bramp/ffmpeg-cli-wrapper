@@ -22,28 +22,23 @@ import com.google.common.base.Throwables;
  * @author bramp
  *
  */
-public class RunProcessFunction implements Function<List<String>, BufferedReader> {
+public class RunProcessFunction implements ProcessFunction {
 
 	final static Logger LOG = LoggerFactory.getLogger(RunProcessFunction.class);
 
-	public @Nullable BufferedReader apply(@Nullable List<String> args) {
+	public BufferedReader run(List<String> args) throws IOException {
 
 		Preconditions.checkNotNull(args);
 		Preconditions.checkArgument(!args.isEmpty());
 
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("{}", Joiner.on(" ").join(args));
+		if (LOG.isInfoEnabled()) {
+			LOG.info("{}", Joiner.on(" ").join(args));
 		}
 
-		try {
-			ProcessBuilder builder = new ProcessBuilder(args);
-			builder.redirectErrorStream(true);
-			Process p = builder.start();
-			return new BufferedReader( new InputStreamReader(p.getInputStream()) );
-
-		} catch (IOException e) {
-			throw Throwables.propagate(e);
-		}
+        ProcessBuilder builder = new ProcessBuilder(args);
+        builder.redirectErrorStream(true);
+        Process p = builder.start();
+        return new BufferedReader( new InputStreamReader(p.getInputStream()) );
 	}
 
 }

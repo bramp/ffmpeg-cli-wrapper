@@ -26,16 +26,16 @@ import com.google.common.base.Function;
 public class FFmpegTest {
 
 	@Mock
-	Function<List<String>, BufferedReader> runFunc;
+    ProcessFunction runFunc;
 
 	FFmpeg ffmpeg;
 	
 	@Before
 	public void before() throws IOException {
 		FFmpeg.runFunc = runFunc;
-		when(runFunc.apply(argThatHasItem("-version"))).thenReturn(loadResource("ffmpeg-version"));
-		when(runFunc.apply(argThatHasItem("-formats"))).thenReturn(loadResource("ffmpeg-formats"));
-		when(runFunc.apply(argThatHasItem("-codecs"))).thenReturn(loadResource("ffmpeg-codecs"));
+		when(runFunc.run(argThatHasItem("-version"))).thenReturn(loadResource("ffmpeg-version"));
+		when(runFunc.run(argThatHasItem("-formats"))).thenReturn(loadResource("ffmpeg-formats"));
+		when(runFunc.run(argThatHasItem("-codecs"))).thenReturn(loadResource("ffmpeg-codecs"));
 
 		ffmpeg = new FFmpeg(); // setup after the mock
 	}
@@ -58,7 +58,7 @@ public class FFmpegTest {
 		assertEquals("ffmpeg version 0.10.9-7:0.10.9-1~raring1", ffmpeg.version());
 		assertEquals("ffmpeg version 0.10.9-7:0.10.9-1~raring1", ffmpeg.version());
 
-		verify(runFunc, times(1)).apply(anyListOf(String.class));
+		verify(runFunc, times(1)).run(anyListOf(String.class));
 	}
 
 	@Test
@@ -68,7 +68,7 @@ public class FFmpegTest {
 		assertArrayEquals(Codecs.CODECS, ffmpeg.codecs().toArray());
 		assertArrayEquals(Codecs.CODECS, ffmpeg.codecs().toArray());
 
-		verify(runFunc, times(1)).apply(argThatHasItem("-codecs"));
+		verify(runFunc, times(1)).run(argThatHasItem("-codecs"));
 	}
 	
 	@Test
@@ -77,6 +77,6 @@ public class FFmpegTest {
 		assertArrayEquals(Formats.FORMATS, ffmpeg.formats().toArray());
 		assertArrayEquals(Formats.FORMATS, ffmpeg.formats().toArray());
 
-		verify(runFunc, times(1)).apply(argThatHasItem("-formats"));
+		verify(runFunc, times(1)).run(argThatHasItem("-formats"));
 	}
 }

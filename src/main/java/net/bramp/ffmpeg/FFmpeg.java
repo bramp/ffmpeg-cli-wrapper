@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.info.Codec;
 import net.bramp.ffmpeg.info.Format;
@@ -18,7 +20,6 @@ import org.apache.commons.lang3.math.Fraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -45,7 +46,7 @@ public class FFmpeg {
 	/**
 	 * Function to run FFmpeg. We define it like this so we can swap it out (during testing)
 	 */
-	static Function<List<String>, BufferedReader> runFunc = new RunProcessFunction();
+	static ProcessFunction runFunc = new RunProcessFunction();
 
 	/**
 	 * Supported codecs
@@ -68,16 +69,14 @@ public class FFmpeg {
 	}
 
 	public FFmpeg(@Nonnull String path) throws IOException {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(path));
 		this.path = path;
 		this.version = version();
 	}
 
 	public synchronized @Nonnull String version() throws IOException {
-		if (version == null) {
-			BufferedReader r = runFunc.apply(ImmutableList.of(path, "-version"));
-			version = r.readLine();
-		}
-		return version;
+        BufferedReader r = runFunc.run(ImmutableList.of(path, "-version"));
+        return r.readLine();
 	}
 
 	public synchronized @Nonnull List<Codec> codecs() throws IOException {
@@ -86,7 +85,7 @@ public class FFmpeg {
 
 			String line;
 
-			BufferedReader r = runFunc.apply(ImmutableList.of(path, "-codecs"));
+			BufferedReader r = runFunc.run(ImmutableList.of(path, "-codecs"));
 			while ((line = r.readLine()) != null) {
 				Matcher m = CODECS_REGEX.matcher(line);
 				if (!m.matches())
@@ -107,7 +106,7 @@ public class FFmpeg {
 
 			String line;
 
-			BufferedReader r = runFunc.apply(ImmutableList.of(path, "-formats"));
+			BufferedReader r = runFunc.run(ImmutableList.of(path, "-formats"));
 			while ((line = r.readLine()) != null) {
 				Matcher m = FORMATS_REGEX.matcher(line);
 				if (!m.matches())
@@ -127,7 +126,7 @@ public class FFmpeg {
 		newArgs.add(path);
 		newArgs.addAll(args);
 
-		BufferedReader reader = runFunc.apply(newArgs);
+		BufferedReader reader = runFunc.run(newArgs);
 
 		// Now block reading ffmpeg's stdout
 		IOUtils.copy(reader, System.out);

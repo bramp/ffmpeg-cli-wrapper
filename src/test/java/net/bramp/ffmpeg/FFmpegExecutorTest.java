@@ -24,10 +24,10 @@ public class FFmpegExecutorTest {
 	public FFmpegExecutorTest() throws IOException {}
 	
 	@Test
-	public void test() throws InterruptedException, ExecutionException {
+	public void test() throws InterruptedException, ExecutionException, IOException {
 		String input = "/home/bramp/personal/ffmpeg/samples/mobileedge_1280x720.mp4";
 		FFmpegProbeResult in = ffprobe.probe(input);
-		
+
 		FFmpegBuilder builder = new FFmpegBuilder()
 			.setInput(in)
 			.overrideOutputFiles(true)
