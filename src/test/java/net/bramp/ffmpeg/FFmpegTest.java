@@ -17,10 +17,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
+import org.mockito.stubbing.Answer;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FFmpegTest {
@@ -33,7 +35,14 @@ public class FFmpegTest {
 	@Before
 	public void before() throws IOException {
 		FFmpeg.runFunc = runFunc;
-		when(runFunc.run(argThatHasItem("-version"))).thenReturn(loadResource("ffmpeg-version"));
+
+		when(runFunc.run(argThatHasItem("-version"))).then(new Answer<BufferedReader>() {
+            @Override
+            public BufferedReader answer(InvocationOnMock invocation) throws Throwable {
+                return loadResource("ffmpeg-version");
+            }
+        });
+
 		when(runFunc.run(argThatHasItem("-formats"))).thenReturn(loadResource("ffmpeg-formats"));
 		when(runFunc.run(argThatHasItem("-codecs"))).thenReturn(loadResource("ffmpeg-codecs"));
 
@@ -53,12 +62,8 @@ public class FFmpegTest {
 
 	@Test
 	public void testVersion() throws Exception {
-
-		// Run twice, the second should be cached
 		assertEquals("ffmpeg version 0.10.9-7:0.10.9-1~raring1", ffmpeg.version());
-		assertEquals("ffmpeg version 0.10.9-7:0.10.9-1~raring1", ffmpeg.version());
-
-		verify(runFunc, times(1)).run(anyListOf(String.class));
+        assertEquals("ffmpeg version 0.10.9-7:0.10.9-1~raring1", ffmpeg.version());
 	}
 
 	@Test
