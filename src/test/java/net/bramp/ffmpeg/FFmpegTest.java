@@ -37,7 +37,6 @@ public class FFmpegTest {
 		FFmpeg.runFunc = runFunc;
 
 		when(runFunc.run(argThatHasItem("-version"))).then(new Answer<BufferedReader>() {
-            @Override
             public BufferedReader answer(InvocationOnMock invocation) throws Throwable {
                 return loadResource("ffmpeg-version");
             }

@@ -25,8 +25,13 @@ public class FFmpegBuilder {
         VERY,        // strictly conform to a older more strict version of the spec or reference software
         STRICT,      // strictly conform to all the things in the spec no matter what consequences
         NORMAL,
-        UNOFFICAL,   // allow unofficial extensions
-        EXPERIMENTAL // allow non standardized experimental things
+        UNOFFICAL,// allow unofficial extensions
+        EXPERIMENTAL;
+
+        //ffmpeg command line requires these options in the lower case
+        public String toString() {
+            return name().toLowerCase();
+        }
     }
 
 	// Global Settings
