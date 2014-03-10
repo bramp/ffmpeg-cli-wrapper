@@ -29,6 +29,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 	public String filename;
 
 	public String format;
+    public Long startOffset; // in millis
 
 	public boolean audio_enabled = true;
 	public String audio_codec;
@@ -42,10 +43,9 @@ public class FFmpegOutputBuilder implements Cloneable {
 	public int video_width;
 	public int video_height;
 	public int video_bit_rate;
+    public Integer video_frames;
 
 	public boolean subtitle_enabled = true;
-
-	public Long startOffset; // in millis
 
     public FFmpegBuilder.Strict strict = FFmpegBuilder.Strict.NORMAL;
 
@@ -58,6 +58,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 
     public FFmpegOutputBuilder useOptions(EncodingOptions opts) {
         this.format = opts.format;
+        this.startOffset = opts.startOffset;
         useOptions(opts.getAudio());
         useOptions(opts.getVideo());
         return this;
@@ -79,6 +80,7 @@ public class FFmpegOutputBuilder implements Cloneable {
         video_width      = opts.width;
         video_height     = opts.height;
         video_bit_rate   = opts.bit_rate;
+        video_frames     = opts.frames;
         return this;
     }
 
@@ -122,10 +124,21 @@ public class FFmpegOutputBuilder implements Cloneable {
 		this.video_frame_rate = Preconditions.checkNotNull(frame_rate);
 		return this;
 	}
-	
+
 	public FFmpegOutputBuilder setVideoFramerate(double frame_rate) {
 		return setVideoFramerate(Fraction.getFraction(frame_rate));
 	}
+
+    /**
+     * Set the number of video frames to record.
+     * @param frames
+     * @return
+     */
+    public FFmpegOutputBuilder setFrames(int frames) {
+        this.video_enabled = true;
+        this.video_frames = frames;
+        return this;
+    }
 
 	public FFmpegOutputBuilder setVideoResolution(int width, int height) {
 		Preconditions.checkArgument(width > 0 && height > 0, "Both width and height must be greater than zero");
@@ -200,9 +213,10 @@ public class FFmpegOutputBuilder implements Cloneable {
 
 	protected EncodingOptions buildOptions() {
 		return new EncodingOptions(
-			format, 
+			format,
+			startOffset,
 			new AudioEncodingOptions(audio_enabled, audio_codec, audio_channels, audio_sample_rate, audio_bit_rate),
-			new VideoEncodingOptions(video_enabled, video_codec, video_frame_rate, video_width, video_height, video_bit_rate)
+			new VideoEncodingOptions(video_enabled, video_codec, video_frame_rate, video_width, video_height, video_bit_rate, video_frames)
 		);
 	}
 
@@ -214,6 +228,8 @@ public class FFmpegOutputBuilder implements Cloneable {
 			if (input == null) {
 				throw new IllegalStateException("Can not set target size, without using setInput(FFmpegProbeResult)");
 			}
+
+            // TODO factor in start time and/or number of frames
 
 			double durationInSeconds = input.format.duration;
 			int totalBitRate = (int) Math.floor((targetSize * 8) / durationInSeconds);
