@@ -2,6 +2,7 @@ package net.bramp.ffmpeg.builder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
@@ -38,9 +39,12 @@ public class FFmpegBuilder {
 	boolean override = true;
 	int pass = 0;
 
-	// Input and Output settings
+	// Input settings
+	Long startOffset; // in millis
 	String input;
 	FFmpegProbeResult inputProbe;
+
+	// Output
 	List<FFmpegOutputBuilder> outputs = new ArrayList<FFmpegOutputBuilder>();
 
 	public FFmpegBuilder overrideOutputFiles(boolean override) {
@@ -70,6 +74,15 @@ public class FFmpegBuilder {
 		this.inputProbe = result;
 		return this;
 	}
+
+    public FFmpegBuilder setStartOffset(long duration, TimeUnit units) {
+        Preconditions.checkNotNull(duration);
+        Preconditions.checkNotNull(units);
+
+        this.startOffset = units.toMillis(duration);
+
+        return this;
+    }
 	
 	/**
 	 * Create new output file
@@ -97,7 +110,12 @@ public class FFmpegBuilder {
 
 		args.add(override ? "-y" : "-n");
 		args.add("-v", "error"); // TODO make configurable
-		args.add("-i").add(input);
+
+        if (startOffset != null) {
+            args.add("-ss").add(String.format("%.3f", startOffset / 1000f));
+        }
+
+        args.add("-i").add(input);
 
 		if (pass > 0) {
 			args.add("-pass").add(Integer.toString(pass));

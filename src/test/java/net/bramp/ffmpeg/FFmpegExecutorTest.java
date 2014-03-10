@@ -22,7 +22,7 @@ public class FFmpegExecutorTest {
 	ExecutorService executor = Executors.newSingleThreadExecutor();
 
 	public FFmpegExecutorTest() throws IOException {}
-	
+
 	@Test
 	public void test() throws InterruptedException, ExecutionException, IOException {
 		String input = "/home/bramp/personal/ffmpeg/samples/mobileedge_1280x720.mp4";

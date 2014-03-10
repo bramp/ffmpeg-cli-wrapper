@@ -1,6 +1,7 @@
 package net.bramp.ffmpeg.builder;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import net.bramp.ffmpeg.options.AudioEncodingOptions;
 import net.bramp.ffmpeg.options.EncodingOptions;
@@ -44,11 +45,13 @@ public class FFmpegOutputBuilder implements Cloneable {
 
 	public boolean subtitle_enabled = true;
 
+	public Long startOffset; // in millis
+
     public FFmpegBuilder.Strict strict = FFmpegBuilder.Strict.NORMAL;
 
 	public long targetSize = 0; // in bytes
 
-	protected FFmpegOutputBuilder(FFmpegBuilder parent, String filename) {
+    protected FFmpegOutputBuilder(FFmpegBuilder parent, String filename) {
 		this.parent = parent;
 		this.filename = filename;
 	}
@@ -170,6 +173,21 @@ public class FFmpegOutputBuilder implements Cloneable {
 		return this;
 	}
 
+    /**
+     * Decodes but discards input until the duration
+     * @param duration
+     * @param units
+     * @return
+     */
+    public FFmpegOutputBuilder setStartOffset(long duration, TimeUnit units) {
+        Preconditions.checkNotNull(duration);
+        Preconditions.checkNotNull(units);
+
+        this.startOffset = units.toMillis(duration);
+
+        return this;
+    }
+
     public FFmpegOutputBuilder setStrict(FFmpegBuilder.Strict strict) {
         Preconditions.checkNotNull(strict);
         this.strict = strict;
@@ -213,12 +231,17 @@ public class FFmpegOutputBuilder implements Cloneable {
 		}
 
         if (strict != FFmpegBuilder.Strict.NORMAL) {
-            args.add("-strict").add(strict.toString());
+            args.add("-strict").add(strict.toString().toLowerCase());
         }
 
 		if (format != null) {
 			args.add("-f").add(format);
 		}
+
+        if (startOffset != null) {
+            // TODO Consider formatting into "hh:mm:ss[.xxx]"
+            args.add("-ss").add(String.format("%.3f", startOffset / 1000f));
+        }
 
 		if (video_enabled) {
 

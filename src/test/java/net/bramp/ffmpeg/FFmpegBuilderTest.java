@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 
@@ -25,9 +26,11 @@ public class FFmpegBuilderTest {
 
 		FFmpegBuilder builder = new FFmpegBuilder()
 			.setInput("input")
+            .setStartOffset(1500, TimeUnit.MILLISECONDS)
 			.overrideOutputFiles(true)
 			.addOutput("output")
 				.setFormat("mp4")
+                .setStartOffset(500, TimeUnit.MILLISECONDS)
 				.setAudioCodec("aac")
 				.setAudioChannels(1)
 				.setAudioRate(48000)
@@ -37,7 +40,13 @@ public class FFmpegBuilderTest {
 				.done();
 
 		List<String> args = builder.build();
-		assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-f", "mp4", "-vcodec", "libx264", "-s", "320x240", "-r", "30/1", "-acodec", "aac", "-ac", "1", "-ar", "48000", "output")));
+		assertThat(args, is(Arrays.asList(
+            "-y", "-v", "error", "-ss", "1.500", "-i", "input",
+                "-f", "mp4", "-ss", "0.500",
+                "-vcodec", "libx264", "-s", "320x240", "-r", "30/1",
+                "-acodec", "aac", "-ac", "1", "-ar", "48000",
+                "output"
+        )));
 	}
 
 	@Test
