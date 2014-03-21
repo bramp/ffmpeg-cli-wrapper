@@ -21,7 +21,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 
 	final private static String DEVNULL = SystemUtils.IS_OS_WINDOWS ? "NUL" : "/dev/null";
 
-	final FFmpegBuilder parent;
+	FFmpegBuilder parent;
 
 	/**
 	 * Output filename
@@ -50,6 +50,8 @@ public class FFmpegOutputBuilder implements Cloneable {
     public FFmpegBuilder.Strict strict = FFmpegBuilder.Strict.NORMAL;
 
 	public long targetSize = 0; // in bytes
+
+    public FFmpegOutputBuilder() {}
 
     protected FFmpegOutputBuilder(FFmpegBuilder parent, String filename) {
 		this.parent = parent;
@@ -208,10 +210,11 @@ public class FFmpegOutputBuilder implements Cloneable {
     }
 
 	public FFmpegBuilder done() {
+        Preconditions.checkState(parent != null, "Can not call done without parent being set");
 		return parent;
 	}
 
-	protected EncodingOptions buildOptions() {
+	public EncodingOptions buildOptions() {
 		return new EncodingOptions(
 			format,
 			startOffset,
@@ -221,6 +224,8 @@ public class FFmpegOutputBuilder implements Cloneable {
 	}
 
 	protected List<String> build(int pass) {
+        Preconditions.checkState(parent != null, "Can not build without parent being set");
+
 		ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
 
 		if (targetSize > 0) {
