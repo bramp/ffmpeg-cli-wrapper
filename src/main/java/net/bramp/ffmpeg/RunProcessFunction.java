@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.io.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,7 @@ public class RunProcessFunction implements ProcessFunction {
         ProcessBuilder builder = new ProcessBuilder(args);
         builder.redirectErrorStream(true);
         Process p = builder.start();
-        return new BufferedReader( new InputStreamReader(p.getInputStream()) );
+        return new BufferedReader( new InputStreamReader(p.getInputStream(), Charsets.UTF_8) );
 	}
 
 }
