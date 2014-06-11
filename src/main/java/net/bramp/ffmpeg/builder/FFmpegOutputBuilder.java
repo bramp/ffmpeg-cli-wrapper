@@ -144,8 +144,13 @@ public class FFmpegOutputBuilder implements Cloneable {
         return this;
     }
 
+	protected static boolean isValidSize(int widthOrHeight) {
+		return widthOrHeight > 0 || widthOrHeight == -1;
+	}
+
 	public FFmpegOutputBuilder setVideoResolution(int width, int height) {
-		Preconditions.checkArgument(width > 0 && height > 0, "Both width and height must be greater than zero");
+		Preconditions.checkArgument(isValidSize(width) && isValidSize(height),
+				"Both width and height must be valid resolutions");
 
 		this.video_enabled = true;
 		this.video_width = width;
@@ -278,7 +283,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 				args.add("-vcodec").add(video_codec);
 			}
 
-			if (video_width > 0 && video_height > 0) {
+			if (video_width != 0 && video_height != 0) {
 				args.add("-s").add(String.format("%dx%d", video_width, video_height));
 			}
 
