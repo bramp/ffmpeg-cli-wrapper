@@ -47,6 +47,8 @@ public class FFmpegOutputBuilder implements Cloneable {
 
 	public boolean subtitle_enabled = true;
 
+	public String filter;
+
     public FFmpegBuilder.Strict strict = FFmpegBuilder.Strict.NORMAL;
 
 	public long targetSize = 0; // in bytes
@@ -209,6 +211,12 @@ public class FFmpegOutputBuilder implements Cloneable {
         return this;
     }
 
+	public FFmpegOutputBuilder setFilter(String filter) {
+		Preconditions.checkNotNull(filter);
+		this.filter = filter;
+		return this;
+	}
+
 	public FFmpegBuilder done() {
         Preconditions.checkState(parent != null, "Can not call done without parent being set");
 		return parent;
@@ -298,7 +306,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 			if (audio_sample_rate > 0) {
 				args.add("-ar").add(String.format("%d", audio_sample_rate));
 			}
-			
+
 			if (audio_bit_rate > 0) {
 				args.add("-b:a").add(String.format("%d", audio_bit_rate));
 			}
@@ -310,6 +318,11 @@ public class FFmpegOutputBuilder implements Cloneable {
 		if (!subtitle_enabled)
 			args.add("-sn");
 
+		if (filter != null) {
+			args.add("-vf").add(filter);
+		}
+
+		// Output
 		if (pass == 1) {
 			args.add(DEVNULL);
 		} else {

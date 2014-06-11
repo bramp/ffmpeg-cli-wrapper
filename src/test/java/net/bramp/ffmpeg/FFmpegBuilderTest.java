@@ -64,6 +64,22 @@ public class FFmpegBuilderTest {
 		assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-vn", "-an", "-sn", "output")));
 	}
 
+	@Test
+	public void testFilter() {
+
+		FFmpegBuilder builder = new FFmpegBuilder()
+				.setInput("input")
+				.addOutput("output")
+				.disableAudio()
+				.disableSubtitle()
+				.disableVideo()
+				.setFilter("scale='trunc(ow/a/2)*2:320'")
+				.done();
+
+		List<String> args = builder.build();
+		assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-vn", "-an", "-sn", "-vf", "scale='trunc(ow/a/2)*2:320'", "output")));
+	}
+
 	@Test(expected=IllegalArgumentException.class)
 	public void testNothing() {
 		FFmpegBuilder builder = new FFmpegBuilder();

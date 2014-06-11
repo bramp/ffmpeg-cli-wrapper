@@ -14,6 +14,9 @@ import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 import org.junit.Test;
 
+/**
+ * TODO Change this test to not have hardcoded paths
+ */
 public class FFmpegExecutorTest {
 
 	FFmpeg ffmpeg = new FFmpeg();
@@ -24,7 +27,7 @@ public class FFmpegExecutorTest {
 	public FFmpegExecutorTest() throws IOException {}
 
 	@Test
-	public void test() throws InterruptedException, ExecutionException, IOException {
+	public void testTwoPass() throws InterruptedException, ExecutionException, IOException {
 		String input = "/home/bramp/personal/ffmpeg/samples/mobileedge_1280x720.mp4";
 		FFmpegProbeResult in = ffprobe.probe(input);
 
@@ -43,6 +46,31 @@ public class FFmpegExecutorTest {
 		FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 
 		FFmpegJob job = executor.createTwoPassJob(builder);
+		runAndWait(job);
+	}
+
+
+	@Test
+	public void testFilter() throws InterruptedException, ExecutionException, IOException {
+		String input = "/home/bramp/personal/ffmpeg/samples/mobileedge_1280x720.mp4";
+
+		FFmpegBuilder builder = new FFmpegBuilder()
+				.setInput(input)
+				.overrideOutputFiles(true)
+				.addOutput("/home/bramp/personal/ffmpeg/samples/output.mp4")
+				.setFormat("mp4")
+				.disableAudio()
+				.setVideoCodec("libx264")
+				.setFilter("scale=320:trunc(ow/a/2)*2")
+				.done();
+
+		FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+
+		FFmpegJob job = executor.createJob(builder);
+		runAndWait(job);
+	}
+
+	protected void runAndWait(FFmpegJob job) throws ExecutionException, InterruptedException {
 		Future<?> future = this.executor.submit(job);
 
 		while (!future.isDone()) {
