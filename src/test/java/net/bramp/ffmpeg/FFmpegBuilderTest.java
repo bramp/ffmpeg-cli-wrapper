@@ -79,6 +79,22 @@ public class FFmpegBuilderTest {
 		List<String> args = builder.build();
 		assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-vn", "-an", "-sn", "-vf", "scale='trunc(ow/a/2)*2:320'", "output")));
 	}
+	
+	@Test
+	public void testFilter_and_scale() {
+
+		FFmpegBuilder builder = new FFmpegBuilder()
+				.setInput("input")
+				.addOutput("output")
+				.disableSubtitle()
+				.disableVideo()
+				.setFilter("scale='trunc(ow/a/2)*2:320'")
+				.setVideoResolution(320, 240)
+				.done();
+
+		List<String> args = builder.build();
+		assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-vn", "-an", "-sn", "-vf", "scale='trunc(ow/a/2)*2:320'", "output")));
+	}
 
 	@Test(expected=IllegalArgumentException.class)
 	public void testNothing() {

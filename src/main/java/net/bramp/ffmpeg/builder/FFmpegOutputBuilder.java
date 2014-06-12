@@ -85,6 +85,7 @@ public class FFmpegOutputBuilder implements Cloneable {
         video_height     = opts.height;
         video_bit_rate   = opts.bit_rate;
         video_frames     = opts.frames;
+        filter			 = opts.filter;
         return this;
     }
 
@@ -232,7 +233,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 			format,
 			startOffset,
 			new AudioEncodingOptions(audio_enabled, audio_codec, audio_channels, audio_sample_rate, audio_bit_rate),
-			new VideoEncodingOptions(video_enabled, video_codec, video_frame_rate, video_width, video_height, video_bit_rate, video_frames)
+			new VideoEncodingOptions(video_enabled, video_codec, video_frame_rate, video_width, video_height, video_bit_rate, video_frames, filter)
 		);
 	}
 
