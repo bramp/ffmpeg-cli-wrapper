@@ -34,8 +34,6 @@ public class FFmpegTest {
 	
 	@Before
 	public void before() throws IOException {
-		FFmpeg.runFunc = runFunc;
-
 		when(runFunc.run(argThatHasItem("-version"))).then(new Answer<BufferedReader>() {
             public BufferedReader answer(InvocationOnMock invocation) throws Throwable {
                 return loadResource("ffmpeg-version");
@@ -45,7 +43,7 @@ public class FFmpegTest {
 		when(runFunc.run(argThatHasItem("-formats"))).thenReturn(loadResource("ffmpeg-formats"));
 		when(runFunc.run(argThatHasItem("-codecs"))).thenReturn(loadResource("ffmpeg-codecs"));
 
-		ffmpeg = new FFmpeg(); // setup after the mock
+		ffmpeg = new FFmpeg(runFunc);
 	}
 
 	protected static BufferedReader loadResource(String name) {

@@ -29,8 +29,8 @@ public class RunProcessFunction implements ProcessFunction {
 
 	public BufferedReader run(List<String> args) throws IOException {
 
-		Preconditions.checkNotNull(args);
-		Preconditions.checkArgument(!args.isEmpty());
+		Preconditions.checkNotNull(args, "Arguments must not be null");
+		Preconditions.checkArgument(!args.isEmpty(), "No arguments specified");
 
 		if (LOG.isInfoEnabled()) {
 			LOG.info("{}", Joiner.on(" ").join(args));

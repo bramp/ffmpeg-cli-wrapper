@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableList;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * @author bramp
  *
@@ -46,7 +48,7 @@ public class FFmpeg {
 	/**
 	 * Function to run FFmpeg. We define it like this so we can swap it out (during testing)
 	 */
-	static ProcessFunction runFunc = new RunProcessFunction();
+	final ProcessFunction runFunc;
 
 	/**
 	 * Supported codecs
@@ -64,18 +66,26 @@ public class FFmpeg {
 	String version = null;
 
 	public FFmpeg() throws IOException {
-		this.path = "ffmpeg";
-		this.version = version();
+		this("ffmpeg", new RunProcessFunction());
 	}
 
 	public FFmpeg(@Nonnull String path) throws IOException {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(path));
+        this(path, new RunProcessFunction());
+	}
+
+	public FFmpeg(ProcessFunction runFunction) throws IOException {
+		this("ffmpeg", runFunction);
+	}
+
+	public FFmpeg(@Nonnull String path, ProcessFunction runFunction) throws IOException {
+		Preconditions.checkArgument(!Strings.isNullOrEmpty(path));
+		this.runFunc = checkNotNull(runFunction);
 		this.path = path;
 		this.version = version();
 	}
 
 	public synchronized @Nonnull String version() throws IOException {
-        BufferedReader r = runFunc.run(ImmutableList.of(path, "-version"));
+        BufferedReader r = runFunc(ImmutableList.of(path, "-version"));
         return r.readLine();
 	}
 
@@ -85,7 +95,7 @@ public class FFmpeg {
 
 			String line;
 
-			BufferedReader r = runFunc.run(ImmutableList.of(path, "-codecs"));
+			BufferedReader r = runFunc(ImmutableList.of(path, "-codecs"));
 			while ((line = r.readLine()) != null) {
 				Matcher m = CODECS_REGEX.matcher(line);
 				if (!m.matches())
@@ -106,7 +116,7 @@ public class FFmpeg {
 
 			String line;
 
-			BufferedReader r = runFunc.run(ImmutableList.of(path, "-formats"));
+			BufferedReader r = runFunc(ImmutableList.of(path, "-formats"));
 			while ((line = r.readLine()) != null) {
 				Matcher m = FORMATS_REGEX.matcher(line);
 				if (!m.matches())
@@ -121,12 +131,20 @@ public class FFmpeg {
 		return formats;
 	}
 
+	private BufferedReader runFunc(List<String> args) throws IOException {
+		BufferedReader reader = runFunc.run(args);
+		if (reader == null) {
+			throw new RuntimeException("RunProcessFunction returned null");
+		}
+		return reader;
+	}
+
 	public void run(List<String> args) throws IOException {
 		List<String> newArgs = new ArrayList<String>(1 + args.size());
 		newArgs.add(path);
 		newArgs.addAll(args);
 
-		BufferedReader reader = runFunc.run(newArgs);
+		BufferedReader reader = runFunc(newArgs);
 
 		// Now block reading ffmpeg's stdout
 		IOUtils.copy(reader, System.out);

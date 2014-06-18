@@ -71,7 +71,7 @@ public class FFmpegExecutorTest {
 	}
 
 	protected void runAndWait(FFmpegJob job) throws ExecutionException, InterruptedException {
-		Future<?> future = this.executor.submit(job);
+		Future<?> future = executor.submit(job);
 
 		while (!future.isDone()) {
 			try {

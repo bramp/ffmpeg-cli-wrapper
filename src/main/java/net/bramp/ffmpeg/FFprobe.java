@@ -32,7 +32,7 @@ public class FFprobe {
 	/**
 	 * Function to run FFmpeg. We define it like this so we can swap it out (during testing)
 	 */
-	static ProcessFunction runFunc = new RunProcessFunction();
+	ProcessFunction runFunc = new RunProcessFunction();
 
 	public FFprobe() {
 		this.path = "ffprobe";
