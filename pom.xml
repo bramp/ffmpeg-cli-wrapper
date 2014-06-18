@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.bramp.ffmpeg</groupId>
 	<artifactId>ffmpeg</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.1</version>
     <packaging>jar</packaging>
 	<name>FFmpeg Wrapper</name>
 	<description>Simple Java Wrapper around the FFmpeg command line</description>
@@ -11,7 +10,8 @@
     <scm>
         <url>https://github.com/bramp/ffmpeg-cli-wrapper</url>
         <connection>scm:git:git@github.com:bramp/ffmpeg-cli-wrapper.git</connection>
-    </scm>
+      <tag>ffmpeg-0.1</tag>
+  </scm>
 
 	<licenses>
 		<license>
