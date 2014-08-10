@@ -1,10 +1,9 @@
 package net.bramp.ffmpeg.job;
 
-import java.util.List;
-
+import com.google.common.base.Throwables;
 import net.bramp.ffmpeg.FFmpeg;
 
-import com.google.common.base.Throwables;
+import java.util.List;
 
 public class SinglePassFFmpegJob extends FFmpegJob {
 

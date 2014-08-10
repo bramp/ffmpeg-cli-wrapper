@@ -1,13 +1,11 @@
 package net.bramp.ffmpeg.job;
 
-import java.util.List;
-
+import com.google.common.base.Throwables;
 import net.bramp.ffmpeg.FFmpeg;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Throwables;
+import java.util.List;
 
 public class TwoPassFFmpegJob extends FFmpegJob {
 
@@ -28,6 +26,8 @@ public class TwoPassFFmpegJob extends FFmpegJob {
 		try {
 			ffmpeg.run(args1);
 			ffmpeg.run(args2);
+
+			// TODO Consider deleting the passlog files
 
 			state = State.FINISHED;
 

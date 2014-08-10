@@ -1,23 +1,22 @@
 package net.bramp.ffmpeg;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.job.FFmpegJob;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
+
+import java.io.IOException;
+import java.util.concurrent.*;
 
 /**
  * TODO Change this test to not have hardcoded paths
  */
 public class FFmpegExecutorTest {
+
+	@Rule
+	public Timeout timeout = new Timeout(30000);
 
 	FFmpeg ffmpeg = new FFmpeg();
 	FFprobe ffprobe = new FFprobe();
@@ -38,7 +37,7 @@ public class FFmpegExecutorTest {
 				.setFormat("mp4")
 				.disableAudio()
 				.setVideoCodec("libx264")
-				.setVideoFramerate(FFmpeg.FPS_30)
+				.setVideoFrameRate(FFmpeg.FPS_30)
 				.setVideoResolution(320, 240)
 				.setTargetSize(1024 * 1024)
 				.done();
@@ -61,7 +60,7 @@ public class FFmpegExecutorTest {
 				.setFormat("mp4")
 				.disableAudio()
 				.setVideoCodec("libx264")
-				.setFilter("scale=320:trunc(ow/a/2)*2")
+				.setVideoFilter("scale=320:trunc(ow/a/2)*2")
 				.done();
 
 		FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);

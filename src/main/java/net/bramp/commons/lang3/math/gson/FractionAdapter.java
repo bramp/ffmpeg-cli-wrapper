@@ -1,13 +1,12 @@
 package net.bramp.commons.lang3.math.gson;
 
-import java.io.IOException;
-
-import org.apache.commons.lang3.math.Fraction;
-
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import org.apache.commons.lang3.math.Fraction;
+
+import java.io.IOException;
 
 /**
  * GSON TypeAdapter for Apache Commons Math Fraction Object

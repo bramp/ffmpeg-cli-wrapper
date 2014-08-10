@@ -1,26 +1,23 @@
 package net.bramp.ffmpeg;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
+import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import net.bramp.ffmpeg.info.Codec;
+import net.bramp.ffmpeg.info.Format;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.math.Fraction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.annotation.Nonnull;
-
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import net.bramp.ffmpeg.builder.FFmpegBuilder;
-import net.bramp.ffmpeg.info.Codec;
-import net.bramp.ffmpeg.info.Format;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.math.Fraction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.ImmutableList;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,6 +33,25 @@ public class FFmpeg {
 	public final static Fraction FPS_29_97  = Fraction.getFraction(30000, 1001);
 	public final static Fraction FPS_24     = Fraction.getFraction(24, 1);
 	public final static Fraction FPS_23_976 = Fraction.getFraction(24000, 1001);
+
+	public final static int AUDIO_MONO = 1;
+	public final static int AUDIO_STEREO = 2;
+
+	public final static String AUDIO_DEPTH_U8  = "u8";  // 8
+	public final static String AUDIO_DEPTH_S16 = "s16"; // 16
+	public final static String AUDIO_DEPTH_S32 = "s32"; // 32
+	public final static String AUDIO_DEPTH_FLT = "flt"; // 32
+	public final static String AUDIO_DEPTH_DBL = "dbl"; // 64
+
+	public final static int AUDIO_SAMPLE_8000 = 8000;
+	public final static int AUDIO_SAMPLE_11025 = 11025;
+	public final static int AUDIO_SAMPLE_12000 = 12000;
+	public final static int AUDIO_SAMPLE_16000 = 16000;
+	public final static int AUDIO_SAMPLE_22050 = 22050;
+	public final static int AUDIO_SAMPLE_32000 = 32000;
+	public final static int AUDIO_SAMPLE_44100 = 44100;
+	public final static int AUDIO_SAMPLE_48000 = 48000;
+	public final static int AUDIO_SAMPLE_96000 = 96000;
 
     final static Pattern CODECS_REGEX = Pattern.compile("^ ([ D][ E][VAS][ S][ D][ T]) (\\S+)\\s+(.*)$");
     final static Pattern FORMATS_REGEX = Pattern.compile("^ ([ D][ E]) (\\S+)\\s+(.*)$");

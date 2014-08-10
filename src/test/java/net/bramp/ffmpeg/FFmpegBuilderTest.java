@@ -1,16 +1,20 @@
 package net.bramp.ffmpeg;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import net.bramp.ffmpeg.options.AudioEncodingOptions;
+import net.bramp.ffmpeg.options.EncodingOptions;
+import net.bramp.ffmpeg.options.MainEncodingOptions;
+import net.bramp.ffmpeg.options.VideoEncodingOptions;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import net.bramp.ffmpeg.builder.FFmpegBuilder;
-
-import org.junit.Test;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
  * -psnr
@@ -33,9 +37,9 @@ public class FFmpegBuilderTest {
                 .setStartOffset(500, TimeUnit.MILLISECONDS)
 				.setAudioCodec("aac")
 				.setAudioChannels(1)
-				.setAudioRate(48000)
+				.setAudioSampleRate(48000)
 				.setVideoCodec("libx264")
-				.setVideoFramerate(FFmpeg.FPS_30)
+				.setVideoFrameRate(FFmpeg.FPS_30)
 				.setVideoResolution(320, 240)
 				.done();
 
@@ -72,12 +76,11 @@ public class FFmpegBuilderTest {
 				.addOutput("output")
 				.disableAudio()
 				.disableSubtitle()
-				.disableVideo()
-				.setFilter("scale='trunc(ow/a/2)*2:320'")
+				.setVideoFilter("scale='trunc(ow/a/2)*2:320'")
 				.done();
 
 		List<String> args = builder.build();
-		assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-vn", "-an", "-sn", "-vf", "scale='trunc(ow/a/2)*2:320'", "output")));
+		assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-vf", "scale='trunc(ow/a/2)*2:320'", "-an", "-sn", "output")));
 	}
 	
 	@Test
@@ -87,11 +90,48 @@ public class FFmpegBuilderTest {
 				.setInput("input")
 				.addOutput("output")
 				.setVideoResolution(320, 240)
-				.setFilter("scale='trunc(ow/a/2)*2:320'")
+				.setVideoFilter("scale='trunc(ow/a/2)*2:320'")
 				.done();
 
 		List<String> args = builder.build();
 		assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-s", "320x240", "-vf", "scale='trunc(ow/a/2)*2:320'", "output")));
+	}
+
+	/**
+	 * Tests if all the various encoding options actually get stored and used correctly
+	 */
+	@Test
+	public void testSetOptions() {
+		MainEncodingOptions main = new MainEncodingOptions("mp4", 1500L, 2L);
+		AudioEncodingOptions audio = new AudioEncodingOptions(true, "aac", 1, FFmpeg.AUDIO_SAMPLE_48000, FFmpeg.AUDIO_DEPTH_S16, 1, 2);
+		VideoEncodingOptions video = new VideoEncodingOptions(true, "libx264", FFmpeg.FPS_30, 320, 240, 1, null, "", "");
+
+		EncodingOptions options = new FFmpegBuilder()
+			.setInput("input")
+			.addOutput("output")
+				.useOptions(main)
+				.useOptions(audio)
+				.useOptions(video)
+				.buildOptions();
+
+		assertReflectionEquals(main,  options.getMain());
+		assertReflectionEquals(audio, options.getAudio());
+		assertReflectionEquals(video, options.getVideo());
+	}
+
+	@Test
+	public void testMultipleOutputs() {
+		List<String> args = new FFmpegBuilder()
+			.setInput("input")
+			.addOutput("output1")
+				.setVideoResolution(320, 240)
+				.done()
+			.addOutput("output2")
+				.setVideoResolution(640, 480)
+				.done()
+			.build();
+
+		assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-s", "320x240", "output1", "-s", "640x480", "output2")));
 	}
 
 	@Test(expected=IllegalArgumentException.class)

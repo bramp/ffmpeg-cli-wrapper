@@ -1,20 +1,15 @@
 package net.bramp.ffmpeg;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
-import net.bramp.commons.lang3.math.gson.FractionAdapter;
-import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-
-import org.apache.commons.lang3.math.Fraction;
-
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.bramp.commons.lang3.math.gson.FractionAdapter;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
+import org.apache.commons.lang3.math.Fraction;
+
+import javax.annotation.Nonnull;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 /**
  * Wrapper around FFprobe

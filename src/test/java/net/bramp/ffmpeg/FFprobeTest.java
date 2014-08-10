@@ -1,11 +1,9 @@
 package net.bramp.ffmpeg;
 
+import com.google.gson.Gson;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.gson.Gson;
 
 import java.io.IOException;
 
