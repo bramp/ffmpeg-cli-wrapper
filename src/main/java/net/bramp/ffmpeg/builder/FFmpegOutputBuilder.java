@@ -34,7 +34,10 @@ public class FFmpegOutputBuilder implements Cloneable {
 	public String format;
 
 	public Long startOffset; // in millis
+	public String startOffsetStr; // as String
     public Long duration; // in millis
+    public String durationStr; // as String
+    public Integer vframes; 
 
 	public boolean audio_enabled = true;
 	public String audio_codec;
@@ -287,6 +290,14 @@ public class FFmpegOutputBuilder implements Cloneable {
         return this;
     }
 
+    public FFmpegOutputBuilder setStartOffsetStr(String startOffsetStr) {
+        checkNotNull(startOffsetStr);
+
+        this.startOffsetStr = startOffsetStr;
+
+        return this;
+    }
+
 	/**
 	 * Stop writing the output after its duration reaches duration
 	 * @param duration
@@ -302,6 +313,18 @@ public class FFmpegOutputBuilder implements Cloneable {
 		return this;
 	}
 
+	public FFmpegOutputBuilder  setDurationStr(String durationStr) {
+		this.durationStr = durationStr;
+		return this;
+	}
+	
+	
+	public FFmpegOutputBuilder setVframes(Integer vframes) {
+		this.vframes = vframes;
+		return this;
+	}
+	
+	
     public FFmpegOutputBuilder setStrict(FFmpegBuilder.Strict strict) {
         this.strict = checkNotNull(strict);
         return this;
@@ -373,16 +396,24 @@ public class FFmpegOutputBuilder implements Cloneable {
 			args.add("-f").add(format);
 		}
 
-        if (startOffset != null) {
+		if (startOffsetStr != null) {
+            args.add("-ss").add(startOffsetStr);
+		} else if (startOffset != null) {
             // TODO Consider formatting into "hh:mm:ss[.xxx]"
             args.add("-ss").add(String.format("%.3f", startOffset / 1000f));
         }
 
-		if (duration != null) {
+        if (durationStr != null) {
+			args.add("-t").add(durationStr);
+        } else if (duration != null) {
 			// TODO Consider formatting into "hh:mm:ss[.xxx]"
 			args.add("-t").add(String.format("%.3f", duration / 1000f));
 		}
 
+        if (vframes != null) {
+			args.add("-vframes").add(String.format("%d", vframes));
+        }
+        
 		if (video_enabled) {
 
 			if (!Strings.isNullOrEmpty(video_codec)) {
