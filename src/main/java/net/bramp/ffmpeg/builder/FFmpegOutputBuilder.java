@@ -34,9 +34,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 	public String format;
 
 	public Long startOffset; // in millis
-	public String startOffsetStr; // as String
     public Long duration; // in millis
-    public String durationStr; // as String
     public Integer vframes; 
 
 	public boolean audio_enabled = true;
@@ -290,14 +288,6 @@ public class FFmpegOutputBuilder implements Cloneable {
         return this;
     }
 
-    public FFmpegOutputBuilder setStartOffsetStr(String startOffsetStr) {
-        checkNotNull(startOffsetStr);
-
-        this.startOffsetStr = startOffsetStr;
-
-        return this;
-    }
-
 	/**
 	 * Stop writing the output after its duration reaches duration
 	 * @param duration
@@ -313,12 +303,6 @@ public class FFmpegOutputBuilder implements Cloneable {
 		return this;
 	}
 
-	public FFmpegOutputBuilder  setDurationStr(String durationStr) {
-		this.durationStr = durationStr;
-		return this;
-	}
-	
-	
 	public FFmpegOutputBuilder setVframes(Integer vframes) {
 		this.vframes = vframes;
 		return this;
@@ -396,18 +380,12 @@ public class FFmpegOutputBuilder implements Cloneable {
 			args.add("-f").add(format);
 		}
 
-		if (startOffsetStr != null) {
-            args.add("-ss").add(startOffsetStr);
-		} else if (startOffset != null) {
-            // TODO Consider formatting into "hh:mm:ss[.xxx]"
-            args.add("-ss").add(String.format("%.3f", startOffset / 1000f));
+		if (startOffset != null) {
+			args.add("-ss").add(millisecondsToString(startOffset));
         }
 
-        if (durationStr != null) {
-			args.add("-t").add(durationStr);
-        } else if (duration != null) {
-			// TODO Consider formatting into "hh:mm:ss[.xxx]"
-			args.add("-t").add(String.format("%.3f", duration / 1000f));
+        if (duration != null) {
+			args.add("-t").add(millisecondsToString(duration));
 		}
 
         if (vframes != null) {
@@ -492,6 +470,32 @@ public class FFmpegOutputBuilder implements Cloneable {
 		return args.build();
 	}
 
+	/**
+	 * convert milliseconds to hh:mm:ss.ms representation
+	 * 
+	 * @param value
+	 * @return
+	 */
+	private String millisecondsToString(Long value) {
+		long milliseconds, seconds, minutes, hours = 0;
+		
+		milliseconds = value;
+		
+		seconds = milliseconds / 1000;
+		milliseconds = milliseconds - (seconds * 1000);
+		
+		minutes = seconds / 60; 
+		seconds = seconds - (minutes * 60);
+		
+		hours = minutes / 60;
+		minutes = minutes - (hours * 60);
+		
+		if (milliseconds == 0)
+			return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+		
+		return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds);
+	}
+	
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
