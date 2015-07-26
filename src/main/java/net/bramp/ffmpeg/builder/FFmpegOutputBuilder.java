@@ -62,6 +62,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 	public int pass_padding_bitrate = 1024; // in bits per second
 
 	public boolean throwWarnings = true;
+	public Integer loop;
 
 	public FFmpegOutputBuilder() {}
 
@@ -318,6 +319,12 @@ public class FFmpegOutputBuilder implements Cloneable {
 		return this;
 	}
 
+	public FFmpegOutputBuilder setLoop(int loop) {
+		Preconditions.checkArgument(loop>= 0);
+		this.loop = loop;
+		return this;
+	}
+
 	/**
 	 * Finished with this output
 	 * @return the parent FFmpegBuilder
@@ -450,6 +457,9 @@ public class FFmpegOutputBuilder implements Cloneable {
 
 		if (!subtitle_enabled)
 			args.add("-sn");
+
+		if (null != loop)
+			args.add("-loop").add(String.valueOf(loop));
 
 		// Output
 		if (pass == 1) {
