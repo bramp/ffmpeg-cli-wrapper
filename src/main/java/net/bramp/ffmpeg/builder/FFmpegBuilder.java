@@ -14,13 +14,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Builds a ffmpeg command line
- * 
- * @author bramp
  *
+ * @author bramp
  */
 public class FFmpegBuilder {
 
-	final static Logger LOG = LoggerFactory.getLogger(FFmpegBuilder.class);
+    final static Logger LOG = LoggerFactory.getLogger(FFmpegBuilder.class);
 
     public enum Strict {
         VERY,        // strictly conform to a older more strict version of the spec or reference software
@@ -35,49 +34,49 @@ public class FFmpegBuilder {
         }
     }
 
-	// Global Settings
-	boolean override = true;
-	int pass = 0;
-	String pass_prefix;
+    // Global Settings
+    boolean override = true;
+    int pass = 0;
+    String pass_prefix;
 
-	// Input settings
-	Long startOffset; // in millis
-	String input;
-	FFmpegProbeResult inputProbe;
+    // Input settings
+    Long startOffset; // in millis
+    String input;
+    FFmpegProbeResult inputProbe;
 
-	// Output
-	List<FFmpegOutputBuilder> outputs = new ArrayList<FFmpegOutputBuilder>();
+    // Output
+    List<FFmpegOutputBuilder> outputs = new ArrayList<FFmpegOutputBuilder>();
 
-	public FFmpegBuilder overrideOutputFiles(boolean override) {
-		this.override = override;
-		return this;
-	}
+    public FFmpegBuilder overrideOutputFiles(boolean override) {
+        this.override = override;
+        return this;
+    }
 
-	public boolean getOverrideOutputFiles() {
-		return this.override;
-	}
-	
-	public FFmpegBuilder setPass(int pass) {
-		this.pass = pass;
-		return this;
-	}
+    public boolean getOverrideOutputFiles() {
+        return this.override;
+    }
 
-	public FFmpegBuilder setPassPrefix(String prefix) {
-		this.pass_prefix = prefix;
-		return this;
-	}
+    public FFmpegBuilder setPass(int pass) {
+        this.pass = pass;
+        return this;
+    }
 
-	public FFmpegBuilder setInput(String filename) {
-		this.input = filename;
-		return this;
-	}
+    public FFmpegBuilder setPassPrefix(String prefix) {
+        this.pass_prefix = prefix;
+        return this;
+    }
 
-	public FFmpegBuilder setInput(FFmpegProbeResult result) {
-		this.inputProbe = checkNotNull(result);
-		this.input = checkNotNull(result.format).filename;
+    public FFmpegBuilder setInput(String filename) {
+        this.input = filename;
+        return this;
+    }
 
-		return this;
-	}
+    public FFmpegBuilder setInput(FFmpegProbeResult result) {
+        this.inputProbe = checkNotNull(result);
+        this.input = checkNotNull(result.format).filename;
+
+        return this;
+    }
 
     public FFmpegBuilder setStartOffset(long duration, TimeUnit units) {
         checkNotNull(duration);
@@ -87,33 +86,34 @@ public class FFmpegBuilder {
 
         return this;
     }
-	
-	/**
-	 * Create new output file
-	 * @param filename
-	 * @return A new FFmpegOutputBuilder
-	 */
-	public FFmpegOutputBuilder addOutput(String filename) {
-		FFmpegOutputBuilder output = new FFmpegOutputBuilder(this, filename);
-		outputs.add(output);
-		return output;
-	}
 
-	/**
-	 * Create new output (to stdout)
-	 */
-	public FFmpegOutputBuilder addStreamedOutput() {
-		return addOutput("-");
-	}
+    /**
+     * Create new output file
+     *
+     * @param filename
+     * @return A new FFmpegOutputBuilder
+     */
+    public FFmpegOutputBuilder addOutput(String filename) {
+        FFmpegOutputBuilder output = new FFmpegOutputBuilder(this, filename);
+        outputs.add(output);
+        return output;
+    }
 
-	public List<String> build() {
-		ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
+    /**
+     * Create new output (to stdout)
+     */
+    public FFmpegOutputBuilder addStreamedOutput() {
+        return addOutput("-");
+    }
 
-		Preconditions.checkArgument(input != null, "Input must be specified");
-		Preconditions.checkArgument(!outputs.isEmpty(), "At least one output must be specified");
+    public List<String> build() {
+        ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
 
-		args.add(override ? "-y" : "-n");
-		args.add("-v", "error"); // TODO make configurable
+        Preconditions.checkArgument(input != null, "Input must be specified");
+        Preconditions.checkArgument(!outputs.isEmpty(), "At least one output must be specified");
+
+        args.add(override ? "-y" : "-n");
+        args.add("-v", "error"); // TODO make configurable
 
         if (startOffset != null) {
             args.add("-ss").add(String.format("%.3f", startOffset / 1000f));
@@ -121,18 +121,18 @@ public class FFmpegBuilder {
 
         args.add("-i").add(input);
 
-		if (pass > 0) {
-			args.add("-pass").add(Integer.toString(pass));
+        if (pass > 0) {
+            args.add("-pass").add(Integer.toString(pass));
 
-			if (pass_prefix != null) {
-				args.add("-passlogfile").add(pass_prefix);
-			}
-		}
+            if (pass_prefix != null) {
+                args.add("-passlogfile").add(pass_prefix);
+            }
+        }
 
-		for (FFmpegOutputBuilder output : this.outputs) {
-			args.addAll( output.build(pass) );
-		}
+        for (FFmpegOutputBuilder output : this.outputs) {
+            args.addAll(output.build(pass));
+        }
 
-		return args.build();
-	}
+        return args.build();
+    }
 }
