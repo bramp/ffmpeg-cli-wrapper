@@ -320,7 +320,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 	}
 
 	public FFmpegOutputBuilder setLoop(int loop) {
-		Preconditions.checkArgument(loop>= 0);
+		Preconditions.checkArgument(loop >= 0);
 		this.loop = loop;
 		return this;
 	}
@@ -458,7 +458,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 		if (!subtitle_enabled)
 			args.add("-sn");
 
-		if (null != loop)
+		if (loop != null)
 			args.add("-loop").add(String.valueOf(loop));
 
 		// Output
