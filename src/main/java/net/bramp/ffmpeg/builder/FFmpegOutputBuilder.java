@@ -55,6 +55,7 @@ public class FFmpegOutputBuilder implements Cloneable {
   public Integer video_frames;
   public String video_preset;
   public String video_filter;
+  public String video_filter_complex;
 
   public boolean subtitle_enabled = true;
 
@@ -201,6 +202,12 @@ public class FFmpegOutputBuilder implements Cloneable {
   public FFmpegOutputBuilder setVideoFilter(String filter) {
     this.video_enabled = true;
     this.video_filter = checkNotNull(filter);
+    return this;
+  }
+
+  public FFmpegOutputBuilder setComplexVideoFilter(String filter) {
+    this.video_enabled = true;
+    this.video_filter_complex = checkNotNull(filter);
     return this;
   }
 
@@ -420,7 +427,13 @@ public class FFmpegOutputBuilder implements Cloneable {
       }
 
       if (!Strings.isNullOrEmpty(video_filter)) {
+        checkState(parent.inputs.size() == 1,
+            "Video filter only works with one input, instead use setVideoFilterComplex(..)");
         args.add("-vf").add(video_filter);
+      }
+
+      if (!Strings.isNullOrEmpty(video_filter_complex)) {
+        args.add("-filter_complex").add(video_filter_complex);
       }
 
     } else {
