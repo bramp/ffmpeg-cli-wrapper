@@ -22,7 +22,25 @@ public class FFmpegFormat {
 	/**
 	 * Bitrate
 	 */
-	public int bit_rate;
+	public long bit_rate;
 
 	public Map<String, String> tags;
+	
+	@Override
+	public String toString() {
+	    StringBuilder stb = new StringBuilder();
+	    stb.append("[filename: " + filename +  "], ");
+	    stb.append("[nb_streams: " + filename +  "], ");
+	    stb.append("[format_name: " + filename +  "], ");
+	    stb.append("[format_long_name: " + filename +  "], ");
+	    stb.append("[start_time: " + filename +  "], ");
+	    stb.append("[duration: " + filename +  "], ");
+	    stb.append("[size (bytes): " + filename +  "], ");
+	    stb.append("[bit_rate: " + filename +  "], ");
+	    if (null != tags) {
+	        stb.append(tags.toString());
+	    }
+	    
+	    return stb.toString();
+	}
 }
