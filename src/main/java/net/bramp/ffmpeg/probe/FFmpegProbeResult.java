@@ -16,7 +16,12 @@ public class FFmpegProbeResult {
         return error;
     }
 
-    public FFmpegFormat getFormat() {
+    public boolean hasError() {
+    return error != null;
+  }
+
+
+  public FFmpegFormat getFormat() {
         return format;
     }
 

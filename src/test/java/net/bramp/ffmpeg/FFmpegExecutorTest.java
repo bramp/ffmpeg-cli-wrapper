@@ -10,30 +10,31 @@ import org.junit.rules.Timeout;
 import java.io.IOException;
 import java.util.concurrent.*;
 
-/**
- * TODO Change this test to not have hardcoded paths
- */
+import static org.junit.Assert.assertFalse;
+
+
 public class FFmpegExecutorTest {
 
 	@Rule
 	public Timeout timeout = new Timeout(30000);
 
-	FFmpeg ffmpeg = new FFmpeg();
-	FFprobe ffprobe = new FFprobe();
+	final FFmpeg ffmpeg = new FFmpeg();
+	final FFprobe ffprobe = new FFprobe();
 	
-	ExecutorService executor = Executors.newSingleThreadExecutor();
+	final ExecutorService executor = Executors.newSingleThreadExecutor();
 
 	public FFmpegExecutorTest() throws IOException {}
 
 	@Test
 	public void testTwoPass() throws InterruptedException, ExecutionException, IOException {
-		String input = "/home/bramp/personal/ffmpeg/samples/mobileedge_1280x720.mp4";
-		FFmpegProbeResult in = ffprobe.probe(input);
+		FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
+
+		assertFalse(in.hasError());
 
 		FFmpegBuilder builder = new FFmpegBuilder()
 			.setInput(in)
 			.overrideOutputFiles(true)
-			.addOutput("/home/bramp/personal/ffmpeg/samples/output.mp4")
+			.addOutput(Samples.output_mp4)
 				.setFormat("mp4")
 				.disableAudio()
 				.setVideoCodec("libx264")
@@ -51,12 +52,11 @@ public class FFmpegExecutorTest {
 
 	@Test
 	public void testFilter() throws InterruptedException, ExecutionException, IOException {
-		String input = "/home/bramp/personal/ffmpeg/samples/mobileedge_1280x720.mp4";
 
 		FFmpegBuilder builder = new FFmpegBuilder()
-				.setInput(input)
+				.setInput(Samples.big_buck_bunny_720p_1mb)
 				.overrideOutputFiles(true)
-				.addOutput("/home/bramp/personal/ffmpeg/samples/output.mp4")
+				.addOutput(Samples.output_mp4)
 				.setFormat("mp4")
 				.disableAudio()
 				.setVideoCodec("libx264")
