@@ -15,6 +15,7 @@ import org.apache.commons.lang3.math.Fraction;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static net.bramp.ffmpeg.FFmpegUtils.millisecondsToString;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -470,32 +471,6 @@ public class FFmpegOutputBuilder implements Cloneable {
 		return args.build();
 	}
 
-	/**
-	 * convert milliseconds to hh:mm:ss.ms representation
-	 * 
-	 * @param value
-	 * @return
-	 */
-	private String millisecondsToString(Long value) {
-		long milliseconds, seconds, minutes, hours = 0;
-		
-		milliseconds = value;
-		
-		seconds = milliseconds / 1000;
-		milliseconds = milliseconds - (seconds * 1000);
-		
-		minutes = seconds / 60; 
-		seconds = seconds - (minutes * 60);
-		
-		hours = minutes / 60;
-		minutes = minutes - (hours * 60);
-		
-		if (milliseconds == 0)
-			return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-		
-		return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds);
-	}
-	
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
