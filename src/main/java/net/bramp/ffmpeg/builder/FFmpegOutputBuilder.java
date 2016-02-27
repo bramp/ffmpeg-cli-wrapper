@@ -15,6 +15,7 @@ import org.apache.commons.lang3.math.Fraction;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static net.bramp.ffmpeg.FFmpegUtils.millisecondsToString;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -35,6 +36,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 
 	public Long startOffset; // in millis
     public Long duration; // in millis
+    public Integer vframes; 
 
 	public boolean audio_enabled = true;
 	public String audio_codec;
@@ -303,6 +305,12 @@ public class FFmpegOutputBuilder implements Cloneable {
 		return this;
 	}
 
+	public FFmpegOutputBuilder setVframes(Integer vframes) {
+		this.vframes = vframes;
+		return this;
+	}
+	
+	
     public FFmpegOutputBuilder setStrict(FFmpegBuilder.Strict strict) {
         this.strict = checkNotNull(strict);
         return this;
@@ -380,16 +388,18 @@ public class FFmpegOutputBuilder implements Cloneable {
 			args.add("-f").add(format);
 		}
 
-        if (startOffset != null) {
-            // TODO Consider formatting into "hh:mm:ss[.xxx]"
-            args.add("-ss").add(String.format("%.3f", startOffset / 1000f));
+		if (startOffset != null) {
+			args.add("-ss").add(millisecondsToString(startOffset));
         }
 
-		if (duration != null) {
-			// TODO Consider formatting into "hh:mm:ss[.xxx]"
-			args.add("-t").add(String.format("%.3f", duration / 1000f));
+        if (duration != null) {
+			args.add("-t").add(millisecondsToString(duration));
 		}
 
+        if (vframes != null) {
+			args.add("-vframes").add(String.format("%d", vframes));
+        }
+        
 		if (video_enabled) {
 
 			if (!Strings.isNullOrEmpty(video_codec)) {

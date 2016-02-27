@@ -2,6 +2,8 @@ package net.bramp.ffmpeg.builder;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import net.bramp.ffmpeg.FFmpeg;
+import net.bramp.ffmpeg.FFmpegUtils;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,7 +118,7 @@ public class FFmpegBuilder {
         args.add("-v", "error"); // TODO make configurable
 
         if (startOffset != null) {
-            args.add("-ss").add(String.format("%.3f", startOffset / 1000f));
+            args.add("-ss").add(FFmpegUtils.millisecondsToString(startOffset));
         }
 
         args.add("-i").add(input);
