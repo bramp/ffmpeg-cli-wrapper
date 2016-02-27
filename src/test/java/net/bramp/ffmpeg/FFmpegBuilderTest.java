@@ -45,8 +45,8 @@ public class FFmpegBuilderTest {
 
 		List<String> args = builder.build();
 		assertThat(args, is(Arrays.asList(
-            "-y", "-v", "error", "-ss", "1.500", "-i", "input",
-                "-f", "mp4", "-ss", "0.500",
+            "-y", "-v", "error", "-ss", "00:00:01.500", "-i", "input",
+                "-f", "mp4", "-ss", "00:00:00.500",
                 "-vcodec", "libx264", "-s", "320x240", "-r", "30/1",
                 "-acodec", "aac", "-ac", "1", "-ar", "48000",
                 "output"

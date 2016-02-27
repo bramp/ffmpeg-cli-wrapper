@@ -1,5 +1,7 @@
 package net.bramp.ffmpeg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
  * Helper class with commonly used methods
  */
@@ -14,6 +16,8 @@ public final class FFmpegUtils {
    * @return
    */
   public static String millisecondsToString(long milliseconds) {
+
+    checkArgument(milliseconds >= 0, "milliseconds must be >= 0");
 
     long seconds = milliseconds / 1000;
     milliseconds = milliseconds - (seconds * 1000);
