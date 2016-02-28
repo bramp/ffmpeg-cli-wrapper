@@ -6,8 +6,11 @@ import net.bramp.ffmpeg.options.EncodingOptions;
 import net.bramp.ffmpeg.options.MainEncodingOptions;
 import net.bramp.ffmpeg.options.VideoEncodingOptions;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.modelmapper.config.Configuration;
 import org.modelmapper.convention.NameTokenizers;
+
+import static net.bramp.ffmpeg.modelmapper.NotDefaultCondition.notDefault;
 
 /**
  * Copies values from one type of object to another
@@ -18,16 +21,25 @@ public class Mapper {
 
 	final private static ModelMapper mapper = newModelMapper();
 
+	private static <S, D> TypeMap<S, D> createTypeMap(ModelMapper mapper,
+			Class<S> sourceType, Class<D> destinationType, Configuration config) {
+
+		return mapper.createTypeMap(sourceType, destinationType, config)
+				// We setPropertyCondition because ModelMapper seems to ignore this in the config
+				.setPropertyCondition(config.getPropertyCondition());
+	}
+
 	private static ModelMapper newModelMapper() {
-		ModelMapper mapper = new ModelMapper();
+		final ModelMapper mapper = new ModelMapper();
 
 		Configuration config = mapper.getConfiguration().copy()
 				.setFieldMatchingEnabled(true)
+				.setPropertyCondition(notDefault)
 				.setSourceNameTokenizer(NameTokenizers.UNDERSCORE);
 
-		mapper.createTypeMap(MainEncodingOptions.class,  FFmpegOutputBuilder.class, config);
-		mapper.createTypeMap(AudioWrapper.class,  FFmpegOutputBuilder.class, config);
-		mapper.createTypeMap(VideoWrapper.class, FFmpegOutputBuilder.class, config);
+		createTypeMap(mapper, MainEncodingOptions.class, FFmpegOutputBuilder.class, config);
+		createTypeMap(mapper, AudioWrapper.class, FFmpegOutputBuilder.class, config);
+		createTypeMap(mapper, VideoWrapper.class, FFmpegOutputBuilder.class, config);
 
 		return mapper;
 	}
@@ -68,8 +80,13 @@ public class Mapper {
 
 	public static void map(EncodingOptions opts, FFmpegOutputBuilder dest) {
 		map(opts.getMain(), dest);
-		map(opts.getAudio(), dest);
-		map(opts.getVideo(), dest);
+
+		if (opts.getAudio().enabled) {
+			map(opts.getAudio(), dest);
+		}
+		if (opts.getVideo().enabled) {
+			map(opts.getVideo(), dest);
+		}
 	}
 
 }

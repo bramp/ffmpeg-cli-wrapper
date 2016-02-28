@@ -23,7 +23,7 @@ public class MapperTest {
 		FFmpegOutputBuilder mappedObj = new FFmpegOutputBuilder();
 		
 		Mapper.map(options, mappedObj);
-		
-		Assert.assertNotNull(mappedObj);
+
+		// TODO Add actual test!
 	}
 }
