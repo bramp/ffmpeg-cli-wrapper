@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.bramp.ffmpeg</groupId>
     <artifactId>ffmpeg</artifactId>
-    <version>0.3</version>
+    <version>0.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <prerequisites>
@@ -16,7 +16,7 @@
     <scm>
         <url>https://github.com/bramp/ffmpeg-cli-wrapper</url>
         <connection>scm:git:git@github.com:bramp/ffmpeg-cli-wrapper.git</connection>
-        <tag>ffmpeg-0.3</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <licenses>
