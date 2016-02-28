@@ -41,12 +41,6 @@ Usage
 Install FFmpeg on Ubuntu
 -----------------
 
-```
-FFmpeg is in Ubuntu's default repositories, however, it is a bit dated. Instead use a PPA of it:
-    sudo add-apt-repository ppa:jon-severinsson/ffmpeg
-    sudo apt-get update
-    sudo apt-get install ffmpeg
-    ffmpeg -version
-        ffmpeg version 0.10.11-7:0.10.11-1~saucy1
-        built on Feb  6 2014 16:55:15 with gcc 4.8.1
-```
+We only the support the original FFmpeg, not the libav version. Before Ubuntu 12.04, and in 15.04
+and later original FFmpeg is shipped. If you have to run on a version with libav, you can install
+FFmpeg from a PPA, or using the static build. More information [here](http://askubuntu.com/q/373322/34845)
