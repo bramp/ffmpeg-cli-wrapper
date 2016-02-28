@@ -34,7 +34,7 @@ public class FFmpegExecutorTest {
 
 		FFmpegBuilder builder = new FFmpegBuilder().setInput(in)
 				.overrideOutputFiles(true).addOutput(Samples.output_mp4)
-				.setFormat("mp4").disableAudio().setVideoCodec("libx264")
+				.setFormat("mp4").disableAudio().setVideoCodec("mpeg4")
 				.setVideoFrameRate(FFmpeg.FPS_30).setVideoResolution(320, 240)
 				.setTargetSize(1024 * 1024).done();
 
@@ -51,7 +51,7 @@ public class FFmpegExecutorTest {
 		FFmpegBuilder builder = new FFmpegBuilder()
 				.setInput(Samples.big_buck_bunny_720p_1mb)
 				.overrideOutputFiles(true).addOutput(Samples.output_mp4)
-				.setFormat("mp4").disableAudio().setVideoCodec("libx264")
+				.setFormat("mp4").disableAudio().setVideoCodec("mpeg4")
 				.setVideoFilter("scale=320:trunc(ow/a/2)*2").done();
 
 		FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
