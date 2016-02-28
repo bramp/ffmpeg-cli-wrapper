@@ -112,19 +112,6 @@ public class FFmpeg {
     return new BufferedReader(new InputStreamReader(p.getInputStream(), Charsets.UTF_8));
   }
 
-
-  private void throwOnError(Process p) throws IOException {
-    try {
-      if (ProcessUtils.waitForWithTimeout(p, 1, TimeUnit.SECONDS) != 0) { // TODO In java 8 use
-                                                                          // waitForWithTimeout
-        // TODO Parse the error
-        throw new IOException("FFmpeg returned non-zero. Check stdout.");
-      }
-    } catch (TimeoutException e) {
-      throw new IOException("Timed out waiting for FFmpeg to finish.");
-    }
-  }
-
   public synchronized @Nonnull String version() throws IOException {
     String version;
     Process p = runFunc.run(ImmutableList.of(path, "-version"));
@@ -132,7 +119,7 @@ public class FFmpeg {
       BufferedReader r = wrapInReader(p);
       version = r.readLine();
       IOUtils.copy(r, new NullOutputStream()); // Throw away rest of the output
-      throwOnError(p);
+      FFmpegUtils.throwOnError(p);
     } finally {
       p.destroy();
     }
@@ -156,7 +143,7 @@ public class FFmpeg {
           codecs.add(new Codec(m.group(2), m.group(3), m.group(1)));
         }
 
-        throwOnError(p);
+        FFmpegUtils.throwOnError(p);
         this.codecs = ImmutableList.copyOf(codecs);
       } finally {
         p.destroy();
@@ -184,7 +171,7 @@ public class FFmpeg {
           formats.add(new Format(m.group(2), m.group(3), m.group(1)));
         }
 
-        throwOnError(p);
+        FFmpegUtils.throwOnError(p);
         this.formats = ImmutableList.copyOf(formats);
       } finally {
         p.destroy();
@@ -201,7 +188,7 @@ public class FFmpeg {
       // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
       IOUtils.copy(wrapInReader(p), System.out); // TODO Should I be outputting to stdout?
 
-      throwOnError(p);
+      FFmpegUtils.throwOnError(p);
 
     } finally {
       p.destroy();

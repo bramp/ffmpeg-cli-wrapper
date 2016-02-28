@@ -1,10 +1,12 @@
 package net.bramp.ffmpeg;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.bramp.commons.lang3.math.gson.FractionAdapter;
 import net.bramp.ffmpeg.io.LoggingFilterReader;
+import net.bramp.ffmpeg.io.ProcessUtils;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.apache.commons.lang3.math.Fraction;
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Wrapper around FFprobe
@@ -27,8 +30,7 @@ import java.io.Reader;
 public class FFprobe {
 
   final static Logger LOG = LoggerFactory.getLogger(FFprobe.class);
-
-  final Gson gson = setupGson();
+  final static Gson gson = setupGson();
 
   final String path;
 
@@ -55,27 +57,35 @@ public class FFprobe {
     return path;
   }
 
+  private BufferedReader wrapInReader(Process p) {
+    return new BufferedReader(new InputStreamReader(p.getInputStream(), Charsets.UTF_8));
+  }
+
   public FFmpegProbeResult probe(String mediaPath) throws IOException {
     ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
 
+    // .add("--show_packets")
+    // .add("--show_frames")
+
     args.add(path).add("-v", "quiet").add("-print_format", "json").add("-show_error")
-        .add("-show_format").add("-show_streams")
-
-        // .add("--show_packets")
-        // .add("--show_frames")
-
-        .add(mediaPath);
+        .add("-show_format").add("-show_streams").add(mediaPath);
 
     Process p = runFunc.run(args.build());
     try {
-      Reader reader = new InputStreamReader(p.getInputStream());
+      Reader reader = wrapInReader(p);
       if (LOG.isDebugEnabled()) {
         reader = new LoggingFilterReader(reader, LOG);
       }
 
-      // TODO Check p.exitValue()
+      FFmpegProbeResult result = gson.fromJson(reader, FFmpegProbeResult.class);
 
-      return gson.fromJson(reader, FFmpegProbeResult.class);
+      FFmpegUtils.throwOnError(p);
+
+      if (result == null) {
+        throw new IllegalStateException("Gson returned null, which shouldn't happen :(");
+      }
+
+      return result;
 
     } finally {
       p.destroy();
