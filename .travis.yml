@@ -1,0 +1,27 @@
+sudo: false
+
+language: java
+
+jdk:
+  - openjdk7
+  - oraclejdk8
+  - oraclejdk7
+
+os:
+  - linux
+
+addons:
+#  apt:
+#    packages:
+#    - ffmpeg # Sadly this is libav's ffmpeg, which is not comptable
+
+before_install:
+  - ./travis-install-ffmpeg.sh
+  - export FFMPEG=$PWD/ffmpeg-3.0-64bit-static/ffmpeg
+  - export FFPROBE=$PWD/ffmpeg-3.0-64bit-static/ffprobe
+
+cache:
+  apt: true
+  directories:
+    - $HOME/.m2
+    - $HOME/.dist

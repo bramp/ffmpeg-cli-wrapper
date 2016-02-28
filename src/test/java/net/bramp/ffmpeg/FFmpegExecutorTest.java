@@ -10,73 +10,67 @@ import org.junit.rules.Timeout;
 import java.io.IOException;
 import java.util.concurrent.*;
 
-/**
- * TODO Change this test to not have hardcoded paths
- */
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 public class FFmpegExecutorTest {
 
-	@Rule
-	public Timeout timeout = new Timeout(30000);
+  @Rule
+  public Timeout timeout = new Timeout(30000);
 
-	FFmpeg ffmpeg = new FFmpeg();
-	FFprobe ffprobe = new FFprobe();
-	
-	ExecutorService executor = Executors.newSingleThreadExecutor();
+  final FFmpeg ffmpeg = new FFmpeg();
+  final FFprobe ffprobe = new FFprobe();
 
-	public FFmpegExecutorTest() throws IOException {}
+  final ExecutorService executor = Executors.newSingleThreadExecutor();
 
-	@Test
-	public void testTwoPass() throws InterruptedException, ExecutionException, IOException {
-		String input = "/home/bramp/personal/ffmpeg/samples/mobileedge_1280x720.mp4";
-		FFmpegProbeResult in = ffprobe.probe(input);
+  public FFmpegExecutorTest() throws IOException {}
 
-		FFmpegBuilder builder = new FFmpegBuilder()
-			.setInput(in)
-			.overrideOutputFiles(true)
-			.addOutput("/home/bramp/personal/ffmpeg/samples/output.mp4")
-				.setFormat("mp4")
-				.disableAudio()
-				.setVideoCodec("libx264")
-				.setVideoFrameRate(FFmpeg.FPS_30)
-				.setVideoResolution(320, 240)
-				.setTargetSize(1024 * 1024)
-				.done();
+  @Test
+  public void testTwoPass() throws InterruptedException, ExecutionException, IOException {
+    FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
 
-		FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+    assertFalse(in.hasError());
 
-		FFmpegJob job = executor.createTwoPassJob(builder);
-		runAndWait(job);
-	}
+    FFmpegBuilder builder =
+        new FFmpegBuilder().setInput(in).overrideOutputFiles(true).addOutput(Samples.output_mp4)
+            .setFormat("mp4").disableAudio().setVideoCodec("mpeg4")
+            .setVideoFrameRate(FFmpeg.FPS_30).setVideoResolution(320, 240)
+            .setTargetSize(1024 * 1024).done();
 
+    FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 
-	@Test
-	public void testFilter() throws InterruptedException, ExecutionException, IOException {
-		String input = "/home/bramp/personal/ffmpeg/samples/mobileedge_1280x720.mp4";
+    FFmpegJob job = executor.createTwoPassJob(builder);
+    runAndWait(job);
 
-		FFmpegBuilder builder = new FFmpegBuilder()
-				.setInput(input)
-				.overrideOutputFiles(true)
-				.addOutput("/home/bramp/personal/ffmpeg/samples/output.mp4")
-				.setFormat("mp4")
-				.disableAudio()
-				.setVideoCodec("libx264")
-				.setVideoFilter("scale=320:trunc(ow/a/2)*2")
-				.done();
+    assertEquals(FFmpegJob.State.FINISHED, job.getState());
+  }
 
-		FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+  @Test
+  public void testFilter() throws InterruptedException, ExecutionException, IOException {
 
-		FFmpegJob job = executor.createJob(builder);
-		runAndWait(job);
-	}
+    FFmpegBuilder builder =
+        new FFmpegBuilder().setInput(Samples.big_buck_bunny_720p_1mb).overrideOutputFiles(true)
+            .addOutput(Samples.output_mp4).setFormat("mp4").disableAudio().setVideoCodec("mpeg4")
+            .setVideoFilter("scale=320:trunc(ow/a/2)*2").done();
 
-	protected void runAndWait(FFmpegJob job) throws ExecutionException, InterruptedException {
-		Future<?> future = executor.submit(job);
+    FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 
-		while (!future.isDone()) {
-			try {
-				future.get(100, TimeUnit.MILLISECONDS);
-				break;
-			} catch (TimeoutException e) {}
-		}
-	}
+    FFmpegJob job = executor.createJob(builder);
+    runAndWait(job);
+
+    assertEquals(FFmpegJob.State.FINISHED, job.getState());
+  }
+
+  protected void runAndWait(FFmpegJob job) throws ExecutionException, InterruptedException {
+    Future<?> future = executor.submit(job);
+
+    // TODO Why do we loop, and not future.get()?
+    while (!future.isDone()) {
+      try {
+        future.get(100, TimeUnit.MILLISECONDS);
+        break;
+      } catch (TimeoutException e) {
+      }
+    }
+  }
 }

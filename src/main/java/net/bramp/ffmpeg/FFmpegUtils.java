@@ -1,5 +1,11 @@
 package net.bramp.ffmpeg;
 
+import net.bramp.ffmpeg.io.ProcessUtils;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
@@ -34,4 +40,15 @@ public final class FFmpegUtils {
     return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds);
   }
 
+  public static void throwOnError(String cmd, Process p) throws IOException {
+    try {
+      // TODO In java 8 use waitFor(long timeout, TimeUnit unit)
+      if (ProcessUtils.waitForWithTimeout(p, 1, TimeUnit.SECONDS) != 0) {
+        // TODO Parse the error
+        throw new IOException(cmd + " returned non-zero exit status. Check stdout.");
+      }
+    } catch (TimeoutException e) {
+      throw new IOException("Timed out waiting for " + cmd + " to finish.");
+    }
+  }
 }

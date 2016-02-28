@@ -6,8 +6,11 @@ import net.bramp.ffmpeg.options.EncodingOptions;
 import net.bramp.ffmpeg.options.MainEncodingOptions;
 import net.bramp.ffmpeg.options.VideoEncodingOptions;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.modelmapper.config.Configuration;
 import org.modelmapper.convention.NameTokenizers;
+
+import static net.bramp.ffmpeg.modelmapper.NotDefaultCondition.notDefault;
 
 /**
  * Copies values from one type of object to another
@@ -16,60 +19,74 @@ import org.modelmapper.convention.NameTokenizers;
  */
 public class Mapper {
 
-	final private static ModelMapper mapper = newModelMapper();
+  final private static ModelMapper mapper = newModelMapper();
 
-	private static ModelMapper newModelMapper() {
-		ModelMapper mapper = new ModelMapper();
+  private static <S, D> TypeMap<S, D> createTypeMap(ModelMapper mapper, Class<S> sourceType,
+      Class<D> destinationType, Configuration config) {
 
-		Configuration config = mapper.getConfiguration().copy()
-				.setFieldMatchingEnabled(true)
-				.setSourceNameTokenizer(NameTokenizers.UNDERSCORE);
+    return mapper.createTypeMap(sourceType, destinationType, config)
+    // We setPropertyCondition because ModelMapper seems to ignore this in
+    // the config
+        .setPropertyCondition(config.getPropertyCondition());
+  }
 
-		mapper.createTypeMap(MainEncodingOptions.class,  FFmpegOutputBuilder.class, config);
-		mapper.createTypeMap(AudioWrapper.class,  FFmpegOutputBuilder.class, config);
-		mapper.createTypeMap(VideoWrapper.class, FFmpegOutputBuilder.class, config);
+  private static ModelMapper newModelMapper() {
+    final ModelMapper mapper = new ModelMapper();
 
-		return mapper;
-	}
+    Configuration config =
+        mapper.getConfiguration().copy().setFieldMatchingEnabled(true)
+            .setPropertyCondition(notDefault).setSourceNameTokenizer(NameTokenizers.UNDERSCORE);
 
-	/**
-	 * Simple wrapper object, to inject the word "audio" in the property name
-	 */
-	static class AudioWrapper {
-		public final AudioEncodingOptions audio;
+    createTypeMap(mapper, MainEncodingOptions.class, FFmpegOutputBuilder.class, config);
+    createTypeMap(mapper, AudioWrapper.class, FFmpegOutputBuilder.class, config);
+    createTypeMap(mapper, VideoWrapper.class, FFmpegOutputBuilder.class, config);
 
-		AudioWrapper(AudioEncodingOptions audio) {
-			this.audio = audio;
-		}
-	}
+    return mapper;
+  }
 
-	/**
-	 * Simple wrapper object, to inject the word "video" in the property name
-	 */
-	static class VideoWrapper {
-		public final VideoEncodingOptions video;
+  /**
+   * Simple wrapper object, to inject the word "audio" in the property name
+   */
+  static class AudioWrapper {
+    public final AudioEncodingOptions audio;
 
-		VideoWrapper(VideoEncodingOptions video) {
-			this.video = video;
-		}
-	}
+    AudioWrapper(AudioEncodingOptions audio) {
+      this.audio = audio;
+    }
+  }
 
-	public static void map(MainEncodingOptions opts, FFmpegOutputBuilder dest) {
-		mapper.map(opts, dest);
-	}
+  /**
+   * Simple wrapper object, to inject the word "video" in the property name
+   */
+  static class VideoWrapper {
+    public final VideoEncodingOptions video;
 
-	public static void map(AudioEncodingOptions opts, FFmpegOutputBuilder dest) {
-		mapper.map(new AudioWrapper(opts), dest);
-	}
+    VideoWrapper(VideoEncodingOptions video) {
+      this.video = video;
+    }
+  }
 
-	public static void map(VideoEncodingOptions opts, FFmpegOutputBuilder dest) {
-		mapper.map(new VideoWrapper(opts), dest);
-	}
+  public static void map(MainEncodingOptions opts, FFmpegOutputBuilder dest) {
+    mapper.map(opts, dest);
+  }
 
-	public static void map(EncodingOptions opts, FFmpegOutputBuilder dest) {
-		map(opts.getMain(), dest);
-		map(opts.getAudio(), dest);
-		map(opts.getVideo(), dest);
-	}
+  public static void map(AudioEncodingOptions opts, FFmpegOutputBuilder dest) {
+    mapper.map(new AudioWrapper(opts), dest);
+  }
+
+  public static void map(VideoEncodingOptions opts, FFmpegOutputBuilder dest) {
+    mapper.map(new VideoWrapper(opts), dest);
+  }
+
+  public static void map(EncodingOptions opts, FFmpegOutputBuilder dest) {
+    map(opts.getMain(), dest);
+
+    if (opts.getAudio().enabled) {
+      map(opts.getAudio(), dest);
+    }
+    if (opts.getVideo().enabled) {
+      map(opts.getVideo(), dest);
+    }
+  }
 
 }

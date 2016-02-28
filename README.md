@@ -1,8 +1,11 @@
 FFmpeg Java
 ===========
-by Andrew Brampton 2013-2014
+by Andrew Brampton ([bramp.net](http://bramp.net)) (c) 2013-2014,2016
 
 A fluent interface to running FFmpeg from Java.
+
+![Java](https://img.shields.io/badge/Java-6+-brightgreen.svg)
+[![Build Status](https://img.shields.io/travis/bramp/ffmpeg-cli-wrapper/gh-pages.svg)](https://travis-ci.org/bramp/ffmpeg-cli-wrapper)
 
 [GitHub](https://github.com/bramp/ffmpeg-cli-wrapper) | [API docs](https://bramp.github.io/ffmpeg-cli-wrapper/apidocs/index.html)
 
@@ -41,16 +44,9 @@ Usage
 Install FFmpeg on Ubuntu
 -----------------
 
-FFmpeg is in Ubuntu's default repositories, however, it is a bit dated. Instead use a PPA of it:
-
-```bash
-$ sudo add-apt-repository ppa:jon-severinsson/ffmpeg
-$ sudo apt-get update
-$ sudo apt-get install ffmpeg
-$ ffmpeg -version
-    ffmpeg version 0.10.11-7:0.10.11-1~saucy1
-    built on Feb  6 2014 16:55:15 with gcc 4.8.1
-```
+We only the support the original FFmpeg, not the libav version. Before Ubuntu 12.04, and in 15.04
+and later original FFmpeg is shipped. If you have to run on a version with libav, you can install
+FFmpeg from a PPA, or using the static build. More information [here](http://askubuntu.com/q/373322/34845)
 
 Licence (Simplified BSD License)
 --------------------------------
