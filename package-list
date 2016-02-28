@@ -1,0 +1,9 @@
+net.bramp.commons.lang3.math.gson
+net.bramp.ffmpeg
+net.bramp.ffmpeg.builder
+net.bramp.ffmpeg.info
+net.bramp.ffmpeg.io
+net.bramp.ffmpeg.job
+net.bramp.ffmpeg.modelmapper
+net.bramp.ffmpeg.options
+net.bramp.ffmpeg.probe
