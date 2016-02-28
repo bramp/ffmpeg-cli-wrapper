@@ -9,20 +9,20 @@ public class FFmpegFormat {
   public String format_long_name;
   public double start_time;
 
-  /**
-   * Duration in seconds
-   */
-  public double duration;
+	/**
+	 * Duration in seconds
+	 */
+	public double duration;
+	
+	/**
+	 * File size in bytes
+	 */
+	public long size;
+	
+	/**
+	 * Bitrate
+	 */
+	public long bit_rate;
 
-  /**
-   * File size in bytes
-   */
-  public long size;
-
-  /**
-   * Bitrate
-   */
-  public int bit_rate;
-
-  public Map<String, String> tags;
+	public Map<String, String> tags;
 }
