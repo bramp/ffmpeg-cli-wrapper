@@ -12,6 +12,14 @@ A fluent interface to running FFmpeg from Java.
 Usage
 -----
 
+```xml
+<dependency>
+  <groupId>net.bramp.ffmpeg</groupId>
+  <artifactId>ffmpeg</artifactId>
+  <version>0.3</version>
+</dependency>
+```
+
 ```java
 FFmpeg ffmpeg = new FFmpeg("/path/to/ffmpeg");
 FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
