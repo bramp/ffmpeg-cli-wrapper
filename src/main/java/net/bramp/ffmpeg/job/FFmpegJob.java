@@ -4,16 +4,14 @@ import net.bramp.ffmpeg.FFmpeg;
 
 /**
  * TODO Read progress from output
+ * 
  * @author bramp
  *
  */
 public abstract class FFmpegJob implements Runnable {
 
 	public static enum State {
-		WAITING,
-		RUNNING,
-		FINISHED,
-		FAILED,
+		WAITING, RUNNING, FINISHED, FAILED,
 	}
 
 	final FFmpeg ffmpeg;

@@ -12,8 +12,8 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 /**
- * Simple function that creates a Process with the arguments, and returns
- * a BufferedReader reading stdout 
+ * Simple function that creates a Process with the arguments, and returns a
+ * BufferedReader reading stdout
  * 
  * @author bramp
  *
@@ -31,10 +31,11 @@ public class RunProcessFunction implements ProcessFunction {
 			LOG.info("{}", Joiner.on(" ").join(args));
 		}
 
-        ProcessBuilder builder = new ProcessBuilder(args);
-        builder.redirectErrorStream(true);
-        Process p = builder.start();
-        return new BufferedReader( new InputStreamReader(p.getInputStream(), Charsets.UTF_8) );
+		ProcessBuilder builder = new ProcessBuilder(args);
+		builder.redirectErrorStream(true);
+		Process p = builder.start();
+		return new BufferedReader(new InputStreamReader(p.getInputStream(),
+				Charsets.UTF_8));
 	}
 
 }

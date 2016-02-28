@@ -11,20 +11,20 @@ import static org.junit.Assert.assertFalse;
 
 public class FFprobeTest {
 
-	final static Gson gson = new Gson();
+  final static Gson gson = new Gson();
 
-	FFprobe ffprobe;
+  FFprobe ffprobe;
 
-	@Before
-	public void before() {
-		ffprobe = new FFprobe();
-	}
+  @Before
+  public void before() {
+    ffprobe = new FFprobe();
+  }
 
-	@Test
-	public void testProbe() throws IOException {
-		FFmpegProbeResult info = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
-		assertFalse(info.hasError());
-		System.out.println(gson.toJson(info));
-	}
+  @Test
+  public void testProbe() throws IOException {
+    FFmpegProbeResult info = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
+    assertFalse(info.hasError());
+    System.out.println(gson.toJson(info));
+  }
 
 }

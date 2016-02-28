@@ -16,7 +16,7 @@ public class FFmpegExecutor {
 	final FFprobe ffprobe;
 
 	public FFmpegExecutor(FFmpeg ffmpeg, FFprobe ffprobe) {
-		this.ffmpeg  = checkNotNull(ffmpeg);
+		this.ffmpeg = checkNotNull(ffmpeg);
 		this.ffprobe = checkNotNull(ffprobe);
 	}
 
@@ -28,6 +28,7 @@ public class FFmpegExecutor {
 
 	/**
 	 * Info: https://trac.ffmpeg.org/wiki/x264EncodingGuide#twopass
+	 * 
 	 * @param builder
 	 * @return A new two-pass FFmpegJob
 	 */
@@ -39,15 +40,12 @@ public class FFmpegExecutor {
 		// Two pass
 		final boolean override = builder.getOverrideOutputFiles();
 
-		final List<String> args1 = builder
-			.setPass(1).setPassPrefix(passlogPrefix)
-			.overrideOutputFiles(true)
-			.build();
+		final List<String> args1 = builder.setPass(1)
+				.setPassPrefix(passlogPrefix).overrideOutputFiles(true).build();
 
-		final List<String> args2 = builder
-			.setPass(2).setPassPrefix(passlogPrefix)
-			.overrideOutputFiles(override)
-			.build();
+		final List<String> args2 = builder.setPass(2)
+				.setPassPrefix(passlogPrefix).overrideOutputFiles(override)
+				.build();
 
 		return new TwoPassFFmpegJob(ffmpeg, args1, args2);
 	}

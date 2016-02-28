@@ -29,15 +29,15 @@ public class FFmpeg {
 
 	final static Logger LOG = LoggerFactory.getLogger(FFmpeg.class);
 
-	public final static Fraction FPS_30     = Fraction.getFraction(30, 1);
-	public final static Fraction FPS_29_97  = Fraction.getFraction(30000, 1001);
-	public final static Fraction FPS_24     = Fraction.getFraction(24, 1);
+	public final static Fraction FPS_30 = Fraction.getFraction(30, 1);
+	public final static Fraction FPS_29_97 = Fraction.getFraction(30000, 1001);
+	public final static Fraction FPS_24 = Fraction.getFraction(24, 1);
 	public final static Fraction FPS_23_976 = Fraction.getFraction(24000, 1001);
 
 	public final static int AUDIO_MONO = 1;
 	public final static int AUDIO_STEREO = 2;
 
-	public final static String AUDIO_DEPTH_U8  = "u8";  // 8
+	public final static String AUDIO_DEPTH_U8 = "u8"; // 8
 	public final static String AUDIO_DEPTH_S16 = "s16"; // 16
 	public final static String AUDIO_DEPTH_S32 = "s32"; // 32
 	public final static String AUDIO_DEPTH_FLT = "flt"; // 32
@@ -53,16 +53,19 @@ public class FFmpeg {
 	public final static int AUDIO_SAMPLE_48000 = 48000;
 	public final static int AUDIO_SAMPLE_96000 = 96000;
 
-    final static Pattern CODECS_REGEX = Pattern.compile("^ ([ D][ E][VAS][ S][ D][ T]) (\\S+)\\s+(.*)$");
-    final static Pattern FORMATS_REGEX = Pattern.compile("^ ([ D][ E]) (\\S+)\\s+(.*)$");
+	final static Pattern CODECS_REGEX = Pattern
+			.compile("^ ([ D][ E][VAS][ S][ D][ T]) (\\S+)\\s+(.*)$");
+	final static Pattern FORMATS_REGEX = Pattern
+			.compile("^ ([ D][ E]) (\\S+)\\s+(.*)$");
 
-    /**
-     * Path to FFmpeg (e.g. /usr/bin/ffmpeg)
-     */
+	/**
+	 * Path to FFmpeg (e.g. /usr/bin/ffmpeg)
+	 */
 	final String path;
 
 	/**
-	 * Function to run FFmpeg. We define it like this so we can swap it out (during testing)
+	 * Function to run FFmpeg. We define it like this so we can swap it out
+	 * (during testing)
 	 */
 	final ProcessFunction runFunc;
 
@@ -75,7 +78,7 @@ public class FFmpeg {
 	 * Supported formats
 	 */
 	List<Format> formats = null;
-	
+
 	/**
 	 * Version string
 	 */
@@ -86,14 +89,15 @@ public class FFmpeg {
 	}
 
 	public FFmpeg(@Nonnull String path) throws IOException {
-        this(path, new RunProcessFunction());
+		this(path, new RunProcessFunction());
 	}
 
 	public FFmpeg(ProcessFunction runFunction) throws IOException {
 		this("ffmpeg", runFunction);
 	}
 
-	public FFmpeg(@Nonnull String path, ProcessFunction runFunction) throws IOException {
+	public FFmpeg(@Nonnull String path, ProcessFunction runFunction)
+			throws IOException {
 		Preconditions.checkArgument(!Strings.isNullOrEmpty(path));
 		this.runFunc = checkNotNull(runFunction);
 		this.path = path;
@@ -101,8 +105,8 @@ public class FFmpeg {
 	}
 
 	public synchronized @Nonnull String version() throws IOException {
-        BufferedReader r = runFunc(ImmutableList.of(path, "-version"));
-        return r.readLine();
+		BufferedReader r = runFunc(ImmutableList.of(path, "-version"));
+		return r.readLine();
 	}
 
 	public synchronized @Nonnull List<Codec> codecs() throws IOException {
@@ -117,7 +121,7 @@ public class FFmpeg {
 				if (!m.matches())
 					continue;
 
-				codecs.add( new Codec(m.group(2), m.group(3), m.group(1)) );
+				codecs.add(new Codec(m.group(2), m.group(3), m.group(1)));
 			}
 
 			codecs = ImmutableList.copyOf(codecs);
@@ -138,7 +142,7 @@ public class FFmpeg {
 				if (!m.matches())
 					continue;
 
-				formats.add( new Format(m.group(2), m.group(3), m.group(1)) );
+				formats.add(new Format(m.group(2), m.group(3), m.group(1)));
 			}
 
 			formats = ImmutableList.copyOf(formats);

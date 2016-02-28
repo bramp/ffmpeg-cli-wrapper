@@ -24,39 +24,44 @@ import static org.mockito.Mockito.*;
 public class FFmpegTest {
 
 	@Mock
-    ProcessFunction runFunc;
+	ProcessFunction runFunc;
 
 	FFmpeg ffmpeg;
-	
+
 	@Before
 	public void before() throws IOException {
-		when(runFunc.run(argThatHasItem("-version"))).then(new Answer<BufferedReader>() {
-            public BufferedReader answer(InvocationOnMock invocation) throws Throwable {
-                return loadResource("ffmpeg-version");
-            }
-        });
+		when(runFunc.run(argThatHasItem("-version"))).then(
+				new Answer<BufferedReader>() {
+					public BufferedReader answer(InvocationOnMock invocation)
+							throws Throwable {
+						return loadResource("ffmpeg-version");
+					}
+				});
 
-		when(runFunc.run(argThatHasItem("-formats"))).thenReturn(loadResource("ffmpeg-formats"));
-		when(runFunc.run(argThatHasItem("-codecs"))).thenReturn(loadResource("ffmpeg-codecs"));
+		when(runFunc.run(argThatHasItem("-formats"))).thenReturn(
+				loadResource("ffmpeg-formats"));
+		when(runFunc.run(argThatHasItem("-codecs"))).thenReturn(
+				loadResource("ffmpeg-codecs"));
 
 		ffmpeg = new FFmpeg(runFunc);
 	}
 
 	protected static BufferedReader loadResource(String name) {
-		return new BufferedReader(
-			new InputStreamReader(FFmpegTest.class.getResourceAsStream(name), Charsets.UTF_8)
-		);
+		return new BufferedReader(new InputStreamReader(
+				FFmpegTest.class.getResourceAsStream(name), Charsets.UTF_8));
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	protected static<T> List<T> argThatHasItem(T s) {
+	protected static <T> List<T> argThatHasItem(T s) {
 		return (List<T>) argThat(hasItem(s));
 	}
 
 	@Test
 	public void testVersion() throws Exception {
-		assertEquals("ffmpeg version 0.10.9-7:0.10.9-1~raring1", ffmpeg.version());
-        assertEquals("ffmpeg version 0.10.9-7:0.10.9-1~raring1", ffmpeg.version());
+		assertEquals("ffmpeg version 0.10.9-7:0.10.9-1~raring1",
+				ffmpeg.version());
+		assertEquals("ffmpeg version 0.10.9-7:0.10.9-1~raring1",
+				ffmpeg.version());
 	}
 
 	@Test
@@ -68,7 +73,7 @@ public class FFmpegTest {
 
 		verify(runFunc, times(1)).run(argThatHasItem("-codecs"));
 	}
-	
+
 	@Test
 	public void testFormats() throws IOException {
 		// Run twice, the second should be cached

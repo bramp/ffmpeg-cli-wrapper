@@ -18,7 +18,9 @@ import java.io.Reader;
 /**
  * Wrapper around FFprobe
  * 
- * TODO ffprobe -v quiet -print_format json -show_format -show_streams mobileedge_1280x720.mp4
+ * TODO ffprobe -v quiet -print_format json -show_format -show_streams
+ * mobileedge_1280x720.mp4
+ * 
  * @author bramp
  *
  */
@@ -27,11 +29,12 @@ public class FFprobe {
 	final static Logger LOG = LoggerFactory.getLogger(FFprobe.class);
 
 	final Gson gson = setupGson();
-	
+
 	final String path;
 
 	/**
-	 * Function to run FFmpeg. We define it like this so we can swap it out (during testing)
+	 * Function to run FFmpeg. We define it like this so we can swap it out
+	 * (during testing)
 	 */
 	ProcessFunction runFunc = new RunProcessFunction();
 
@@ -56,17 +59,13 @@ public class FFprobe {
 	public FFmpegProbeResult probe(String mediaPath) throws IOException {
 		ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
 
-		args.add(path)
-			.add("-v", "quiet")
-			.add("-print_format", "json")
-			.add("-show_error")
-			.add("-show_format")
-			.add("-show_streams")
+		args.add(path).add("-v", "quiet").add("-print_format", "json")
+				.add("-show_error").add("-show_format").add("-show_streams")
 
-			//.add("--show_packets")
-			//.add("--show_frames")
+				// .add("--show_packets")
+				// .add("--show_frames")
 
-			.add(mediaPath);
+				.add(mediaPath);
 
 		Reader reader = runFunc.run(args.build());
 

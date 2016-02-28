@@ -51,7 +51,8 @@ public class LoggingFilterReader extends FilterReader {
 
     // If end of stream, or contains new line
     if (ret == -1 || indexOf(cbuf, LOG_CHAR, off, ret) != -1) {
-      // BUG this will log a unfinished line, if a string such as "line \n unfinished" is read.
+      // BUG this will log a unfinished line, if a string such as
+      // "line \n unfinished" is read.
       log();
     }
 
@@ -62,7 +63,7 @@ public class LoggingFilterReader extends FilterReader {
   public int read() throws IOException {
     int ret = super.read();
     if (ret != -1) {
-      buffer.append((char)ret);
+      buffer.append((char) ret);
     }
 
     // If end of stream, or contains new line

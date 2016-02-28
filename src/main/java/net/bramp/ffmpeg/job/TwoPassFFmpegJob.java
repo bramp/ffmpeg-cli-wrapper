@@ -14,7 +14,8 @@ public class TwoPassFFmpegJob extends FFmpegJob {
 	final List<String> args1;
 	final List<String> args2;
 
-	public TwoPassFFmpegJob(FFmpeg ffmpeg, List<String> args1, List<String> args2) {
+	public TwoPassFFmpegJob(FFmpeg ffmpeg, List<String> args1,
+			List<String> args2) {
 		super(ffmpeg);
 		this.args1 = args1;
 		this.args2 = args2;
