@@ -5,40 +5,40 @@ by Andrew Brampton ([bramp.net](http://bramp.net)) (c) 2013-2014,2016
 A fluent interface to running FFmpeg from Java.
 
 ![Java](https://img.shields.io/badge/Java-6+-brightgreen.svg)
-[![Build Status](https://img.shields.io/travis/bramp/ffmpeg-cli-wrapper/gh-pages.svg)](https://travis-ci.org/bramp/ffmpeg-cli-wrapper)
+[![Build Status](https://img.shields.io/travis/bramp/ffmpeg-cli-wrapper/master.svg)](https://travis-ci.org/bramp/ffmpeg-cli-wrapper)
 
-[GitHub](https://github.com/bramp/ffmpeg-cli-wrapper) | [API docs](https://bramp.github.io/ffmpeg-cli-wrapper/apidocs/index.html)
+[GitHub](https://github.com/bramp/ffmpeg-cli-wrapper) | [API docs](https://bramp.github.io/ffmpeg-cli-wrapper/)
 
 Usage
 -----
 
 ```java
-    FFmpeg ffmpeg = new FFmpeg("/path/to/ffmpeg");
-	FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
+FFmpeg ffmpeg = new FFmpeg("/path/to/ffmpeg");
+FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
 
-    FFmpegBuilder builder = new FFmpegBuilder()
-    	.setInput(in)
-    	.overrideOutputFiles(true)
-    	.addOutput("output.mp4")
-	        .setFormat("mp4")
-	        .setTargetSize(250000)
-	        
-	        .disableSubtitle()
-	        
-	        .setAudioChannels(1)
-	        .setAudioCodec("libfdk_aac")
-	        .setAudioRate(48000)
-	        .setAudioBitrate(32768)
-	        
-	        .setVideoCodec("libx264")
-	        .setVideoFramerate(Fraction.getFraction(24, 1))
-	        .setVideoResolution(640, 480)
-	        
-	        .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
-	        .done();
+FFmpegBuilder builder = new FFmpegBuilder()
+    .setInput(in)
+    .overrideOutputFiles(true)
+    .addOutput("output.mp4")
+        .setFormat("mp4")
+        .setTargetSize(250000)
+        
+        .disableSubtitle()
+        
+        .setAudioChannels(1)
+        .setAudioCodec("libfdk_aac")
+        .setAudioRate(48000)
+        .setAudioBitrate(32768)
+        
+        .setVideoCodec("libx264")
+        .setVideoFramerate(Fraction.getFraction(24, 1))
+        .setVideoResolution(640, 480)
+        
+        .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
+        .done();
 
-	FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
-	executor.createTwoPassJob(builder).run();
+FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+executor.createTwoPassJob(builder).run();
 ```
 
 Install FFmpeg on Ubuntu
