@@ -42,7 +42,7 @@ public class FFmpegOutputBuilder implements Cloneable {
   public int audio_channels;
   public int audio_sample_rate;
   public String audio_bit_depth;
-  public int audio_bit_rate;
+  public long audio_bit_rate;
   public int audio_quality;
 
   public boolean video_enabled = true;
@@ -50,7 +50,7 @@ public class FFmpegOutputBuilder implements Cloneable {
   public Fraction video_frame_rate;
   public int video_width;
   public int video_height;
-  public int video_bit_rate;
+  public long video_bit_rate;
   public Integer video_frames;
   public String video_preset;
   public String video_filter;
@@ -60,7 +60,7 @@ public class FFmpegOutputBuilder implements Cloneable {
   public FFmpegBuilder.Strict strict = FFmpegBuilder.Strict.NORMAL;
 
   public long targetSize = 0; // in bytes
-  public int pass_padding_bitrate = 1024; // in bits per second
+  public long pass_padding_bitrate = 1024; // in bits per second
 
   public boolean throwWarnings = true;
 
@@ -120,7 +120,7 @@ public class FFmpegOutputBuilder implements Cloneable {
     return this;
   }
 
-  public FFmpegOutputBuilder setVideoBitRate(int bit_rate) {
+  public FFmpegOutputBuilder setVideoBitRate(long bit_rate) {
     Preconditions.checkArgument(bit_rate > 0, "bitrate must be positive");
     this.video_enabled = true;
     this.video_bit_rate = bit_rate;
@@ -248,7 +248,7 @@ public class FFmpegOutputBuilder implements Cloneable {
    * @param bit_rate
    * @return this
    */
-  public FFmpegOutputBuilder setAudioBitRate(int bit_rate) {
+  public FFmpegOutputBuilder setAudioBitRate(long bit_rate) {
     Preconditions.checkArgument(bit_rate > 0, "bitrate must be positive");
     this.audio_enabled = true;
     this.audio_bit_rate = bit_rate;
@@ -317,7 +317,7 @@ public class FFmpegOutputBuilder implements Cloneable {
    * @param bitrate
    * @return this
    */
-  public FFmpegOutputBuilder setPassPaddingBitrate(int bitrate) {
+  public FFmpegOutputBuilder setPassPaddingBitrate(long bitrate) {
     Preconditions.checkArgument(bitrate > 0, "bitrate must be positive");
     this.pass_padding_bitrate = bitrate;
     return this;
@@ -359,14 +359,14 @@ public class FFmpegOutputBuilder implements Cloneable {
       // TODO factor in start time and/or number of frames
 
       double durationInSeconds = input.format.duration;
-      int totalBitRate =
-          (int) Math.floor((targetSize * 8) / durationInSeconds) - pass_padding_bitrate;
+      long totalBitRate =
+          (long) Math.floor((targetSize * 8) / durationInSeconds) - pass_padding_bitrate;
 
       // TODO Calculate audioBitRate
 
       if (video_enabled && video_bit_rate == 0) {
         // Video (and possibly audio)
-        int audioBitRate = audio_enabled ? audio_bit_rate : 0;
+        long audioBitRate = audio_enabled ? audio_bit_rate : 0;
         video_bit_rate = totalBitRate - audioBitRate;
       } else if (audio_enabled && audio_bit_rate == 0) {
         // Just Audio

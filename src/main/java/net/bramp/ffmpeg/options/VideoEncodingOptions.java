@@ -16,7 +16,7 @@ public class VideoEncodingOptions {
   public final Fraction frame_rate;
   public final int width;
   public final int height;
-  public final int bit_rate;
+  public final long bit_rate;
   public final Integer frames;
   public final String filter;
   public final String preset;
@@ -24,7 +24,7 @@ public class VideoEncodingOptions {
   @ConstructorProperties({"enabled", "codec", "frame_rate", "width", "height", "bit_rate",
       "frames", "video_filter", "preset"})
   public VideoEncodingOptions(boolean enabled, String codec, Fraction frame_rate, int width,
-      int height, int bit_rate, Integer frames, String filter, String preset) {
+      int height, long bit_rate, Integer frames, String filter, String preset) {
     this.enabled = enabled;
     this.codec = codec;
     this.frame_rate = frame_rate;
