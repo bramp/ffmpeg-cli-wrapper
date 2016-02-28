@@ -1,6 +1,8 @@
 package net.bramp.ffmpeg;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,6 +32,9 @@ import java.util.concurrent.TimeUnit;
 public class FFprobe {
 
   final static Logger LOG = LoggerFactory.getLogger(FFprobe.class);
+
+  final static String DEFAULT_PATH = MoreObjects.firstNonNull(System.getenv("FFPROBE"), "ffprobe");
+
   final static Gson gson = setupGson();
 
   final String path;
@@ -40,7 +45,7 @@ public class FFprobe {
   ProcessFunction runFunc = new RunProcessFunction();
 
   public FFprobe() {
-    this.path = "ffprobe";
+    this(DEFAULT_PATH);
   }
 
   public FFprobe(@Nonnull String path) {
@@ -79,7 +84,7 @@ public class FFprobe {
 
       FFmpegProbeResult result = gson.fromJson(reader, FFmpegProbeResult.class);
 
-      FFmpegUtils.throwOnError(p);
+      FFmpegUtils.throwOnError("ffprobe", p);
 
       if (result == null) {
         throw new IllegalStateException("Gson returned null, which shouldn't happen :(");

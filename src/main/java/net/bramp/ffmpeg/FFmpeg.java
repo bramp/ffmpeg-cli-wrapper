@@ -1,13 +1,13 @@
 package net.bramp.ffmpeg;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.info.Codec;
 import net.bramp.ffmpeg.info.Format;
-import net.bramp.ffmpeg.io.ProcessUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang3.math.Fraction;
@@ -18,11 +18,8 @@ import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,6 +32,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class FFmpeg {
 
   final static Logger LOG = LoggerFactory.getLogger(FFmpeg.class);
+
+  final static String DEFAULT_PATH = MoreObjects.firstNonNull(System.getenv("FFMPEG"), "ffmpeg");
 
   public final static Fraction FPS_30 = Fraction.getFraction(30, 1);
   public final static Fraction FPS_29_97 = Fraction.getFraction(30000, 1001);
@@ -90,7 +89,7 @@ public class FFmpeg {
   String version = null;
 
   public FFmpeg() throws IOException {
-    this("ffmpeg", new RunProcessFunction());
+    this(DEFAULT_PATH, new RunProcessFunction());
   }
 
   public FFmpeg(@Nonnull String path) throws IOException {
@@ -98,7 +97,7 @@ public class FFmpeg {
   }
 
   public FFmpeg(ProcessFunction runFunction) throws IOException {
-    this("ffmpeg", runFunction);
+    this(DEFAULT_PATH, runFunction);
   }
 
   public FFmpeg(@Nonnull String path, ProcessFunction runFunction) throws IOException {
@@ -119,7 +118,7 @@ public class FFmpeg {
       BufferedReader r = wrapInReader(p);
       version = r.readLine();
       IOUtils.copy(r, new NullOutputStream()); // Throw away rest of the output
-      FFmpegUtils.throwOnError(p);
+      FFmpegUtils.throwOnError("ffmpeg", p);
     } finally {
       p.destroy();
     }
@@ -143,7 +142,7 @@ public class FFmpeg {
           codecs.add(new Codec(m.group(2), m.group(3), m.group(1)));
         }
 
-        FFmpegUtils.throwOnError(p);
+        FFmpegUtils.throwOnError("ffmpeg", p);
         this.codecs = ImmutableList.copyOf(codecs);
       } finally {
         p.destroy();
@@ -171,7 +170,7 @@ public class FFmpeg {
           formats.add(new Format(m.group(2), m.group(3), m.group(1)));
         }
 
-        FFmpegUtils.throwOnError(p);
+        FFmpegUtils.throwOnError("ffmpeg", p);
         this.formats = ImmutableList.copyOf(formats);
       } finally {
         p.destroy();
@@ -188,7 +187,7 @@ public class FFmpeg {
       // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
       IOUtils.copy(wrapInReader(p), System.out); // TODO Should I be outputting to stdout?
 
-      FFmpegUtils.throwOnError(p);
+      FFmpegUtils.throwOnError("ffmpeg", p);
 
     } finally {
       p.destroy();
