@@ -2,7 +2,6 @@ package net.bramp.ffmpeg.builder;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegUtils;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.slf4j.Logger;
@@ -10,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -43,11 +44,11 @@ public class FFmpegBuilder {
 
   // Input settings
   Long startOffset; // in millis
-  String input;
-  FFmpegProbeResult inputProbe;
+  final List<String> inputs = new ArrayList<>();
+  final Map<String, FFmpegProbeResult> inputProbes = new TreeMap<>();
 
   // Output
-  List<FFmpegOutputBuilder> outputs = new ArrayList<FFmpegOutputBuilder>();
+  final List<FFmpegOutputBuilder> outputs = new ArrayList<FFmpegOutputBuilder>();
 
   public FFmpegBuilder overrideOutputFiles(boolean override) {
     this.override = override;
@@ -68,16 +69,34 @@ public class FFmpegBuilder {
     return this;
   }
 
-  public FFmpegBuilder setInput(String filename) {
-    this.input = filename;
+  public FFmpegBuilder addInput(FFmpegProbeResult result) {
+    checkNotNull(result);
+    String filename = checkNotNull(result.format).filename;
+    inputProbes.put(filename, result);
+    return addInput(filename);
+  }
+
+  public FFmpegBuilder addInput(String filename) {
+    checkNotNull(filename);
+    inputs.add(filename);
     return this;
   }
 
-  public FFmpegBuilder setInput(FFmpegProbeResult result) {
-    this.inputProbe = checkNotNull(result);
-    this.input = checkNotNull(result.format).filename;
+  protected void clearInputs() {
+    inputs.clear();
+    inputProbes.clear();
+  }
 
-    return this;
+  public FFmpegBuilder setInput(FFmpegProbeResult result) {
+    checkNotNull(result);
+    clearInputs();
+    return addInput(result);
+  }
+
+  public FFmpegBuilder setInput(String filename) {
+    checkNotNull(filename);
+    clearInputs();
+    return addInput(filename);
   }
 
   public FFmpegBuilder setStartOffset(long duration, TimeUnit units) {
@@ -111,7 +130,7 @@ public class FFmpegBuilder {
   public List<String> build() {
     ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
 
-    Preconditions.checkArgument(input != null, "Input must be specified");
+    Preconditions.checkArgument(!inputs.isEmpty(), "At least one input must be specified");
     Preconditions.checkArgument(!outputs.isEmpty(), "At least one output must be specified");
 
     args.add(override ? "-y" : "-n");
@@ -121,7 +140,9 @@ public class FFmpegBuilder {
       args.add("-ss").add(FFmpegUtils.millisecondsToString(startOffset));
     }
 
-    args.add("-i").add(input);
+    for (String input : inputs) {
+      args.add("-i").add(input);
+    }
 
     if (pass > 0) {
       args.add("-pass").add(Integer.toString(pass));

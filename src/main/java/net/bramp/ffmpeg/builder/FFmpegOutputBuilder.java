@@ -15,6 +15,7 @@ import org.apache.commons.lang3.math.Fraction;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.google.common.base.Preconditions.checkState;
 import static net.bramp.ffmpeg.FFmpegUtils.millisecondsToString;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -350,11 +351,12 @@ public class FFmpegOutputBuilder implements Cloneable {
     ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
 
     if (targetSize > 0) {
-      FFmpegProbeResult input = parent.inputProbe;
-      if (input == null) {
-        throw new IllegalStateException(
-            "Can not set target size, without using setInput(FFmpegProbeResult)");
-      }
+      checkState(parent.inputs.size() == 1, "Target size does not support multiple inputs");
+
+      String filename = parent.inputs.get(0);
+      FFmpegProbeResult input = parent.inputProbes.get(filename);
+
+      checkState(input != null, "Target size must be used with setInput(FFmpegProbeResult)");
 
       // TODO factor in start time and/or number of frames
 
