@@ -8,7 +8,12 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+apidocs
 
 # IntelliJ
 *.iml
 .idea/
+
+# Testing files
+*.log
+output.mp4
