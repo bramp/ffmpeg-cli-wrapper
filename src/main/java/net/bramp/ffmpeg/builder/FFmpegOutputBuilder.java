@@ -36,7 +36,6 @@ public class FFmpegOutputBuilder implements Cloneable {
 
 	public Long startOffset; // in millis
     public Long duration; // in millis
-    public Integer vframes; 
 
 	public boolean audio_enabled = true;
 	public String audio_codec;
@@ -304,12 +303,6 @@ public class FFmpegOutputBuilder implements Cloneable {
 		return this;
 	}
 
-	public FFmpegOutputBuilder setVframes(Integer vframes) {
-		this.vframes = vframes;
-		return this;
-	}
-	
-	
     public FFmpegOutputBuilder setStrict(FFmpegBuilder.Strict strict) {
         this.strict = checkNotNull(strict);
         return this;
@@ -389,11 +382,12 @@ public class FFmpegOutputBuilder implements Cloneable {
 			args.add("-t").add(millisecondsToString(duration));
 		}
 
-        if (vframes != null) {
-			args.add("-vframes").add(String.format("%d", vframes));
-        }
         
 		if (video_enabled) {
+
+			if (video_frames != null) {
+				args.add("-vframes").add(String.format("%d", video_frames));
+			}
 
 			if (!Strings.isNullOrEmpty(video_codec)) {
 				args.add("-vcodec").add(video_codec);
