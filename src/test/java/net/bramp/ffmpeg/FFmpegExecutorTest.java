@@ -10,66 +10,67 @@ import org.junit.rules.Timeout;
 import java.io.IOException;
 import java.util.concurrent.*;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class FFmpegExecutorTest {
 
-	@Rule
-	public Timeout timeout = new Timeout(30000);
+  @Rule
+  public Timeout timeout = new Timeout(30000);
 
-	final FFmpeg ffmpeg = new FFmpeg();
-	final FFprobe ffprobe = new FFprobe();
+  final FFmpeg ffmpeg = new FFmpeg();
+  final FFprobe ffprobe = new FFprobe();
 
-	final ExecutorService executor = Executors.newSingleThreadExecutor();
+  final ExecutorService executor = Executors.newSingleThreadExecutor();
 
-	public FFmpegExecutorTest() throws IOException {
-	}
+  public FFmpegExecutorTest() throws IOException {}
 
-	@Test
-	public void testTwoPass() throws InterruptedException, ExecutionException,
-			IOException {
-		FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
+  @Test
+  public void testTwoPass() throws InterruptedException, ExecutionException, IOException {
+    FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
 
-		assertFalse(in.hasError());
+    assertFalse(in.hasError());
 
-		FFmpegBuilder builder = new FFmpegBuilder().setInput(in)
-				.overrideOutputFiles(true).addOutput(Samples.output_mp4)
-				.setFormat("mp4").disableAudio().setVideoCodec("mpeg4")
-				.setVideoFrameRate(FFmpeg.FPS_30).setVideoResolution(320, 240)
-				.setTargetSize(1024 * 1024).done();
+    FFmpegBuilder builder =
+        new FFmpegBuilder().setInput(in).overrideOutputFiles(true).addOutput(Samples.output_mp4)
+            .setFormat("mp4").disableAudio().setVideoCodec("mpeg4")
+            .setVideoFrameRate(FFmpeg.FPS_30).setVideoResolution(320, 240)
+            .setTargetSize(1024 * 1024).done();
 
-		FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+    FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 
-		FFmpegJob job = executor.createTwoPassJob(builder);
-		runAndWait(job);
-	}
+    FFmpegJob job = executor.createTwoPassJob(builder);
+    runAndWait(job);
 
-	@Test
-	public void testFilter() throws InterruptedException, ExecutionException,
-			IOException {
+    assertEquals(FFmpegJob.State.FINISHED, job.getState());
+  }
 
-		FFmpegBuilder builder = new FFmpegBuilder()
-				.setInput(Samples.big_buck_bunny_720p_1mb)
-				.overrideOutputFiles(true).addOutput(Samples.output_mp4)
-				.setFormat("mp4").disableAudio().setVideoCodec("mpeg4")
-				.setVideoFilter("scale=320:trunc(ow/a/2)*2").done();
+  @Test
+  public void testFilter() throws InterruptedException, ExecutionException, IOException {
 
-		FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+    FFmpegBuilder builder =
+        new FFmpegBuilder().setInput(Samples.big_buck_bunny_720p_1mb).overrideOutputFiles(true)
+            .addOutput(Samples.output_mp4).setFormat("mp4").disableAudio().setVideoCodec("mpeg4")
+            .setVideoFilter("scale=320:trunc(ow/a/2)*2").done();
 
-		FFmpegJob job = executor.createJob(builder);
-		runAndWait(job);
-	}
+    FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 
-	protected void runAndWait(FFmpegJob job) throws ExecutionException,
-			InterruptedException {
-		Future<?> future = executor.submit(job);
+    FFmpegJob job = executor.createJob(builder);
+    runAndWait(job);
 
-		while (!future.isDone()) {
-			try {
-				future.get(100, TimeUnit.MILLISECONDS);
-				break;
-			} catch (TimeoutException e) {
-			}
-		}
-	}
+    assertEquals(FFmpegJob.State.FINISHED, job.getState());
+  }
+
+  protected void runAndWait(FFmpegJob job) throws ExecutionException, InterruptedException {
+    Future<?> future = executor.submit(job);
+
+    // TODO Why do we loop, and not future.get()?
+    while (!future.isDone()) {
+      try {
+        future.get(100, TimeUnit.MILLISECONDS);
+        break;
+      } catch (TimeoutException e) {
+      }
+    }
+  }
 }
