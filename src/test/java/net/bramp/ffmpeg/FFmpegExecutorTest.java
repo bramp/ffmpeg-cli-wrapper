@@ -16,7 +16,7 @@ import static org.junit.Assert.assertFalse;
 public class FFmpegExecutorTest {
 
   @Rule
-  public Timeout timeout = new Timeout(30000);
+  public Timeout timeout = new Timeout(30, TimeUnit.SECONDS);
 
   final FFmpeg ffmpeg = new FFmpeg();
   final FFprobe ffprobe = new FFprobe();
