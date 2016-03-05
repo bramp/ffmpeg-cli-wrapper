@@ -141,6 +141,18 @@ public class FFmpegOutputBuilder implements Cloneable {
     return this;
   }
 
+  /**
+   * Set the video frame rate in terms of frames per interval. For example 24fps would be 24/1,
+   * however NTSC TV at 23.976fps would be 24000 per 1001
+   * 
+   * @param frames Number of frames
+   * @param per Number of seconds
+   * @return
+   */
+  public FFmpegOutputBuilder setVideoFrameRate(int frames, int per) {
+    return setVideoFrameRate(Fraction.getFraction(frames, per));
+  }
+
   public FFmpegOutputBuilder setVideoFrameRate(double frame_rate) {
     return setVideoFrameRate(Fraction.getFraction(frame_rate));
   }
@@ -225,7 +237,7 @@ public class FFmpegOutputBuilder implements Cloneable {
   }
 
   /**
-   * Sets the Audio Sample Rate, for example 440000
+   * Sets the Audio Sample Rate, for example 44_000
    * 
    * @param sample_rate
    * @return this
