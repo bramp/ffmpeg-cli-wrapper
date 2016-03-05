@@ -12,9 +12,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.nitorcreations.Matchers.reflectEquals;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
  * -psnr
@@ -94,9 +94,9 @@ public class FFmpegBuilderTest {
         new FFmpegBuilder().setInput("input").addOutput("output").useOptions(main)
             .useOptions(audio).useOptions(video).buildOptions();
 
-    assertReflectionEquals(main, options.getMain());
-    assertReflectionEquals(audio, options.getAudio());
-    assertReflectionEquals(video, options.getVideo());
+    assertThat(main, reflectEquals(options.getMain()));
+    assertThat(audio, reflectEquals(options.getAudio()));
+    assertThat(video, reflectEquals(options.getVideo()));
   }
 
   @Test
