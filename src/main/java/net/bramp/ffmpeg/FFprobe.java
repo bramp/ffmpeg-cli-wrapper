@@ -3,6 +3,8 @@ package net.bramp.ffmpeg;
 import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.concurrent.TimeUnit;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Wrapper around FFprobe
@@ -40,22 +44,26 @@ public class FFprobe {
   final String path;
 
   /**
-   * Function to run FFmpeg. We define it like this so we can swap it out (during testing)
+   * Function to run FFprobe. We define it like this so we can swap it out (during testing)
    */
-  ProcessFunction runFunc = new RunProcessFunction();
+  final ProcessFunction runFunc;
 
   public FFprobe() {
-    this(DEFAULT_PATH);
+    this(DEFAULT_PATH, new RunProcessFunction());
   }
 
   public FFprobe(@Nonnull String path) {
-    this.path = path;
+    this(path, new RunProcessFunction());
   }
 
-  private static Gson setupGson() {
-    GsonBuilder builder = new GsonBuilder();
-    builder.registerTypeAdapter(Fraction.class, new FractionAdapter());
-    return builder.create();
+  public FFprobe(@Nonnull ProcessFunction runFunction) {
+    this(DEFAULT_PATH, runFunction);
+  }
+
+  public FFprobe(@Nonnull String path, @Nonnull ProcessFunction runFunction) {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(path));
+    this.runFunc = checkNotNull(runFunction);
+    this.path = path;
   }
 
   public String getPath() {

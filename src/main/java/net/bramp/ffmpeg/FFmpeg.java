@@ -96,11 +96,11 @@ public class FFmpeg {
     this(path, new RunProcessFunction());
   }
 
-  public FFmpeg(ProcessFunction runFunction) throws IOException {
+  public FFmpeg(@Nonnull ProcessFunction runFunction) throws IOException {
     this(DEFAULT_PATH, runFunction);
   }
 
-  public FFmpeg(@Nonnull String path, ProcessFunction runFunction) throws IOException {
+  public FFmpeg(@Nonnull String path, @Nonnull ProcessFunction runFunction) throws IOException {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(path));
     this.runFunc = checkNotNull(runFunction);
     this.path = path;
