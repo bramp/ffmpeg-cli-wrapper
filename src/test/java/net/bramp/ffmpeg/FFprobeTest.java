@@ -51,6 +51,9 @@ public class FFprobeTest {
     assertThat(info.getStreams().get(0).codec_type, is(FFmpegStream.CodecType.VIDEO));
     assertThat(info.getStreams().get(1).codec_type, is(FFmpegStream.CodecType.AUDIO));
 
+    assertThat(info.getStreams().get(1).channels, is(6));
+    assertThat(info.getStreams().get(1).sample_rate, is(48_000));
+
     System.out.println(FFmpegUtils.getGson().toJson(info));
   }
 
@@ -63,6 +66,9 @@ public class FFprobeTest {
     assertThat(info.getStreams(), hasSize(2));
     assertThat(info.getStreams().get(0).codec_type, is(FFmpegStream.CodecType.VIDEO));
     assertThat(info.getStreams().get(1).codec_type, is(FFmpegStream.CodecType.AUDIO));
+
+    assertThat(info.getStreams().get(1).channels, is(2));
+    assertThat(info.getStreams().get(1).sample_rate, is(48_000));
 
     // Test a UTF-8 name
     assertThat(info.getFormat().filename,
