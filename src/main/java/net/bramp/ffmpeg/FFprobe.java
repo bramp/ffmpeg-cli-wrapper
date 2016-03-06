@@ -77,11 +77,19 @@ public class FFprobe {
   public FFmpegProbeResult probe(String mediaPath) throws IOException {
     ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
 
+    // TODO Add:
     // .add("--show_packets")
     // .add("--show_frames")
 
-    args.add(path).add("-v", "quiet").add("-print_format", "json").add("-show_error")
-        .add("-show_format").add("-show_streams").add(mediaPath);
+    // @formatter:off
+    args.add(path)
+        .add("-v", "quiet")
+        .add("-print_format", "json")
+        .add("-show_error")
+        .add("-show_format")
+        .add("-show_streams")
+        .add(mediaPath);
+    // @formatter:on
 
     Process p = runFunc.run(args.build());
     try {

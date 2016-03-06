@@ -3,6 +3,7 @@ package net.bramp.ffmpeg;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.bramp.commons.lang3.math.gson.FractionAdapter;
+import net.bramp.ffmpeg.gson.LowercaseEnumTypeAdapterFactory;
 import net.bramp.ffmpeg.gson.NamedBitsetAdapter;
 import net.bramp.ffmpeg.io.ProcessUtils;
 import net.bramp.ffmpeg.probe.FFmpegDisposition;
@@ -66,6 +67,8 @@ public final class FFmpegUtils {
 
   private static Gson setupGson() {
     GsonBuilder builder = new GsonBuilder();
+
+    builder.registerTypeAdapterFactory(new LowercaseEnumTypeAdapterFactory());
     builder.registerTypeAdapter(Fraction.class, new FractionAdapter());
     builder.registerTypeAdapter(FFmpegDisposition.class, new NamedBitsetAdapter<>(
         FFmpegDisposition.class));
