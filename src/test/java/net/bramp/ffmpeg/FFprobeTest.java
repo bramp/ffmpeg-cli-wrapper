@@ -65,7 +65,8 @@ public class FFprobeTest {
     assertThat(info.getStreams().get(1).codec_type, is(FFmpegStream.CodecType.AUDIO));
 
     // Test a UTF-8 name
-    assertThat(info.getFormat().filename, is("c:\\Users\\Bob\\Always On My Mind [Program Only] - Adelén.mp4"));
+    assertThat(info.getFormat().filename,
+        is("c:\\Users\\Bob\\Always On My Mind [Program Only] - Adelén.mp4"));
 
     System.out.println(FFmpegUtils.getGson().toJson(info));
   }

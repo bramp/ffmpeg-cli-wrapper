@@ -14,7 +14,9 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Taken from https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/TypeAdapterFactory.html
+ * Taken from: <a href=
+ * "https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/TypeAdapterFactory.html"
+ * >TypeAdapterFactory</a>
  */
 public class LowercaseEnumTypeAdapterFactory implements TypeAdapterFactory {
   public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
