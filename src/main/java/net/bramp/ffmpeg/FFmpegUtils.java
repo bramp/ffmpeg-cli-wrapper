@@ -13,6 +13,8 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 public final class FFmpegUtils {
 
+  final static Gson gson = FFmpegUtils.setupGson();
+
   private FFmpegUtils() {}
 
   /**
@@ -50,5 +52,18 @@ public final class FFmpegUtils {
     } catch (TimeoutException e) {
       throw new IOException("Timed out waiting for " + cmd + " to finish.");
     }
+  }
+
+  static Gson getGson() {
+    return gson;
+  }
+
+  private static Gson setupGson() {
+    GsonBuilder builder = new GsonBuilder();
+    builder.registerTypeAdapter(Fraction.class, new FractionAdapter());
+    builder.registerTypeAdapter(FFmpegDisposition.class, new NamedBitsetAdapter<>(
+        FFmpegDisposition.class));
+
+    return builder.create();
   }
 }

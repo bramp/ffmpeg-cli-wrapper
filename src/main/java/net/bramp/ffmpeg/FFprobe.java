@@ -39,7 +39,7 @@ public class FFprobe {
 
   final static String DEFAULT_PATH = MoreObjects.firstNonNull(System.getenv("FFPROBE"), "ffprobe");
 
-  final static Gson gson = setupGson();
+  final static Gson gson = FFmpegUtils.getGson();
 
   final String path;
 
