@@ -2,6 +2,8 @@ package net.bramp.ffmpeg.info;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Information about supported Codecs
@@ -80,14 +82,12 @@ public class Codec {
 
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof Codec)) {
-      return false;
-    }
+    return EqualsBuilder.reflectionEquals(this, obj);
+  }
 
-    Codec that = (Codec) obj;
-    return Objects.equal(this.name, that.name) && Objects.equal(this.longName, that.longName)
-        && (this.type == that.type) && (this.canEncode == that.canEncode)
-        && (this.canDecode == that.canDecode);
+  @Override
+  public int hashCode() {
+    return HashCodeBuilder.reflectionHashCode(this);
   }
 
   public String getName() {

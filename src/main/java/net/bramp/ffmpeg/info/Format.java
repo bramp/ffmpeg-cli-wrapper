@@ -2,6 +2,8 @@ package net.bramp.ffmpeg.info;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Information about supported Format
@@ -36,13 +38,12 @@ public class Format {
 
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof Format)) {
-      return false;
-    }
+    return EqualsBuilder.reflectionEquals(this, obj);
+  }
 
-    Format that = (Format) obj;
-    return Objects.equal(this.name, that.name) && Objects.equal(this.longName, that.longName)
-        && (this.canMux == that.canMux) && (this.canDemux == that.canDemux);
+  @Override
+  public int hashCode() {
+    return HashCodeBuilder.reflectionHashCode(this);
   }
 
   public String getName() {

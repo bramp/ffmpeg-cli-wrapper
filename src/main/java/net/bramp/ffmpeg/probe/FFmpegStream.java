@@ -1,9 +1,12 @@
 package net.bramp.ffmpeg.probe;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.math.Fraction;
 
 import java.util.Map;
 
+@SuppressFBWarnings(value = {"UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"},
+    justification = "POJO objects where the fields are populated by gson")
 public class FFmpegStream {
 
   public enum CodecType {

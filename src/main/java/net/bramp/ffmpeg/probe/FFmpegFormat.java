@@ -1,7 +1,12 @@
 package net.bramp.ffmpeg.probe;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.util.Map;
 
+@SuppressFBWarnings(value = {"UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD",
+    "UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD"},
+    justification = "POJO objects where the fields are populated by gson")
 public class FFmpegFormat {
   public String filename;
   public int nb_streams;
