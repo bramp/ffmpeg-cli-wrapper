@@ -40,13 +40,13 @@ public class FFmpegTest {
     ffmpeg = new FFmpeg(runFunc);
   }
 
-  protected static InputStream loadResource(String name) {
+  public static InputStream loadResource(String name) {
     checkNotNull(name);
     return FFmpegTest.class.getResourceAsStream(name);
   }
 
   @SuppressWarnings("unchecked")
-  protected static <T> List<T> argThatHasItem(T s) {
+  public static <T> List<T> argThatHasItem(T s) {
     return (List<T>) argThat(hasItem(s));
   }
 
