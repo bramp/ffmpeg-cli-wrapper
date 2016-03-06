@@ -24,7 +24,7 @@
 <span class="sourceLineNo">016</span>  public final Fraction frame_rate;<a name="line.16"></a>
 <span class="sourceLineNo">017</span>  public final int width;<a name="line.17"></a>
 <span class="sourceLineNo">018</span>  public final int height;<a name="line.18"></a>
-<span class="sourceLineNo">019</span>  public final int bit_rate;<a name="line.19"></a>
+<span class="sourceLineNo">019</span>  public final long bit_rate;<a name="line.19"></a>
 <span class="sourceLineNo">020</span>  public final Integer frames;<a name="line.20"></a>
 <span class="sourceLineNo">021</span>  public final String filter;<a name="line.21"></a>
 <span class="sourceLineNo">022</span>  public final String preset;<a name="line.22"></a>
@@ -32,7 +32,7 @@
 <span class="sourceLineNo">024</span>  @ConstructorProperties({"enabled", "codec", "frame_rate", "width", "height", "bit_rate",<a name="line.24"></a>
 <span class="sourceLineNo">025</span>      "frames", "video_filter", "preset"})<a name="line.25"></a>
 <span class="sourceLineNo">026</span>  public VideoEncodingOptions(boolean enabled, String codec, Fraction frame_rate, int width,<a name="line.26"></a>
-<span class="sourceLineNo">027</span>      int height, int bit_rate, Integer frames, String filter, String preset) {<a name="line.27"></a>
+<span class="sourceLineNo">027</span>      int height, long bit_rate, Integer frames, String filter, String preset) {<a name="line.27"></a>
 <span class="sourceLineNo">028</span>    this.enabled = enabled;<a name="line.28"></a>
 <span class="sourceLineNo">029</span>    this.codec = codec;<a name="line.29"></a>
 <span class="sourceLineNo">030</span>    this.frame_rate = frame_rate;<a name="line.30"></a>

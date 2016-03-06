@@ -104,11 +104,11 @@
 <span class="sourceLineNo">096</span>    this(path, new RunProcessFunction());<a name="line.96"></a>
 <span class="sourceLineNo">097</span>  }<a name="line.97"></a>
 <span class="sourceLineNo">098</span><a name="line.98"></a>
-<span class="sourceLineNo">099</span>  public FFmpeg(ProcessFunction runFunction) throws IOException {<a name="line.99"></a>
+<span class="sourceLineNo">099</span>  public FFmpeg(@Nonnull ProcessFunction runFunction) throws IOException {<a name="line.99"></a>
 <span class="sourceLineNo">100</span>    this(DEFAULT_PATH, runFunction);<a name="line.100"></a>
 <span class="sourceLineNo">101</span>  }<a name="line.101"></a>
 <span class="sourceLineNo">102</span><a name="line.102"></a>
-<span class="sourceLineNo">103</span>  public FFmpeg(@Nonnull String path, ProcessFunction runFunction) throws IOException {<a name="line.103"></a>
+<span class="sourceLineNo">103</span>  public FFmpeg(@Nonnull String path, @Nonnull ProcessFunction runFunction) throws IOException {<a name="line.103"></a>
 <span class="sourceLineNo">104</span>    Preconditions.checkArgument(!Strings.isNullOrEmpty(path));<a name="line.104"></a>
 <span class="sourceLineNo">105</span>    this.runFunc = checkNotNull(runFunction);<a name="line.105"></a>
 <span class="sourceLineNo">106</span>    this.path = path;<a name="line.106"></a>
