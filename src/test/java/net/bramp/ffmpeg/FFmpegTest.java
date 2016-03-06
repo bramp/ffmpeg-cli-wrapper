@@ -42,7 +42,7 @@ public class FFmpegTest {
 
   public static InputStream loadResource(String name) {
     checkNotNull(name);
-    return FFmpegTest.class.getResourceAsStream(name);
+    return FFmpegTest.class.getResourceAsStream("fixtures/" + name);
   }
 
   @SuppressWarnings("unchecked")
