@@ -1,6 +1,12 @@
 package net.bramp.ffmpeg;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.bramp.commons.lang3.math.gson.FractionAdapter;
+import net.bramp.ffmpeg.gson.NamedBitsetAdapter;
 import net.bramp.ffmpeg.io.ProcessUtils;
+import net.bramp.ffmpeg.probe.FFmpegDisposition;
+import org.apache.commons.lang3.math.Fraction;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
