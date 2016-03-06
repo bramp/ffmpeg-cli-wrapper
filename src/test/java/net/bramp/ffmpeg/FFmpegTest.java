@@ -28,18 +28,6 @@ public class FFmpegTest {
 
   FFmpeg ffmpeg;
 
-  private static class NewProcessAnswer implements Answer<Process> {
-    final String resource;
-
-    private NewProcessAnswer(String resource) {
-      this.resource = resource;
-    }
-
-    @Override
-    public Process answer(InvocationOnMock invocationOnMock) throws Throwable {
-      return new MockProcess(loadResource(resource));
-    }
-  }
 
   @Before
   public void before() throws IOException {
