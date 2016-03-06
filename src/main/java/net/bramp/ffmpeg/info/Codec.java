@@ -13,14 +13,13 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class Codec {
 
-  static enum Type {
+  enum Type {
     VIDEO, AUDIO, SUBTITLE
   };
 
   final String name;
   final String longName;
 
-  // All the flags
   /**
    * Can I decode with this codec
    */

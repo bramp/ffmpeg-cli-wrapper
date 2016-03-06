@@ -22,8 +22,11 @@ public class Format {
     this.name = Preconditions.checkNotNull(name).trim();
     this.longName = Preconditions.checkNotNull(longName).trim();
 
-    /*
-     * {@literal D. = Demuxing supported .E = Muxing supported }
+    /**
+     * {@literal
+     * D. = Demuxing supported
+     * .E = Muxing supported
+     * }
      */
     Preconditions.checkNotNull(flags);
     Preconditions.checkArgument(flags.length() == 2, "Format flags is invalid '{}'", flags);
