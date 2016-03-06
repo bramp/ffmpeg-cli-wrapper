@@ -1,4 +1,4 @@
-package net.bramp.ffmpeg;
+package net.bramp.ffmpeg.lang;
 
 import java.io.InputStream;
 import java.io.OutputStream;

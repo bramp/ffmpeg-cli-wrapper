@@ -1,4 +1,4 @@
-package net.bramp.ffmpeg;
+package net.bramp.ffmpeg.fixtures;
 
 public abstract class Samples {
   private Samples() {}

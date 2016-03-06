@@ -1,4 +1,4 @@
-package net.bramp.ffmpeg;
+package net.bramp.ffmpeg.fixtures;
 
 import net.bramp.ffmpeg.info.Codec;
 
