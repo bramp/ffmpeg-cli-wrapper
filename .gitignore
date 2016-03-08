@@ -16,4 +16,5 @@ apidocs
 
 # Testing files
 *.log
+*.log.mbtree
 output.mp4
