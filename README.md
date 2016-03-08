@@ -13,14 +13,16 @@ A fluent interface to running FFmpeg from Java.
 Usage
 -----
 
+Maven:
 ```xml
 <dependency>
   <groupId>net.bramp.ffmpeg</groupId>
   <artifactId>ffmpeg</artifactId>
-  <version>0.3</version>
+  <version>0.4</version>
 </dependency>
 ```
 
+Code:
 ```java
 FFmpeg ffmpeg = new FFmpeg("/path/to/ffmpeg");
 FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
@@ -55,6 +57,24 @@ executor.createJob(builder).run();
 
 // Or run a two-pass encode (which is slower at the cost of better quality)
 executor.createTwoPassJob(builder).run();
+```
+
+Building & Releasing
+--------------
+If you wish to make changes, then building and releasing is simple:
+```bash
+# To build
+mvn
+
+# To test
+mvn test
+
+# To release (pushing jar to maven central)
+mvn release:prepare
+mvn release:perform
+
+# To publish javadoc
+mvn clean javadoc:aggregate scm-publish:publish-scm
 ```
 
 Install FFmpeg on Ubuntu
