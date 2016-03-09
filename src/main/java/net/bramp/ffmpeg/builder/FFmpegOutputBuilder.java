@@ -24,6 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class FFmpegOutputBuilder implements Cloneable {
 
+  private static final String BITRATE_MUST_BE_POSITIVE = "bitrate must be positive";
   final private static String DEVNULL = SystemUtils.IS_OS_WINDOWS ? "NUL" : "/dev/null";
 
   FFmpegBuilder parent;
@@ -123,7 +124,7 @@ public class FFmpegOutputBuilder implements Cloneable {
   }
 
   public FFmpegOutputBuilder setVideoBitRate(long bit_rate) {
-    Preconditions.checkArgument(bit_rate > 0, "bitrate must be positive");
+    Preconditions.checkArgument(bit_rate > 0, BITRATE_MUST_BE_POSITIVE);
     this.video_enabled = true;
     this.video_bit_rate = bit_rate;
     return this;
@@ -269,7 +270,7 @@ public class FFmpegOutputBuilder implements Cloneable {
    * @return this
    */
   public FFmpegOutputBuilder setAudioBitRate(long bit_rate) {
-    Preconditions.checkArgument(bit_rate > 0, "bitrate must be positive");
+    Preconditions.checkArgument(bit_rate > 0, BITRATE_MUST_BE_POSITIVE);
     this.audio_enabled = true;
     this.audio_bit_rate = bit_rate;
     return this;
@@ -338,7 +339,7 @@ public class FFmpegOutputBuilder implements Cloneable {
    * @return this
    */
   public FFmpegOutputBuilder setPassPaddingBitrate(long bitrate) {
-    Preconditions.checkArgument(bitrate > 0, "bitrate must be positive");
+    Preconditions.checkArgument(bitrate > 0, BITRATE_MUST_BE_POSITIVE);
     this.pass_padding_bitrate = bitrate;
     return this;
   }

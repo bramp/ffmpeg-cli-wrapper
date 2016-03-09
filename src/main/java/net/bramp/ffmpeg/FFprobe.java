@@ -70,7 +70,7 @@ public class FFprobe {
     return path;
   }
 
-  private BufferedReader wrapInReader(Process p) {
+  private static BufferedReader wrapInReader(Process p) {
     return new BufferedReader(new InputStreamReader(p.getInputStream(), Charsets.UTF_8));
   }
 
