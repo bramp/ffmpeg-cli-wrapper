@@ -112,18 +112,18 @@ public class FFmpeg {
   }
 
   public synchronized @Nonnull String version() throws IOException {
-    String version;
+    String readVersion;
     Process p = runFunc.run(ImmutableList.of(path, "-version"));
     try {
       BufferedReader r = wrapInReader(p);
-      version = r.readLine();
+      readVersion = r.readLine();
       IOUtils.copy(r, new NullOutputStream()); // Throw away rest of the output
       FFmpegUtils.throwOnError("ffmpeg", p);
     } finally {
       p.destroy();
     }
 
-    return version;
+    return readVersion;
   }
 
   public synchronized @Nonnull List<Codec> codecs() throws IOException {

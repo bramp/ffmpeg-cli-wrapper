@@ -94,7 +94,7 @@ public class NamedBitsetAdapter<T> extends TypeAdapter<T> {
       return;
     }
 
-    assert (value.getClass().equals(clazz));
+    assert value.getClass().equals(clazz);
 
     writer.beginObject();
     for (Field f : clazz.getFields()) {

@@ -372,8 +372,8 @@ public class FFmpegOutputBuilder implements Cloneable {
     if (targetSize > 0) {
       checkState(parent.inputs.size() == 1, "Target size does not support multiple inputs");
 
-      String filename = parent.inputs.get(0);
-      FFmpegProbeResult input = parent.inputProbes.get(filename);
+      String filenameAtZeroIndex = parent.inputs.get(0);
+      FFmpegProbeResult input = parent.inputProbes.get(filenameAtZeroIndex);
 
       checkState(input != null, "Target size must be used with setInput(FFmpegProbeResult)");
 
@@ -498,10 +498,5 @@ public class FFmpegOutputBuilder implements Cloneable {
     }
 
     return args.build();
-  }
-
-  @Override
-  public Object clone() throws CloneNotSupportedException {
-    return super.clone();
   }
 }
