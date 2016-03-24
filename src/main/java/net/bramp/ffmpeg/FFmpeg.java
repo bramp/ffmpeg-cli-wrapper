@@ -194,7 +194,7 @@ public class FFmpeg {
     }
   }
 
-  public FFmpegBuilder buider() {
+  public FFmpegBuilder builder() {
     return new FFmpegBuilder();
   }
 
