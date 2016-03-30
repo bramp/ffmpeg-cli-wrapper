@@ -48,9 +48,11 @@ public class FFmpegOutputBuilder implements Cloneable {
 
   public boolean video_enabled = true;
   public String video_codec;
+  public boolean video_copyinkf = false;
   public Fraction video_frame_rate;
   public int video_width;
   public int video_height;
+  public String video_movflags;
   public long video_bit_rate;
   public Integer video_frames;
   public String video_preset;
@@ -132,6 +134,18 @@ public class FFmpegOutputBuilder implements Cloneable {
   public FFmpegOutputBuilder setVideoCodec(String codec) {
     this.video_enabled = true;
     this.video_codec = checkNotNull(codec);
+    return this;
+  }
+
+  public FFmpegOutputBuilder setVideoCopyInkf(boolean copyinkf) {
+    this.video_enabled = true;
+    this.video_copyinkf = copyinkf;
+    return this;
+  }
+
+  public FFmpegOutputBuilder setVideoMovFlags(String movflags) {
+    this.video_enabled = true;
+    this.video_movflags = checkNotNull(video_movflags);
     return this;
   }
 
@@ -419,6 +433,14 @@ public class FFmpegOutputBuilder implements Cloneable {
 
       if (!Strings.isNullOrEmpty(video_codec)) {
         args.add("-vcodec").add(video_codec);
+      }
+
+      if (video_copyinkf) {
+        args.add("-copyinkf");
+      }
+
+      if (!Strings.isNullOrEmpty(video_movflags)) {
+        args.add("-movflags").add(video_movflags);
       }
 
       if (video_width != 0 && video_height != 0) {
