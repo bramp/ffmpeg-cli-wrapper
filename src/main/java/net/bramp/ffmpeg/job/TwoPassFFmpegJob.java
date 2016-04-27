@@ -45,6 +45,13 @@ public class TwoPassFFmpegJob extends FFmpegJob {
 		Files.deleteIfExists(path);
 	}
 
+	private boolean callback() {
+		boolean callbackValid = (ffmpegCallback != null);
+		if (callbackValid)
+			ffmpegCallback.callback(state);
+		return callbackValid;
+	}
+
 	public void run() {
 		state = State.RUNNING;
 
@@ -58,12 +65,11 @@ public class TwoPassFFmpegJob extends FFmpegJob {
 
 		} catch (Throwable t) {
 			state = State.FAILED;
-			if (ffmpegCallback != null)
-				ffmpegCallback.callback(state);
-			Throwables.propagate(t);
+			if (!callback())
+				Throwables.propagate(t);
 		} finally {
-			if (ffmpegCallback != null)
-				ffmpegCallback.callback(state);
+			if (state != State.FAILED)
+				callback();
 		}
 	}
 }

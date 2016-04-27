@@ -31,13 +31,19 @@ public class SinglePassFFmpegJob extends FFmpegJob {
 
 		} catch (Throwable t) {
 			state = State.FAILED;
-			if (ffmpegCallback != null)
-				ffmpegCallback.callback(state);
-			else
+			if (!callback())
 				Throwables.propagate(t);
+
 		} finally {
-			if (ffmpegCallback != null)
-				ffmpegCallback.callback(state);
+			if (state != State.FAILED)
+				callback();
 		}
+	}
+
+	private boolean callback() {
+		boolean callbackValid = (ffmpegCallback != null);
+		if (callbackValid)
+			ffmpegCallback.callback(state);
+		return callbackValid;
 	}
 }
