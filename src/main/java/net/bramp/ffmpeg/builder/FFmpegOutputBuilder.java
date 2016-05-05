@@ -13,6 +13,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.math.Fraction;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkState;
@@ -56,6 +57,7 @@ public class FFmpegOutputBuilder implements Cloneable {
   public String video_preset;
   public String video_filter;
   public String video_filter_complex;
+  public List<String> meta_tags;
 
   public boolean subtitle_enabled = true;
 
@@ -220,6 +222,23 @@ public class FFmpegOutputBuilder implements Cloneable {
   public FFmpegOutputBuilder setComplexVideoFilter(String filter) {
     this.video_enabled = true;
     this.video_filter_complex = checkNotNull(filter);
+    return this;
+  }
+
+  /**
+   * Allows to add metadata to output video. Which keys are possible depends on the used output
+   * video codec.
+   * 
+   * @param key Metadata key, e.g. "comment"
+   * @param value Value to set for key
+   * @return This instance
+   */
+  public FFmpegOutputBuilder addMetaTag(String key, String value) {
+    this.video_enabled = true;
+    if (this.meta_tags == null) {
+      this.meta_tags = new ArrayList<>();
+    }
+    this.meta_tags.add(key + "=" + value);
     return this;
   }
 
@@ -446,6 +465,12 @@ public class FFmpegOutputBuilder implements Cloneable {
 
       if (!Strings.isNullOrEmpty(video_filter_complex)) {
         args.add("-filter_complex").add(video_filter_complex);
+      }
+
+      if (meta_tags != null) {
+        for (String meta : meta_tags) {
+          args.add("-metadata").add(meta);
+        }
       }
 
     } else {

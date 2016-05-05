@@ -109,6 +109,20 @@ public class FFmpegBuilderTest {
         "output1", "-s", "640x480", "output2")));
   }
 
+  /**
+   * Tests whether setting meta tags works correctly.
+   */
+  @Test
+  public void testMetaTags() {
+    FFmpegBuilder builder =
+      new FFmpegBuilder().setInput("input").addOutput("output").disableAudio().disableSubtitle()
+        .addMetaTag("comment", "MyComment").addMetaTag("title", "video").done();
+
+    List<String> args = builder.build();
+    assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-metadata",
+      "comment=MyComment", "-metadata", "title=video", "-an", "-sn", "output")));
+  }
+
   @Test(expected = IllegalArgumentException.class)
   public void testNothing() {
     FFmpegBuilder builder = new FFmpegBuilder();
