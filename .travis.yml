@@ -17,8 +17,8 @@ addons:
 
 before_install:
   - ./travis-install-ffmpeg.sh
-  - export FFMPEG=$PWD/ffmpeg-3.0-64bit-static/ffmpeg
-  - export FFPROBE=$PWD/ffmpeg-3.0-64bit-static/ffprobe
+  - export FFMPEG=$PWD/ffmpeg-release-64bit-static/ffmpeg
+  - export FFPROBE=$PWD/ffmpeg-release-64bit-static/ffprobe
 
 install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true -B -V

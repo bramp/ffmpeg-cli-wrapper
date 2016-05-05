@@ -1,3 +1,6 @@
+#
+ffmpeg-release-64bit-static
+
 # Maven
 target/
 pom.xml.tag
