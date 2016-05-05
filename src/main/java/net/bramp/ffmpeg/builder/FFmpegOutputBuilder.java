@@ -57,7 +57,7 @@ public class FFmpegOutputBuilder implements Cloneable {
   public String video_preset;
   public String video_filter;
   public String video_filter_complex;
-  public List<String> meta_tags;
+  public List<String> video_meta_tags;
 
   public boolean subtitle_enabled = true;
 
@@ -235,10 +235,11 @@ public class FFmpegOutputBuilder implements Cloneable {
    */
   public FFmpegOutputBuilder addMetaTag(String key, String value) {
     this.video_enabled = true;
-    if (this.meta_tags == null) {
-      this.meta_tags = new ArrayList<>();
+    if (this.video_meta_tags == null) {
+      this.video_meta_tags = new ArrayList<>();
     }
-    this.meta_tags.add(key + "=" + value);
+
+    this.video_meta_tags.add(checkNotNull(key) + "=" + checkNotNull(value).replace("\"", ""));
     return this;
   }
 
@@ -467,9 +468,9 @@ public class FFmpegOutputBuilder implements Cloneable {
         args.add("-filter_complex").add(video_filter_complex);
       }
 
-      if (meta_tags != null) {
-        for (String meta : meta_tags) {
-          args.add("-metadata").add(meta);
+      if (video_meta_tags != null) {
+        for (String meta : video_meta_tags) {
+          args.add("-metadata").add("\"" + meta + "\"");
         }
       }
 

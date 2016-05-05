@@ -115,12 +115,12 @@ public class FFmpegBuilderTest {
   @Test
   public void testMetaTags() {
     FFmpegBuilder builder =
-      new FFmpegBuilder().setInput("input").addOutput("output").disableAudio().disableSubtitle()
-        .addMetaTag("comment", "MyComment").addMetaTag("title", "video").done();
+        new FFmpegBuilder().setInput("input").addOutput("output").disableAudio().disableSubtitle()
+            .addMetaTag("comment", "My Comment").addMetaTag("title", "\"Video\"").done();
 
     List<String> args = builder.build();
     assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-metadata",
-      "comment=MyComment", "-metadata", "title=video", "-an", "-sn", "output")));
+        "\"comment=My Comment\"", "-metadata", "\"title=Video\"", "-an", "-sn", "output")));
   }
 
   @Test(expected = IllegalArgumentException.class)
