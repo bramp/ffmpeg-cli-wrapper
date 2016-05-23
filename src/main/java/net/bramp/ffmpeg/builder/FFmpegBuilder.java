@@ -43,6 +43,7 @@ public class FFmpegBuilder {
   String pass_prefix;
 
   // Input settings
+  String format;
   Long startOffset; // in millis
   final List<String> inputs = new ArrayList<>();
   final Map<String, FFmpegProbeResult> inputProbes = new TreeMap<>();
@@ -99,6 +100,12 @@ public class FFmpegBuilder {
     return addInput(filename);
   }
 
+  public FFmpegBuilder setFormat(String format) {
+    checkNotNull(format);
+    this.format = format;
+    return this;
+  }
+
   public FFmpegBuilder setStartOffset(long duration, TimeUnit units) {
     checkNotNull(duration);
     checkNotNull(units);
@@ -138,6 +145,10 @@ public class FFmpegBuilder {
 
     if (startOffset != null) {
       args.add("-ss").add(FFmpegUtils.millisecondsToString(startOffset));
+    }
+
+    if (format != null) {
+      args.add("-f", format);
     }
 
     for (String input : inputs) {

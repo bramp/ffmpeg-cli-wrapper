@@ -30,16 +30,17 @@ public class FFmpegBuilderTest {
   public void testNormal() {
 
     FFmpegBuilder builder =
-        new FFmpegBuilder().setInput("input").setStartOffset(1500, TimeUnit.MILLISECONDS)
-            .overrideOutputFiles(true).addOutput("output").setFormat("mp4")
-            .setStartOffset(500, TimeUnit.MILLISECONDS).setAudioCodec("aac").setAudioChannels(1)
-            .setAudioSampleRate(48000).setVideoCodec("libx264").setVideoFrameRate(FFmpeg.FPS_30)
-            .setVideoResolution(320, 240).done();
+        new FFmpegBuilder().setFormat("customFormat").setInput("input")
+            .setStartOffset(1500, TimeUnit.MILLISECONDS).overrideOutputFiles(true)
+            .addOutput("output").setFormat("mp4").setStartOffset(500, TimeUnit.MILLISECONDS)
+            .setAudioCodec("aac").setAudioChannels(1).setAudioSampleRate(48000)
+            .setVideoCodec("libx264").setVideoFrameRate(FFmpeg.FPS_30).setVideoResolution(320, 240)
+            .done();
 
     List<String> args = builder.build();
-    assertThat(args, is(Arrays.asList("-y", "-v", "error", "-ss", "00:00:01.500", "-i", "input",
-        "-f", "mp4", "-ss", "00:00:00.500", "-vcodec", "libx264", "-s", "320x240", "-r", "30/1",
-        "-acodec", "aac", "-ac", "1", "-ar", "48000", "output")));
+    assertThat(args, is(Arrays.asList("-y", "-v", "error", "-ss", "00:00:01.500", "-f",
+        "customFormat", "-i", "input", "-f", "mp4", "-ss", "00:00:00.500", "-vcodec", "libx264",
+        "-s", "320x240", "-r", "30/1", "-acodec", "aac", "-ac", "1", "-ar", "48000", "output")));
   }
 
   @Test
