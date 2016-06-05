@@ -7,6 +7,7 @@ import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -123,6 +124,12 @@ public class FFmpegBuilder {
    */
   public FFmpegOutputBuilder addOutput(String filename) {
     FFmpegOutputBuilder output = new FFmpegOutputBuilder(this, filename);
+    outputs.add(output);
+    return output;
+  }
+
+  public FFmpegOutputBuilder addOutput(URI uri) {
+    FFmpegOutputBuilder output = new FFmpegOutputBuilder(this, uri);
     outputs.add(output);
     return output;
   }

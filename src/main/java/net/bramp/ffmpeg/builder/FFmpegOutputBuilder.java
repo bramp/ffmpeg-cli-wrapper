@@ -12,6 +12,7 @@ import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.math.Fraction;
 
+import java.net.URI;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -25,13 +26,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class FFmpegOutputBuilder implements Cloneable {
 
   final private static String DEVNULL = SystemUtils.IS_OS_WINDOWS ? "NUL" : "/dev/null";
+  final private static List<String> rtps = ImmutableList.of("rtsp", "rtp", "rtmp");
+  final private static List<String> udpTcp = ImmutableList.of("udp", "tcp");
 
   FFmpegBuilder parent;
 
   /**
-   * Output filename
+   * Output filename or uri. Only one may be set
    */
   public String filename;
+  public URI uri;
 
   public String format;
 
@@ -66,13 +70,42 @@ public class FFmpegOutputBuilder implements Cloneable {
   public long targetSize = 0; // in bytes
   public long pass_padding_bitrate = 1024; // in bits per second
 
-  public boolean throwWarnings = true;
+  public boolean throwWarnings = true; // TODO Either delete this, or apply it consistently
+
+  /**
+   * Checks if the URI is valid for streaming to
+   * 
+   * @param uri
+   * @return
+   */
+  public static URI checkValidStream(URI uri) {
+    String scheme = checkNotNull(uri).getScheme();
+    scheme = checkNotNull(scheme, "URI is missing a scheme").toLowerCase();
+
+    if (rtps.contains(scheme)) {
+      return uri;
+    }
+
+    if (udpTcp.contains(scheme)) {
+      if (uri.getPort() == -1) {
+        throw new IllegalArgumentException("must set port when using udp or tcp scheme");
+      }
+      return uri;
+    }
+
+    throw new IllegalArgumentException("not a valid output URL, must use rtp/tcp/udp scheme");
+  }
 
   public FFmpegOutputBuilder() {}
 
   protected FFmpegOutputBuilder(FFmpegBuilder parent, String filename) {
-    this.parent = parent;
-    this.filename = filename;
+    this.parent = checkNotNull(parent);
+    this.filename = checkNotNull(filename);
+  }
+
+  protected FFmpegOutputBuilder(FFmpegBuilder parent, URI uri) {
+    this.parent = checkNotNull(parent);
+    this.uri = checkValidStream(uri);
   }
 
   public FFmpegOutputBuilder useOptions(EncodingOptions opts) {
@@ -117,6 +150,15 @@ public class FFmpegOutputBuilder implements Cloneable {
 
   public String getFilename() {
     return filename;
+  }
+
+  public FFmpegOutputBuilder setUri(URI uri) {
+    this.uri = checkValidStream(uri);
+    return this;
+  }
+
+  public URI getUri() {
+    return uri;
   }
 
   public FFmpegOutputBuilder setFormat(String format) {
@@ -388,8 +430,8 @@ public class FFmpegOutputBuilder implements Cloneable {
     if (targetSize > 0) {
       checkState(parent.inputs.size() == 1, "Target size does not support multiple inputs");
 
-      String filename = parent.inputs.get(0);
-      FFmpegProbeResult input = parent.inputProbes.get(filename);
+      String firstInput = parent.inputs.get(0);
+      FFmpegProbeResult input = parent.inputProbes.get(firstInput);
 
       checkState(input != null, "Target size must be used with setInput(FFmpegProbeResult)");
 
@@ -514,11 +556,19 @@ public class FFmpegOutputBuilder implements Cloneable {
     if (!subtitle_enabled)
       args.add("-sn");
 
+    if (filename != null && uri != null) {
+      throw new IllegalStateException("Only one of filename and uri can be set");
+    }
+
     // Output
     if (pass == 1) {
       args.add(DEVNULL);
-    } else {
+    } else if (filename != null) {
       args.add(filename);
+    } else if (uri != null) {
+      args.add(uri.toString());
+    } else {
+      assert (false);
     }
 
     return args.build();

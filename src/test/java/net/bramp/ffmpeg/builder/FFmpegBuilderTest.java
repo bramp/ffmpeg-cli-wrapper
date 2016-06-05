@@ -146,9 +146,26 @@ public class FFmpegBuilderTest {
         "output1", "-s", "640x480", "output2")));
   }
 
+  @Test
+  public void testURLOutput() {
+    // @formatter:off
+    List<String> args = new FFmpegBuilder()
+        .setInput("input")
+        .addOutput("udp://10.1.0.102:1234")
+          .setVideoResolution(320, 240)
+          .done()
+        .build();
+    // @formatter:on
+
+    assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-s", "320x240",
+        "udp://10.1.0.102:1234")));
+  }
+
+
   @Test(expected = IllegalArgumentException.class)
   public void testNothing() {
     FFmpegBuilder builder = new FFmpegBuilder();
     builder.build();
   }
+
 }
