@@ -18,6 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class NamedBitsetAdapter<T> extends TypeAdapter<T> {
 
+  private static final String REFLECTION_ERROR = "Reflection error";
   final Class<T> clazz;
 
   public NamedBitsetAdapter(Class<T> clazz) {
@@ -81,9 +82,9 @@ public class NamedBitsetAdapter<T> extends TypeAdapter<T> {
       return obj;
 
     } catch (InstantiationException e) {
-      throw new IOException("Reflection error", e);
+      throw new IOException(REFLECTION_ERROR, e);
     } catch (IllegalAccessException e) {
-      throw new IOException("Reflection error", e);
+      throw new IOException(REFLECTION_ERROR, e);
     }
   }
 
@@ -114,7 +115,7 @@ public class NamedBitsetAdapter<T> extends TypeAdapter<T> {
         writer.value(b);
 
       } catch (IllegalAccessException e) {
-        throw new IOException("Reflection error", e);
+        throw new IOException(REFLECTION_ERROR, e);
       }
     }
     writer.endObject();

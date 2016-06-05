@@ -31,9 +31,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class FFmpeg {
 
+  private static final String FFMPEG = "ffmpeg";
   final static Logger LOG = LoggerFactory.getLogger(FFmpeg.class);
 
-  final static String DEFAULT_PATH = MoreObjects.firstNonNull(System.getenv("FFMPEG"), "ffmpeg");
+  final static String DEFAULT_PATH = MoreObjects.firstNonNull(System.getenv("FFMPEG"), FFMPEG);
 
   public final static Fraction FPS_30 = Fraction.getFraction(30, 1);
   public final static Fraction FPS_29_97 = Fraction.getFraction(30000, 1001);
@@ -107,7 +108,7 @@ public class FFmpeg {
     this.version = version();
   }
 
-  private BufferedReader wrapInReader(Process p) {
+  private static BufferedReader wrapInReader(Process p) {
     return new BufferedReader(new InputStreamReader(p.getInputStream(), Charsets.UTF_8));
   }
 
@@ -118,7 +119,7 @@ public class FFmpeg {
       BufferedReader r = wrapInReader(p);
       version = r.readLine();
       IOUtils.copy(r, new NullOutputStream()); // Throw away rest of the output
-      FFmpegUtils.throwOnError("ffmpeg", p);
+      FFmpegUtils.throwOnError(FFMPEG, p);
     } finally {
       p.destroy();
     }
@@ -142,7 +143,7 @@ public class FFmpeg {
           codecs.add(new Codec(m.group(2), m.group(3), m.group(1)));
         }
 
-        FFmpegUtils.throwOnError("ffmpeg", p);
+        FFmpegUtils.throwOnError(FFMPEG, p);
         this.codecs = ImmutableList.copyOf(codecs);
       } finally {
         p.destroy();
@@ -170,7 +171,7 @@ public class FFmpeg {
           formats.add(new Format(m.group(2), m.group(3), m.group(1)));
         }
 
-        FFmpegUtils.throwOnError("ffmpeg", p);
+        FFmpegUtils.throwOnError(FFMPEG, p);
         this.formats = ImmutableList.copyOf(formats);
       } finally {
         p.destroy();
@@ -187,7 +188,7 @@ public class FFmpeg {
       // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
       IOUtils.copy(wrapInReader(p), System.out); // TODO Should I be outputting to stdout?
 
-      FFmpegUtils.throwOnError("ffmpeg", p);
+      FFmpegUtils.throwOnError(FFMPEG, p);
 
     } finally {
       p.destroy();
