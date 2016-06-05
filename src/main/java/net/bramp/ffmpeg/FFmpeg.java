@@ -105,7 +105,7 @@ public class FFmpeg {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(path));
     this.runFunc = checkNotNull(runFunction);
     this.path = path;
-    this.version = version();
+    version();
   }
 
   private static BufferedReader wrapInReader(Process p) {
@@ -113,18 +113,18 @@ public class FFmpeg {
   }
 
   public synchronized @Nonnull String version() throws IOException {
-    String readVersion;
-    Process p = runFunc.run(ImmutableList.of(path, "-version"));
-    try {
-      BufferedReader r = wrapInReader(p);
-      readVersion = r.readLine();
-      IOUtils.copy(r, new NullOutputStream()); // Throw away rest of the output
-      FFmpegUtils.throwOnError("ffmpeg", p);
-    } finally {
-      p.destroy();
+    if (this.version == null) {
+      Process p = runFunc.run(ImmutableList.of(path, "-version"));
+      try {
+        BufferedReader r = wrapInReader(p);
+        this.version = r.readLine();
+        IOUtils.copy(r, new NullOutputStream()); // Throw away rest of the output
+        FFmpegUtils.throwOnError(FFMPEG, p);
+      } finally {
+        p.destroy();
+      }
     }
-
-    return readVersion;
+    return version;
   }
 
   public synchronized @Nonnull List<Codec> codecs() throws IOException {
