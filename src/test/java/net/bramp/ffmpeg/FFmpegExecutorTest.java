@@ -62,6 +62,22 @@ public class FFmpegExecutorTest {
     assertEquals(FFmpegJob.State.FINISHED, job.getState());
   }
 
+  @Test
+  public void testMetaTags() throws InterruptedException, ExecutionException, IOException {
+
+    FFmpegBuilder builder =
+        new FFmpegBuilder().setInput(Samples.big_buck_bunny_720p_1mb).overrideOutputFiles(true)
+            .addOutput(Samples.output_mp4).setFormat("mp4").disableAudio().setVideoCodec("mpeg4")
+            .addMetaTag("comment", "This=Nice!").addMetaTag("title", "Big Buck Bunny").done();
+
+    FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+
+    FFmpegJob job = executor.createJob(builder);
+    runAndWait(job);
+
+    assertEquals(FFmpegJob.State.FINISHED, job.getState());
+  }
+
   protected void runAndWait(FFmpegJob job) throws ExecutionException, InterruptedException {
     Future<?> future = executor.submit(job);
 

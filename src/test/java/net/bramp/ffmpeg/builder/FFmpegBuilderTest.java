@@ -167,6 +167,23 @@ public class FFmpegBuilderTest {
         "udp://10.1.0.102:1234")));
   }
 
+  @Test
+  public void testMetaTags() {
+    // @formatter:off
+    List<String> args = new FFmpegBuilder()
+        .setInput("input")
+        .addOutput("output")
+          .disableAudio()
+          .disableSubtitle()
+          .addMetaTag("comment", "My Comment")
+          .addMetaTag("title", "\"Video\"")
+          .done()
+        .build();
+    // @formatter:on
+
+    assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-metadata",
+        "\"comment=My Comment\"", "-metadata", "\"title=Video\"", "-an", "-sn", "output")));
+  }
 
   @Test(expected = IllegalArgumentException.class)
   public void testNothing() {

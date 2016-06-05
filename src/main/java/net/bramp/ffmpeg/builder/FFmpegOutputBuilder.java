@@ -14,6 +14,7 @@ import org.apache.commons.lang3.math.Fraction;
 
 import java.net.URI;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkState;
@@ -49,7 +50,7 @@ public class FFmpegOutputBuilder implements Cloneable {
   public String audio_bit_depth;
   public long audio_bit_rate;
   public int audio_quality;
-  private String audio_bit_stream_filter;
+  public String audio_bit_stream_filter;
 
   public boolean video_enabled = true;
   public String video_codec;
@@ -61,7 +62,8 @@ public class FFmpegOutputBuilder implements Cloneable {
   public String video_preset;
   public String video_filter;
   public String video_filter_complex;
-  private String video_bit_stream_filter;
+  public String video_bit_stream_filter;
+  public List<String> video_meta_tags = new ArrayList<>();
 
   public boolean subtitle_enabled = true;
 
@@ -271,6 +273,22 @@ public class FFmpegOutputBuilder implements Cloneable {
   public FFmpegOutputBuilder setComplexVideoFilter(String filter) {
     this.video_enabled = true;
     this.video_filter_complex = checkNotNull(filter);
+    return this;
+  }
+
+  /**
+   * Allows to add metadata to output video. Which keys are possible depends on the used output
+   * video codec.
+   * 
+   * @param key Metadata key, e.g. "comment"
+   * @param value Value to set for key
+   * @return This instance
+   */
+  public FFmpegOutputBuilder addMetaTag(String key, String value) {
+    this.video_enabled = true;
+    checkNotNull(key, "Key may not be null");
+    checkNotNull(value, "Value may not be null");
+    video_meta_tags.add(key + "=" + value.replace("\"", ""));
     return this;
   }
 
@@ -508,6 +526,10 @@ public class FFmpegOutputBuilder implements Cloneable {
 
       if (!Strings.isNullOrEmpty(video_bit_stream_filter)) {
         args.add("-bsf:v", video_bit_stream_filter);
+      }
+
+      for (String meta : video_meta_tags) {
+        args.add("-metadata").add("\"" + meta + "\"");
       }
 
     } else {
