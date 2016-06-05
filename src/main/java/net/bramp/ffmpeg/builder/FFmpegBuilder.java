@@ -137,7 +137,7 @@ public class FFmpegBuilder {
   /**
    * Create new output (to stdout)
    */
-  public FFmpegOutputBuilder addStreamedOutput() {
+  public FFmpegOutputBuilder addStdoutOutput() {
     return addOutput("-");
   }
 

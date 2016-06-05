@@ -119,9 +119,15 @@ public class FFmpegBuilderTest {
     VideoEncodingOptions video =
         new VideoEncodingOptions(true, "libx264", FFmpeg.FPS_30, 320, 240, 1, null, "", "");
 
-    EncodingOptions options =
-        new FFmpegBuilder().setInput("input").addOutput("output").useOptions(main)
-            .useOptions(audio).useOptions(video).buildOptions();
+    // @formatter:off
+    EncodingOptions options = new FFmpegBuilder()
+        .setInput("input")
+        .addOutput("output")
+          .useOptions(main)
+          .useOptions(audio)
+          .useOptions(video)
+        .buildOptions();
+    // @formatter:on
 
     assertThat(main, reflectEquals(options.getMain()));
     assertThat(audio, reflectEquals(options.getAudio()));
