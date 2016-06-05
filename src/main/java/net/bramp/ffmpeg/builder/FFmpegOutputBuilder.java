@@ -595,9 +595,4 @@ public class FFmpegOutputBuilder implements Cloneable {
 
     return args.build();
   }
-
-  @Override
-  public Object clone() throws CloneNotSupportedException {
-    return super.clone();
-  }
 }

@@ -19,6 +19,10 @@ import static net.bramp.ffmpeg.modelmapper.NotDefaultCondition.notDefault;
  */
 public class Mapper {
 
+  private Mapper() {
+    throw new InstantiationError("Must not instantiate this class");
+  }
+
   final private static ModelMapper mapper = newModelMapper();
 
   private static <S, D> TypeMap<S, D> createTypeMap(ModelMapper mapper, Class<S> sourceType,
