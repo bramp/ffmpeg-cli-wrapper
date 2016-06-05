@@ -145,7 +145,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 
   public FFmpegOutputBuilder setVideoBitStreamFilter(String filter) {
     Preconditions
-            .checkArgument(!Strings.isNullOrEmpty(filter), "filter should be declared by name");
+        .checkArgument(!Strings.isNullOrEmpty(filter), "filter should be declared by name");
     this.video_bit_stream_filter = filter;
     return this;
   }
@@ -206,7 +206,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 
   public FFmpegOutputBuilder setVideoResolution(int width, int height) {
     Preconditions.checkArgument(isValidSize(width) && isValidSize(height),
-            "Both width and height must be -1 or greater than zero");
+        "Both width and height must be -1 or greater than zero");
 
     this.video_enabled = true;
     this.video_width = width;
@@ -293,7 +293,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 
   public FFmpegOutputBuilder setAudioBitStreamFilter(String filter) {
     Preconditions
-            .checkArgument(!Strings.isNullOrEmpty(filter), "filter should be declared by name");
+        .checkArgument(!Strings.isNullOrEmpty(filter), "filter should be declared by name");
     this.audio_bit_stream_filter = filter;
     return this;
   }
@@ -374,8 +374,8 @@ public class FFmpegOutputBuilder implements Cloneable {
     // object, instead of doing new XXX(...)
     // https://github.com/jhalterman/modelmapper/issues/44
     return new EncodingOptions(new MainEncodingOptions(format, startOffset, duration),
-            new AudioEncodingOptions(audio_enabled, audio_codec, audio_channels, audio_sample_rate,
-                    audio_bit_depth, audio_bit_rate, audio_quality), new VideoEncodingOptions(
+        new AudioEncodingOptions(audio_enabled, audio_codec, audio_channels, audio_sample_rate,
+            audio_bit_depth, audio_bit_rate, audio_quality), new VideoEncodingOptions(
             video_enabled, video_codec, video_frame_rate, video_width, video_height,
             video_bit_rate, video_frames, video_filter, video_preset));
   }
@@ -397,7 +397,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 
       double durationInSeconds = input.format.duration;
       long totalBitRate =
-              (long) Math.floor((targetSize * 8) / durationInSeconds) - pass_padding_bitrate;
+          (long) Math.floor((targetSize * 8) / durationInSeconds) - pass_padding_bitrate;
 
       // TODO Calculate audioBitRate
 
@@ -456,7 +456,7 @@ public class FFmpegOutputBuilder implements Cloneable {
 
       if (!Strings.isNullOrEmpty(video_filter)) {
         checkState(parent.inputs.size() == 1,
-                "Video filter only works with one input, instead use setVideoFilterComplex(..)");
+            "Video filter only works with one input, instead use setVideoFilterComplex(..)");
         args.add("-vf").add(video_filter);
       }
 
