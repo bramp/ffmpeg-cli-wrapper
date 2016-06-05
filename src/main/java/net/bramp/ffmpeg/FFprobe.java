@@ -37,7 +37,8 @@ public class FFprobe {
 
   final static Logger LOG = LoggerFactory.getLogger(FFprobe.class);
 
-  final static String DEFAULT_PATH = MoreObjects.firstNonNull(System.getenv("FFPROBE"), "ffprobe");
+  final static String FFPROBE = "ffprobe";
+  final static String DEFAULT_PATH = MoreObjects.firstNonNull(System.getenv("FFPROBE"), FFPROBE);
 
   final static Gson gson = FFmpegUtils.getGson();
 
@@ -70,7 +71,7 @@ public class FFprobe {
     return path;
   }
 
-  private BufferedReader wrapInReader(Process p) {
+  private static BufferedReader wrapInReader(Process p) {
     return new BufferedReader(new InputStreamReader(p.getInputStream(), Charsets.UTF_8));
   }
 
@@ -100,7 +101,7 @@ public class FFprobe {
 
       FFmpegProbeResult result = gson.fromJson(reader, FFmpegProbeResult.class);
 
-      FFmpegUtils.throwOnError("ffprobe", p);
+      FFmpegUtils.throwOnError(FFPROBE, p);
 
       if (result == null) {
         throw new IllegalStateException("Gson returned null, which shouldn't happen :(");
