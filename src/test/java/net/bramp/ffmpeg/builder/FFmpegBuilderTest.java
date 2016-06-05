@@ -185,6 +185,24 @@ public class FFmpegBuilderTest {
         "\"comment=My Comment\"", "-metadata", "\"title=Video\"", "-an", "-sn", "output")));
   }
 
+  @Test
+  public void testExtraArgs() {
+    // @formatter:off
+    List<String> args = new FFmpegBuilder()
+        .addExtraArgs("-a", "b")
+        .setInput("input")
+        .addOutput("output")
+          .addExtraArgs("-c", "d")
+          .disableAudio()
+          .disableSubtitle()
+          .done()
+        .build();
+    // @formatter:on
+
+    assertThat(args, is(Arrays.asList("-y", "-v", "error", "-a", "b", "-i", "input", "-an", "-sn",
+        "-c", "d", "output")));
+  }
+
   @Test(expected = IllegalArgumentException.class)
   public void testNothing() {
     FFmpegBuilder builder = new FFmpegBuilder();

@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -48,6 +49,8 @@ public class FFmpegBuilder {
   Long startOffset; // in millis
   final List<String> inputs = new ArrayList<>();
   final Map<String, FFmpegProbeResult> inputProbes = new TreeMap<>();
+
+  final List<String> extra_args = new ArrayList<>();
 
   // Output
   final List<FFmpegOutputBuilder> outputs = new ArrayList<FFmpegOutputBuilder>();
@@ -102,8 +105,7 @@ public class FFmpegBuilder {
   }
 
   public FFmpegBuilder setFormat(String format) {
-    checkNotNull(format);
-    this.format = format;
+    this.format = checkNotNull(format);
     return this;
   }
 
@@ -115,6 +117,20 @@ public class FFmpegBuilder {
 
     return this;
   }
+
+  /**
+   * Add additional ouput arguments (for flags which aren't currently supported).
+   *
+   * @param values
+   */
+  public FFmpegBuilder addExtraArgs(String... values) {
+    checkArgument(values.length > 0, "One or more values must be supplied");
+    for (String value : values) {
+      extra_args.add(checkNotNull(value));
+    }
+    return this;
+  }
+
 
   /**
    * Create new output file
@@ -157,6 +173,8 @@ public class FFmpegBuilder {
     if (format != null) {
       args.add("-f", format);
     }
+
+    args.addAll(extra_args);
 
     for (String input : inputs) {
       args.add("-i").add(input);

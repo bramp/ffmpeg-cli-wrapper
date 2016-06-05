@@ -11,12 +11,14 @@ import net.bramp.ffmpeg.options.VideoEncodingOptions;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.math.Fraction;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.net.URI;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static net.bramp.ffmpeg.FFmpegUtils.millisecondsToString;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -65,9 +67,11 @@ public class FFmpegOutputBuilder implements Cloneable {
   public String video_filter;
   public String video_filter_complex;
   public String video_bit_stream_filter;
-  public List<String> video_meta_tags = new ArrayList<>();
+  public final List<String> video_meta_tags = new ArrayList<>();
 
   public boolean subtitle_enabled = true;
+
+  public final List<String> extra_args = new ArrayList<>();
 
   public FFmpegBuilder.Strict strict = FFmpegBuilder.Strict.NORMAL;
 
@@ -434,6 +438,19 @@ public class FFmpegOutputBuilder implements Cloneable {
   }
 
   /**
+   * Add additional ouput arguments (for flags which aren't currently supported).
+   *
+   * @param values
+   */
+  public FFmpegOutputBuilder addExtraArgs(String... values) {
+    checkArgument(values.length > 0, "One or more values must be supplied");
+    for (String value : values) {
+      extra_args.add(checkNotNull(value));
+    }
+    return this;
+  }
+
+  /**
    * Finished with this output
    *
    * @return the parent FFmpegBuilder
@@ -599,6 +616,8 @@ public class FFmpegOutputBuilder implements Cloneable {
 
     if (!subtitle_enabled)
       args.add("-sn");
+
+    args.addAll(extra_args);
 
     if (filename != null && uri != null) {
       throw new IllegalStateException("Only one of filename and uri can be set");
