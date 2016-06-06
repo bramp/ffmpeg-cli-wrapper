@@ -12,6 +12,7 @@ public abstract class Samples {
   public static final String always_on_my_mind = FAKE_PREFIX
       + "Always On My Mind [Program Only] - Adelén.mp4";
 
+  public static final String divide_by_zero = FAKE_PREFIX + "Divide By Zero.mp4";
 
   public static final String output_mp4 = "output.mp4"; // TODO Change to a temp directory
 }

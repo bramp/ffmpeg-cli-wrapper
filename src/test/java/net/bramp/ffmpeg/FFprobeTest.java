@@ -5,6 +5,7 @@ import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import net.bramp.ffmpeg.probe.FFmpegStream;
+import org.apache.commons.lang3.math.Fraction;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +39,9 @@ public class FFprobeTest {
     when(runFunc.run(argThatHasItem(Samples.always_on_my_mind))).thenAnswer(
         new NewProcessAnswer("ffprobe-Always On My Mind [Program Only] - Adelén.mp4"));
 
+    when(runFunc.run(argThatHasItem(Samples.divide_by_zero))).thenAnswer(
+        new NewProcessAnswer("ffprobe-divide-by-zero"));
+
     ffprobe = new FFprobe(runFunc);
   }
 
@@ -54,7 +58,7 @@ public class FFprobeTest {
     assertThat(info.getStreams().get(1).channels, is(6));
     assertThat(info.getStreams().get(1).sample_rate, is(48_000));
 
-    System.out.println(FFmpegUtils.getGson().toJson(info));
+    // System.out.println(FFmpegUtils.getGson().toJson(info));
   }
 
   @Test
@@ -74,7 +78,17 @@ public class FFprobeTest {
     assertThat(info.getFormat().filename,
         is("c:\\Users\\Bob\\Always On My Mind [Program Only] - Adelén.mp4"));
 
-    System.out.println(FFmpegUtils.getGson().toJson(info));
+    // System.out.println(FFmpegUtils.getGson().toJson(info));
   }
 
+  @Test
+  public void testProbeDivideByZero() throws IOException {
+    // https://github.com/bramp/ffmpeg-cli-wrapper/issues/10
+    FFmpegProbeResult info = ffprobe.probe(Samples.divide_by_zero);
+    assertFalse(info.hasError());
+
+    assertThat(info.getStreams().get(1).codec_time_base, is(Fraction.ZERO));
+
+    // System.out.println(FFmpegUtils.getGson().toJson(info));
+  }
 }
