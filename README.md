@@ -18,7 +18,7 @@ Maven:
 <dependency>
   <groupId>net.bramp.ffmpeg</groupId>
   <artifactId>ffmpeg</artifactId>
-  <version>0.4</version>
+  <version>0.5</version>
 </dependency>
 ```
 
@@ -74,6 +74,7 @@ mvn release:prepare
 mvn release:perform
 
 # To publish javadoc
+git checkout ffmpeg-0.x
 mvn clean javadoc:aggregate scm-publish:publish-scm
 ```
 
