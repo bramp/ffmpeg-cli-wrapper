@@ -41,121 +41,121 @@
 <span class="sourceLineNo">033</span><a name="line.33"></a>
 <span class="sourceLineNo">034</span>  final static Logger LOG = LoggerFactory.getLogger(FFmpeg.class);<a name="line.34"></a>
 <span class="sourceLineNo">035</span><a name="line.35"></a>
-<span class="sourceLineNo">036</span>  final static String DEFAULT_PATH = MoreObjects.firstNonNull(System.getenv("FFMPEG"), "ffmpeg");<a name="line.36"></a>
-<span class="sourceLineNo">037</span><a name="line.37"></a>
-<span class="sourceLineNo">038</span>  public final static Fraction FPS_30 = Fraction.getFraction(30, 1);<a name="line.38"></a>
-<span class="sourceLineNo">039</span>  public final static Fraction FPS_29_97 = Fraction.getFraction(30000, 1001);<a name="line.39"></a>
-<span class="sourceLineNo">040</span>  public final static Fraction FPS_24 = Fraction.getFraction(24, 1);<a name="line.40"></a>
-<span class="sourceLineNo">041</span>  public final static Fraction FPS_23_976 = Fraction.getFraction(24000, 1001);<a name="line.41"></a>
-<span class="sourceLineNo">042</span><a name="line.42"></a>
-<span class="sourceLineNo">043</span>  public final static int AUDIO_MONO = 1;<a name="line.43"></a>
-<span class="sourceLineNo">044</span>  public final static int AUDIO_STEREO = 2;<a name="line.44"></a>
-<span class="sourceLineNo">045</span><a name="line.45"></a>
-<span class="sourceLineNo">046</span>  public final static String AUDIO_DEPTH_U8 = "u8"; // 8<a name="line.46"></a>
-<span class="sourceLineNo">047</span>  public final static String AUDIO_DEPTH_S16 = "s16"; // 16<a name="line.47"></a>
-<span class="sourceLineNo">048</span>  public final static String AUDIO_DEPTH_S32 = "s32"; // 32<a name="line.48"></a>
-<span class="sourceLineNo">049</span>  public final static String AUDIO_DEPTH_FLT = "flt"; // 32<a name="line.49"></a>
-<span class="sourceLineNo">050</span>  public final static String AUDIO_DEPTH_DBL = "dbl"; // 64<a name="line.50"></a>
-<span class="sourceLineNo">051</span><a name="line.51"></a>
-<span class="sourceLineNo">052</span>  public final static int AUDIO_SAMPLE_8000 = 8000;<a name="line.52"></a>
-<span class="sourceLineNo">053</span>  public final static int AUDIO_SAMPLE_11025 = 11025;<a name="line.53"></a>
-<span class="sourceLineNo">054</span>  public final static int AUDIO_SAMPLE_12000 = 12000;<a name="line.54"></a>
-<span class="sourceLineNo">055</span>  public final static int AUDIO_SAMPLE_16000 = 16000;<a name="line.55"></a>
-<span class="sourceLineNo">056</span>  public final static int AUDIO_SAMPLE_22050 = 22050;<a name="line.56"></a>
-<span class="sourceLineNo">057</span>  public final static int AUDIO_SAMPLE_32000 = 32000;<a name="line.57"></a>
-<span class="sourceLineNo">058</span>  public final static int AUDIO_SAMPLE_44100 = 44100;<a name="line.58"></a>
-<span class="sourceLineNo">059</span>  public final static int AUDIO_SAMPLE_48000 = 48000;<a name="line.59"></a>
-<span class="sourceLineNo">060</span>  public final static int AUDIO_SAMPLE_96000 = 96000;<a name="line.60"></a>
-<span class="sourceLineNo">061</span><a name="line.61"></a>
-<span class="sourceLineNo">062</span>  final static Pattern CODECS_REGEX = Pattern<a name="line.62"></a>
-<span class="sourceLineNo">063</span>      .compile("^ ([ D][ E][VAS][ S][ D][ T]) (\\S+)\\s+(.*)$");<a name="line.63"></a>
-<span class="sourceLineNo">064</span>  final static Pattern FORMATS_REGEX = Pattern.compile("^ ([ D][ E]) (\\S+)\\s+(.*)$");<a name="line.64"></a>
-<span class="sourceLineNo">065</span><a name="line.65"></a>
-<span class="sourceLineNo">066</span>  /**<a name="line.66"></a>
-<span class="sourceLineNo">067</span>   * Path to FFmpeg (e.g. /usr/bin/ffmpeg)<a name="line.67"></a>
-<span class="sourceLineNo">068</span>   */<a name="line.68"></a>
-<span class="sourceLineNo">069</span>  final String path;<a name="line.69"></a>
-<span class="sourceLineNo">070</span><a name="line.70"></a>
-<span class="sourceLineNo">071</span>  /**<a name="line.71"></a>
-<span class="sourceLineNo">072</span>   * Function to run FFmpeg. We define it like this so we can swap it out (during testing)<a name="line.72"></a>
-<span class="sourceLineNo">073</span>   */<a name="line.73"></a>
-<span class="sourceLineNo">074</span>  final ProcessFunction runFunc;<a name="line.74"></a>
-<span class="sourceLineNo">075</span><a name="line.75"></a>
-<span class="sourceLineNo">076</span>  /**<a name="line.76"></a>
-<span class="sourceLineNo">077</span>   * Supported codecs<a name="line.77"></a>
-<span class="sourceLineNo">078</span>   */<a name="line.78"></a>
-<span class="sourceLineNo">079</span>  List&lt;Codec&gt; codecs = null;<a name="line.79"></a>
-<span class="sourceLineNo">080</span><a name="line.80"></a>
-<span class="sourceLineNo">081</span>  /**<a name="line.81"></a>
-<span class="sourceLineNo">082</span>   * Supported formats<a name="line.82"></a>
-<span class="sourceLineNo">083</span>   */<a name="line.83"></a>
-<span class="sourceLineNo">084</span>  List&lt;Format&gt; formats = null;<a name="line.84"></a>
-<span class="sourceLineNo">085</span><a name="line.85"></a>
-<span class="sourceLineNo">086</span>  /**<a name="line.86"></a>
-<span class="sourceLineNo">087</span>   * Version string<a name="line.87"></a>
-<span class="sourceLineNo">088</span>   */<a name="line.88"></a>
-<span class="sourceLineNo">089</span>  String version = null;<a name="line.89"></a>
-<span class="sourceLineNo">090</span><a name="line.90"></a>
-<span class="sourceLineNo">091</span>  public FFmpeg() throws IOException {<a name="line.91"></a>
-<span class="sourceLineNo">092</span>    this(DEFAULT_PATH, new RunProcessFunction());<a name="line.92"></a>
-<span class="sourceLineNo">093</span>  }<a name="line.93"></a>
-<span class="sourceLineNo">094</span><a name="line.94"></a>
-<span class="sourceLineNo">095</span>  public FFmpeg(@Nonnull String path) throws IOException {<a name="line.95"></a>
-<span class="sourceLineNo">096</span>    this(path, new RunProcessFunction());<a name="line.96"></a>
-<span class="sourceLineNo">097</span>  }<a name="line.97"></a>
-<span class="sourceLineNo">098</span><a name="line.98"></a>
-<span class="sourceLineNo">099</span>  public FFmpeg(@Nonnull ProcessFunction runFunction) throws IOException {<a name="line.99"></a>
-<span class="sourceLineNo">100</span>    this(DEFAULT_PATH, runFunction);<a name="line.100"></a>
-<span class="sourceLineNo">101</span>  }<a name="line.101"></a>
-<span class="sourceLineNo">102</span><a name="line.102"></a>
-<span class="sourceLineNo">103</span>  public FFmpeg(@Nonnull String path, @Nonnull ProcessFunction runFunction) throws IOException {<a name="line.103"></a>
-<span class="sourceLineNo">104</span>    Preconditions.checkArgument(!Strings.isNullOrEmpty(path));<a name="line.104"></a>
-<span class="sourceLineNo">105</span>    this.runFunc = checkNotNull(runFunction);<a name="line.105"></a>
-<span class="sourceLineNo">106</span>    this.path = path;<a name="line.106"></a>
-<span class="sourceLineNo">107</span>    this.version = version();<a name="line.107"></a>
-<span class="sourceLineNo">108</span>  }<a name="line.108"></a>
-<span class="sourceLineNo">109</span><a name="line.109"></a>
-<span class="sourceLineNo">110</span>  private BufferedReader wrapInReader(Process p) {<a name="line.110"></a>
-<span class="sourceLineNo">111</span>    return new BufferedReader(new InputStreamReader(p.getInputStream(), Charsets.UTF_8));<a name="line.111"></a>
-<span class="sourceLineNo">112</span>  }<a name="line.112"></a>
-<span class="sourceLineNo">113</span><a name="line.113"></a>
-<span class="sourceLineNo">114</span>  public synchronized @Nonnull String version() throws IOException {<a name="line.114"></a>
-<span class="sourceLineNo">115</span>    String version;<a name="line.115"></a>
-<span class="sourceLineNo">116</span>    Process p = runFunc.run(ImmutableList.of(path, "-version"));<a name="line.116"></a>
-<span class="sourceLineNo">117</span>    try {<a name="line.117"></a>
-<span class="sourceLineNo">118</span>      BufferedReader r = wrapInReader(p);<a name="line.118"></a>
-<span class="sourceLineNo">119</span>      version = r.readLine();<a name="line.119"></a>
-<span class="sourceLineNo">120</span>      IOUtils.copy(r, new NullOutputStream()); // Throw away rest of the output<a name="line.120"></a>
-<span class="sourceLineNo">121</span>      FFmpegUtils.throwOnError("ffmpeg", p);<a name="line.121"></a>
-<span class="sourceLineNo">122</span>    } finally {<a name="line.122"></a>
-<span class="sourceLineNo">123</span>      p.destroy();<a name="line.123"></a>
-<span class="sourceLineNo">124</span>    }<a name="line.124"></a>
-<span class="sourceLineNo">125</span><a name="line.125"></a>
-<span class="sourceLineNo">126</span>    return version;<a name="line.126"></a>
-<span class="sourceLineNo">127</span>  }<a name="line.127"></a>
-<span class="sourceLineNo">128</span><a name="line.128"></a>
-<span class="sourceLineNo">129</span>  public synchronized @Nonnull List&lt;Codec&gt; codecs() throws IOException {<a name="line.129"></a>
-<span class="sourceLineNo">130</span>    if (this.codecs == null) {<a name="line.130"></a>
-<span class="sourceLineNo">131</span>      codecs = new ArrayList&lt;Codec&gt;();<a name="line.131"></a>
-<span class="sourceLineNo">132</span><a name="line.132"></a>
-<span class="sourceLineNo">133</span>      Process p = runFunc.run(ImmutableList.of(path, "-codecs"));<a name="line.133"></a>
-<span class="sourceLineNo">134</span>      try {<a name="line.134"></a>
-<span class="sourceLineNo">135</span>        BufferedReader r = wrapInReader(p);<a name="line.135"></a>
-<span class="sourceLineNo">136</span>        String line;<a name="line.136"></a>
-<span class="sourceLineNo">137</span>        while ((line = r.readLine()) != null) {<a name="line.137"></a>
-<span class="sourceLineNo">138</span>          Matcher m = CODECS_REGEX.matcher(line);<a name="line.138"></a>
-<span class="sourceLineNo">139</span>          if (!m.matches())<a name="line.139"></a>
-<span class="sourceLineNo">140</span>            continue;<a name="line.140"></a>
-<span class="sourceLineNo">141</span><a name="line.141"></a>
-<span class="sourceLineNo">142</span>          codecs.add(new Codec(m.group(2), m.group(3), m.group(1)));<a name="line.142"></a>
-<span class="sourceLineNo">143</span>        }<a name="line.143"></a>
-<span class="sourceLineNo">144</span><a name="line.144"></a>
-<span class="sourceLineNo">145</span>        FFmpegUtils.throwOnError("ffmpeg", p);<a name="line.145"></a>
-<span class="sourceLineNo">146</span>        this.codecs = ImmutableList.copyOf(codecs);<a name="line.146"></a>
-<span class="sourceLineNo">147</span>      } finally {<a name="line.147"></a>
-<span class="sourceLineNo">148</span>        p.destroy();<a name="line.148"></a>
-<span class="sourceLineNo">149</span>      }<a name="line.149"></a>
-<span class="sourceLineNo">150</span><a name="line.150"></a>
+<span class="sourceLineNo">036</span>  final static String FFMPEG = "ffmpeg";<a name="line.36"></a>
+<span class="sourceLineNo">037</span>  final static String DEFAULT_PATH = MoreObjects.firstNonNull(System.getenv("FFMPEG"), FFMPEG);<a name="line.37"></a>
+<span class="sourceLineNo">038</span><a name="line.38"></a>
+<span class="sourceLineNo">039</span>  public final static Fraction FPS_30 = Fraction.getFraction(30, 1);<a name="line.39"></a>
+<span class="sourceLineNo">040</span>  public final static Fraction FPS_29_97 = Fraction.getFraction(30000, 1001);<a name="line.40"></a>
+<span class="sourceLineNo">041</span>  public final static Fraction FPS_24 = Fraction.getFraction(24, 1);<a name="line.41"></a>
+<span class="sourceLineNo">042</span>  public final static Fraction FPS_23_976 = Fraction.getFraction(24000, 1001);<a name="line.42"></a>
+<span class="sourceLineNo">043</span><a name="line.43"></a>
+<span class="sourceLineNo">044</span>  public final static int AUDIO_MONO = 1;<a name="line.44"></a>
+<span class="sourceLineNo">045</span>  public final static int AUDIO_STEREO = 2;<a name="line.45"></a>
+<span class="sourceLineNo">046</span><a name="line.46"></a>
+<span class="sourceLineNo">047</span>  public final static String AUDIO_DEPTH_U8 = "u8"; // 8<a name="line.47"></a>
+<span class="sourceLineNo">048</span>  public final static String AUDIO_DEPTH_S16 = "s16"; // 16<a name="line.48"></a>
+<span class="sourceLineNo">049</span>  public final static String AUDIO_DEPTH_S32 = "s32"; // 32<a name="line.49"></a>
+<span class="sourceLineNo">050</span>  public final static String AUDIO_DEPTH_FLT = "flt"; // 32<a name="line.50"></a>
+<span class="sourceLineNo">051</span>  public final static String AUDIO_DEPTH_DBL = "dbl"; // 64<a name="line.51"></a>
+<span class="sourceLineNo">052</span><a name="line.52"></a>
+<span class="sourceLineNo">053</span>  public final static int AUDIO_SAMPLE_8000 = 8000;<a name="line.53"></a>
+<span class="sourceLineNo">054</span>  public final static int AUDIO_SAMPLE_11025 = 11025;<a name="line.54"></a>
+<span class="sourceLineNo">055</span>  public final static int AUDIO_SAMPLE_12000 = 12000;<a name="line.55"></a>
+<span class="sourceLineNo">056</span>  public final static int AUDIO_SAMPLE_16000 = 16000;<a name="line.56"></a>
+<span class="sourceLineNo">057</span>  public final static int AUDIO_SAMPLE_22050 = 22050;<a name="line.57"></a>
+<span class="sourceLineNo">058</span>  public final static int AUDIO_SAMPLE_32000 = 32000;<a name="line.58"></a>
+<span class="sourceLineNo">059</span>  public final static int AUDIO_SAMPLE_44100 = 44100;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>  public final static int AUDIO_SAMPLE_48000 = 48000;<a name="line.60"></a>
+<span class="sourceLineNo">061</span>  public final static int AUDIO_SAMPLE_96000 = 96000;<a name="line.61"></a>
+<span class="sourceLineNo">062</span><a name="line.62"></a>
+<span class="sourceLineNo">063</span>  final static Pattern CODECS_REGEX = Pattern<a name="line.63"></a>
+<span class="sourceLineNo">064</span>      .compile("^ ([ D][ E][VAS][ S][ D][ T]) (\\S+)\\s+(.*)$");<a name="line.64"></a>
+<span class="sourceLineNo">065</span>  final static Pattern FORMATS_REGEX = Pattern.compile("^ ([ D][ E]) (\\S+)\\s+(.*)$");<a name="line.65"></a>
+<span class="sourceLineNo">066</span><a name="line.66"></a>
+<span class="sourceLineNo">067</span>  /**<a name="line.67"></a>
+<span class="sourceLineNo">068</span>   * Path to FFmpeg (e.g. /usr/bin/ffmpeg)<a name="line.68"></a>
+<span class="sourceLineNo">069</span>   */<a name="line.69"></a>
+<span class="sourceLineNo">070</span>  final String path;<a name="line.70"></a>
+<span class="sourceLineNo">071</span><a name="line.71"></a>
+<span class="sourceLineNo">072</span>  /**<a name="line.72"></a>
+<span class="sourceLineNo">073</span>   * Function to run FFmpeg. We define it like this so we can swap it out (during testing)<a name="line.73"></a>
+<span class="sourceLineNo">074</span>   */<a name="line.74"></a>
+<span class="sourceLineNo">075</span>  final ProcessFunction runFunc;<a name="line.75"></a>
+<span class="sourceLineNo">076</span><a name="line.76"></a>
+<span class="sourceLineNo">077</span>  /**<a name="line.77"></a>
+<span class="sourceLineNo">078</span>   * Supported codecs<a name="line.78"></a>
+<span class="sourceLineNo">079</span>   */<a name="line.79"></a>
+<span class="sourceLineNo">080</span>  List&lt;Codec&gt; codecs = null;<a name="line.80"></a>
+<span class="sourceLineNo">081</span><a name="line.81"></a>
+<span class="sourceLineNo">082</span>  /**<a name="line.82"></a>
+<span class="sourceLineNo">083</span>   * Supported formats<a name="line.83"></a>
+<span class="sourceLineNo">084</span>   */<a name="line.84"></a>
+<span class="sourceLineNo">085</span>  List&lt;Format&gt; formats = null;<a name="line.85"></a>
+<span class="sourceLineNo">086</span><a name="line.86"></a>
+<span class="sourceLineNo">087</span>  /**<a name="line.87"></a>
+<span class="sourceLineNo">088</span>   * Version string<a name="line.88"></a>
+<span class="sourceLineNo">089</span>   */<a name="line.89"></a>
+<span class="sourceLineNo">090</span>  String version = null;<a name="line.90"></a>
+<span class="sourceLineNo">091</span><a name="line.91"></a>
+<span class="sourceLineNo">092</span>  public FFmpeg() throws IOException {<a name="line.92"></a>
+<span class="sourceLineNo">093</span>    this(DEFAULT_PATH, new RunProcessFunction());<a name="line.93"></a>
+<span class="sourceLineNo">094</span>  }<a name="line.94"></a>
+<span class="sourceLineNo">095</span><a name="line.95"></a>
+<span class="sourceLineNo">096</span>  public FFmpeg(@Nonnull String path) throws IOException {<a name="line.96"></a>
+<span class="sourceLineNo">097</span>    this(path, new RunProcessFunction());<a name="line.97"></a>
+<span class="sourceLineNo">098</span>  }<a name="line.98"></a>
+<span class="sourceLineNo">099</span><a name="line.99"></a>
+<span class="sourceLineNo">100</span>  public FFmpeg(@Nonnull ProcessFunction runFunction) throws IOException {<a name="line.100"></a>
+<span class="sourceLineNo">101</span>    this(DEFAULT_PATH, runFunction);<a name="line.101"></a>
+<span class="sourceLineNo">102</span>  }<a name="line.102"></a>
+<span class="sourceLineNo">103</span><a name="line.103"></a>
+<span class="sourceLineNo">104</span>  public FFmpeg(@Nonnull String path, @Nonnull ProcessFunction runFunction) throws IOException {<a name="line.104"></a>
+<span class="sourceLineNo">105</span>    Preconditions.checkArgument(!Strings.isNullOrEmpty(path));<a name="line.105"></a>
+<span class="sourceLineNo">106</span>    this.runFunc = checkNotNull(runFunction);<a name="line.106"></a>
+<span class="sourceLineNo">107</span>    this.path = path;<a name="line.107"></a>
+<span class="sourceLineNo">108</span>    version();<a name="line.108"></a>
+<span class="sourceLineNo">109</span>  }<a name="line.109"></a>
+<span class="sourceLineNo">110</span><a name="line.110"></a>
+<span class="sourceLineNo">111</span>  private static BufferedReader wrapInReader(Process p) {<a name="line.111"></a>
+<span class="sourceLineNo">112</span>    return new BufferedReader(new InputStreamReader(p.getInputStream(), Charsets.UTF_8));<a name="line.112"></a>
+<span class="sourceLineNo">113</span>  }<a name="line.113"></a>
+<span class="sourceLineNo">114</span><a name="line.114"></a>
+<span class="sourceLineNo">115</span>  public synchronized @Nonnull String version() throws IOException {<a name="line.115"></a>
+<span class="sourceLineNo">116</span>    if (this.version == null) {<a name="line.116"></a>
+<span class="sourceLineNo">117</span>      Process p = runFunc.run(ImmutableList.of(path, "-version"));<a name="line.117"></a>
+<span class="sourceLineNo">118</span>      try {<a name="line.118"></a>
+<span class="sourceLineNo">119</span>        BufferedReader r = wrapInReader(p);<a name="line.119"></a>
+<span class="sourceLineNo">120</span>        this.version = r.readLine();<a name="line.120"></a>
+<span class="sourceLineNo">121</span>        IOUtils.copy(r, new NullOutputStream()); // Throw away rest of the output<a name="line.121"></a>
+<span class="sourceLineNo">122</span>        FFmpegUtils.throwOnError(FFMPEG, p);<a name="line.122"></a>
+<span class="sourceLineNo">123</span>      } finally {<a name="line.123"></a>
+<span class="sourceLineNo">124</span>        p.destroy();<a name="line.124"></a>
+<span class="sourceLineNo">125</span>      }<a name="line.125"></a>
+<span class="sourceLineNo">126</span>    }<a name="line.126"></a>
+<span class="sourceLineNo">127</span>    return version;<a name="line.127"></a>
+<span class="sourceLineNo">128</span>  }<a name="line.128"></a>
+<span class="sourceLineNo">129</span><a name="line.129"></a>
+<span class="sourceLineNo">130</span>  public synchronized @Nonnull List&lt;Codec&gt; codecs() throws IOException {<a name="line.130"></a>
+<span class="sourceLineNo">131</span>    if (this.codecs == null) {<a name="line.131"></a>
+<span class="sourceLineNo">132</span>      codecs = new ArrayList&lt;Codec&gt;();<a name="line.132"></a>
+<span class="sourceLineNo">133</span><a name="line.133"></a>
+<span class="sourceLineNo">134</span>      Process p = runFunc.run(ImmutableList.of(path, "-codecs"));<a name="line.134"></a>
+<span class="sourceLineNo">135</span>      try {<a name="line.135"></a>
+<span class="sourceLineNo">136</span>        BufferedReader r = wrapInReader(p);<a name="line.136"></a>
+<span class="sourceLineNo">137</span>        String line;<a name="line.137"></a>
+<span class="sourceLineNo">138</span>        while ((line = r.readLine()) != null) {<a name="line.138"></a>
+<span class="sourceLineNo">139</span>          Matcher m = CODECS_REGEX.matcher(line);<a name="line.139"></a>
+<span class="sourceLineNo">140</span>          if (!m.matches())<a name="line.140"></a>
+<span class="sourceLineNo">141</span>            continue;<a name="line.141"></a>
+<span class="sourceLineNo">142</span><a name="line.142"></a>
+<span class="sourceLineNo">143</span>          codecs.add(new Codec(m.group(2), m.group(3), m.group(1)));<a name="line.143"></a>
+<span class="sourceLineNo">144</span>        }<a name="line.144"></a>
+<span class="sourceLineNo">145</span><a name="line.145"></a>
+<span class="sourceLineNo">146</span>        FFmpegUtils.throwOnError(FFMPEG, p);<a name="line.146"></a>
+<span class="sourceLineNo">147</span>        this.codecs = ImmutableList.copyOf(codecs);<a name="line.147"></a>
+<span class="sourceLineNo">148</span>      } finally {<a name="line.148"></a>
+<span class="sourceLineNo">149</span>        p.destroy();<a name="line.149"></a>
+<span class="sourceLineNo">150</span>      }<a name="line.150"></a>
 <span class="sourceLineNo">151</span>    }<a name="line.151"></a>
 <span class="sourceLineNo">152</span><a name="line.152"></a>
 <span class="sourceLineNo">153</span>    return codecs;<a name="line.153"></a>
@@ -178,7 +178,7 @@
 <span class="sourceLineNo">170</span>          formats.add(new Format(m.group(2), m.group(3), m.group(1)));<a name="line.170"></a>
 <span class="sourceLineNo">171</span>        }<a name="line.171"></a>
 <span class="sourceLineNo">172</span><a name="line.172"></a>
-<span class="sourceLineNo">173</span>        FFmpegUtils.throwOnError("ffmpeg", p);<a name="line.173"></a>
+<span class="sourceLineNo">173</span>        FFmpegUtils.throwOnError(FFMPEG, p);<a name="line.173"></a>
 <span class="sourceLineNo">174</span>        this.formats = ImmutableList.copyOf(formats);<a name="line.174"></a>
 <span class="sourceLineNo">175</span>      } finally {<a name="line.175"></a>
 <span class="sourceLineNo">176</span>        p.destroy();<a name="line.176"></a>
@@ -195,14 +195,14 @@
 <span class="sourceLineNo">187</span>      // Now block reading ffmpeg's stdout. We are effectively throwing away the output.<a name="line.187"></a>
 <span class="sourceLineNo">188</span>      IOUtils.copy(wrapInReader(p), System.out); // TODO Should I be outputting to stdout?<a name="line.188"></a>
 <span class="sourceLineNo">189</span><a name="line.189"></a>
-<span class="sourceLineNo">190</span>      FFmpegUtils.throwOnError("ffmpeg", p);<a name="line.190"></a>
+<span class="sourceLineNo">190</span>      FFmpegUtils.throwOnError(FFMPEG, p);<a name="line.190"></a>
 <span class="sourceLineNo">191</span><a name="line.191"></a>
 <span class="sourceLineNo">192</span>    } finally {<a name="line.192"></a>
 <span class="sourceLineNo">193</span>      p.destroy();<a name="line.193"></a>
 <span class="sourceLineNo">194</span>    }<a name="line.194"></a>
 <span class="sourceLineNo">195</span>  }<a name="line.195"></a>
 <span class="sourceLineNo">196</span><a name="line.196"></a>
-<span class="sourceLineNo">197</span>  public FFmpegBuilder buider() {<a name="line.197"></a>
+<span class="sourceLineNo">197</span>  public FFmpegBuilder builder() {<a name="line.197"></a>
 <span class="sourceLineNo">198</span>    return new FFmpegBuilder();<a name="line.198"></a>
 <span class="sourceLineNo">199</span>  }<a name="line.199"></a>
 <span class="sourceLineNo">200</span><a name="line.200"></a>

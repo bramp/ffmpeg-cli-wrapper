@@ -15,158 +15,194 @@
 <span class="sourceLineNo">007</span>import org.slf4j.Logger;<a name="line.7"></a>
 <span class="sourceLineNo">008</span>import org.slf4j.LoggerFactory;<a name="line.8"></a>
 <span class="sourceLineNo">009</span><a name="line.9"></a>
-<span class="sourceLineNo">010</span>import java.util.ArrayList;<a name="line.10"></a>
-<span class="sourceLineNo">011</span>import java.util.List;<a name="line.11"></a>
-<span class="sourceLineNo">012</span>import java.util.Map;<a name="line.12"></a>
-<span class="sourceLineNo">013</span>import java.util.TreeMap;<a name="line.13"></a>
-<span class="sourceLineNo">014</span>import java.util.concurrent.TimeUnit;<a name="line.14"></a>
-<span class="sourceLineNo">015</span><a name="line.15"></a>
-<span class="sourceLineNo">016</span>import static com.google.common.base.Preconditions.checkNotNull;<a name="line.16"></a>
-<span class="sourceLineNo">017</span><a name="line.17"></a>
-<span class="sourceLineNo">018</span>/**<a name="line.18"></a>
-<span class="sourceLineNo">019</span> * Builds a ffmpeg command line<a name="line.19"></a>
-<span class="sourceLineNo">020</span> *<a name="line.20"></a>
-<span class="sourceLineNo">021</span> * @author bramp<a name="line.21"></a>
-<span class="sourceLineNo">022</span> */<a name="line.22"></a>
-<span class="sourceLineNo">023</span>public class FFmpegBuilder {<a name="line.23"></a>
-<span class="sourceLineNo">024</span><a name="line.24"></a>
-<span class="sourceLineNo">025</span>  final static Logger LOG = LoggerFactory.getLogger(FFmpegBuilder.class);<a name="line.25"></a>
+<span class="sourceLineNo">010</span>import java.net.URI;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import java.util.ArrayList;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import java.util.List;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import java.util.Map;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import java.util.TreeMap;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import java.util.concurrent.TimeUnit;<a name="line.15"></a>
+<span class="sourceLineNo">016</span><a name="line.16"></a>
+<span class="sourceLineNo">017</span>import static com.google.common.base.Preconditions.checkArgument;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>import static com.google.common.base.Preconditions.checkNotNull;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>/**<a name="line.20"></a>
+<span class="sourceLineNo">021</span> * Builds a ffmpeg command line<a name="line.21"></a>
+<span class="sourceLineNo">022</span> *<a name="line.22"></a>
+<span class="sourceLineNo">023</span> * @author bramp<a name="line.23"></a>
+<span class="sourceLineNo">024</span> */<a name="line.24"></a>
+<span class="sourceLineNo">025</span>public class FFmpegBuilder {<a name="line.25"></a>
 <span class="sourceLineNo">026</span><a name="line.26"></a>
-<span class="sourceLineNo">027</span>  public enum Strict {<a name="line.27"></a>
-<span class="sourceLineNo">028</span>    VERY, // strictly conform to a older more strict version of the spec or reference software<a name="line.28"></a>
-<span class="sourceLineNo">029</span>    STRICT, // strictly conform to all the things in the spec no matter what consequences<a name="line.29"></a>
-<span class="sourceLineNo">030</span>    NORMAL, // normal<a name="line.30"></a>
-<span class="sourceLineNo">031</span>    UNOFFICAL, // allow unofficial extensions<a name="line.31"></a>
-<span class="sourceLineNo">032</span>    EXPERIMENTAL;<a name="line.32"></a>
-<span class="sourceLineNo">033</span><a name="line.33"></a>
-<span class="sourceLineNo">034</span>    // ffmpeg command line requires these options in the lower case<a name="line.34"></a>
-<span class="sourceLineNo">035</span>    public String toString() {<a name="line.35"></a>
-<span class="sourceLineNo">036</span>      return name().toLowerCase();<a name="line.36"></a>
-<span class="sourceLineNo">037</span>    }<a name="line.37"></a>
-<span class="sourceLineNo">038</span>  }<a name="line.38"></a>
-<span class="sourceLineNo">039</span><a name="line.39"></a>
-<span class="sourceLineNo">040</span>  // Global Settings<a name="line.40"></a>
-<span class="sourceLineNo">041</span>  boolean override = true;<a name="line.41"></a>
-<span class="sourceLineNo">042</span>  int pass = 0;<a name="line.42"></a>
-<span class="sourceLineNo">043</span>  String pass_prefix;<a name="line.43"></a>
-<span class="sourceLineNo">044</span><a name="line.44"></a>
-<span class="sourceLineNo">045</span>  // Input settings<a name="line.45"></a>
-<span class="sourceLineNo">046</span>  Long startOffset; // in millis<a name="line.46"></a>
-<span class="sourceLineNo">047</span>  final List&lt;String&gt; inputs = new ArrayList&lt;&gt;();<a name="line.47"></a>
-<span class="sourceLineNo">048</span>  final Map&lt;String, FFmpegProbeResult&gt; inputProbes = new TreeMap&lt;&gt;();<a name="line.48"></a>
-<span class="sourceLineNo">049</span><a name="line.49"></a>
-<span class="sourceLineNo">050</span>  // Output<a name="line.50"></a>
-<span class="sourceLineNo">051</span>  final List&lt;FFmpegOutputBuilder&gt; outputs = new ArrayList&lt;FFmpegOutputBuilder&gt;();<a name="line.51"></a>
+<span class="sourceLineNo">027</span>  final static Logger LOG = LoggerFactory.getLogger(FFmpegBuilder.class);<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>  public enum Strict {<a name="line.29"></a>
+<span class="sourceLineNo">030</span>    VERY, // strictly conform to a older more strict version of the spec or reference software<a name="line.30"></a>
+<span class="sourceLineNo">031</span>    STRICT, // strictly conform to all the things in the spec no matter what consequences<a name="line.31"></a>
+<span class="sourceLineNo">032</span>    NORMAL, // normal<a name="line.32"></a>
+<span class="sourceLineNo">033</span>    UNOFFICAL, // allow unofficial extensions<a name="line.33"></a>
+<span class="sourceLineNo">034</span>    EXPERIMENTAL;<a name="line.34"></a>
+<span class="sourceLineNo">035</span><a name="line.35"></a>
+<span class="sourceLineNo">036</span>    // ffmpeg command line requires these options in the lower case<a name="line.36"></a>
+<span class="sourceLineNo">037</span>    public String toString() {<a name="line.37"></a>
+<span class="sourceLineNo">038</span>      return name().toLowerCase();<a name="line.38"></a>
+<span class="sourceLineNo">039</span>    }<a name="line.39"></a>
+<span class="sourceLineNo">040</span>  }<a name="line.40"></a>
+<span class="sourceLineNo">041</span><a name="line.41"></a>
+<span class="sourceLineNo">042</span>  // Global Settings<a name="line.42"></a>
+<span class="sourceLineNo">043</span>  boolean override = true;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>  int pass = 0;<a name="line.44"></a>
+<span class="sourceLineNo">045</span>  String pass_prefix;<a name="line.45"></a>
+<span class="sourceLineNo">046</span><a name="line.46"></a>
+<span class="sourceLineNo">047</span>  // Input settings<a name="line.47"></a>
+<span class="sourceLineNo">048</span>  String format;<a name="line.48"></a>
+<span class="sourceLineNo">049</span>  Long startOffset; // in millis<a name="line.49"></a>
+<span class="sourceLineNo">050</span>  final List&lt;String&gt; inputs = new ArrayList&lt;&gt;();<a name="line.50"></a>
+<span class="sourceLineNo">051</span>  final Map&lt;String, FFmpegProbeResult&gt; inputProbes = new TreeMap&lt;&gt;();<a name="line.51"></a>
 <span class="sourceLineNo">052</span><a name="line.52"></a>
-<span class="sourceLineNo">053</span>  public FFmpegBuilder overrideOutputFiles(boolean override) {<a name="line.53"></a>
-<span class="sourceLineNo">054</span>    this.override = override;<a name="line.54"></a>
-<span class="sourceLineNo">055</span>    return this;<a name="line.55"></a>
-<span class="sourceLineNo">056</span>  }<a name="line.56"></a>
+<span class="sourceLineNo">053</span>  final List&lt;String&gt; extra_args = new ArrayList&lt;&gt;();<a name="line.53"></a>
+<span class="sourceLineNo">054</span><a name="line.54"></a>
+<span class="sourceLineNo">055</span>  // Output<a name="line.55"></a>
+<span class="sourceLineNo">056</span>  final List&lt;FFmpegOutputBuilder&gt; outputs = new ArrayList&lt;FFmpegOutputBuilder&gt;();<a name="line.56"></a>
 <span class="sourceLineNo">057</span><a name="line.57"></a>
-<span class="sourceLineNo">058</span>  public boolean getOverrideOutputFiles() {<a name="line.58"></a>
-<span class="sourceLineNo">059</span>    return this.override;<a name="line.59"></a>
-<span class="sourceLineNo">060</span>  }<a name="line.60"></a>
-<span class="sourceLineNo">061</span><a name="line.61"></a>
-<span class="sourceLineNo">062</span>  public FFmpegBuilder setPass(int pass) {<a name="line.62"></a>
-<span class="sourceLineNo">063</span>    this.pass = pass;<a name="line.63"></a>
-<span class="sourceLineNo">064</span>    return this;<a name="line.64"></a>
+<span class="sourceLineNo">058</span>  public FFmpegBuilder overrideOutputFiles(boolean override) {<a name="line.58"></a>
+<span class="sourceLineNo">059</span>    this.override = override;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>    return this;<a name="line.60"></a>
+<span class="sourceLineNo">061</span>  }<a name="line.61"></a>
+<span class="sourceLineNo">062</span><a name="line.62"></a>
+<span class="sourceLineNo">063</span>  public boolean getOverrideOutputFiles() {<a name="line.63"></a>
+<span class="sourceLineNo">064</span>    return this.override;<a name="line.64"></a>
 <span class="sourceLineNo">065</span>  }<a name="line.65"></a>
 <span class="sourceLineNo">066</span><a name="line.66"></a>
-<span class="sourceLineNo">067</span>  public FFmpegBuilder setPassPrefix(String prefix) {<a name="line.67"></a>
-<span class="sourceLineNo">068</span>    this.pass_prefix = prefix;<a name="line.68"></a>
+<span class="sourceLineNo">067</span>  public FFmpegBuilder setPass(int pass) {<a name="line.67"></a>
+<span class="sourceLineNo">068</span>    this.pass = pass;<a name="line.68"></a>
 <span class="sourceLineNo">069</span>    return this;<a name="line.69"></a>
 <span class="sourceLineNo">070</span>  }<a name="line.70"></a>
 <span class="sourceLineNo">071</span><a name="line.71"></a>
-<span class="sourceLineNo">072</span>  public FFmpegBuilder addInput(FFmpegProbeResult result) {<a name="line.72"></a>
-<span class="sourceLineNo">073</span>    checkNotNull(result);<a name="line.73"></a>
-<span class="sourceLineNo">074</span>    String filename = checkNotNull(result.format).filename;<a name="line.74"></a>
-<span class="sourceLineNo">075</span>    inputProbes.put(filename, result);<a name="line.75"></a>
-<span class="sourceLineNo">076</span>    return addInput(filename);<a name="line.76"></a>
-<span class="sourceLineNo">077</span>  }<a name="line.77"></a>
-<span class="sourceLineNo">078</span><a name="line.78"></a>
-<span class="sourceLineNo">079</span>  public FFmpegBuilder addInput(String filename) {<a name="line.79"></a>
-<span class="sourceLineNo">080</span>    checkNotNull(filename);<a name="line.80"></a>
-<span class="sourceLineNo">081</span>    inputs.add(filename);<a name="line.81"></a>
-<span class="sourceLineNo">082</span>    return this;<a name="line.82"></a>
-<span class="sourceLineNo">083</span>  }<a name="line.83"></a>
-<span class="sourceLineNo">084</span><a name="line.84"></a>
-<span class="sourceLineNo">085</span>  protected void clearInputs() {<a name="line.85"></a>
-<span class="sourceLineNo">086</span>    inputs.clear();<a name="line.86"></a>
-<span class="sourceLineNo">087</span>    inputProbes.clear();<a name="line.87"></a>
+<span class="sourceLineNo">072</span>  public FFmpegBuilder setPassPrefix(String prefix) {<a name="line.72"></a>
+<span class="sourceLineNo">073</span>    this.pass_prefix = prefix;<a name="line.73"></a>
+<span class="sourceLineNo">074</span>    return this;<a name="line.74"></a>
+<span class="sourceLineNo">075</span>  }<a name="line.75"></a>
+<span class="sourceLineNo">076</span><a name="line.76"></a>
+<span class="sourceLineNo">077</span>  public FFmpegBuilder addInput(FFmpegProbeResult result) {<a name="line.77"></a>
+<span class="sourceLineNo">078</span>    checkNotNull(result);<a name="line.78"></a>
+<span class="sourceLineNo">079</span>    String filename = checkNotNull(result.format).filename;<a name="line.79"></a>
+<span class="sourceLineNo">080</span>    inputProbes.put(filename, result);<a name="line.80"></a>
+<span class="sourceLineNo">081</span>    return addInput(filename);<a name="line.81"></a>
+<span class="sourceLineNo">082</span>  }<a name="line.82"></a>
+<span class="sourceLineNo">083</span><a name="line.83"></a>
+<span class="sourceLineNo">084</span>  public FFmpegBuilder addInput(String filename) {<a name="line.84"></a>
+<span class="sourceLineNo">085</span>    checkNotNull(filename);<a name="line.85"></a>
+<span class="sourceLineNo">086</span>    inputs.add(filename);<a name="line.86"></a>
+<span class="sourceLineNo">087</span>    return this;<a name="line.87"></a>
 <span class="sourceLineNo">088</span>  }<a name="line.88"></a>
 <span class="sourceLineNo">089</span><a name="line.89"></a>
-<span class="sourceLineNo">090</span>  public FFmpegBuilder setInput(FFmpegProbeResult result) {<a name="line.90"></a>
-<span class="sourceLineNo">091</span>    checkNotNull(result);<a name="line.91"></a>
-<span class="sourceLineNo">092</span>    clearInputs();<a name="line.92"></a>
-<span class="sourceLineNo">093</span>    return addInput(result);<a name="line.93"></a>
-<span class="sourceLineNo">094</span>  }<a name="line.94"></a>
-<span class="sourceLineNo">095</span><a name="line.95"></a>
-<span class="sourceLineNo">096</span>  public FFmpegBuilder setInput(String filename) {<a name="line.96"></a>
-<span class="sourceLineNo">097</span>    checkNotNull(filename);<a name="line.97"></a>
-<span class="sourceLineNo">098</span>    clearInputs();<a name="line.98"></a>
-<span class="sourceLineNo">099</span>    return addInput(filename);<a name="line.99"></a>
-<span class="sourceLineNo">100</span>  }<a name="line.100"></a>
-<span class="sourceLineNo">101</span><a name="line.101"></a>
-<span class="sourceLineNo">102</span>  public FFmpegBuilder setStartOffset(long duration, TimeUnit units) {<a name="line.102"></a>
-<span class="sourceLineNo">103</span>    checkNotNull(duration);<a name="line.103"></a>
-<span class="sourceLineNo">104</span>    checkNotNull(units);<a name="line.104"></a>
-<span class="sourceLineNo">105</span><a name="line.105"></a>
-<span class="sourceLineNo">106</span>    this.startOffset = units.toMillis(duration);<a name="line.106"></a>
-<span class="sourceLineNo">107</span><a name="line.107"></a>
-<span class="sourceLineNo">108</span>    return this;<a name="line.108"></a>
-<span class="sourceLineNo">109</span>  }<a name="line.109"></a>
-<span class="sourceLineNo">110</span><a name="line.110"></a>
-<span class="sourceLineNo">111</span>  /**<a name="line.111"></a>
-<span class="sourceLineNo">112</span>   * Create new output file<a name="line.112"></a>
-<span class="sourceLineNo">113</span>   * <a name="line.113"></a>
-<span class="sourceLineNo">114</span>   * @param filename<a name="line.114"></a>
-<span class="sourceLineNo">115</span>   * @return A new FFmpegOutputBuilder<a name="line.115"></a>
-<span class="sourceLineNo">116</span>   */<a name="line.116"></a>
-<span class="sourceLineNo">117</span>  public FFmpegOutputBuilder addOutput(String filename) {<a name="line.117"></a>
-<span class="sourceLineNo">118</span>    FFmpegOutputBuilder output = new FFmpegOutputBuilder(this, filename);<a name="line.118"></a>
-<span class="sourceLineNo">119</span>    outputs.add(output);<a name="line.119"></a>
-<span class="sourceLineNo">120</span>    return output;<a name="line.120"></a>
-<span class="sourceLineNo">121</span>  }<a name="line.121"></a>
-<span class="sourceLineNo">122</span><a name="line.122"></a>
-<span class="sourceLineNo">123</span>  /**<a name="line.123"></a>
-<span class="sourceLineNo">124</span>   * Create new output (to stdout)<a name="line.124"></a>
+<span class="sourceLineNo">090</span>  protected void clearInputs() {<a name="line.90"></a>
+<span class="sourceLineNo">091</span>    inputs.clear();<a name="line.91"></a>
+<span class="sourceLineNo">092</span>    inputProbes.clear();<a name="line.92"></a>
+<span class="sourceLineNo">093</span>  }<a name="line.93"></a>
+<span class="sourceLineNo">094</span><a name="line.94"></a>
+<span class="sourceLineNo">095</span>  public FFmpegBuilder setInput(FFmpegProbeResult result) {<a name="line.95"></a>
+<span class="sourceLineNo">096</span>    checkNotNull(result);<a name="line.96"></a>
+<span class="sourceLineNo">097</span>    clearInputs();<a name="line.97"></a>
+<span class="sourceLineNo">098</span>    return addInput(result);<a name="line.98"></a>
+<span class="sourceLineNo">099</span>  }<a name="line.99"></a>
+<span class="sourceLineNo">100</span><a name="line.100"></a>
+<span class="sourceLineNo">101</span>  public FFmpegBuilder setInput(String filename) {<a name="line.101"></a>
+<span class="sourceLineNo">102</span>    checkNotNull(filename);<a name="line.102"></a>
+<span class="sourceLineNo">103</span>    clearInputs();<a name="line.103"></a>
+<span class="sourceLineNo">104</span>    return addInput(filename);<a name="line.104"></a>
+<span class="sourceLineNo">105</span>  }<a name="line.105"></a>
+<span class="sourceLineNo">106</span><a name="line.106"></a>
+<span class="sourceLineNo">107</span>  public FFmpegBuilder setFormat(String format) {<a name="line.107"></a>
+<span class="sourceLineNo">108</span>    this.format = checkNotNull(format);<a name="line.108"></a>
+<span class="sourceLineNo">109</span>    return this;<a name="line.109"></a>
+<span class="sourceLineNo">110</span>  }<a name="line.110"></a>
+<span class="sourceLineNo">111</span><a name="line.111"></a>
+<span class="sourceLineNo">112</span>  public FFmpegBuilder setStartOffset(long duration, TimeUnit units) {<a name="line.112"></a>
+<span class="sourceLineNo">113</span>    checkNotNull(duration);<a name="line.113"></a>
+<span class="sourceLineNo">114</span>    checkNotNull(units);<a name="line.114"></a>
+<span class="sourceLineNo">115</span><a name="line.115"></a>
+<span class="sourceLineNo">116</span>    this.startOffset = units.toMillis(duration);<a name="line.116"></a>
+<span class="sourceLineNo">117</span><a name="line.117"></a>
+<span class="sourceLineNo">118</span>    return this;<a name="line.118"></a>
+<span class="sourceLineNo">119</span>  }<a name="line.119"></a>
+<span class="sourceLineNo">120</span><a name="line.120"></a>
+<span class="sourceLineNo">121</span>  /**<a name="line.121"></a>
+<span class="sourceLineNo">122</span>   * Add additional ouput arguments (for flags which aren't currently supported).<a name="line.122"></a>
+<span class="sourceLineNo">123</span>   *<a name="line.123"></a>
+<span class="sourceLineNo">124</span>   * @param values<a name="line.124"></a>
 <span class="sourceLineNo">125</span>   */<a name="line.125"></a>
-<span class="sourceLineNo">126</span>  public FFmpegOutputBuilder addStreamedOutput() {<a name="line.126"></a>
-<span class="sourceLineNo">127</span>    return addOutput("-");<a name="line.127"></a>
-<span class="sourceLineNo">128</span>  }<a name="line.128"></a>
-<span class="sourceLineNo">129</span><a name="line.129"></a>
-<span class="sourceLineNo">130</span>  public List&lt;String&gt; build() {<a name="line.130"></a>
-<span class="sourceLineNo">131</span>    ImmutableList.Builder&lt;String&gt; args = new ImmutableList.Builder&lt;String&gt;();<a name="line.131"></a>
-<span class="sourceLineNo">132</span><a name="line.132"></a>
-<span class="sourceLineNo">133</span>    Preconditions.checkArgument(!inputs.isEmpty(), "At least one input must be specified");<a name="line.133"></a>
-<span class="sourceLineNo">134</span>    Preconditions.checkArgument(!outputs.isEmpty(), "At least one output must be specified");<a name="line.134"></a>
-<span class="sourceLineNo">135</span><a name="line.135"></a>
-<span class="sourceLineNo">136</span>    args.add(override ? "-y" : "-n");<a name="line.136"></a>
-<span class="sourceLineNo">137</span>    args.add("-v", "error"); // TODO make configurable<a name="line.137"></a>
-<span class="sourceLineNo">138</span><a name="line.138"></a>
-<span class="sourceLineNo">139</span>    if (startOffset != null) {<a name="line.139"></a>
-<span class="sourceLineNo">140</span>      args.add("-ss").add(FFmpegUtils.millisecondsToString(startOffset));<a name="line.140"></a>
-<span class="sourceLineNo">141</span>    }<a name="line.141"></a>
-<span class="sourceLineNo">142</span><a name="line.142"></a>
-<span class="sourceLineNo">143</span>    for (String input : inputs) {<a name="line.143"></a>
-<span class="sourceLineNo">144</span>      args.add("-i").add(input);<a name="line.144"></a>
-<span class="sourceLineNo">145</span>    }<a name="line.145"></a>
+<span class="sourceLineNo">126</span>  public FFmpegBuilder addExtraArgs(String... values) {<a name="line.126"></a>
+<span class="sourceLineNo">127</span>    checkArgument(values.length &gt; 0, "One or more values must be supplied");<a name="line.127"></a>
+<span class="sourceLineNo">128</span>    for (String value : values) {<a name="line.128"></a>
+<span class="sourceLineNo">129</span>      extra_args.add(checkNotNull(value));<a name="line.129"></a>
+<span class="sourceLineNo">130</span>    }<a name="line.130"></a>
+<span class="sourceLineNo">131</span>    return this;<a name="line.131"></a>
+<span class="sourceLineNo">132</span>  }<a name="line.132"></a>
+<span class="sourceLineNo">133</span><a name="line.133"></a>
+<span class="sourceLineNo">134</span><a name="line.134"></a>
+<span class="sourceLineNo">135</span>  /**<a name="line.135"></a>
+<span class="sourceLineNo">136</span>   * Create new output file<a name="line.136"></a>
+<span class="sourceLineNo">137</span>   * <a name="line.137"></a>
+<span class="sourceLineNo">138</span>   * @param filename<a name="line.138"></a>
+<span class="sourceLineNo">139</span>   * @return A new FFmpegOutputBuilder<a name="line.139"></a>
+<span class="sourceLineNo">140</span>   */<a name="line.140"></a>
+<span class="sourceLineNo">141</span>  public FFmpegOutputBuilder addOutput(String filename) {<a name="line.141"></a>
+<span class="sourceLineNo">142</span>    FFmpegOutputBuilder output = new FFmpegOutputBuilder(this, filename);<a name="line.142"></a>
+<span class="sourceLineNo">143</span>    outputs.add(output);<a name="line.143"></a>
+<span class="sourceLineNo">144</span>    return output;<a name="line.144"></a>
+<span class="sourceLineNo">145</span>  }<a name="line.145"></a>
 <span class="sourceLineNo">146</span><a name="line.146"></a>
-<span class="sourceLineNo">147</span>    if (pass &gt; 0) {<a name="line.147"></a>
-<span class="sourceLineNo">148</span>      args.add("-pass").add(Integer.toString(pass));<a name="line.148"></a>
-<span class="sourceLineNo">149</span><a name="line.149"></a>
-<span class="sourceLineNo">150</span>      if (pass_prefix != null) {<a name="line.150"></a>
-<span class="sourceLineNo">151</span>        args.add("-passlogfile").add(pass_prefix);<a name="line.151"></a>
-<span class="sourceLineNo">152</span>      }<a name="line.152"></a>
-<span class="sourceLineNo">153</span>    }<a name="line.153"></a>
-<span class="sourceLineNo">154</span><a name="line.154"></a>
-<span class="sourceLineNo">155</span>    for (FFmpegOutputBuilder output : this.outputs) {<a name="line.155"></a>
-<span class="sourceLineNo">156</span>      args.addAll(output.build(pass));<a name="line.156"></a>
-<span class="sourceLineNo">157</span>    }<a name="line.157"></a>
-<span class="sourceLineNo">158</span><a name="line.158"></a>
-<span class="sourceLineNo">159</span>    return args.build();<a name="line.159"></a>
-<span class="sourceLineNo">160</span>  }<a name="line.160"></a>
-<span class="sourceLineNo">161</span>}<a name="line.161"></a>
+<span class="sourceLineNo">147</span>  public FFmpegOutputBuilder addOutput(URI uri) {<a name="line.147"></a>
+<span class="sourceLineNo">148</span>    FFmpegOutputBuilder output = new FFmpegOutputBuilder(this, uri);<a name="line.148"></a>
+<span class="sourceLineNo">149</span>    outputs.add(output);<a name="line.149"></a>
+<span class="sourceLineNo">150</span>    return output;<a name="line.150"></a>
+<span class="sourceLineNo">151</span>  }<a name="line.151"></a>
+<span class="sourceLineNo">152</span><a name="line.152"></a>
+<span class="sourceLineNo">153</span>  /**<a name="line.153"></a>
+<span class="sourceLineNo">154</span>   * Create new output (to stdout)<a name="line.154"></a>
+<span class="sourceLineNo">155</span>   */<a name="line.155"></a>
+<span class="sourceLineNo">156</span>  public FFmpegOutputBuilder addStdoutOutput() {<a name="line.156"></a>
+<span class="sourceLineNo">157</span>    return addOutput("-");<a name="line.157"></a>
+<span class="sourceLineNo">158</span>  }<a name="line.158"></a>
+<span class="sourceLineNo">159</span><a name="line.159"></a>
+<span class="sourceLineNo">160</span>  public List&lt;String&gt; build() {<a name="line.160"></a>
+<span class="sourceLineNo">161</span>    ImmutableList.Builder&lt;String&gt; args = new ImmutableList.Builder&lt;String&gt;();<a name="line.161"></a>
+<span class="sourceLineNo">162</span><a name="line.162"></a>
+<span class="sourceLineNo">163</span>    Preconditions.checkArgument(!inputs.isEmpty(), "At least one input must be specified");<a name="line.163"></a>
+<span class="sourceLineNo">164</span>    Preconditions.checkArgument(!outputs.isEmpty(), "At least one output must be specified");<a name="line.164"></a>
+<span class="sourceLineNo">165</span><a name="line.165"></a>
+<span class="sourceLineNo">166</span>    args.add(override ? "-y" : "-n");<a name="line.166"></a>
+<span class="sourceLineNo">167</span>    args.add("-v", "error"); // TODO make configurable<a name="line.167"></a>
+<span class="sourceLineNo">168</span><a name="line.168"></a>
+<span class="sourceLineNo">169</span>    if (startOffset != null) {<a name="line.169"></a>
+<span class="sourceLineNo">170</span>      args.add("-ss").add(FFmpegUtils.millisecondsToString(startOffset));<a name="line.170"></a>
+<span class="sourceLineNo">171</span>    }<a name="line.171"></a>
+<span class="sourceLineNo">172</span><a name="line.172"></a>
+<span class="sourceLineNo">173</span>    if (format != null) {<a name="line.173"></a>
+<span class="sourceLineNo">174</span>      args.add("-f", format);<a name="line.174"></a>
+<span class="sourceLineNo">175</span>    }<a name="line.175"></a>
+<span class="sourceLineNo">176</span><a name="line.176"></a>
+<span class="sourceLineNo">177</span>    args.addAll(extra_args);<a name="line.177"></a>
+<span class="sourceLineNo">178</span><a name="line.178"></a>
+<span class="sourceLineNo">179</span>    for (String input : inputs) {<a name="line.179"></a>
+<span class="sourceLineNo">180</span>      args.add("-i").add(input);<a name="line.180"></a>
+<span class="sourceLineNo">181</span>    }<a name="line.181"></a>
+<span class="sourceLineNo">182</span><a name="line.182"></a>
+<span class="sourceLineNo">183</span>    if (pass &gt; 0) {<a name="line.183"></a>
+<span class="sourceLineNo">184</span>      args.add("-pass").add(Integer.toString(pass));<a name="line.184"></a>
+<span class="sourceLineNo">185</span><a name="line.185"></a>
+<span class="sourceLineNo">186</span>      if (pass_prefix != null) {<a name="line.186"></a>
+<span class="sourceLineNo">187</span>        args.add("-passlogfile").add(pass_prefix);<a name="line.187"></a>
+<span class="sourceLineNo">188</span>      }<a name="line.188"></a>
+<span class="sourceLineNo">189</span>    }<a name="line.189"></a>
+<span class="sourceLineNo">190</span><a name="line.190"></a>
+<span class="sourceLineNo">191</span>    for (FFmpegOutputBuilder output : this.outputs) {<a name="line.191"></a>
+<span class="sourceLineNo">192</span>      args.addAll(output.build(pass));<a name="line.192"></a>
+<span class="sourceLineNo">193</span>    }<a name="line.193"></a>
+<span class="sourceLineNo">194</span><a name="line.194"></a>
+<span class="sourceLineNo">195</span>    return args.build();<a name="line.195"></a>
+<span class="sourceLineNo">196</span>  }<a name="line.196"></a>
+<span class="sourceLineNo">197</span>}<a name="line.197"></a>
 
 
 
