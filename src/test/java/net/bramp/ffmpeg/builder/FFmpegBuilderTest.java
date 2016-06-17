@@ -1,7 +1,6 @@
 package net.bramp.ffmpeg.builder;
 
 import net.bramp.ffmpeg.FFmpeg;
-import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.options.AudioEncodingOptions;
 import net.bramp.ffmpeg.options.EncodingOptions;
 import net.bramp.ffmpeg.options.MainEncodingOptions;
@@ -14,6 +13,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.nitorcreations.Matchers.reflectEquals;
+import static net.bramp.ffmpeg.builder.FFmpegBuilder.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -31,6 +31,7 @@ public class FFmpegBuilderTest {
 
     // @formatter:off
     List<String> args = new FFmpegBuilder()
+        .setVerbosity(Verbosity.DEBUG)
         .setInput("input")
         .setStartOffset(1500, TimeUnit.MILLISECONDS)
         .overrideOutputFiles(true)
@@ -49,7 +50,7 @@ public class FFmpegBuilderTest {
         .build();
     // @formatter:on
 
-    assertThat(args, is(Arrays.asList("-y", "-v", "error", "-ss", "00:00:01.500", "-i", "input",
+    assertThat(args, is(Arrays.asList("-y", "-v", "debug", "-ss", "00:00:01.500", "-i", "input",
         "-f", "mp4", "-ss", "00:00:00.500", "-vcodec", "libx264", "-s", "320x240", "-r", "30/1",
         "-bsf:v", "foo", "-acodec", "aac", "-ac", "1", "-ar", "48000", "-bsf:a", "bar", "output")));
   }
