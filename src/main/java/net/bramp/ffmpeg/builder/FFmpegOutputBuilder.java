@@ -502,7 +502,7 @@ public class FFmpegOutputBuilder implements Cloneable {
     }
 
     if (strict != FFmpegBuilder.Strict.NORMAL) {
-      args.add("-strict").add(strict.toString().toLowerCase());
+      args.add("-strict").add(strict.toString());
     }
 
     if (!Strings.isNullOrEmpty(format)) {
