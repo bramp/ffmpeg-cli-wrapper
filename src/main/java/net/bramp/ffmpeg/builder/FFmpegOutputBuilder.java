@@ -45,6 +45,8 @@ public class FFmpegOutputBuilder implements Cloneable {
   public Long startOffset; // in millis
   public Long duration; // in millis
 
+  public final List<String> meta_tags = new ArrayList<>();
+
   public boolean audio_enabled = true;
   public String audio_codec;
   public int audio_channels;
@@ -67,7 +69,6 @@ public class FFmpegOutputBuilder implements Cloneable {
   public String video_filter;
   public String video_filter_complex;
   public String video_bit_stream_filter;
-  public final List<String> video_meta_tags = new ArrayList<>();
 
   public boolean subtitle_enabled = true;
 
@@ -295,18 +296,16 @@ public class FFmpegOutputBuilder implements Cloneable {
   }
 
   /**
-   * Allows to add metadata to output video. Which keys are possible depends on the used output
-   * video codec.
+   * Add metadata on output streams. Which keys are possible depends on the used codec.
    * 
    * @param key Metadata key, e.g. "comment"
    * @param value Value to set for key
-   * @return This instance
+   * @return this
    */
   public FFmpegOutputBuilder addMetaTag(String key, String value) {
-    this.video_enabled = true;
     checkNotNull(key, "Key may not be null");
     checkNotNull(value, "Value may not be null");
-    video_meta_tags.add(key + "=" + value.replace("\"", ""));
+    meta_tags.add(key + "=" + value.replace("\"", ""));
     return this;
   }
 
@@ -518,6 +517,10 @@ public class FFmpegOutputBuilder implements Cloneable {
       args.add("-t").add(millisecondsToString(duration));
     }
 
+    for (String meta : meta_tags) {
+      args.add("-metadata").add("\"" + meta + "\"");
+    }
+
     if (video_enabled) {
 
       if (video_frames != null) {
@@ -565,10 +568,6 @@ public class FFmpegOutputBuilder implements Cloneable {
 
       if (!Strings.isNullOrEmpty(video_bit_stream_filter)) {
         args.add("-bsf:v", video_bit_stream_filter);
-      }
-
-      for (String meta : video_meta_tags) {
-        args.add("-metadata").add("\"" + meta + "\"");
       }
 
     } else {
