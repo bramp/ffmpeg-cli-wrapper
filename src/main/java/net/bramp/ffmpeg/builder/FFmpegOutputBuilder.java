@@ -309,6 +309,14 @@ public class FFmpegOutputBuilder implements Cloneable {
     return this;
   }
 
+
+  public FFmpegOutputBuilder addMetaTag(MetadataSpec metadata_spec, String key, String value) {
+    checkNotNull(key, "Key may not be null");
+    checkNotNull(value, "Value may not be null");
+    meta_tags.add(key + "=" + value.replace("\"", ""));
+    return this;
+  }
+
   public FFmpegOutputBuilder setAudioCodec(String codec) {
     this.audio_enabled = true;
     this.audio_codec = checkNotNull(codec);
