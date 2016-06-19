@@ -6,9 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class TwoPassFFmpegJob extends FFmpegJob {
@@ -28,9 +30,12 @@ public class TwoPassFFmpegJob extends FFmpegJob {
   }
 
   protected void deletePassLog() throws IOException {
-    Path path = FileSystems.getDefault().getPath(passlogPrefix);
-
-    Files.deleteIfExists(path);
+    final Path cwd = Paths.get("");
+    try (DirectoryStream<Path> stream = Files.newDirectoryStream(cwd, passlogPrefix + "*.log*")) {
+      for (Path p : stream) {
+        Files.deleteIfExists(p);
+      }
+    }
   }
 
   public void run() {
