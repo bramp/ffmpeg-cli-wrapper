@@ -11,7 +11,6 @@ import net.bramp.ffmpeg.options.VideoEncodingOptions;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.math.Fraction;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.net.URI;
 import java.util.List;
@@ -22,6 +21,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static net.bramp.ffmpeg.FFmpegUtils.millisecondsToString;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
 
 /**
  * Builds a representation of a single output/encoding setting
@@ -303,9 +303,49 @@ public class FFmpegOutputBuilder implements Cloneable {
    * @return this
    */
   public FFmpegOutputBuilder addMetaTag(String key, String value) {
-    checkNotNull(key, "Key may not be null");
-    checkNotNull(value, "Value may not be null");
-    meta_tags.add(key + "=" + value.replace("\"", ""));
+    checkValidKey(key);
+    checkNotNull(value);
+    meta_tags.add("-metadata");
+    meta_tags.add(key + "=" + value);
+    return this;
+  }
+
+  /**
+   * Add metadata on output streams. Which keys are possible depends on the used codec.
+   *
+   * <pre>
+   * {@code
+   * import static net.bramp.ffmpeg.builder.MetadataSpecifier.*;
+   * import static net.bramp.ffmpeg.builder.StreamSpecifier.*;
+   * import static net.bramp.ffmpeg.builder.StreamSpecifierType.*;
+   * 
+   * new FFmpegBuilder()
+   *   .addMetaTag("title", "Movie Title") // Annotate whole file
+   *   .addMetaTag(chapter(0), "author", "Bob") // Annotate first chapter
+   *   .addMetaTag(program(0), "comment", "Awesome") // Annotate first program
+   *   .addMetaTag(stream(0), "copyright", "Megacorp") // Annotate first stream
+   *   .addMetaTag(stream(Video), "framerate", "24fps") // Annotate all video streams
+   *   .addMetaTag(stream(Video, 0), "artist", "Joe") // Annotate first video stream
+   *   .addMetaTag(stream(Audio, 0), "language", "eng") // Annotate first audio stream
+   *   .addMetaTag(stream(Subtitle, 0), "language", "fre") // Annotate first subtitle stream
+   *   .addMetaTag(usable(), "year", "2010") // Annotate all streams with a usable configuration
+   * }
+   * </pre>
+   *
+   * assertThat(global().spec(), is("g")); assertThat(chapter(1).spec(), is("c:1"));
+   * assertThat(program(1).spec(), is("p:1")); assertThat(stream(1).spec(), is("s:1"));
+   * assertThat(stream(id(1)).spec(), is("s:i:1"));
+   *
+   * @param spec Metadata specifier, e.g `MetadataSpec.stream(Audio, 0)`
+   * @param key Metadata key, e.g. "comment"
+   * @param value Value to set for key
+   * @return this
+   */
+  public FFmpegOutputBuilder addMetaTag(MetadataSpecifier spec, String key, String value) {
+    checkValidKey(key);
+    checkNotNull(value);
+    meta_tags.add("-metadata:" + spec.spec());
+    meta_tags.add(key + "=" + value);
     return this;
   }
 
@@ -518,7 +558,7 @@ public class FFmpegOutputBuilder implements Cloneable {
     }
 
     for (String meta : meta_tags) {
-      args.add("-metadata").add("\"" + meta + "\"");
+      args.add(meta);
     }
 
     if (video_enabled) {

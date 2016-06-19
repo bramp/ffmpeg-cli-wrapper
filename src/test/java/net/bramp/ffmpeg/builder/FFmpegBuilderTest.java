@@ -1,7 +1,7 @@
 package net.bramp.ffmpeg.builder;
 
+import com.google.common.base.Joiner;
 import net.bramp.ffmpeg.FFmpeg;
-import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.options.AudioEncodingOptions;
 import net.bramp.ffmpeg.options.EncodingOptions;
 import net.bramp.ffmpeg.options.MainEncodingOptions;
@@ -14,6 +14,12 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.nitorcreations.Matchers.reflectEquals;
+import static net.bramp.ffmpeg.builder.MetadataSpecifier.chapter;
+import static net.bramp.ffmpeg.builder.MetadataSpecifier.program;
+import static net.bramp.ffmpeg.builder.MetadataSpecifier.stream;
+import static net.bramp.ffmpeg.builder.StreamSpecifier.tag;
+import static net.bramp.ffmpeg.builder.StreamSpecifier.usable;
+import static net.bramp.ffmpeg.builder.StreamSpecifierType.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -173,16 +179,45 @@ public class FFmpegBuilderTest {
     List<String> args = new FFmpegBuilder()
         .setInput("input")
         .addOutput("output")
-          .disableAudio()
-          .disableSubtitle()
           .addMetaTag("comment", "My Comment")
           .addMetaTag("title", "\"Video\"")
+          .addMetaTag("author", "a=b:c")
+          .done()
+        .build();
+    // @formatter:on
+
+    assertThat(args,
+        is(Arrays.asList("-y", "-v", "error", "-i", "input", "-metadata", "comment=My Comment",
+            "-metadata", "title=\"Video\"", "-metadata", "author=a=b:c", "output")));
+  }
+
+  @Test
+  public void testMetaTagsWithSpecifier() {
+    // @formatter:off
+    List<String> args = new FFmpegBuilder()
+        .setInput("input")
+        .addOutput("output")
+          .addMetaTag("title", "Movie Title")
+          .addMetaTag(chapter(0), "author", "Bob")
+          .addMetaTag(program(0), "comment", "Awesome")
+          .addMetaTag(stream(0), "copyright", "Megacorp")
+          .addMetaTag(stream(Video), "framerate", "24fps")
+          .addMetaTag(stream(Video, 0), "artist", "Joe")
+          .addMetaTag(stream(Audio, 0), "language", "eng")
+          .addMetaTag(stream(Subtitle, 0), "language", "fre")
+          .addMetaTag(stream(usable()), "year", "2010")
+          .addMetaTag(stream(tag("key")), "a", "b")
+          .addMetaTag(stream(tag("key", "value")), "a", "b")
           .done()
         .build();
     // @formatter:on
 
     assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-metadata",
-        "\"comment=My Comment\"", "-metadata", "\"title=Video\"", "-an", "-sn", "output")));
+        "title=Movie Title", "-metadata:c:0", "author=Bob", "-metadata:p:0", "comment=Awesome",
+        "-metadata:s:0", "copyright=Megacorp", "-metadata:s:v", "framerate=24fps",
+        "-metadata:s:v:0", "artist=Joe", "-metadata:s:a:0", "language=eng", "-metadata:s:s:0",
+        "language=fre", "-metadata:s:u", "year=2010", "-metadata:s:m:key", "a=b",
+        "-metadata:s:m:key:value", "a=b", "output")));
   }
 
   @Test
