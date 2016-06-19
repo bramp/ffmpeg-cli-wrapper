@@ -1,6 +1,9 @@
 package net.bramp.ffmpeg.fixtures;
 
+import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.info.Codec;
+
+import java.util.List;
 
 /**
  * Class that contains all Codecs as defined in the unit tests This should not be used as a concise
@@ -12,7 +15,7 @@ import net.bramp.ffmpeg.info.Codec;
  */
 public class Codecs {
 
-  public static Codec[] CODECS = new Codec[] {
+  public final static List<Codec> CODECS = new ImmutableList.Builder().add(
       new Codec("4xm", "4X Movie", "D V D "),
       new Codec("8bps", "QuickTime 8BPS video", "D V D "),
       new Codec("8svx_exp", "8SVX exponential", "D A D "),
@@ -314,5 +317,5 @@ public class Codecs {
       new Codec("yop", "Psygnosis YOP Video", "D V   "),
       new Codec("yuv4", "Uncompressed packed 4:2:0", "DEV D "),
       new Codec("zlib", "LCL (LossLess Codec Library) ZLIB", "DEV D "),
-      new Codec("zmbv", "Zip Motion Blocks Video", "DEV D ")};
+      new Codec("zmbv", "Zip Motion Blocks Video", "DEV D ")).build();
 }

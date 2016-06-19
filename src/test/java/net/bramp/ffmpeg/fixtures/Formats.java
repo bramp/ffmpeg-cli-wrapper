@@ -1,6 +1,9 @@
 package net.bramp.ffmpeg.fixtures;
 
+import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.info.Format;
+
+import java.util.List;
 
 /**
  * Class that contains all Formats as defined in the unit tests This should not be used to test if a
@@ -12,7 +15,7 @@ import net.bramp.ffmpeg.info.Format;
  */
 public class Formats {
 
-  public static Format[] FORMATS = new Format[] {
+  public final static List<Format> FORMATS = new ImmutableList.Builder().add(
       new Format("3g2", "3GP2 format", " E"),
       new Format("3gp", "3GP format", " E"),
       new Format("4xm", "4X Technologies format", "D "),
@@ -198,5 +201,5 @@ public class Formats {
       new Format("xbin", "eXtended BINary text (XBIN)", "D "),
       new Format("xmv", "Microsoft XMV", "D "), new Format("xwma", "Microsoft xWMA", "D "),
       new Format("yop", "Psygnosis YOP Format", "D "),
-      new Format("yuv4mpegpipe", "YUV4MPEG pipe format", "DE"),};
+      new Format("yuv4mpegpipe", "YUV4MPEG pipe format", "DE")).build();
 }

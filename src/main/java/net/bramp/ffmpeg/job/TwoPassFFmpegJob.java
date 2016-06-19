@@ -1,17 +1,19 @@
 package net.bramp.ffmpeg.job;
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.FFmpeg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class TwoPassFFmpegJob extends FFmpegJob {
 
@@ -24,9 +26,9 @@ public class TwoPassFFmpegJob extends FFmpegJob {
   public TwoPassFFmpegJob(FFmpeg ffmpeg, String passlogPrefix, List<String> args1,
       List<String> args2) {
     super(ffmpeg);
-    this.passlogPrefix = passlogPrefix;
-    this.args1 = args1;
-    this.args2 = args2;
+    this.passlogPrefix = checkNotNull(passlogPrefix);
+    this.args1 = ImmutableList.copyOf(args1);
+    this.args2 = ImmutableList.copyOf(args2);
   }
 
   protected void deletePassLog() throws IOException {
@@ -42,11 +44,12 @@ public class TwoPassFFmpegJob extends FFmpegJob {
     state = State.RUNNING;
 
     try {
-      ffmpeg.run(args1);
-      ffmpeg.run(args2);
-
-      deletePassLog();
-
+      try {
+        ffmpeg.run(args1);
+        ffmpeg.run(args2);
+      } finally {
+        deletePassLog();
+      }
       state = State.FINISHED;
 
     } catch (Throwable t) {

@@ -24,7 +24,7 @@ import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
 /**
  * Builds a representation of a single output/encoding setting
  */
-public class FFmpegOutputBuilder implements Cloneable {
+public class FFmpegOutputBuilder {
 
   final private static String DEVNULL = SystemUtils.IS_OS_WINDOWS ? "NUL" : "/dev/null";
   final private static List<String> rtps = ImmutableList.of("rtsp", "rtp", "rtmp");

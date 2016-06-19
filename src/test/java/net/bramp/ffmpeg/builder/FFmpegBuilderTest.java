@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.nitorcreations.Matchers.reflectEquals;
+import static net.bramp.ffmpeg.builder.FFmpegBuilder.Verbosity;
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.*;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.tag;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.usable;
 import static net.bramp.ffmpeg.builder.StreamSpecifierType.*;
-import static net.bramp.ffmpeg.builder.FFmpegBuilder.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 

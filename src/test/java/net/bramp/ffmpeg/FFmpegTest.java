@@ -15,7 +15,6 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.hamcrest.Matchers.hasItem;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
@@ -58,10 +57,9 @@ public class FFmpegTest {
 
   @Test
   public void testCodecs() throws IOException {
-
     // Run twice, the second should be cached
-    assertArrayEquals(Codecs.CODECS, ffmpeg.codecs().toArray());
-    assertArrayEquals(Codecs.CODECS, ffmpeg.codecs().toArray());
+    assertEquals(Codecs.CODECS, ffmpeg.codecs());
+    assertEquals(Codecs.CODECS, ffmpeg.codecs());
 
     verify(runFunc, times(1)).run(argThatHasItem("-codecs"));
   }
@@ -69,8 +67,8 @@ public class FFmpegTest {
   @Test
   public void testFormats() throws IOException {
     // Run twice, the second should be cached
-    assertArrayEquals(Formats.FORMATS, ffmpeg.formats().toArray());
-    assertArrayEquals(Formats.FORMATS, ffmpeg.formats().toArray());
+    assertEquals(Formats.FORMATS, ffmpeg.formats());
+    assertEquals(Formats.FORMATS, ffmpeg.formats());
 
     verify(runFunc, times(1)).run(argThatHasItem("-formats"));
   }

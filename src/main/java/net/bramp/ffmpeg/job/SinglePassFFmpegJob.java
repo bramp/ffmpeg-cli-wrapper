@@ -1,6 +1,7 @@
 package net.bramp.ffmpeg.job;
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.FFmpeg;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public class SinglePassFFmpegJob extends FFmpegJob {
 
   public SinglePassFFmpegJob(FFmpeg ffmpeg, List<String> args) {
     super(ffmpeg);
-    this.args = args;
+    this.args = ImmutableList.copyOf(args);
   }
 
   public void run() {
