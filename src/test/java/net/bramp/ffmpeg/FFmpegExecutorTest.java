@@ -79,15 +79,6 @@ public class FFmpegExecutorTest {
   }
 
   protected void runAndWait(FFmpegJob job) throws ExecutionException, InterruptedException {
-    Future<?> future = executor.submit(job);
-
-    // TODO Why do we loop, and not future.get()?
-    while (!future.isDone()) {
-      try {
-        future.get(100, TimeUnit.MILLISECONDS);
-        break;
-      } catch (TimeoutException e) {
-      }
-    }
+    executor.submit(job).get();
   }
 }
