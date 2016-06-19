@@ -3,13 +3,11 @@ package net.bramp.ffmpeg.builder;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 public class FFmpegOutputBuilderTestCheckValidStream {
 

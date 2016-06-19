@@ -5,11 +5,9 @@ import com.google.gson.GsonBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.StringReader;
-
 import static com.nitorcreations.Matchers.reflectEquals;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 
 public class NamedBitsetAdapterTest {

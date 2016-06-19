@@ -8,8 +8,6 @@ package net.bramp.ffmpeg.builder;
 // index is meant to be zero based, by negitive is allowed as dummy values
 
 
-import com.google.common.base.CharMatcher;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 

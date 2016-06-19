@@ -13,14 +13,12 @@ import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.math.Fraction;
 
 import java.net.URI;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Preconditions.*;
 import static net.bramp.ffmpeg.FFmpegUtils.millisecondsToString;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
 
 /**

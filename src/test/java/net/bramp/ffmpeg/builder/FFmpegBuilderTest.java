@@ -1,6 +1,5 @@
 package net.bramp.ffmpeg.builder;
 
-import com.google.common.base.Joiner;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.options.AudioEncodingOptions;
 import net.bramp.ffmpeg.options.EncodingOptions;
@@ -14,9 +13,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.nitorcreations.Matchers.reflectEquals;
-import static net.bramp.ffmpeg.builder.MetadataSpecifier.chapter;
-import static net.bramp.ffmpeg.builder.MetadataSpecifier.program;
-import static net.bramp.ffmpeg.builder.MetadataSpecifier.stream;
+import static net.bramp.ffmpeg.builder.MetadataSpecifier.*;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.tag;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.usable;
 import static net.bramp.ffmpeg.builder.StreamSpecifierType.*;

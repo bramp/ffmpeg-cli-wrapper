@@ -11,7 +11,8 @@ public class FFmpegStream {
 
   public enum CodecType {
     VIDEO, AUDIO,
-  };
+  }
+
 
   public int index;
   public String codec_name;

@@ -1,13 +1,10 @@
 package net.bramp.ffmpeg.modelmapper;
 
+import net.bramp.ffmpeg.builder.FFmpegOutputBuilder;
 import net.bramp.ffmpeg.options.AudioEncodingOptions;
 import net.bramp.ffmpeg.options.EncodingOptions;
 import net.bramp.ffmpeg.options.MainEncodingOptions;
 import net.bramp.ffmpeg.options.VideoEncodingOptions;
-import net.bramp.ffmpeg.builder.FFmpegOutputBuilder;
-import net.bramp.ffmpeg.modelmapper.Mapper;
-
-import org.junit.Assert;
 import org.junit.Test;
 
 public class MapperTest {

@@ -5,7 +5,7 @@ import org.junit.Test;
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.*;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.id;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class MetadataSpecTest {
 

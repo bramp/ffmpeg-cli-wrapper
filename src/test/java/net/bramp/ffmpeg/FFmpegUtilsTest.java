@@ -3,7 +3,7 @@ package net.bramp.ffmpeg;
 import org.junit.Test;
 
 import static net.bramp.ffmpeg.FFmpegUtils.millisecondsToString;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class FFmpegUtilsTest {
 

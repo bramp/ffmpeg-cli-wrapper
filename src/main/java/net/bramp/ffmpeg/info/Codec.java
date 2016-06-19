@@ -1,6 +1,5 @@
 package net.bramp.ffmpeg.info;
 
-import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -15,7 +14,8 @@ public class Codec {
 
   enum Type {
     VIDEO, AUDIO, SUBTITLE
-  };
+  }
+
 
   final String name;
   final String longName;
