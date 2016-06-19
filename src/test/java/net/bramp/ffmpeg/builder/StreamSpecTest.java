@@ -1,6 +1,9 @@
 package net.bramp.ffmpeg.builder;
 
-import static net.bramp.ffmpeg.builder.MetadataSpec.stream;
+import org.junit.Test;
+
+import static net.bramp.ffmpeg.builder.StreamSpecifier.*;
+import static net.bramp.ffmpeg.builder.StreamSpecifierType.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -8,21 +11,23 @@ public class StreamSpecTest {
 
   @Test
   public void testStreamSpec() {
-    assertThat(stream(1).toString(), is("1"));
-    assertThat(stream(VIDEO, 1).toString(), is("v:1"));
+    assertThat(stream(1).spec(), is("1"));
+    assertThat(stream(Video).spec(), is("v"));
 
-    assertThat(chapter(1).toString(), is("c:1"));
-    assertThat(program(1).toString(), is("p:1"));
+    assertThat(stream(Video, 1).spec(), is("v:1"));
+    assertThat(stream(PureVideo, 1).spec(), is("V:1"));
+    assertThat(stream(Audio, 1).spec(), is("a:1"));
+    assertThat(stream(Subtitle, 1).spec(), is("s:1"));
+    assertThat(stream(Data, 1).spec(), is("d:1"));
+    assertThat(stream(Attachment, 1).spec(), is("t:1"));
+
+    assertThat(program(1).spec(), is("p:1"));
+    assertThat(program(1, 2).spec(), is("p:1:2"));
+
+    assertThat(id(1).spec(), is("i:1"));
+
+    assertThat(tag("key").spec(), is("m:key"));
+    assertThat(tag("key", "value").spec(), is("m:key:value"));
+    assertThat(usable().spec(), is("u"));
   }
-
-  addMetaTag("key", "value", );
-  addMetaTag("key", "value", chapter(1));
-  addMetaTag("key", "value", program(1));
-  addMetaTag("key", "value", stream(0));
-  addMetaTag("key", "value", stream(VIDEO, 0);
-  addMetaTag("key", "value", stream(AUDIO, 0);
-  addMetaTag("key", "value", stream(id(0x502));
-  addMetaTag("key", "value", stream(tag("key2", "value2"))); // This one is confusing, key2 refers to the output stream, and would apply key/value to any output stream already with key2/value2.
-  */
-}
 }
