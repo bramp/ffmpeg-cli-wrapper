@@ -39,10 +39,22 @@ public class FFmpegBuilder {
     }
   }
 
+  /*
+   * Log level options : https://ffmpeg.org/ffmpeg.html#Generic-options
+   */
+  public enum Verbosity {
+    QUIET, PANIC, FATAL, ERROR, WARNING, INFO, VERBOSE, DEBUG;
+
+    public String toString() {
+      return name().toLowerCase();
+    }
+  }
+
   // Global Settings
   boolean override = true;
   int pass = 0;
   String pass_prefix;
+  Verbosity verbosity = Verbosity.ERROR;
 
   // Input settings
   String format;
@@ -71,6 +83,12 @@ public class FFmpegBuilder {
 
   public FFmpegBuilder setPassPrefix(String prefix) {
     this.pass_prefix = prefix;
+    return this;
+  }
+
+  public FFmpegBuilder setVerbosity(Verbosity verbosity) {
+    checkNotNull(verbosity);
+    this.verbosity = verbosity;
     return this;
   }
 
@@ -164,7 +182,7 @@ public class FFmpegBuilder {
     Preconditions.checkArgument(!outputs.isEmpty(), "At least one output must be specified");
 
     args.add(override ? "-y" : "-n");
-    args.add("-v", "error"); // TODO make configurable
+    args.add("-v", this.verbosity.toString());
 
     if (startOffset != null) {
       args.add("-ss").add(FFmpegUtils.millisecondsToString(startOffset));
