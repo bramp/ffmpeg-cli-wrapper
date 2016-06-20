@@ -22,8 +22,7 @@ public class FFmpegExecutor {
 
   public FFmpegJob createJob(FFmpegBuilder builder) {
     // Single Pass
-    final List<String> args = builder.build();
-    return new SinglePassFFmpegJob(ffmpeg, args);
+    return new SinglePassFFmpegJob(ffmpeg, builder);
   }
 
   /**
@@ -33,19 +32,6 @@ public class FFmpegExecutor {
    * @return A new two-pass FFmpegJob
    */
   public FFmpegJob createTwoPassJob(FFmpegBuilder builder) {
-
-    // Random prefix so multiple runs don't clash
-    String passlogPrefix = UUID.randomUUID().toString();
-
-    // Two pass
-    final boolean override = builder.getOverrideOutputFiles();
-
-    final List<String> args1 =
-        builder.setPass(1).setPassPrefix(passlogPrefix).overrideOutputFiles(true).build();
-
-    final List<String> args2 =
-        builder.setPass(2).setPassPrefix(passlogPrefix).overrideOutputFiles(override).build();
-
-    return new TwoPassFFmpegJob(ffmpeg, passlogPrefix, args1, args2);
+    return new TwoPassFFmpegJob(ffmpeg, builder);
   }
 }
