@@ -22,8 +22,8 @@ public class TwoPassFFmpegJob extends FFmpegJob {
   final static Logger LOG = LoggerFactory.getLogger(TwoPassFFmpegJob.class);
 
   final String passlogPrefix;
-  final List<String> args1;
-  final List<String> args2;
+  final public List<String> args1;
+  final public List<String> args2;
 
   public TwoPassFFmpegJob(FFmpeg ffmpeg, FFmpegBuilder builder) {
     super(ffmpeg);

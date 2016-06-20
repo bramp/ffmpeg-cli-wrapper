@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class SinglePassFFmpegJob extends FFmpegJob {
 
-  final List<String> args;
+  final public List<String> args;
   final FFmpegProgressParser parser;
 
   public SinglePassFFmpegJob(FFmpeg ffmpeg, FFmpegBuilder builder) {
