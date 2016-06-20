@@ -103,12 +103,12 @@ public class Progress {
         return true; // The progress field is always last
 
       default:
-
         // TODO
         // stream_%d_%d_q= file_index, index, quality
         // stream_%d_%d_psnr_%c=%2.2f, file_index, index, type{Y, U, V}, quality // Enable with
         // AV_CODEC_FLAG_PSNR
         // stream_%d_%d_psnr_all
+        System.out.println("Unsupported key " + line); // TODO Fix
         return false; // Ignore for the moment
     }
   }
@@ -152,5 +152,12 @@ public class Progress {
   public int hashCode() {
     return Objects.hash(frame, fps, bitrate, total_size, out_time_ms, dup_frames, drop_frames,
         speed, progress);
+
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this).add("frame", frame).add("fps", fps)
+        .add("bitrate", bitrate).add("total_size", total_size).add("out_time_ms", out_time_ms)
+        .add("dup_frames", dup_frames).add("drop_frames", drop_frames).add("speed", speed)
+        .add("progress", progress).toString();
   }
 }

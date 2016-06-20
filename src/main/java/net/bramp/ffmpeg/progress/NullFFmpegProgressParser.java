@@ -37,5 +37,4 @@ public class NullFFmpegProgressParser extends FFmpegProgressParser {
   public URI getUri() {
     return null;
   }
-
 }
