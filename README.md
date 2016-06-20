@@ -4,7 +4,7 @@ by Andrew Brampton ([bramp.net](https://bramp.net)) (c) 2013-2014,2016
 
 A fluent interface to running FFmpeg from Java.
 
-![Java](https://img.shields.io/badge/Java-6+-brightgreen.svg)
+![Java](https://img.shields.io/badge/Java-7+-brightgreen.svg)
 [![Build Status](https://img.shields.io/travis/bramp/ffmpeg-cli-wrapper/master.svg)](https://travis-ci.org/bramp/ffmpeg-cli-wrapper)
 [![Maven](https://img.shields.io/maven-central/v/net.bramp.ffmpeg/ffmpeg.svg)](http://mvnrepository.com/artifact/net.bramp.ffmpeg/ffmpeg)
 
