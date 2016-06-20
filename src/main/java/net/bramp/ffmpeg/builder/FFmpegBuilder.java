@@ -59,6 +59,7 @@ public class FFmpegBuilder {
   // Input settings
   String format;
   Long startOffset; // in millis
+  boolean read_at_native_frame_rate = false;
   final List<String> inputs = new ArrayList<>();
   final Map<String, FFmpegProbeResult> inputProbes = new TreeMap<>();
 
@@ -89,6 +90,11 @@ public class FFmpegBuilder {
   public FFmpegBuilder setVerbosity(Verbosity verbosity) {
     checkNotNull(verbosity);
     this.verbosity = verbosity;
+    return this;
+  }
+
+  public FFmpegBuilder readAtNativeFrameRate() {
+    this.read_at_native_frame_rate = true;
     return this;
   }
 
@@ -190,6 +196,10 @@ public class FFmpegBuilder {
 
     if (format != null) {
       args.add("-f", format);
+    }
+
+    if (read_at_native_frame_rate) {
+      args.add("-re");
     }
 
     args.addAll(extra_args);
