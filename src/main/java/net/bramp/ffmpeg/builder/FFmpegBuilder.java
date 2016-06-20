@@ -55,6 +55,7 @@ public class FFmpegBuilder {
   int pass = 0;
   String pass_prefix;
   Verbosity verbosity = Verbosity.ERROR;
+  URI progress;
 
   // Input settings
   String format;
@@ -83,7 +84,7 @@ public class FFmpegBuilder {
   }
 
   public FFmpegBuilder setPassPrefix(String prefix) {
-    this.pass_prefix = prefix;
+    this.pass_prefix = checkNotNull(prefix);
     return this;
   }
 
@@ -141,6 +142,12 @@ public class FFmpegBuilder {
 
     return this;
   }
+
+  public FFmpegBuilder addProgress(URI uri) {
+    this.progress = checkNotNull(uri);
+    return this;
+  }
+
 
   /**
    * Add additional ouput arguments (for flags which aren't currently supported).
@@ -200,6 +207,10 @@ public class FFmpegBuilder {
 
     if (read_at_native_frame_rate) {
       args.add("-re");
+    }
+
+    if (progress != null) {
+      args.add("-progress").add(progress.toString());
     }
 
     args.addAll(extra_args);
