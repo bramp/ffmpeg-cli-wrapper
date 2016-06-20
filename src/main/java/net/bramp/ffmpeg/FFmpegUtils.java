@@ -12,6 +12,8 @@ import org.apache.commons.lang3.math.Fraction;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -47,6 +49,22 @@ public final class FFmpegUtils {
       return String.format("%02d:%02d:%02d", hours, minutes, seconds);
 
     return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds);
+  }
+
+  /**
+   * Converts a string representation of bitrate to a long of bits per second
+   *
+   * @param bitrate in the form of 12.3kbits/s
+   * @return
+   */
+  public static long parseBitrate(String bitrate) {
+    Pattern p = Pattern.compile("(\\d+(\\.\\d+)?)kbits/s");
+    Matcher m = p.matcher(bitrate);
+    if (!m.find()) {
+      throw new IllegalArgumentException("Invalid bitrate '" + bitrate + "'");
+    }
+
+    return (long) (Float.parseFloat(m.group(1)) * 1000);
   }
 
   public static void throwOnError(String cmd, Process p) throws IOException {
