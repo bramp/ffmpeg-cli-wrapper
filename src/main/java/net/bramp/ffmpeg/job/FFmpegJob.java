@@ -1,10 +1,13 @@
 package net.bramp.ffmpeg.job;
 
+import com.google.common.base.Optional;
 import net.bramp.ffmpeg.FFmpeg;
+import net.bramp.ffmpeg.progress.FFmpegProgressListener;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * TODO Read progress from output
- * 
+ *
  * @author bramp
  *
  */
@@ -15,11 +18,19 @@ public abstract class FFmpegJob implements Runnable {
   }
 
   final FFmpeg ffmpeg;
+  final FFmpegProgressListener progressListener;
+
   State state = State.WAITING;
 
   public FFmpegJob(FFmpeg ffmpeg) {
-    this.ffmpeg = ffmpeg;
+    this(ffmpeg, Optional.<FFmpegProgressListener>absent());
   }
+
+  public FFmpegJob(FFmpeg ffmpeg, Optional<FFmpegProgressListener> progressListener) {
+    this.ffmpeg = checkNotNull(ffmpeg);
+    this.progressListener = progressListener.orNull();
+  }
+
 
   public State getState() {
     return state;

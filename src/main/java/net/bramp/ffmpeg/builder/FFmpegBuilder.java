@@ -39,7 +39,7 @@ public class FFmpegBuilder {
     }
   }
 
-  /*
+  /**
    * Log level options : https://ffmpeg.org/ffmpeg.html#Generic-options
    */
   public enum Verbosity {

@@ -4,6 +4,7 @@ import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.job.FFmpegJob;
 import net.bramp.ffmpeg.job.SinglePassFFmpegJob;
 import net.bramp.ffmpeg.job.TwoPassFFmpegJob;
+import net.bramp.ffmpeg.progress.FFmpegProgressListener;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +22,11 @@ public class FFmpegExecutor {
   }
 
   public FFmpegJob createJob(FFmpegBuilder builder) {
+    // Single Pass
+    return new SinglePassFFmpegJob(ffmpeg, builder);
+  }
+
+  public FFmpegJob createJob(FFmpegBuilder builder, FFmpegProgressListener listener) {
     // Single Pass
     return new SinglePassFFmpegJob(ffmpeg, builder);
   }
