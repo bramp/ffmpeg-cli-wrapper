@@ -118,7 +118,7 @@ public class FFmpeg {
       try {
         BufferedReader r = wrapInReader(p);
         this.version = r.readLine();
-        IOUtils.copy(r, new NullOutputStream()); // Throw away rest of the output
+        IOUtils.copy(r, new NullOutputStream(), Charsets.UTF_8); // Throw away rest of the output
         FFmpegUtils.throwOnError(FFMPEG, p);
       } finally {
         p.destroy();
@@ -185,7 +185,8 @@ public class FFmpeg {
     Process p = runFunc.run(newArgs);
     try {
       // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
-      IOUtils.copy(wrapInReader(p), System.out); // TODO Should I be outputting to stdout?
+      IOUtils.copy(wrapInReader(p), System.out, Charsets.UTF_8); // TODO Should I be outputting to
+                                                                 // stdout?
 
       FFmpegUtils.throwOnError(FFMPEG, p);
 
