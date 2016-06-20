@@ -9,7 +9,7 @@ import java.util.List;
 
 public class SinglePassFFmpegJob extends FFmpegJob {
 
-  final List<String> args;
+  final public List<String> args;
 
   public SinglePassFFmpegJob(FFmpeg ffmpeg, FFmpegBuilder argsBuilder) {
     super(ffmpeg);

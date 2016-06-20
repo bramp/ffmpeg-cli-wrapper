@@ -179,6 +179,11 @@ public class FFmpeg {
     return formats;
   }
 
+  /**
+   * Runs ffmpeg with the supplied args. Blocking until finished.
+   * @param args
+   * @throws IOException
+   */
   public void run(List<String> args) throws IOException {
     List<String> newArgs = ImmutableList.<String>builder().add(path).addAll(args).build();
 
