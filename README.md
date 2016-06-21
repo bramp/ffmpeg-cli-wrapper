@@ -10,8 +10,8 @@ A fluent interface to running FFmpeg from Java.
 
 [GitHub](https://github.com/bramp/ffmpeg-cli-wrapper) | [API docs](https://bramp.github.io/ffmpeg-cli-wrapper/)
 
-Usage
------
+Install
+-------
 
 Maven:
 ```xml
@@ -21,6 +21,11 @@ Maven:
   <version>0.5</version>
 </dependency>
 ```
+
+Usage
+-----
+
+### Video Encoding
 
 Code:
 ```java
@@ -57,6 +62,28 @@ executor.createJob(builder).run();
 
 // Or run a two-pass encode (which is slower at the cost of better quality)
 executor.createTwoPassJob(builder).run();
+```
+
+### Get Media Information
+
+Code:
+```java
+FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
+FFmpegProbeResult probeResult = ffprobe.probe("input.mp4");
+
+FFmpegFormat format = probeResult.getFormat();
+System.out.format("%nFile: '%s' ; Format: '%s' ; Duration: %.3fs", 
+	format.filename, 
+	format.format_long_name,
+	format.duration
+);
+
+FFmpegStream stream = probeResult.getStreams().get(0);
+System.out.format("%nCodec: '%s' ; Width: %dpx ; Height: %dpx",
+	stream.codec_long_name,
+	stream.width,
+	stream.height
+);
 ```
 
 Building & Releasing
