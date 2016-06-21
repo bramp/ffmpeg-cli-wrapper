@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -118,7 +119,7 @@ public class FFmpeg {
       try {
         BufferedReader r = wrapInReader(p);
         this.version = r.readLine();
-        IOUtils.copy(r, new NullOutputStream()); // Throw away rest of the output
+        IOUtils.copy(r, NullOutputStream.NULL_OUTPUT_STREAM, Charset.defaultCharset()); // Throw away rest of the output
         FFmpegUtils.throwOnError(FFMPEG, p);
       } finally {
         p.destroy();
@@ -190,7 +191,7 @@ public class FFmpeg {
     Process p = runFunc.run(newArgs);
     try {
       // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
-      IOUtils.copy(wrapInReader(p), System.out); // TODO Should I be outputting to stdout?
+      IOUtils.copy(wrapInReader(p), System.out, Charset.defaultCharset()); // TODO Should I be outputting to stdout?
 
       FFmpegUtils.throwOnError(FFMPEG, p);
 
