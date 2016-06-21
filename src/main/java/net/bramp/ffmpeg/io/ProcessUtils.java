@@ -38,13 +38,13 @@ public abstract class ProcessUtils {
   }
 
   /**
-   * Waits until the process finishs or the timeout occurs
+   * Waits until a process finishes or a timeout occurs
    * 
-   * @param p
-   * @param timeout
-   * @param unit
-   * @return the process' exit value
-   * @throws TimeoutException if the timeout occurs
+   * @param p process
+   * @param timeout timeout in given unit
+   * @param unit time unit
+   * @return the process exit value
+   * @throws TimeoutException if a timeout occurs
    */
   public static int waitForWithTimeout(final Process p, long timeout, TimeUnit unit)
       throws TimeoutException {
