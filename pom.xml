@@ -9,7 +9,7 @@
     </prerequisites>
 
     <name>FFmpeg Wrapper</name>
-    <description>Simple Java Wrapper around the FFmpeg command line</description>
+    <description>Simple Java wrapper around FFmpeg command-line interface</description>
     <url>https://github.com/bramp/ffmpeg-cli-wrapper</url>
 
     <scm>
@@ -21,7 +21,7 @@
     <licenses>
         <license>
             <name>The BSD 2-Clause License</name>
-            <url>http://opensource.org/licenses/BSD-2-Clause</url>
+            <url>https://opensource.org/licenses/BSD-2-Clause</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -39,13 +39,12 @@
 
     <properties>
         <powermock.version>1.5.2</powermock.version>
-        <logback.version>1.1.7</logback.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -90,7 +89,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
+            <version>1.1.7</version>
             <scope>test</scope>
         </dependency>
 
