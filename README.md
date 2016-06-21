@@ -64,16 +64,26 @@ executor.createJob(builder).run();
 executor.createTwoPassJob(builder).run();
 ```
 
-### Retreiving information from multimedia streams
-
-Use Java wrapper of [ffprobe](https://ffmpeg.org/ffprobe.html) to get information from multimedia streams.
+### Get Media Information
 
 Code:
 ```java
 FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
 FFmpegProbeResult probeResult = ffprobe.probe("input.mp4");
-	
-double duration = probeResult.getStreams().get(0).duration; // Get stream[0] duration in seconds
+
+FFmpegFormat format = probeResult.getFormat();
+System.out.format("%nFile: '%s' ; Format: '%s' ; Duration: %.3fs", 
+	format.filename, 
+	format.format_long_name,
+	format.duration
+);
+
+FFmpegStream stream = probeResult.getStreams().get(0);
+System.out.format("%nCodec: '%s' ; Width: %dpx ; Height: %dpx",
+	stream.codec_long_name,
+	stream.width,
+	stream.height
+);
 ```
 
 Building & Releasing
