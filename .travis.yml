@@ -13,7 +13,7 @@ os:
 addons:
 #  apt:
 #    packages:
-#    - ffmpeg # Sadly this is libav's ffmpeg, which is not comptable
+#    - ffmpeg # Sadly this is libav's ffmpeg, which is not compatible
 
 before_install:
   - ./travis-install-ffmpeg.sh
