@@ -123,6 +123,7 @@ public class FFmpeg {
         FFmpegUtils.throwOnError(FFMPEG, p);
       } finally {
 	p.destroy();
+	IOUtils.closeQuietly(p.getOutputStream(), p.getErrorStream());
       }
     }
     return version;
@@ -149,6 +150,7 @@ public class FFmpeg {
         this.codecs = ImmutableList.copyOf(codecs);
       } finally {
         p.destroy();
+        IOUtils.closeQuietly(p.getOutputStream(), p.getErrorStream());
       }
     }
 
@@ -177,6 +179,7 @@ public class FFmpeg {
         this.formats = ImmutableList.copyOf(formats);
       } finally {
         p.destroy();
+        IOUtils.closeQuietly(p.getOutputStream(), p.getErrorStream());
       }
     }
     return formats;
@@ -194,6 +197,7 @@ public class FFmpeg {
 
     } finally {
       p.destroy();
+      IOUtils.closeQuietly(p.getInputStream(), p.getOutputStream(), p.getErrorStream());
     }
   }
 
