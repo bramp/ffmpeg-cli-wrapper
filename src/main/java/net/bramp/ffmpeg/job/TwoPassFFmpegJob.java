@@ -34,8 +34,7 @@ public class TwoPassFFmpegJob extends FFmpegJob {
     // Random prefix so multiple runs don't clash
     this.passlogPrefix = UUID.randomUUID().toString();
 
-    this.args1 =
-        builder.setPass(1).setPassPrefix(passlogPrefix).overrideOutputFiles(true).build();
+    this.args1 = builder.setPass(1).setPassPrefix(passlogPrefix).overrideOutputFiles(true).build();
 
     this.args2 =
         builder.setPass(2).setPassPrefix(passlogPrefix).overrideOutputFiles(override).build();

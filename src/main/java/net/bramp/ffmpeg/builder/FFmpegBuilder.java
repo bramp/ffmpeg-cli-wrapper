@@ -65,7 +65,7 @@ public class FFmpegBuilder {
   final List<String> extra_args = new ArrayList<>();
 
   // Output
-  final List<FFmpegOutputBuilder> outputs = new ArrayList<FFmpegOutputBuilder>();
+  final List<FFmpegOutputBuilder> outputs = new ArrayList<>();
 
   public FFmpegBuilder overrideOutputFiles(boolean override) {
     this.override = override;
