@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.*;
+import com.google.common.collect.Range;
 import static net.bramp.ffmpeg.FFmpegUtils.millisecondsToString;
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
 
@@ -40,8 +41,8 @@ public class FFmpegOutputBuilder {
 
   public String format;
 
-  public Long startOffset; // in millis
-  public Long duration; // in millis
+  public Long startOffset; // in milliseconds
+  public Long duration; // in milliseconds
 
   public final List<String> meta_tags = new ArrayList<>();
 
@@ -174,7 +175,7 @@ public class FFmpegOutputBuilder {
   }
 
   public FFmpegOutputBuilder setVideoBitRate(long bit_rate) {
-    Preconditions.checkArgument(bit_rate > 0, "bitrate must be positive");
+    Preconditions.checkArgument(bit_rate > 0, "bit rate must be positive");
     this.video_enabled = true;
     this.video_bit_rate = bit_rate;
     return this;
@@ -387,20 +388,20 @@ public class FFmpegOutputBuilder {
   }
 
   /**
-   * Sets the Audio bitrate
+   * Sets the Audio bit rate
    *
    * @param bit_rate
    * @return this
    */
   public FFmpegOutputBuilder setAudioBitRate(long bit_rate) {
-    Preconditions.checkArgument(bit_rate > 0, "bitrate must be positive");
+    Preconditions.checkArgument(bit_rate > 0, "bit rate must be positive");
     this.audio_enabled = true;
     this.audio_bit_rate = bit_rate;
     return this;
   }
 
   public FFmpegOutputBuilder setAudioQuality(int quality) {
-    Preconditions.checkArgument(quality >= 1 && quality <= 5, "quality must be in the range 1..5");
+    Preconditions.checkArgument(Range.closed(1,5).contains(quality), "quality must be in the range 1..5");
     this.audio_enabled = true;
     this.audio_quality = quality;
     return this;
@@ -465,7 +466,7 @@ public class FFmpegOutputBuilder {
   /**
    * When doing multi-pass we add a little extra padding, to ensure we reach our target
    *
-   * @param bitrate
+   * @param bitrate bit rate
    * @return this
    */
   public FFmpegOutputBuilder setPassPaddingBitrate(long bitrate) {
@@ -530,7 +531,7 @@ public class FFmpegOutputBuilder {
     if (targetSize > 0) {
       checkState(parent.inputs.size() == 1, "Target size does not support multiple inputs");
 
-      String firstInput = parent.inputs.get(0);
+      String firstInput = parent.inputs.iterator().next();
       FFmpegProbeResult input = parent.inputProbes.get(firstInput);
 
       checkState(input != null, "Target size must be used with setInput(FFmpegProbeResult)");
@@ -554,33 +555,31 @@ public class FFmpegOutputBuilder {
     }
 
     if (strict != FFmpegBuilder.Strict.NORMAL) {
-      args.add("-strict").add(strict.toString());
+      args.add("-strict", strict.toString());
     }
 
     if (!Strings.isNullOrEmpty(format)) {
-      args.add("-f").add(format);
+      args.add("-f", format);
     }
 
     if (startOffset != null) {
-      args.add("-ss").add(millisecondsToString(startOffset));
+      args.add("-ss", millisecondsToString(startOffset));
     }
 
     if (duration != null) {
-      args.add("-t").add(millisecondsToString(duration));
+      args.add("-t", millisecondsToString(duration));
     }
 
-    for (String meta : meta_tags) {
-      args.add(meta);
-    }
+    args.addAll(meta_tags);
 
     if (video_enabled) {
 
       if (video_frames != null) {
-        args.add("-vframes").add(String.format("%d", video_frames));
+        args.add("-vframes", video_frames.toString());
       }
 
       if (!Strings.isNullOrEmpty(video_codec)) {
-        args.add("-vcodec").add(video_codec);
+        args.add("-vcodec", video_codec);
       }
 
       if (video_copyinkf) {
@@ -588,34 +587,34 @@ public class FFmpegOutputBuilder {
       }
 
       if (!Strings.isNullOrEmpty(video_movflags)) {
-        args.add("-movflags").add(video_movflags);
+        args.add("-movflags", video_movflags);
       }
 
       if (video_width != 0 && video_height != 0) {
-        args.add("-s").add(String.format("%dx%d", video_width, video_height));
+        args.add("-s", String.format("%dx%d", video_width, video_height));
       }
 
       if (video_frame_rate != null) {
-        // args.add("-r").add(String.format("%2f", video_frame_rate));
-        args.add("-r").add(video_frame_rate.toString());
+        // args.add("-r", String.format("%2f", video_frame_rate));
+        args.add("-r", video_frame_rate.toString());
       }
 
       if (video_bit_rate > 0) {
-        args.add("-b:v").add(String.format("%d", video_bit_rate));
+        args.add("-b:v", String.valueOf(video_bit_rate));
       }
 
       if (!Strings.isNullOrEmpty(video_preset)) {
-        args.add("-vpre").add(video_preset);
+        args.add("-vpre", video_preset);
       }
 
       if (!Strings.isNullOrEmpty(video_filter)) {
         checkState(parent.inputs.size() == 1,
             "Video filter only works with one input, instead use setVideoFilterComplex(..)");
-        args.add("-vf").add(video_filter);
+        args.add("-vf", video_filter);
       }
 
       if (!Strings.isNullOrEmpty(video_filter_complex)) {
-        args.add("-filter_complex").add(video_filter_complex);
+        args.add("-filter_complex", video_filter_complex);
       }
 
       if (!Strings.isNullOrEmpty(video_bit_stream_filter)) {
@@ -628,19 +627,19 @@ public class FFmpegOutputBuilder {
 
     if (audio_enabled && pass != 1) {
       if (!Strings.isNullOrEmpty(audio_codec)) {
-        args.add("-acodec").add(audio_codec);
+        args.add("-acodec", audio_codec);
       }
 
       if (audio_channels > 0) {
-        args.add("-ac").add(String.format("%d", audio_channels));
+        args.add("-ac", String.valueOf(audio_channels));
       }
 
       if (audio_sample_rate > 0) {
-        args.add("-ar").add(String.format("%d", audio_sample_rate));
+        args.add("-ar", String.valueOf(audio_sample_rate));
       }
 
       if (!Strings.isNullOrEmpty(audio_bit_depth)) {
-        args.add("-sample_fmt").add(audio_bit_depth);
+        args.add("-sample_fmt", audio_bit_depth);
       }
 
       if (audio_bit_rate > 0 && audio_quality > 0 && throwWarnings) {
@@ -650,11 +649,11 @@ public class FFmpegOutputBuilder {
       }
 
       if (audio_bit_rate > 0) {
-        args.add("-b:a").add(String.format("%d", audio_bit_rate));
+        args.add("-b:a", String.valueOf(audio_bit_rate));
       }
 
       if (audio_quality > 0) {
-        args.add("-aq").add(String.format("%d", audio_quality));
+        args.add("-aq", String.valueOf(audio_quality));
       }
 
       if (!Strings.isNullOrEmpty(audio_bit_stream_filter)) {
@@ -665,9 +664,10 @@ public class FFmpegOutputBuilder {
       args.add("-an");
     }
 
-    if (!subtitle_enabled)
+    if (!subtitle_enabled) {
       args.add("-sn");
-
+    }
+    
     args.addAll(extra_args);
 
     if (filename != null && uri != null) {
