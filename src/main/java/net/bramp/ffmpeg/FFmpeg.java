@@ -1,6 +1,5 @@
 package net.bramp.ffmpeg;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -9,6 +8,7 @@ import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.info.Codec;
 import net.bramp.ffmpeg.info.Format;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.LineIterator;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang3.math.Fraction;
 import org.slf4j.Logger;
@@ -17,7 +17,9 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -109,19 +111,20 @@ public class FFmpeg {
   }
 
   private static BufferedReader wrapInReader(Process p) {
-    return new BufferedReader(new InputStreamReader(p.getInputStream(), Charsets.UTF_8));
+      return new BufferedReader(new InputStreamReader(p.getInputStream(), StandardCharsets.UTF_8));
   }
 
   public synchronized @Nonnull String version() throws IOException {
     if (this.version == null) {
       Process p = runFunc.run(ImmutableList.of(path, "-version"));
+      InputStream stream = p.getInputStream();
       try {
-        BufferedReader r = wrapInReader(p);
-        this.version = r.readLine();
-        IOUtils.copy(r, new NullOutputStream(), Charsets.UTF_8); // Throw away rest of the output
+	LineIterator iterator = IOUtils.lineIterator(stream, StandardCharsets.UTF_8);
+        this.version = iterator.nextLine();
         FFmpegUtils.throwOnError(FFMPEG, p);
       } finally {
-        p.destroy();
+	p.destroy();
+	IOUtils.closeQuietly(stream);
       }
     }
     return version;
@@ -132,13 +135,15 @@ public class FFmpeg {
       codecs = new ArrayList<Codec>();
 
       Process p = runFunc.run(ImmutableList.of(path, "-codecs"));
+      InputStream stream = p.getInputStream();
       try {
-        BufferedReader r = wrapInReader(p);
-        String line;
-        while ((line = r.readLine()) != null) {
+	LineIterator iterator = IOUtils.lineIterator(stream, StandardCharsets.UTF_8);
+        while (iterator.hasNext()) {
+          String line = iterator.nextLine();
           Matcher m = CODECS_REGEX.matcher(line);
-          if (!m.matches())
+          if (!m.matches()) {
             continue;
+          }
 
           codecs.add(new Codec(m.group(2), m.group(3), m.group(1)));
         }
@@ -147,6 +152,7 @@ public class FFmpeg {
         this.codecs = ImmutableList.copyOf(codecs);
       } finally {
         p.destroy();
+        IOUtils.closeQuietly(stream);
       }
     }
 
@@ -159,13 +165,15 @@ public class FFmpeg {
       formats = new ArrayList<Format>();
 
       Process p = runFunc.run(ImmutableList.of(path, "-formats"));
+      InputStream stream = p.getInputStream();
       try {
-        BufferedReader r = wrapInReader(p);
-        String line;
-        while ((line = r.readLine()) != null) {
+	LineIterator iterator = IOUtils.lineIterator(stream, StandardCharsets.UTF_8);
+	while (iterator.hasNext()) {
+	  String line = iterator.nextLine();  
           Matcher m = FORMATS_REGEX.matcher(line);
-          if (!m.matches())
+          if (!m.matches()) {
             continue;
+          }
 
           formats.add(new Format(m.group(2), m.group(3), m.group(1)));
         }
@@ -174,6 +182,7 @@ public class FFmpeg {
         this.formats = ImmutableList.copyOf(formats);
       } finally {
         p.destroy();
+        IOUtils.closeQuietly(stream);
       }
     }
     return formats;
@@ -185,8 +194,7 @@ public class FFmpeg {
     Process p = runFunc.run(newArgs);
     try {
       // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
-      IOUtils.copy(wrapInReader(p), System.out, Charsets.UTF_8); // TODO Should I be outputting to
-                                                                 // stdout?
+      IOUtils.copy(wrapInReader(p), System.out, StandardCharsets.UTF_8); // TODO Should I be outputting to stdout?
 
       FFmpegUtils.throwOnError(FFMPEG, p);
 
