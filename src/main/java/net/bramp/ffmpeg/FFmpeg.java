@@ -117,14 +117,12 @@ public class FFmpeg {
   public synchronized @Nonnull String version() throws IOException {
     if (this.version == null) {
       Process p = runFunc.run(ImmutableList.of(path, "-version"));
-      InputStream stream = p.getInputStream();
-      try {
+      try (InputStream stream = p.getInputStream()) {
 	LineIterator iterator = IOUtils.lineIterator(stream, StandardCharsets.UTF_8);
         this.version = iterator.nextLine();
         FFmpegUtils.throwOnError(FFMPEG, p);
       } finally {
 	p.destroy();
-	IOUtils.closeQuietly(stream);
       }
     }
     return version;
@@ -135,8 +133,7 @@ public class FFmpeg {
       codecs = new ArrayList<Codec>();
 
       Process p = runFunc.run(ImmutableList.of(path, "-codecs"));
-      InputStream stream = p.getInputStream();
-      try {
+      try (InputStream stream = p.getInputStream()) {
 	LineIterator iterator = IOUtils.lineIterator(stream, StandardCharsets.UTF_8);
         while (iterator.hasNext()) {
           String line = iterator.nextLine();
@@ -152,7 +149,6 @@ public class FFmpeg {
         this.codecs = ImmutableList.copyOf(codecs);
       } finally {
         p.destroy();
-        IOUtils.closeQuietly(stream);
       }
     }
 
@@ -165,8 +161,7 @@ public class FFmpeg {
       formats = new ArrayList<Format>();
 
       Process p = runFunc.run(ImmutableList.of(path, "-formats"));
-      InputStream stream = p.getInputStream();
-      try {
+      try (InputStream stream = p.getInputStream()) {
 	LineIterator iterator = IOUtils.lineIterator(stream, StandardCharsets.UTF_8);
 	while (iterator.hasNext()) {
 	  String line = iterator.nextLine();  
@@ -182,7 +177,6 @@ public class FFmpeg {
         this.formats = ImmutableList.copyOf(formats);
       } finally {
         p.destroy();
-        IOUtils.closeQuietly(stream);
       }
     }
     return formats;
