@@ -509,8 +509,22 @@ public class FFmpegOutputBuilder {
             video_bit_rate, video_frames, video_filter, video_preset));
   }
 
+  /**
+   * Builds the arguments
+   * 
+   * @param pass The particular pass. For one-pass this value will be zero, for multi-pass, it will
+   *        be 1 for the first pass, 2 for the second, and so on.
+   * @return
+   */
   protected List<String> build(int pass) {
     Preconditions.checkState(parent != null, "Can not build without parent being set");
+
+    if (pass > 0) {
+      // TODO Write a test for this:
+      Preconditions.checkArgument(format != null, "Format must be specified when using two-pass");
+      Preconditions.checkArgument(targetSize != 0 || video_bit_rate != 0,
+          "Target size, or video bitrate must be specified when using two-pass");
+    }
 
     ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
 
