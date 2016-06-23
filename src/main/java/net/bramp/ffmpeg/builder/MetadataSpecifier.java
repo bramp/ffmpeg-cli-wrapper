@@ -38,7 +38,7 @@ public class MetadataSpecifier {
   public static String checkValidKey(String key) {
     checkNotNull(key);
     checkArgument(!key.isEmpty(), "key must not be empty");
-    checkArgument(key.matches("[a-zA-Z0-9_]+"), "key must only contain letters, numbers, and _");
+    checkArgument(key.matches("\w+"), "key must only contain letters, numbers or _");
     return key;
   }
 
