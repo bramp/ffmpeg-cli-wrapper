@@ -1,12 +1,12 @@
 package net.bramp.ffmpeg.fixtures;
 
-import com.google.common.collect.ImmutableList;
-import net.bramp.ffmpeg.info.Format;
-
+import java.util.Arrays;
 import java.util.List;
 
+import net.bramp.ffmpeg.info.Format;
+
 /**
- * Class that contains all Formats as defined in the unit tests This should not be used to test if a
+ * Class that contains all formats as defined in the unit tests This should not be used to test if a
  * format is available, because every install of ffmpeg is different. Call ffmpeg.formats() to
  * discover.
  * 
@@ -15,7 +15,8 @@ import java.util.List;
  */
 public class Formats {
 
-  public final static List<Format> FORMATS = new ImmutableList.Builder().add(
+  public final static List<Format> FORMATS = Arrays.asList(
+      // @formatter:off
       new Format("3g2", "3GP2 format", " E"),
       new Format("3gp", "3GP format", " E"),
       new Format("4xm", "4X Technologies format", "D "),
@@ -119,14 +120,18 @@ public class Formats {
       new Format("md5", "MD5 testing format", " E"),
       new Format("microdvd", "MicroDVD subtitle format", "DE"),
       new Format("mjpeg", "raw MJPEG video", "DE"),
-      new Format("mkvtimestamp_v2", "extract pts as timecode v2 format, as defined by mkvtoolnix",
-          " E"), new Format("mlp", "raw MLP", "DE"),
+      new Format("mkvtimestamp_v2", "extract pts as timecode v2 format, as defined by mkvtoolnix", " E"),
+      new Format("mlp", "raw MLP", "DE"),
       new Format("mm", "American Laser Games MM format", "D "),
-      new Format("mmf", "Yamaha SMAF", "DE"), new Format("mov", "MOV format", " E"),
+      new Format("mmf", "Yamaha SMAF", "DE"),
+      new Format("mov", "MOV format", " E"),
       new Format("mov,mp4,m4a,3gp,3g2,mj2", "QuickTime/MPEG-4/Motion JPEG 2000 format", "D "),
-      new Format("mp2", "MPEG audio layer 2", " E"), new Format("mp3", "MPEG audio layer 3", "DE"),
-      new Format("mp4", "MP4 format", " E"), new Format("mpc", "Musepack", "D "),
-      new Format("mpc8", "Musepack SV8", "D "), new Format("mpeg", "MPEG-1 System format", "DE"),
+      new Format("mp2", "MPEG audio layer 2", " E"),
+      new Format("mp3", "MPEG audio layer 3", "DE"),
+      new Format("mp4", "MP4 format", " E"),
+      new Format("mpc", "Musepack", "D "),
+      new Format("mpc8", "Musepack SV8", "D "),
+      new Format("mpeg", "MPEG-1 System format", "DE"),
       new Format("mpeg1video", "raw MPEG-1 video", " E"),
       new Format("mpeg2video", "raw MPEG-2 video", " E"),
       new Format("mpegts", "MPEG-2 transport stream format", "DE"),
@@ -141,8 +146,10 @@ public class Formats {
       new Format("mxg", "MxPEG clip file format", "D "),
       new Format("nc", "NC camera feed format", "D "),
       new Format("nsv", "Nullsoft Streaming Video", "D "),
-      new Format("null", "raw null video format", " E"), new Format("nut", "NUT format", "DE"),
-      new Format("nuv", "NuppelVideo format", "D "), new Format("ogg", "Ogg", "DE"),
+      new Format("null", "raw null video format", " E"),
+      new Format("nut", "NUT format", "DE"),
+      new Format("nuv", "NuppelVideo format", "D "),
+      new Format("ogg", "Ogg", "DE"),
       new Format("oma", "Sony OpenMG audio", "DE"),
       new Format("oss", "Open Sound System playback", "DE"),
       new Format("pmp", "Playstation Portable PMP format", "D "),
@@ -150,12 +157,16 @@ public class Formats {
       new Format("psxstr", "Sony Playstation STR format", "D "),
       new Format("pulse", "Pulse audio input", "D "),
       new Format("pva", "TechnoTrend PVA file and stream format", "D "),
-      new Format("qcp", "QCP format", "D "), new Format("r3d", "REDCODE R3D format", "D "),
+      new Format("qcp", "QCP format", "D "),
+      new Format("r3d", "REDCODE R3D format", "D "),
       new Format("rawvideo", "raw video format", "DE"),
-      new Format("rcv", "VC-1 test bitstream", " E"), new Format("rl2", "RL2 format", "D "),
-      new Format("rm", "RealMedia format", "DE"), new Format("rpl", "RPL/ARMovie format", "D "),
+      new Format("rcv", "VC-1 test bitstream", " E"),
+      new Format("rl2", "RL2 format", "D "),
+      new Format("rm", "RealMedia format", "DE"),
+      new Format("rpl", "RPL/ARMovie format", "D "),
       new Format("rso", "Lego Mindstorms RSO format", "DE"),
-      new Format("rtp", "RTP output format", "DE"), new Format("rtsp", "RTSP output format", "DE"),
+      new Format("rtp", "RTP output format", "DE"),
+      new Format("rtsp", "RTSP output format", "DE"),
       new Format("s16be", "PCM signed 16 bit big-endian format", "DE"),
       new Format("s16le", "PCM signed 16 bit little-endian format", "DE"),
       new Format("s24be", "PCM signed 24 bit big-endian format", "DE"),
@@ -165,17 +176,25 @@ public class Formats {
       new Format("s8", "PCM signed 8 bit format", "DE"),
       new Format("sap", "SAP output format", "DE"),
       new Format("sbg", "SBaGen binaural beats script", "D "),
-      new Format("sdl", "SDL output device", " E"), new Format("sdp", "SDP", "D "),
-      new Format("segment", "segment muxer", " E"), new Format("shn", "raw Shorten", "D "),
-      new Format("siff", "Beam Software SIFF", "D "), new Format("smjpeg", "Loki SDL MJPEG", "DE"),
-      new Format("smk", "Smacker video", "D "), new Format("sol", "Sierra SOL format", "D "),
+      new Format("sdl", "SDL output device", " E"),
+      new Format("sdp", "SDP", "D "),
+      new Format("segment", "segment muxer", " E"),
+      new Format("shn", "raw Shorten", "D "),
+      new Format("siff", "Beam Software SIFF", "D "),
+      new Format("smjpeg", "Loki SDL MJPEG", "DE"),
+      new Format("smk", "Smacker video", "D "),
+      new Format("sol", "Sierra SOL format", "D "),
       new Format("sox", "SoX native format", "DE"),
       new Format("spdif", "IEC 61937 (used on S/PDIF - IEC958)", "DE"),
       new Format("srt", "SubRip subtitle format", "DE"),
-      new Format("svcd", "MPEG-2 PS format (VOB)", " E"), new Format("swf", "Flash format", "DE"),
-      new Format("thp", "THP", "D "), new Format("tiertexseq", "Tiertex Limited SEQ format", "D "),
-      new Format("tmv", "8088flex TMV", "D "), new Format("truehd", "raw TrueHD", "DE"),
-      new Format("tta", "True Audio", "D "), new Format("tty", "Tele-typewriter", "D "),
+      new Format("svcd", "MPEG-2 PS format (VOB)", " E"),
+      new Format("swf", "Flash format", "DE"),
+      new Format("thp", "THP", "D "),
+      new Format("tiertexseq", "Tiertex Limited SEQ format", "D "),
+      new Format("tmv", "8088flex TMV", "D "),
+      new Format("truehd", "raw TrueHD", "DE"),
+      new Format("tta", "True Audio", "D "),
+      new Format("tty", "Tele-typewriter", "D "),
       new Format("txd", "Renderware TeXture Dictionary", "D "),
       new Format("u16be", "PCM unsigned 16 bit big-endian format", "DE"),
       new Format("u16le", "PCM unsigned 16 bit little-endian format", "DE"),
@@ -183,7 +202,8 @@ public class Formats {
       new Format("u24le", "PCM unsigned 24 bit little-endian format", "DE"),
       new Format("u32be", "PCM unsigned 32 bit big-endian format", "DE"),
       new Format("u32le", "PCM unsigned 32 bit little-endian format", "DE"),
-      new Format("u8", "PCM unsigned 8 bit format", "DE"), new Format("vc1", "raw VC-1", "D "),
+      new Format("u8", "PCM unsigned 8 bit format", "DE"),
+      new Format("vc1", "raw VC-1", "D "),
       new Format("vc1test", "VC-1 test bitstream format", "D "),
       new Format("vcd", "MPEG-1 System format (VCD)", " E"),
       new Format("video4linux2,v4l2", "Video4Linux2 device grab", "D "),
@@ -191,15 +211,21 @@ public class Formats {
       new Format("vob", "MPEG-2 PS format (VOB)", " E"),
       new Format("voc", "Creative Voice file format", "DE"),
       new Format("vqf", "Nippon Telegraph and Telephone Corporation (NTT) TwinVQ", "D "),
-      new Format("w64", "Sony Wave64 format", "D "), new Format("wav", "WAV format", "DE"),
+      new Format("w64", "Sony Wave64 format", "D "),
+      new Format("wav", "WAV format", "DE"),
       new Format("wc3movie", "Wing Commander III movie format", "D "),
       new Format("webm", "WebM file format", " E"),
       new Format("wsaud", "Westwood Studios audio format", "D "),
       new Format("wsvqa", "Westwood Studios VQA format", "D "),
-      new Format("wtv", "Windows Television (WTV)", "DE"), new Format("wv", "WavPack", "D "),
-      new Format("x11grab", "X11grab", "D "), new Format("xa", "Maxis XA File Format", "D "),
+      new Format("wtv", "Windows Television (WTV)", "DE"),
+      new Format("wv", "WavPack", "D "),
+      new Format("x11grab", "X11grab", "D "),
+      new Format("xa", "Maxis XA File Format", "D "),
       new Format("xbin", "eXtended BINary text (XBIN)", "D "),
-      new Format("xmv", "Microsoft XMV", "D "), new Format("xwma", "Microsoft xWMA", "D "),
+      new Format("xmv", "Microsoft XMV", "D "),
+      new Format("xwma", "Microsoft xWMA", "D "),
       new Format("yop", "Psygnosis YOP Format", "D "),
-      new Format("yuv4mpegpipe", "YUV4MPEG pipe format", "DE")).build();
+      new Format("yuv4mpegpipe", "YUV4MPEG pipe format", "DE")
+      // @formatter:on
+  );
 }
