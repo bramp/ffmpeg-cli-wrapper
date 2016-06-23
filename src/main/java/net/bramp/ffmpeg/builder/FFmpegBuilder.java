@@ -169,7 +169,7 @@ public class FFmpegBuilder {
    * Create new output file.
    * 
    * @param filename output file path
-   * @return A new {@link FFmpegBuilder}
+   * @return A new {@link FFmpegOutputBuilder}
    */
   public FFmpegOutputBuilder addOutput(String filename) {
     FFmpegOutputBuilder output = new FFmpegOutputBuilder(this, filename);
