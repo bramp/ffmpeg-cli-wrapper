@@ -1,7 +1,8 @@
 package net.bramp.ffmpeg.fixtures;
 
-import java.util.Arrays;
 import java.util.List;
+
+import com.google.common.collect.ImmutableList;
 
 import net.bramp.ffmpeg.info.Format;
 
@@ -15,7 +16,7 @@ import net.bramp.ffmpeg.info.Format;
  */
 public class Formats {
 
-  public final static List<Format> FORMATS = Arrays.asList(
+  public final static List<Format> FORMATS = new ImmutableList.Builder<Format>().add(
       // @formatter:off
       new Format("3g2", "3GP2 format", " E"),
       new Format("3gp", "3GP format", " E"),
@@ -227,5 +228,5 @@ public class Formats {
       new Format("yop", "Psygnosis YOP Format", "D "),
       new Format("yuv4mpegpipe", "YUV4MPEG pipe format", "DE")
       // @formatter:on
-  );
+      ).build();
 }
