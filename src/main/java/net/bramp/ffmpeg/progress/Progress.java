@@ -155,9 +155,18 @@ public class Progress {
 
   @Override
   public String toString() {
-    return MoreObjects.toStringHelper(this).add("frame", frame).add("fps", fps)
-        .add("bitrate", bitrate).add("total_size", total_size).add("out_time_ms", out_time_ms)
-        .add("dup_frames", dup_frames).add("drop_frames", drop_frames).add("speed", speed)
-        .add("progress", progress).toString();
+    return MoreObjects.toStringHelper(this)
+        // @formatter:off
+        .add("frame", frame)
+        .add("fps", fps)
+        .add("bitrate", bitrate)
+        .add("total_size", total_size)
+        .add("out_time_ms", out_time_ms)
+        .add("dup_frames", dup_frames)
+        .add("drop_frames", drop_frames)
+        .add("speed", speed)
+        .add("progress", progress)
+        // @formatter:on
+        .toString();
   }
 }
