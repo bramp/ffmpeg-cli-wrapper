@@ -50,12 +50,14 @@ public class FractionAdapter extends TypeAdapter<Fraction> {
     String fraction = reader.nextString().trim();
 
     // Ambiguous as to what 0/0 is, but FFmpeg seems to think it's zero
-    if (zeroByZero != null && fraction.equals("0/0"))
+    if (zeroByZero != null && "0/0".equals(fraction)) {
       return zeroByZero;
+    }
 
     // Another edge cases is invalid files sometimes output 1/0.
-    if (divideByZero != null && fraction.endsWith("/0"))
+    if (divideByZero != null && fraction.endsWith("/0")) {
       return divideByZero;
+    }
 
     return Fraction.getFraction(fraction);
   }

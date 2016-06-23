@@ -41,9 +41,9 @@ public class NamedBitsetAdapter<T> extends TypeAdapter<T> {
   protected void setField(T target, String name, boolean value) throws IllegalAccessException {
     try {
       Field f = clazz.getField(name);
-      if (f.getType().equals(boolean.class)) {
+      if ((boolean.class.equals(f.getType()))) {
         f.setBoolean(target, value);
-      } else if (f.getType().equals(int.class)) {
+      } else if (int.class.equals(f.getType())) {
         f.setInt(target, value ? 1 : 0);
       }
 
@@ -80,9 +80,7 @@ public class NamedBitsetAdapter<T> extends TypeAdapter<T> {
       reader.endObject();
       return obj;
 
-    } catch (InstantiationException e) {
-      throw new IOException("Reflection error", e);
-    } catch (IllegalAccessException e) {
+    } catch (InstantiationException | IllegalAccessException e) {
       throw new IOException("Reflection error", e);
     }
   }
@@ -100,11 +98,9 @@ public class NamedBitsetAdapter<T> extends TypeAdapter<T> {
     for (Field f : clazz.getFields()) {
       try {
         boolean b;
-        if (f.getType().equals(boolean.class)) {
-
+        if (boolean.class.equals(f.getType())) {
           b = f.getBoolean(value);
-
-        } else if (f.getType().equals(int.class)) {
+        } else if (int.class.equals(f.getType())) {
           b = f.getInt(value) != 0;
         } else {
           continue;
