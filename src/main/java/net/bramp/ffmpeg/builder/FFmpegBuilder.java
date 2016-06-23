@@ -27,24 +27,26 @@ public class FFmpegBuilder {
   final static Logger LOG = LoggerFactory.getLogger(FFmpegBuilder.class);
 
   public enum Strict {
-    VERY, // strictly conform to a older more strict version of the spec or reference software
-    STRICT, // strictly conform to all the things in the spec no matter what consequences
+    VERY, // strictly conform to a older more strict version of the specifications or reference software
+    STRICT, // strictly conform to all the things in the specificiations no matter what consequences
     NORMAL, // normal
     UNOFFICAL, // allow unofficial extensions
     EXPERIMENTAL;
 
-    // ffmpeg command line requires these options in the lower case
+    // ffmpeg command line requires these options in lower case
+    @Override
     public String toString() {
       return name().toLowerCase();
     }
   }
 
   /**
-   * Log level options : https://ffmpeg.org/ffmpeg.html#Generic-options
+   * Log level options: https://ffmpeg.org/ffmpeg.html#Generic-options
    */
   public enum Verbosity {
     QUIET, PANIC, FATAL, ERROR, WARNING, INFO, VERBOSE, DEBUG;
 
+    @Override
     public String toString() {
       return name().toLowerCase();
     }
@@ -67,7 +69,7 @@ public class FFmpegBuilder {
   final List<String> extra_args = new ArrayList<>();
 
   // Output
-  final List<FFmpegOutputBuilder> outputs = new ArrayList<FFmpegOutputBuilder>();
+  final List<FFmpegOutputBuilder> outputs = new ArrayList<>();
 
   public FFmpegBuilder overrideOutputFiles(boolean override) {
     this.override = override;
@@ -164,10 +166,10 @@ public class FFmpegBuilder {
 
 
   /**
-   * Create new output file
+   * Create new output file.
    * 
-   * @param filename
-   * @return A new FFmpegOutputBuilder
+   * @param filename output file path
+   * @return A new {@link FFmpegBuilder}
    */
   public FFmpegOutputBuilder addOutput(String filename) {
     FFmpegOutputBuilder output = new FFmpegOutputBuilder(this, filename);
@@ -198,7 +200,7 @@ public class FFmpegBuilder {
     args.add("-v", this.verbosity.toString());
 
     if (startOffset != null) {
-      args.add("-ss").add(FFmpegUtils.millisecondsToString(startOffset));
+      args.add("-ss", FFmpegUtils.millisecondsToString(startOffset));
     }
 
     if (format != null) {
@@ -210,20 +212,20 @@ public class FFmpegBuilder {
     }
 
     if (progress != null) {
-      args.add("-progress").add(progress.toString());
+      args.add("-progress", progress.toString());
     }
 
     args.addAll(extra_args);
 
     for (String input : inputs) {
-      args.add("-i").add(input);
+      args.add("-i", input);
     }
 
     if (pass > 0) {
-      args.add("-pass").add(Integer.toString(pass));
+      args.add("-pass", Integer.toString(pass));
 
       if (pass_prefix != null) {
-        args.add("-passlogfile").add(pass_prefix);
+        args.add("-passlogfile", pass_prefix);
       }
     }
 
