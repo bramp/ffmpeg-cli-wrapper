@@ -1,12 +1,12 @@
 package net.bramp.ffmpeg.fixtures;
 
-import com.google.common.collect.ImmutableList;
-import net.bramp.ffmpeg.info.Codec;
-
+import java.util.Arrays;
 import java.util.List;
 
+import net.bramp.ffmpeg.info.Codec;
+
 /**
- * Class that contains all Codecs as defined in the unit tests This should not be used as a concise
+ * Class that contains all codecs as defined in the unit tests This should not be used as a concise
  * list of available codecs, as every install of ffmpeg is different. Call ffmpeg.codec() to
  * discover.
  *
@@ -15,14 +15,14 @@ import java.util.List;
  */
 public class Codecs {
 
-  public final static List<Codec> CODECS = new ImmutableList.Builder().add(
+  public final static List<Codec> CODECS = Arrays.asList(
+      // @formatter:off
       new Codec("4xm", "4X Movie", "D V D "),
       new Codec("8bps", "QuickTime 8BPS video", "D V D "),
       new Codec("8svx_exp", "8SVX exponential", "D A D "),
       new Codec("8svx_fib", "8SVX fibonacci", "D A D "),
       new Codec("a64multi", "Multicolor charset for Commodore 64", " EV   "),
-      new Codec("a64multi5",
-          "Multicolor charset for Commodore 64, extended with 5th color (colram)", " EV   "),
+      new Codec("a64multi5", "Multicolor charset for Commodore 64, extended with 5th color (colram)", " EV   "),
       new Codec("aac", "Advanced Audio Coding", "DEA D "),
       new Codec("aac_latm", "AAC LATM (Advanced Audio Codec LATM syntax)", "D A D "),
       new Codec("aasc", "Autodesk RLE", "D V D "),
@@ -132,8 +132,8 @@ public class Codecs {
       new Codec("h263i", "Intel H.263", "D VSD "),
       new Codec("h263p", "H.263+ / H.263-1998 / H.263 version 2", " EV   "),
       new Codec("h264", "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10", "D V D "),
-      new Codec("h264_vdpau", "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 (VDPAU acceleration)",
-          "D V D "), new Codec("huffyuv", "Huffyuv / HuffYUV", "DEVSD "),
+      new Codec("h264_vdpau", "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 (VDPAU acceleration)", "D V D "),
+      new Codec("huffyuv", "Huffyuv / HuffYUV", "DEVSD "),
       new Codec("idcinvideo", "id Quake II CIN video", "D V D "),
       new Codec("idf", "iCEDraw text", "D V D "),
       new Codec("iff_byterun1", "IFF ByteRun1", "D V D "),
@@ -317,5 +317,7 @@ public class Codecs {
       new Codec("yop", "Psygnosis YOP Video", "D V   "),
       new Codec("yuv4", "Uncompressed packed 4:2:0", "DEV D "),
       new Codec("zlib", "LCL (LossLess Codec Library) ZLIB", "DEV D "),
-      new Codec("zmbv", "Zip Motion Blocks Video", "DEV D ")).build();
+      new Codec("zmbv", "Zip Motion Blocks Video", "DEV D ")
+      // @formatter:on
+      );
 }
