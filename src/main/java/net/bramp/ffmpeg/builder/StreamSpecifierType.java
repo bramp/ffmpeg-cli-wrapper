@@ -36,7 +36,8 @@ public enum StreamSpecifierType {
   StreamSpecifierType(String prefix) {
     this.prefix = prefix;
   }
-
+  
+  @Override
   public String toString() {
     return prefix;
   }
