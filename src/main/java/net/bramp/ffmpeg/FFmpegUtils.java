@@ -29,12 +29,12 @@ public final class FFmpegUtils {
   /**
    * Convert milliseconds to "hh:mm:ss.ms" String representation.
    *
-   * @param milliseconds
-   * @return
+   * @param milliseconds time duration in milliseconds
+   * @return time duration in human-readable format
    */
   public static String millisecondsToString(long milliseconds) {
-
-    checkArgument(milliseconds >= 0, "milliseconds must be >= 0");
+    // FIXME Negative durations are also supported. https://www.ffmpeg.org/ffmpeg-utils.html#Time-duration
+    checkArgument(milliseconds >= 0, "milliseconds must be positive");
 
     long seconds = milliseconds / 1000;
     milliseconds = milliseconds - (seconds * 1000);
