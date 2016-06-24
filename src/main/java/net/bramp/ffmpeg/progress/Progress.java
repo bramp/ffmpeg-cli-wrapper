@@ -4,22 +4,44 @@ import com.google.common.base.MoreObjects;
 import net.bramp.ffmpeg.FFmpegUtils;
 import org.apache.commons.lang3.math.Fraction;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * TODO Change to be immutable
+ */
 public class Progress {
-  long frame;
-  Fraction fps;
+  long frame = 0;
+  Fraction fps = Fraction.ZERO;
 
   // TODO stream_0_0_q=0.0
 
-  long bitrate;
-  long total_size; // =48
-  long out_time_ms; // =512000 //out_time=00:00:00.512000
+  long bitrate = 0;
+  long total_size = 0;
+  long out_time_ms = 0;
 
   long dup_frames = 0;
   long drop_frames = 0;
-  float speed; // =1.01x
-  String progress;
+  float speed = 0;
+  String progress = "";
+
+  public Progress() {
+    // Nothing
+  }
+
+  public Progress(long frame, float fps, long bitrate, long total_size, long out_time_ms,
+      long dup_frames, long drop_frames, float speed, String progress) {
+    this.frame = frame;
+    this.fps = Fraction.getFraction(fps);
+    this.bitrate = bitrate;
+    this.total_size = total_size;
+    this.out_time_ms = out_time_ms;
+    this.dup_frames = dup_frames;
+    this.drop_frames = drop_frames;
+    this.speed = speed;
+    this.progress = progress;
+  }
 
   /**
    * Parses values from the line, into this object.
@@ -91,6 +113,10 @@ public class Progress {
     }
   }
 
+  public boolean isEnd() {
+    return Objects.equals(progress, "end");
+  }
+
   @Override
   public String toString() {
     return MoreObjects.toStringHelper(this)
@@ -106,5 +132,25 @@ public class Progress {
         .add("progress", progress)
         // @formatter:on
         .toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    Progress progress1 = (Progress) o;
+    return frame == progress1.frame && bitrate == progress1.bitrate
+        && total_size == progress1.total_size && out_time_ms == progress1.out_time_ms
+        && dup_frames == progress1.dup_frames && drop_frames == progress1.drop_frames
+        && Float.compare(progress1.speed, speed) == 0 && Objects.equals(fps, progress1.fps)
+        && Objects.equals(progress, progress1.progress);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(frame, fps, bitrate, total_size, out_time_ms, dup_frames, drop_frames,
+        speed, progress);
   }
 }
