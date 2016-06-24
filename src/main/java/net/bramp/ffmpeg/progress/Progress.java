@@ -108,7 +108,6 @@ public class Progress {
         // stream_%d_%d_psnr_%c=%2.2f, file_index, index, type{Y, U, V}, quality // Enable with
         // AV_CODEC_FLAG_PSNR
         // stream_%d_%d_psnr_all
-        System.out.println("Unsupported key " + line); // TODO Fix
         return false; // Ignore for the moment
     }
   }
