@@ -28,7 +28,7 @@ public class Progress {
    * @return true if the record is finished
    */
   protected boolean parseLine(String line) {
-    line = line.trim();
+    line = checkNotNull(line).trim();
     if (line.isEmpty()) {
       return false; // Skip empty lines
     }
@@ -50,9 +50,11 @@ public class Progress {
         fps = Fraction.getFraction(value);
         return false;
       case "bitrate":
+        // TODO bitrate could be "N/A"
         bitrate = FFmpegUtils.parseBitrate(value);
         return false;
       case "total_size":
+        // TODO could be "N/A"
         total_size = Long.parseLong(value);
         return false;
       case "out_time_ms":
@@ -62,7 +64,6 @@ public class Progress {
         // There is also out_time_ms, so we ignore out_time.
         // TODO maybe in the future actually parse out_time, if a out_time_ms wasn't provided.
         return false;
-
       case "dup_frames":
         dup_frames = Long.parseLong(value);
         return false;
@@ -70,14 +71,22 @@ public class Progress {
         drop_frames = Long.parseLong(value);
         return false;
       case "speed":
+        // TODO Could be "N/A"
         speed = Float.parseFloat(value.replace("x", ""));
         return false;
       case "progress":
+        // TODO Is only "continue" or "end". Change to enum
+        // TODO After "end" stream is closed
         progress = value;
-        return true;
+        return true; // The progress field is always last
 
       default:
-        System.out.println("Unsupported key " + line); // TODO Fix
+
+        // TODO
+        // stream_%d_%d_q= file_index, index, quality
+        // stream_%d_%d_psnr_%c=%2.2f, file_index, index, type{Y, U, V}, quality // Enable with
+        // AV_CODEC_FLAG_PSNR
+        // stream_%d_%d_psnr_all
         return false; // Ignore for the moment
     }
   }

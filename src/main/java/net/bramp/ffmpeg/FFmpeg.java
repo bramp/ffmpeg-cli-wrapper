@@ -118,7 +118,8 @@ public class FFmpeg {
       try {
         BufferedReader r = wrapInReader(p);
         this.version = r.readLine();
-        IOUtils.copy(r, new NullOutputStream(), Charsets.UTF_8); // Throw away rest of the output
+        IOUtils.copy(r, NullOutputStream.NULL_OUTPUT_STREAM, Charsets.UTF_8); // Throw away rest of
+                                                                              // the output
         FFmpegUtils.throwOnError(FFMPEG, p);
       } finally {
         p.destroy();
@@ -129,7 +130,7 @@ public class FFmpeg {
 
   public synchronized @Nonnull List<Codec> codecs() throws IOException {
     if (this.codecs == null) {
-      codecs = new ArrayList<Codec>();
+      codecs = new ArrayList<>();
 
       Process p = runFunc.run(ImmutableList.of(path, "-codecs"));
       try {
@@ -156,7 +157,7 @@ public class FFmpeg {
 
   public synchronized @Nonnull List<Format> formats() throws IOException {
     if (this.formats == null) {
-      formats = new ArrayList<Format>();
+      formats = new ArrayList<>();
 
       Process p = runFunc.run(ImmutableList.of(path, "-formats"));
       try {

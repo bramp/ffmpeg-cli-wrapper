@@ -498,6 +498,11 @@ public class FFmpegOutputBuilder {
     return parent;
   }
 
+  /**
+   * Returns a representation of this Builder that can be safely serialised.
+   *
+   * @return
+   */
   public EncodingOptions buildOptions() {
     // TODO When/if modelmapper supports @ConstructorProperties, we map this
     // object, instead of doing new XXX(...)
