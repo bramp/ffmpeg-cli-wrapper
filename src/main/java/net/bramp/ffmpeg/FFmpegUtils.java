@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * Helper class with commonly used methods
  */
-public abstract class FFmpegUtils {
+public final class FFmpegUtils {
 
   final static Gson gson = FFmpegUtils.setupGson();
 
