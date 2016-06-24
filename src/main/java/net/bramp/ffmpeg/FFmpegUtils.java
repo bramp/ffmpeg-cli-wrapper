@@ -58,7 +58,7 @@ public final class FFmpegUtils {
    * @return
    */
   public static long parseBitrate(String bitrate) {
-    Pattern p = Pattern.compile("(\\d+(\\.\\d+)?)kbits/s");
+    Pattern p = Pattern.compile("(\\d+(?:\\.\\d+)?)kbits/s");
     Matcher m = p.matcher(bitrate);
     if (!m.find()) {
       throw new IllegalArgumentException("Invalid bitrate '" + bitrate + "'");
