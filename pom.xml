@@ -17,6 +17,11 @@
         <connection>scm:git:git@github.com:bramp/ffmpeg-cli-wrapper.git</connection>
         <tag>HEAD</tag>
     </scm>
+    
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/bramp/ffmpeg-cli-wrapper/issues</url>
+    </issueManagement>
 
     <licenses>
         <license>
