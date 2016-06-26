@@ -401,7 +401,8 @@ public class FFmpegOutputBuilder {
   }
 
   public FFmpegOutputBuilder setAudioQuality(int quality) {
-    Preconditions.checkArgument(Range.closed(1,5).contains(quality), "quality must be in the range 1..5");
+    Preconditions.checkArgument(Range.closed(1, 5).contains(quality),
+        "quality must be in the range 1..5");
     this.audio_enabled = true;
     this.audio_quality = quality;
     return this;
@@ -672,7 +673,7 @@ public class FFmpegOutputBuilder {
     if (!subtitle_enabled) {
       args.add("-sn");
     }
-    
+
     args.addAll(extra_args);
 
     if (filename != null && uri != null) {

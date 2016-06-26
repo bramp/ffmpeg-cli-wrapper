@@ -27,7 +27,8 @@ public class FFmpegBuilder {
   final static Logger LOG = LoggerFactory.getLogger(FFmpegBuilder.class);
 
   public enum Strict {
-    VERY, // strictly conform to a older more strict version of the specifications or reference software
+    VERY, // strictly conform to a older more strict version of the specifications or reference
+          // software
     STRICT, // strictly conform to all the things in the specificiations no matter what consequences
     NORMAL, // normal
     UNOFFICAL, // allow unofficial extensions
