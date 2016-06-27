@@ -12,19 +12,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * TODO Change to be immutable
  */
 public class Progress {
-  long frame = 0;
-  Fraction fps = Fraction.ZERO;
+  public long frame = 0;
+  public Fraction fps = Fraction.ZERO;
 
   // TODO stream_0_0_q=0.0
 
-  long bitrate = 0;
-  long total_size = 0;
-  long out_time_ms = 0;
+  public long bitrate = 0;
+  public long total_size = 0;
+  public long out_time_ms = 0;
 
-  long dup_frames = 0;
-  long drop_frames = 0;
-  float speed = 0;
-  String progress = "";
+  public long dup_frames = 0;
+  public long drop_frames = 0;
+  public float speed = 0;
+  public String progress = "";
 
   public Progress() {
     // Nothing
@@ -117,23 +117,6 @@ public class Progress {
   }
 
   @Override
-  public String toString() {
-    return MoreObjects.toStringHelper(this)
-        // @formatter:off
-        .add("frame", frame)
-        .add("fps", fps)
-        .add("bitrate", bitrate)
-        .add("total_size", total_size)
-        .add("out_time_ms", out_time_ms)
-        .add("dup_frames", dup_frames)
-        .add("drop_frames", drop_frames)
-        .add("speed", speed)
-        .add("progress", progress)
-        // @formatter:on
-        .toString();
-  }
-
-  @Override
   public boolean equals(Object o) {
     if (this == o)
       return true;
@@ -151,6 +134,7 @@ public class Progress {
   public int hashCode() {
     return Objects.hash(frame, fps, bitrate, total_size, out_time_ms, dup_frames, drop_frames,
         speed, progress);
+  }
 
   @Override
   public String toString() {
