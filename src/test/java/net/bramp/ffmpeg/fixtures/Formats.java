@@ -1,9 +1,10 @@
 package net.bramp.ffmpeg.fixtures;
 
-import com.google.common.collect.ImmutableList;
-import net.bramp.ffmpeg.info.Format;
-
 import java.util.List;
+
+import com.google.common.collect.ImmutableList;
+
+import net.bramp.ffmpeg.info.Format;
 
 /**
  * Class that contains all formats as defined in the unit tests This should not be used to test if a
