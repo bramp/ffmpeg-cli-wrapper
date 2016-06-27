@@ -16,15 +16,15 @@ public class FFmpegUtilsTest {
     assertEquals("00:00:00", millisecondsToString(0));
     assertEquals("2562047788015:12:55.807", millisecondsToString(Long.MAX_VALUE));
   }
-  
+
   @Test(expected = IllegalArgumentException.class)
   public void testMillisecondsToStringNegative() throws Exception {
-      millisecondsToString(-1);
+    millisecondsToString(-1);
   }
-  
+
   @Test(expected = IllegalArgumentException.class)
   public void testMillisecondsToStringNegativeMinValue() throws Exception {
-      millisecondsToString(Long.MIN_VALUE);
+    millisecondsToString(Long.MIN_VALUE);
   }
 
   @Test

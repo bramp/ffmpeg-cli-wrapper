@@ -3,6 +3,7 @@ package net.bramp.ffmpeg.builder;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Range;
 import net.bramp.ffmpeg.modelmapper.Mapper;
 import net.bramp.ffmpeg.options.AudioEncodingOptions;
 import net.bramp.ffmpeg.options.EncodingOptions;
@@ -401,7 +402,8 @@ public class FFmpegOutputBuilder {
   }
 
   public FFmpegOutputBuilder setAudioQuality(int quality) {
-    Preconditions.checkArgument(Range.closed(1,5).contains(quality), "quality must be in the range 1..5");
+    Preconditions.checkArgument(Range.closed(1, 5).contains(quality),
+        "quality must be in the range 1..5");
     this.audio_enabled = true;
     this.audio_quality = quality;
     return this;
@@ -498,6 +500,11 @@ public class FFmpegOutputBuilder {
     return parent;
   }
 
+  /**
+   * Returns a representation of this Builder that can be safely serialised.
+   *
+   * @return
+   */
   public EncodingOptions buildOptions() {
     // TODO When/if modelmapper supports @ConstructorProperties, we map this
     // object, instead of doing new XXX(...)
@@ -667,7 +674,7 @@ public class FFmpegOutputBuilder {
     if (!subtitle_enabled) {
       args.add("-sn");
     }
-    
+
     args.addAll(extra_args);
 
     if (filename != null && uri != null) {

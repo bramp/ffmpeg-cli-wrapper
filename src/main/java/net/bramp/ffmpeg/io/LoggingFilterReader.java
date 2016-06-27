@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * Wraps a Reader, and logs full lines of input as its read.
+ * Wraps a Reader, and logs full lines of input as it is read.
  *
  * @author bramp
  */

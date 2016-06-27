@@ -33,7 +33,8 @@ public final class FFmpegUtils {
    * @return time duration in human-readable format
    */
   public static String millisecondsToString(long milliseconds) {
-    // FIXME Negative durations are also supported. https://www.ffmpeg.org/ffmpeg-utils.html#Time-duration
+    // FIXME Negative durations are also supported.
+    // https://www.ffmpeg.org/ffmpeg-utils.html#Time-duration
     checkArgument(milliseconds >= 0, "milliseconds must be positive");
 
     long seconds = milliseconds / 1000;

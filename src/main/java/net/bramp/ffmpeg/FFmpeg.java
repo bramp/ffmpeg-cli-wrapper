@@ -2,12 +2,16 @@ package net.bramp.ffmpeg;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.info.Codec;
 import net.bramp.ffmpeg.info.Format;
+import net.bramp.ffmpeg.progress.ProgressListener;
+import net.bramp.ffmpeg.progress.ProgressParser;
+import net.bramp.ffmpeg.progress.TcpProgressParser;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang3.math.Fraction;
@@ -15,9 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -25,10 +31,6 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * @author bramp
- *
- */
 public class FFmpeg {
 
   final static Logger LOG = LoggerFactory.getLogger(FFmpeg.class);
@@ -118,7 +120,8 @@ public class FFmpeg {
       try {
         BufferedReader r = wrapInReader(p);
         this.version = r.readLine();
-        IOUtils.copy(r, new NullOutputStream(), Charsets.UTF_8); // Throw away rest of the output
+        IOUtils.copy(r, NullOutputStream.NULL_OUTPUT_STREAM, Charsets.UTF_8); // Throw away rest of
+                                                                              // the output
         FFmpegUtils.throwOnError(FFMPEG, p);
       } finally {
         p.destroy();
@@ -129,7 +132,7 @@ public class FFmpeg {
 
   public synchronized @Nonnull List<Codec> codecs() throws IOException {
     if (this.codecs == null) {
-      codecs = new ArrayList<Codec>();
+      codecs = new ArrayList<>();
 
       Process p = runFunc.run(ImmutableList.of(path, "-codecs"));
       try {
@@ -156,7 +159,7 @@ public class FFmpeg {
 
   public synchronized @Nonnull List<Format> formats() throws IOException {
     if (this.formats == null) {
-      formats = new ArrayList<Format>();
+      formats = new ArrayList<>();
 
       Process p = runFunc.run(ImmutableList.of(path, "-formats"));
       try {
@@ -179,6 +182,17 @@ public class FFmpeg {
     return formats;
   }
 
+  protected ProgressParser createProgressParser(ProgressListener listener) throws IOException {
+    // TODO In future create the best kind for this OS, unix socket, named pipe, or TCP.
+    try {
+      // Default to TCP because it is supported across all OSes, and is better than UDP because it
+      // provides good properties such as in-order packets, reliability, error checking, etc.
+      return new TcpProgressParser(checkNotNull(listener));
+    } catch (URISyntaxException e) {
+      throw new IOException(e);
+    }
+  }
+
   /**
    * Runs ffmpeg with the supplied args. Blocking until finished.
    * 
@@ -186,10 +200,14 @@ public class FFmpeg {
    * @throws IOException
    */
   public void run(List<String> args) throws IOException {
+    checkNotNull(args);
+
     List<String> newArgs = ImmutableList.<String>builder().add(path).addAll(args).build();
 
     Process p = runFunc.run(newArgs);
     try {
+      // TODO Move the IOUtils onto a thread, so that FFmpegProgressListener can be on this thread.
+
       // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
       IOUtils.copy(wrapInReader(p), System.out, Charsets.UTF_8); // TODO Should I be outputting to
                                                                  // stdout?
@@ -198,6 +216,21 @@ public class FFmpeg {
 
     } finally {
       p.destroy();
+    }
+  }
+
+  public void run(FFmpegBuilder builder, @Nullable ProgressListener listener) throws IOException {
+    checkNotNull(builder);
+
+    if (listener != null) {
+      try (ProgressParser progressParser = createProgressParser(listener)) {
+        progressParser.start();
+        builder = builder.addProgress(progressParser.getUri());
+
+        run(builder.build());
+      }
+    } else {
+      run(builder.build());
     }
   }
 
