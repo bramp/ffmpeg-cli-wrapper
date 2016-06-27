@@ -17,7 +17,8 @@ class UdpProgressParserRunnable implements Runnable {
   final DatagramSocket socket;
   final CountDownLatch startSignal;
 
-  public UdpProgressParserRunnable(StreamProgressParser parser, DatagramSocket socket, CountDownLatch startSignal) {
+  public UdpProgressParserRunnable(StreamProgressParser parser, DatagramSocket socket,
+      CountDownLatch startSignal) {
     this.parser = checkNotNull(parser);
     this.socket = checkNotNull(socket);
     this.startSignal = checkNotNull(startSignal);

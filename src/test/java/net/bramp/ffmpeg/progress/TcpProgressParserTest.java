@@ -35,8 +35,11 @@ public class TcpProgressParserTest extends AbstractProgressParserTest {
 
     int bytes = IOUtils.copy(inputStream, outputStream);
 
-    client.close();
+    // HACK, but give the TcpProgressParser thread time to actually handle the connection/data
+    // before the client is closed, and the parser is stopped.
+    Thread.sleep(100);
 
+    client.close();
     parser.stop();
 
     assertThat(bytes, greaterThan(0));
