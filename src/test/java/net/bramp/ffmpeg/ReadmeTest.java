@@ -2,20 +2,28 @@ package net.bramp.ffmpeg;
 
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.fixtures.Samples;
+import net.bramp.ffmpeg.probe.FFmpegFormat;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
+import net.bramp.ffmpeg.probe.FFmpegStream;
 import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
 /**
- * Ensures the example in the readme continues to work
+ * Ensures the examples in the README continue to work.
  */
 public class ReadmeTest {
 
+  final FFmpeg ffmpeg = new FFmpeg();
+  final FFprobe ffprobe = new FFprobe();
+
+  public ReadmeTest() throws IOException {}
+
   @Test
-  public void test() throws IOException {
-    FFmpeg ffmpeg = new FFmpeg(FFmpeg.DEFAULT_PATH);
-    FFprobe ffprobe = new FFprobe(FFprobe.DEFAULT_PATH);
+  public void testVideoEncoding() throws IOException {
 
     // String in = Samples.big_buck_bunny_720p_1mb;
     FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
@@ -52,5 +60,26 @@ public class ReadmeTest {
 
     // Or run a two-pass encode (which is slower at the cost of better quality
     executor.createTwoPassJob(builder).run();
+  }
+
+  @Test
+  public void testGetMediaInformation() throws IOException {
+    FFmpegProbeResult probeResult = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
+
+    FFmpegFormat format = probeResult.getFormat();
+    String line1 =
+        String.format("File: '%s' ; Format: '%s' ; Duration: %.3fs", format.filename,
+            format.format_long_name, format.duration);
+
+    FFmpegStream stream = probeResult.getStreams().get(0);
+    String line2 =
+        String.format("Codec: '%s' ; Width: %dpx ; Height: %dpx", stream.codec_long_name,
+            stream.width, stream.height);
+
+    assertThat(
+        line1,
+        is("File: 'src/test/resources/net/bramp/ffmpeg/samples/big_buck_bunny_720p_1mb.mp4' ; Format: 'QuickTime / MOV' ; Duration: 5.312s"));
+    assertThat(line2,
+        is("Codec: 'H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10' ; Width: 1280px ; Height: 720px"));
   }
 }
