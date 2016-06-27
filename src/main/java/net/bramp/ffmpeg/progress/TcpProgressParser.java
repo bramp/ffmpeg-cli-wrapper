@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.CountDownLatch;
 
 public class TcpProgressParser extends AbstractSocketProgressParser {
 
@@ -39,8 +40,8 @@ public class TcpProgressParser extends AbstractSocketProgressParser {
   }
 
   @Override
-  protected Runnable getRunnable() {
-    return new TcpProgressParserRunnable(parser, server);
+  protected Runnable getRunnable(CountDownLatch startSignal) {
+    return new TcpProgressParserRunnable(parser, server, startSignal);
   }
 
   public URI getUri() {

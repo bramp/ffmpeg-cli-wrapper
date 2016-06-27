@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.concurrent.CountDownLatch;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -14,10 +15,12 @@ class UdpProgressParserRunnable implements Runnable {
 
   final StreamProgressParser parser;
   final DatagramSocket socket;
+  final CountDownLatch startSignal;
 
-  public UdpProgressParserRunnable(StreamProgressParser parser, DatagramSocket socket) {
+  public UdpProgressParserRunnable(StreamProgressParser parser, DatagramSocket socket, CountDownLatch startSignal) {
     this.parser = checkNotNull(parser);
     this.socket = checkNotNull(socket);
+    this.startSignal = checkNotNull(startSignal);
   }
 
   @Override
@@ -26,6 +29,8 @@ class UdpProgressParserRunnable implements Runnable {
     final DatagramPacket packet = new DatagramPacket(buf, buf.length);
 
     while (!socket.isClosed() && !Thread.currentThread().isInterrupted()) {
+      startSignal.countDown();
+
       try {
         // TODO This doesn't handle the case of a progress being split across two packets
         socket.receive(packet);

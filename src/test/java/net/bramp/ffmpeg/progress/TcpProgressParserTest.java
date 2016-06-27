@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 
 import static net.bramp.ffmpeg.Helper.combineResource;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -27,15 +28,18 @@ public class TcpProgressParserTest extends AbstractProgressParserTest {
     parser.start();
 
     Socket client = new Socket(uri.getHost(), uri.getPort());
+    assertTrue("Socket is connected", client.isConnected());
 
     InputStream inputStream = combineResource(Progresses.allFiles);
     OutputStream outputStream = client.getOutputStream();
 
-    IOUtils.copy(inputStream, outputStream);
+    int bytes = IOUtils.copy(inputStream, outputStream);
+
     client.close();
 
     parser.stop();
 
+    assertThat(bytes, greaterThan(0));
     assertThat(progesses, equalTo(Progresses.allProgresses));
   }
 
@@ -48,5 +52,4 @@ public class TcpProgressParserTest extends AbstractProgressParserTest {
 
     assertTrue(progesses.isEmpty());
   }
-
 }
