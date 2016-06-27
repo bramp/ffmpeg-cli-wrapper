@@ -31,7 +31,7 @@ public final class ProcessUtils {
         exitValue = p.waitFor();
         finished = true;
       } catch (InterruptedException e) {
-        // Ignore
+        Thread.currentThread().interrupt();
       }
     }
 
@@ -63,6 +63,7 @@ public final class ProcessUtils {
 
     } catch (InterruptedException e) {
       t.interrupt();
+      Thread.currentThread().interrupt();
     }
 
     if (!t.hasFinished()) {

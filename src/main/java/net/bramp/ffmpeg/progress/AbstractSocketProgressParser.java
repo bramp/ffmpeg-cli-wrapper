@@ -63,7 +63,7 @@ public abstract class AbstractSocketProgressParser implements ProgressParser {
         thread.join();
         thread = null;
       } catch (InterruptedException e) {
-        // Ignore and return
+        Thread.currentThread().interrupt();
       }
     }
   }
