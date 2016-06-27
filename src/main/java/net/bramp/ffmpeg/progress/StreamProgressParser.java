@@ -7,23 +7,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.URI;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * Parses the FFmpeg progress fields
- */
-public abstract class FFmpegProgressParser {
+public class StreamProgressParser {
 
-  final FFmpegProgressListener listener;
+  final ProgressListener listener;
 
-  public FFmpegProgressParser(FFmpegProgressListener listener) {
+  public StreamProgressParser(ProgressListener listener) {
     this.listener = checkNotNull(listener);
-  }
-
-  protected void dispatch(Progress p) {
-    listener.progress(checkNotNull(p));
   }
 
   private static BufferedReader wrapInBufferedReader(Reader reader) {
@@ -47,22 +39,10 @@ public abstract class FFmpegProgressParser {
     Progress p = new Progress();
     while ((line = in.readLine()) != null) {
       if (p.parseLine(line)) {
-        dispatch(p);
+        listener.progress(p);
         p = new Progress();
       }
     }
   }
 
-  public abstract void start() throws Exception;
-
-  public abstract void stop();
-
-  public abstract URI getUri();
-
-  /*
-   * TODO implement this, with something like https://github.com/jnr/jnr-unixsocket public void
-   * startUnixSocket() {
-   * 
-   * }
-   */
 }

@@ -1,18 +1,19 @@
 package net.bramp.ffmpeg.job;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import net.bramp.ffmpeg.progress.ProgressListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -22,24 +23,23 @@ public class TwoPassFFmpegJob extends FFmpegJob {
   final static Logger LOG = LoggerFactory.getLogger(TwoPassFFmpegJob.class);
 
   final String passlogPrefix;
-  final public List<String> args1;
-  final public List<String> args2;
+  final FFmpegBuilder builder;
 
   public TwoPassFFmpegJob(FFmpeg ffmpeg, FFmpegBuilder builder) {
-    super(ffmpeg);
+    this(ffmpeg, builder, null);
+  }
 
-    checkNotNull(builder);
-
-    // Two pass
-    final boolean override = builder.getOverrideOutputFiles();
+  public TwoPassFFmpegJob(FFmpeg ffmpeg, FFmpegBuilder builder, @Nullable ProgressListener listener) {
+    super(ffmpeg, listener);
 
     // Random prefix so multiple runs don't clash
     this.passlogPrefix = UUID.randomUUID().toString();
+    this.builder = checkNotNull(builder).setPassPrefix(passlogPrefix);
 
-    this.args1 = builder.setPass(1).setPassPrefix(passlogPrefix).overrideOutputFiles(true).build();
-
-    this.args2 =
-        builder.setPass(2).setPassPrefix(passlogPrefix).overrideOutputFiles(override).build();
+    // Build the args now (but throw away the results). This allows the illegal arguments to be
+    // caught early, but also allows the ffmpeg command to actually alter the arguments when
+    // running.
+    this.builder.setPass(1).build();
   }
 
   protected void deletePassLog() throws IOException {
@@ -56,8 +56,15 @@ public class TwoPassFFmpegJob extends FFmpegJob {
 
     try {
       try {
-        ffmpeg.run(args1);
-        ffmpeg.run(args2);
+        // Two pass
+        final boolean override = builder.getOverrideOutputFiles();
+
+        FFmpegBuilder b1 = builder.setPass(1).overrideOutputFiles(true);
+        ffmpeg.run(b1, listener);
+
+        FFmpegBuilder b2 = builder.setPass(2).overrideOutputFiles(override);
+        ffmpeg.run(b2, listener);
+
       } finally {
         deletePassLog();
       }

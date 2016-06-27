@@ -1,13 +1,13 @@
 package net.bramp.ffmpeg.builder;
 
-import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
 
 @RunWith(Parameterized.class)
 public class FFmpegOutputBuilderTestCheckValidStream {
@@ -28,7 +28,7 @@ public class FFmpegOutputBuilderTestCheckValidStream {
         // Some others
         "UDP://10.1.0.102:1234"
         // @formatter:on
-    );
+        );
   }
 
   private final URI uri;

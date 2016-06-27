@@ -2,42 +2,31 @@ package net.bramp.ffmpeg.job;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
-import net.bramp.ffmpeg.progress.FFmpegProgressListener;
-import net.bramp.ffmpeg.progress.FFmpegProgressParser;
-import net.bramp.ffmpeg.progress.FFmpegTcpProgressParser;
-import net.bramp.ffmpeg.progress.NullFFmpegProgressParser;
+import net.bramp.ffmpeg.progress.ProgressListener;
 
-import java.util.List;
+import javax.annotation.Nullable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class SinglePassFFmpegJob extends FFmpegJob {
 
-  final public List<String> args;
-  final FFmpegProgressParser parser;
+  final public FFmpegBuilder builder;
 
   public SinglePassFFmpegJob(FFmpeg ffmpeg, FFmpegBuilder builder) {
-    this(ffmpeg, builder, Optional.<FFmpegProgressListener>absent());
+    this(ffmpeg, builder, null);
   }
 
   public SinglePassFFmpegJob(FFmpeg ffmpeg, FFmpegBuilder builder,
-      Optional<FFmpegProgressListener> listener) {
-    super(ffmpeg);
-    checkNotNull(builder);
-    checkNotNull(listener);
+      @Nullable ProgressListener listener) {
+    super(ffmpeg, listener);
+    this.builder = checkNotNull(builder);
 
-    if (listener.isPresent()) {
-      this.parser = new FFmpegTcpProgressParser(listener.get());
-      builder.addProgress(this.parser.getUri());
-
-    } else {
-      this.parser = NullFFmpegProgressParser.instance();
-    }
-
-    this.args = builder.build();
+    // Build the args now (but throw away the results). This allows the illegal arguments to be
+    // caught early, but also allows the ffmpeg command to actually alter the arguments when
+    // running.
+    this.builder.build();
   }
 
   public void run() {
@@ -45,14 +34,12 @@ public class SinglePassFFmpegJob extends FFmpegJob {
     state = State.RUNNING;
 
     try {
-      ffmpeg.run(args);
+      ffmpeg.run(builder, listener);
       state = State.FINISHED;
 
     } catch (Throwable t) {
       state = State.FAILED;
       Throwables.propagate(t);
-    } finally {
-      parser.stop();
     }
   }
 }

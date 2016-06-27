@@ -10,10 +10,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.argThat;
@@ -37,11 +35,6 @@ public class FFmpegTest {
     when(runFunc.run(argThatHasItem("-codecs"))).thenAnswer(new NewProcessAnswer("ffmpeg-codecs"));
 
     ffmpeg = new FFmpeg(runFunc);
-  }
-
-  public static InputStream loadResource(String name) {
-    checkNotNull(name);
-    return FFmpegTest.class.getResourceAsStream("fixtures/" + name);
   }
 
   @SuppressWarnings("unchecked")

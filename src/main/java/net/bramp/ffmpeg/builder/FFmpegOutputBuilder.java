@@ -3,6 +3,7 @@ package net.bramp.ffmpeg.builder;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Range;
 import net.bramp.ffmpeg.modelmapper.Mapper;
 import net.bramp.ffmpeg.options.AudioEncodingOptions;
 import net.bramp.ffmpeg.options.EncodingOptions;
@@ -18,7 +19,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.*;
-import com.google.common.collect.Range;
 import static net.bramp.ffmpeg.FFmpegUtils.millisecondsToString;
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
 

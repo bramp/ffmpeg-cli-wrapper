@@ -9,9 +9,9 @@ import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.info.Codec;
 import net.bramp.ffmpeg.info.Format;
-import net.bramp.ffmpeg.progress.FFmpegProgressListener;
-import net.bramp.ffmpeg.progress.FFmpegProgressParser;
-import net.bramp.ffmpeg.progress.FFmpegTcpProgressParser;
+import net.bramp.ffmpeg.progress.ProgressListener;
+import net.bramp.ffmpeg.progress.ProgressParser;
+import net.bramp.ffmpeg.progress.TcpProgressParser;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang3.math.Fraction;
@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,10 +31,6 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * @author bramp
- *
- */
 public class FFmpeg {
 
   final static Logger LOG = LoggerFactory.getLogger(FFmpeg.class);
@@ -185,6 +182,17 @@ public class FFmpeg {
     return formats;
   }
 
+  protected ProgressParser createProgressParser(ProgressListener listener) throws IOException {
+    // TODO In future create the best kind for this OS, unix socket, named pipe, or TCP.
+    try {
+      // Default to TCP because it is supported across all OSes, and is better than UDP because it
+      // provides good properties such as in-order packets, reliability, error checking, etc.
+      return new TcpProgressParser(checkNotNull(listener));
+    } catch (URISyntaxException e) {
+      throw new IOException(e);
+    }
+  }
+
   /**
    * Runs ffmpeg with the supplied args. Blocking until finished.
    * 
@@ -192,10 +200,14 @@ public class FFmpeg {
    * @throws IOException
    */
   public void run(List<String> args) throws IOException {
+    checkNotNull(args);
+
     List<String> newArgs = ImmutableList.<String>builder().add(path).addAll(args).build();
 
     Process p = runFunc.run(newArgs);
     try {
+      // TODO Move the IOUtils onto a thread, so that FFmpegProgressListener can be on this thread.
+
       // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
       IOUtils.copy(wrapInReader(p), System.out, Charsets.UTF_8); // TODO Should I be outputting to
                                                                  // stdout?
@@ -207,50 +219,18 @@ public class FFmpeg {
     }
   }
 
-  protected FFmpegProgressParser createProgressParser(FFmpegProgressListener listener)
-      throws IOException {
-    checkNotNull(listener);
-    // TODO In future create the best kind for this OS, unix socket, named pipe, or TCP.\
-    try {
-      return new FFmpegTcpProgressParser(listener);
-    } catch (URISyntaxException e) {
-      throw new IOException(e);
-    }
-  }
-
-
-  public void run(FFmpegBuilder builder, Optional<FFmpegProgressListener> listener)
-      throws IOException {
+  public void run(FFmpegBuilder builder, @Nullable ProgressListener listener) throws IOException {
     checkNotNull(builder);
-    checkNotNull(listener);
 
-    FFmpegProgressParser progressParser = null;
-    try {
-      if (listener.isPresent()) {
-        progressParser = createProgressParser(listener.get());
-        builder.addProgress(progressParser.getUri());
+    if (listener != null) {
+      try (ProgressParser progressParser = createProgressParser(listener)) {
+        progressParser.start();
+        builder = builder.addProgress(progressParser.getUri());
+
+        run(builder.build());
       }
-
-      List<String> args = ImmutableList.<String>builder().add(path).addAll(builder.build()).build();
-
-      Process p = runFunc.run(args);
-      try {
-        // TODO Move the IOUtils onto a thread, so that FFmpegProgressListener can be on this
-        // thread.
-
-        // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
-        IOUtils.copy(wrapInReader(p), System.out, Charsets.UTF_8); // TODO Should I be outputting to
-        // stdout?
-
-        FFmpegUtils.throwOnError(FFMPEG, p);
-
-      } finally {
-        p.destroy();
-      }
-    } finally {
-      if (progressParser != null) {
-        progressParser.close();
-      }
+    } else {
+      run(builder.build());
     }
   }
 
