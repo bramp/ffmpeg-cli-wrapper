@@ -26,6 +26,9 @@ install:
 script:
   - mvn test -Dgpg.skip=true -B
 
+after_success:
+  - mvn clean cobertura:cobertura coveralls:report
+
 cache:
   apt: true
   directories:
