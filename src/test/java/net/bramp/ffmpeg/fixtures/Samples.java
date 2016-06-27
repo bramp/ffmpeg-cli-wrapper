@@ -1,7 +1,9 @@
 package net.bramp.ffmpeg.fixtures;
 
-public abstract class Samples {
-  private Samples() {}
+public final class Samples {
+  private Samples() {
+    throw new AssertionError("No instances for you!");
+  }
 
   public static final String TEST_PREFIX = "src/test/resources/net/bramp/ffmpeg/samples/";
   public static final String big_buck_bunny_720p_1mb = TEST_PREFIX + "big_buck_bunny_720p_1mb.mp4";

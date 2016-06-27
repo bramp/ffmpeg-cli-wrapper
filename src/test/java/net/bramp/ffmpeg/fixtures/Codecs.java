@@ -14,7 +14,11 @@ import net.bramp.ffmpeg.info.Codec;
  * @author bramp
  *
  */
-public class Codecs {
+public final class Codecs {
+
+  private Codecs() {
+    throw new AssertionError("No instances for you!");
+  }
 
   public final static List<Codec> CODECS = new ImmutableList.Builder<Codec>().add(
       // @formatter:off

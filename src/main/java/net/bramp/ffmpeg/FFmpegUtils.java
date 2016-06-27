@@ -24,7 +24,9 @@ public final class FFmpegUtils {
 
   final static Gson gson = FFmpegUtils.setupGson();
 
-  private FFmpegUtils() {}
+  private FFmpegUtils() {
+    throw new AssertionError("No instances for you!");
+  }
 
   /**
    * Convert milliseconds to "hh:mm:ss.ms" String representation.

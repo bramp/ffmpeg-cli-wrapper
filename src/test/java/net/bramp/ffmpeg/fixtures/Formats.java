@@ -14,7 +14,11 @@ import net.bramp.ffmpeg.info.Format;
  * @author bramp
  *
  */
-public class Formats {
+public final class Formats {
+
+  private Formats() {
+    throw new AssertionError("No instances for you!");
+  }
 
   public final static List<Format> FORMATS = new ImmutableList.Builder<Format>().add(
       // @formatter:off

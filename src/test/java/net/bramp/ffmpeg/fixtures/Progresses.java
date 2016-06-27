@@ -5,7 +5,11 @@ import net.bramp.ffmpeg.progress.Progress;
 
 import java.util.List;
 
-public class Progresses {
+public final class Progresses {
+
+  private Progresses() {
+    throw new AssertionError("No instances for you!");
+  }
 
   // @formatter:off
   public final static List<String> allFiles = ImmutableList.of(

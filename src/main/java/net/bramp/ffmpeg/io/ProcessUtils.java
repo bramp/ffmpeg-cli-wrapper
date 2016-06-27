@@ -1,13 +1,20 @@
 package net.bramp.ffmpeg.io;
 
+import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
+
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
  * @author bramp
  */
-public abstract class ProcessUtils {
-  private ProcessUtils() {}
+public final class ProcessUtils {
+
+  private ProcessUtils() {
+    throw new AssertionError("No instances for you!");
+  }
 
   private static class ProcessThread extends Thread {
     final Process p;
