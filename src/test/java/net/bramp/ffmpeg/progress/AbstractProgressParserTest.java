@@ -20,7 +20,7 @@ public abstract class AbstractProgressParserTest {
   @Rule
   public Timeout timeout = new Timeout(10, TimeUnit.SECONDS);
 
-  final List<Progress> progesses = Collections.<Progress>synchronizedList(new ArrayList());
+  final List<Progress> progesses = Collections.synchronizedList(new ArrayList<Progress>());
 
   ProgressParser parser;
   URI uri;
