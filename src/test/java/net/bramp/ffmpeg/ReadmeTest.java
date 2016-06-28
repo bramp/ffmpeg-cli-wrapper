@@ -8,6 +8,7 @@ import net.bramp.ffmpeg.probe.FFmpegStream;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
