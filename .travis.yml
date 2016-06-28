@@ -24,7 +24,7 @@ install:
   - mvn install -Dgpg.skip=true -B -V
 
 script:
-  - mvn test -Duser.language=de -Duser.country=DE -Dgpg.skip=true -B
+  - mvn test -Dgpg.skip=true -B
 
 after_success:
   - mvn clean cobertura:cobertura coveralls:report
