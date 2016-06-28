@@ -21,7 +21,7 @@ before_install:
   - export FFPROBE=$PWD/ffmpeg-release-64bit-static/ffprobe
 
 install:
-  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true -B -V
+  - mvn install -Dgpg.skip=true -B -V
 
 script:
   - mvn test -Duser.language=de -Duser.country=DE -Dgpg.skip=true -B
