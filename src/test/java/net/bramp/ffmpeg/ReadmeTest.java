@@ -68,12 +68,12 @@ public class ReadmeTest {
 
     FFmpegFormat format = probeResult.getFormat();
     String line1 =
-        String.format("File: '%s' ; Format: '%s' ; Duration: %.3fs", format.filename,
+        String.format(Locale.US, "File: '%s' ; Format: '%s' ; Duration: %.3fs", format.filename,
             format.format_long_name, format.duration);
 
     FFmpegStream stream = probeResult.getStreams().get(0);
     String line2 =
-        String.format("Codec: '%s' ; Width: %dpx ; Height: %dpx", stream.codec_long_name,
+        String.format(Locale.US, "Codec: '%s' ; Width: %dpx ; Height: %dpx", stream.codec_long_name,
             stream.width, stream.height);
 
     assertThat(
