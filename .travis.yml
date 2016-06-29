@@ -23,6 +23,7 @@ before_install:
   - ./travis-install-ffmpeg.sh
   - export FFMPEG=$PWD/ffmpeg-release-64bit-static/ffmpeg
   - export FFPROBE=$PWD/ffmpeg-release-64bit-static/ffprobe
+  - echo "MAVEN_OPTS='-Duser.language=$USER_LANGUAGE -Duser.country=$USER_COUNTRY'" > ~/.mavenrc
 
 install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true -B -V
