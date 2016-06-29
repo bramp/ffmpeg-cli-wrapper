@@ -204,7 +204,7 @@ public class FFmpegBuilder {
     args.add(override ? "-y" : "-n");
     args.add("-v", this.verbosity.toString());
 
-    if(user_agent != null) {
+    if (user_agent != null) {
       args.add("-user-agent", user_agent);
     }
 
