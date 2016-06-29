@@ -150,11 +150,27 @@ public class FFmpegBuilderTest {
         .addOutput("output2")
           .setVideoResolution(640, 480)
           .done()
+        .addOutput("output3")
+          .setVideoResolution("ntsc")
+          .done()
         .build();
     // @formatter:on
 
     assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-s", "320x240",
-        "output1", "-s", "640x480", "output2")));
+        "output1", "-s", "640x480", "output2", "-s", "ntsc", "output3")));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testConflictingVideoSize() {
+    // @formatter:off
+    new FFmpegBuilder()
+        .setInput("input")
+        .addOutput("output")
+          .setVideoResolution(320, 240)
+          .setVideoResolution("ntsc")
+          .done()
+        .build();
+    // @formatter:on
   }
 
   @Test

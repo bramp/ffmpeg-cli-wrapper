@@ -65,6 +65,7 @@ public class FFmpegOutputBuilder {
   public Fraction video_frame_rate;
   public int video_width;
   public int video_height;
+  public String video_size;
   public String video_movflags;
   public long video_bit_rate;
   public Integer video_frames;
@@ -280,6 +281,21 @@ public class FFmpegOutputBuilder {
     this.video_enabled = true;
     this.video_width = width;
     this.video_height = height;
+    return this;
+  }
+
+  /**
+   * Sets video resolution based on an abbreviation, e.g. "ntsc" for 720x480, or "vga" for 640x480
+   *
+   * @see <a href="https://www.ffmpeg.org/ffmpeg-utils.html#Video-size">ffmpeg video size</a>
+   *
+   * @param abbreviation The abbreviation size. No validation is done, instead the value is passed
+   *        as is to ffmpeg.
+   * @return
+   */
+  public FFmpegOutputBuilder setVideoResolution(String abbreviation) {
+    this.video_enabled = true;
+    this.video_size = checkNotEmpty(abbreviation, "video abbreviation must not be empty");
     return this;
   }
 
@@ -600,12 +616,18 @@ public class FFmpegOutputBuilder {
         args.add("-movflags", video_movflags);
       }
 
-      if (video_width != 0 && video_height != 0) {
+      if (video_size != null) {
+        checkArgument(video_width == 0 && video_height == 0,
+            "Can not specific width or height, as well as an abbreviatied video size");
+        args.add("-s", video_size);
+
+      } else if (video_width != 0 && video_height != 0) {
         args.add("-s", String.format("%dx%d", video_width, video_height));
       }
 
+      // TODO What if width is set but heigh isn't. We don't seem to do anything
+
       if (video_frame_rate != null) {
-        // args.add("-r", String.format("%2f", video_frame_rate));
         args.add("-r", video_frame_rate.toString());
       }
 
