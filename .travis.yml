@@ -2,6 +2,10 @@ sudo: false
 
 language: java
 
+env:
+  - LC_ALL=en_US.UTF-8
+  - LC_ALL=de_DE.UTF-8
+
 jdk:
   - openjdk7
   - oraclejdk8
