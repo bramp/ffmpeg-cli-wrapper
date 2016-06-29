@@ -28,11 +28,8 @@ before_install:
 install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true -B -V
 
-before_script:
-- echo "MAVEN_OPTS='-Duser.language=$USER_LANGUAGE -Duser.country=$USER_COUNTRY'" > ~/.mavenrc
-
 script:
-  - mvn test -Dgpg.skip=true -B
+  - mvn test -Dgpg.skip=true -B -V
 
 after_success:
   - mvn clean cobertura:cobertura coveralls:report
