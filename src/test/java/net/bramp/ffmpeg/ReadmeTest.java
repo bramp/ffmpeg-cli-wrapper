@@ -4,6 +4,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.junit.Test;
 
@@ -18,6 +19,7 @@ import net.bramp.ffmpeg.probe.FFmpegStream;
  */
 public class ReadmeTest {
 
+  final Locale locale = Locale.US;
   final FFmpeg ffmpeg = new FFmpeg();
   final FFprobe ffprobe = new FFprobe();
  
@@ -69,12 +71,12 @@ public class ReadmeTest {
 
     FFmpegFormat format = probeResult.getFormat();
     String line1 =
-        String.format("File: '%s' ; Format: '%s' ; Duration: %.3fs", format.filename,
+        String.format(locale, "File: '%s' ; Format: '%s' ; Duration: %.3fs", format.filename,
             format.format_long_name, format.duration);
 
     FFmpegStream stream = probeResult.getStreams().get(0);
     String line2 =
-        String.format("Codec: '%s' ; Width: %dpx ; Height: %dpx", stream.codec_long_name,
+        String.format(locale, "Codec: '%s' ; Width: %dpx ; Height: %dpx", stream.codec_long_name,
             stream.width, stream.height);
 
     assertThat(
