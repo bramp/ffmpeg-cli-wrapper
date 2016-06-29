@@ -3,8 +3,8 @@ sudo: false
 language: java
 
 env:
-  - LC_ALL=en_US.UTF-8
-  - LC_ALL=de_DE.UTF-8
+  - LANG=en_US.UTF-8
+  - LANG=de_DE.UTF-8
 
 jdk:
   - openjdk7
