@@ -1,20 +1,17 @@
 package net.bramp.ffmpeg;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
+import java.io.IOException;
+
+import org.junit.Test;
+
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.probe.FFmpegFormat;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import net.bramp.ffmpeg.probe.FFmpegStream;
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.util.Locale;
-
-import static org.hamcrest.core.Is.*;
-import static org.junit.Assert.assertThat;
 
 /**
  * Ensures the examples in the README continue to work.
@@ -24,19 +21,6 @@ public class ReadmeTest {
   final FFmpeg ffmpeg = new FFmpeg();
   final FFprobe ffprobe = new FFprobe();
  
-
-  static final Locale defaultLocale = Locale.getDefault();
-
-  @BeforeClass
-  public static void setDefaultLocale() {
-    Locale.setDefault(Locale.US);
-  }
-
-  @AfterClass
-  public static void restoreLocale() {
-    Locale.setDefault(defaultLocale);
-  }
-
   public ReadmeTest() throws IOException {}
   
   @Test
