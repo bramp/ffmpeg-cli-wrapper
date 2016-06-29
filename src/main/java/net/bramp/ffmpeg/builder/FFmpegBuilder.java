@@ -121,13 +121,11 @@ public class FFmpegBuilder {
   }
 
   public FFmpegBuilder setInput(FFmpegProbeResult result) {
-    checkNotNull(result);
     clearInputs();
     return addInput(result);
   }
 
   public FFmpegBuilder setInput(String filename) {
-    checkNotNull(filename);
     clearInputs();
     return addInput(filename);
   }

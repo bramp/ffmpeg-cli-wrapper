@@ -259,4 +259,13 @@ public class FFmpegBuilderTest {
     builder.build();
   }
 
+  @Test
+  public void testMultipleInput() {
+    List<String> args =
+        new FFmpegBuilder().addInput("input1").addInput("input2").addOutput("output").done()
+            .build();
+    assertThat(args,
+        is(Arrays.asList("-y", "-v", "error", "-i", "input1", "-i", "input2", "output")));
+  }
+
 }
