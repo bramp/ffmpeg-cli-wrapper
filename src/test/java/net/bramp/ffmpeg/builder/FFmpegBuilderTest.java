@@ -18,7 +18,7 @@ import static net.bramp.ffmpeg.builder.MetadataSpecifier.*;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.tag;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.usable;
 import static net.bramp.ffmpeg.builder.StreamSpecifierType.*;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -265,8 +265,7 @@ public class FFmpegBuilderTest {
     List<String> args =
         new FFmpegBuilder().addInput("input1").addInput("input2").addOutput("output").done()
             .build();
-    assertThat(args,
-        is(Arrays.asList("-y", "-v", "error", "-i", "input1", "-i", "input2", "output")));
+    assertThat(args, contains("-y", "-v", "error", "-i", "input1", "-i", "input2", "output"));
   }
 
 }
