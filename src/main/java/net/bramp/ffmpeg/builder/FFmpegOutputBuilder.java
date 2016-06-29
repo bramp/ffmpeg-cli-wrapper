@@ -20,6 +20,9 @@ import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.*;
 import com.google.common.collect.Range;
+
+import javax.annotation.Nullable;
+
 import static net.bramp.ffmpeg.FFmpegUtils.millisecondsToString;
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
 
@@ -105,11 +108,16 @@ public class FFmpegOutputBuilder {
     throw new IllegalArgumentException("not a valid output URL, must use rtp/tcp/udp scheme");
   }
 
+  private static String checkNotEmpty(String arg, @Nullable Object errorMessage) {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(arg), errorMessage);
+    return arg;
+  }
+
   public FFmpegOutputBuilder() {}
 
   protected FFmpegOutputBuilder(FFmpegBuilder parent, String filename) {
     this.parent = checkNotNull(parent);
-    this.filename = checkNotNull(filename);
+    this.filename = checkNotEmpty(filename, "filename must not be empty");
   }
 
   protected FFmpegOutputBuilder(FFmpegBuilder parent, URI uri) {
@@ -153,7 +161,7 @@ public class FFmpegOutputBuilder {
   }
 
   public FFmpegOutputBuilder setFilename(String filename) {
-    this.filename = checkNotNull(filename);
+    this.filename = checkNotEmpty(filename, "filename must not be empty");
     return this;
   }
 
@@ -171,12 +179,12 @@ public class FFmpegOutputBuilder {
   }
 
   public FFmpegOutputBuilder setFormat(String format) {
-    this.format = checkNotNull(format);
+    this.format = checkNotEmpty(format, "format must not be empty");
     return this;
   }
 
   public FFmpegOutputBuilder setVideoBitRate(long bit_rate) {
-    Preconditions.checkArgument(bit_rate > 0, "bit rate must be positive");
+    checkArgument(bit_rate > 0, "bit rate must be positive");
     this.video_enabled = true;
     this.video_bit_rate = bit_rate;
     return this;
@@ -184,7 +192,7 @@ public class FFmpegOutputBuilder {
 
   public FFmpegOutputBuilder setVideoCodec(String codec) {
     this.video_enabled = true;
-    this.video_codec = checkNotNull(codec);
+    this.video_codec = checkNotEmpty(codec, "codec must not be empty");
     return this;
   }
 
@@ -196,7 +204,7 @@ public class FFmpegOutputBuilder {
 
   public FFmpegOutputBuilder setVideoMovFlags(String movflags) {
     this.video_enabled = true;
-    this.video_movflags = checkNotNull(movflags);
+    this.video_movflags = checkNotEmpty(movflags, "movflags must not be empty");
     return this;
   }
 
@@ -207,9 +215,7 @@ public class FFmpegOutputBuilder {
   }
 
   public FFmpegOutputBuilder setVideoBitStreamFilter(String filter) {
-    Preconditions
-        .checkArgument(!Strings.isNullOrEmpty(filter), "filter should be declared by name");
-    this.video_bit_stream_filter = filter;
+    this.video_bit_stream_filter = checkNotEmpty(filter, "filter must not be empty");
     return this;
   }
 
@@ -243,7 +249,7 @@ public class FFmpegOutputBuilder {
 
   public FFmpegOutputBuilder setVideoPreset(String preset) {
     this.video_enabled = true;
-    this.video_preset = checkNotNull(preset);
+    this.video_preset = checkNotEmpty(preset, "video preset must not be empty");
     return this;
   }
 
@@ -252,7 +258,7 @@ public class FFmpegOutputBuilder {
   }
 
   public FFmpegOutputBuilder setVideoWidth(int width) {
-    Preconditions.checkArgument(isValidSize(width), "Width must be -1 or greater than zero");
+    checkArgument(isValidSize(width), "Width must be -1 or greater than zero");
 
     this.video_enabled = true;
     this.video_width = width;
@@ -260,7 +266,7 @@ public class FFmpegOutputBuilder {
   }
 
   public FFmpegOutputBuilder setVideoHeight(int height) {
-    Preconditions.checkArgument(isValidSize(height), "Height must be -1 or greater than zero");
+    checkArgument(isValidSize(height), "Height must be -1 or greater than zero");
 
     this.video_enabled = true;
     this.video_height = height;
@@ -268,7 +274,7 @@ public class FFmpegOutputBuilder {
   }
 
   public FFmpegOutputBuilder setVideoResolution(int width, int height) {
-    Preconditions.checkArgument(isValidSize(width) && isValidSize(height),
+    checkArgument(isValidSize(width) && isValidSize(height),
         "Both width and height must be -1 or greater than zero");
 
     this.video_enabled = true;
@@ -285,13 +291,13 @@ public class FFmpegOutputBuilder {
    */
   public FFmpegOutputBuilder setVideoFilter(String filter) {
     this.video_enabled = true;
-    this.video_filter = checkNotNull(filter);
+    this.video_filter = checkNotEmpty(filter, "filter must not be empty");
     return this;
   }
 
   public FFmpegOutputBuilder setComplexVideoFilter(String filter) {
     this.video_enabled = true;
-    this.video_filter_complex = checkNotNull(filter);
+    this.video_filter_complex = checkNotEmpty(filter, "filter must not be empty");
     return this;
   }
 
@@ -304,7 +310,7 @@ public class FFmpegOutputBuilder {
    */
   public FFmpegOutputBuilder addMetaTag(String key, String value) {
     checkValidKey(key);
-    checkNotNull(value);
+    checkNotEmpty(value, "value must not be empty");
     meta_tags.add("-metadata");
     meta_tags.add(key + "=" + value);
     return this;
@@ -343,7 +349,7 @@ public class FFmpegOutputBuilder {
    */
   public FFmpegOutputBuilder addMetaTag(MetadataSpecifier spec, String key, String value) {
     checkValidKey(key);
-    checkNotNull(value);
+    checkNotEmpty(value, "value must not be empty");
     meta_tags.add("-metadata:" + spec.spec());
     meta_tags.add(key + "=" + value);
     return this;
@@ -351,12 +357,12 @@ public class FFmpegOutputBuilder {
 
   public FFmpegOutputBuilder setAudioCodec(String codec) {
     this.audio_enabled = true;
-    this.audio_codec = checkNotNull(codec);
+    this.audio_codec = checkNotEmpty(codec, "codec must not be empty");
     return this;
   }
 
   public FFmpegOutputBuilder setAudioChannels(int channels) {
-    Preconditions.checkArgument(channels > 0, "channels must be positive");
+    checkArgument(channels > 0, "channels must be positive");
     this.audio_enabled = true;
     this.audio_channels = channels;
     return this;
@@ -369,7 +375,7 @@ public class FFmpegOutputBuilder {
    * @return this
    */
   public FFmpegOutputBuilder setAudioSampleRate(int sample_rate) {
-    Preconditions.checkArgument(sample_rate > 0, "sample rate must be positive");
+    checkArgument(sample_rate > 0, "sample rate must be positive");
     this.audio_enabled = true;
     this.audio_sample_rate = sample_rate;
     return this;
@@ -382,9 +388,8 @@ public class FFmpegOutputBuilder {
    * @return this
    */
   public FFmpegOutputBuilder setAudioBitDepth(String bit_depth) {
-    Preconditions.checkNotNull(bit_depth);
     this.audio_enabled = true;
-    this.audio_bit_depth = bit_depth;
+    this.audio_bit_depth = checkNotEmpty(bit_depth, "bit depth must not be empty");
     return this;
   }
 
@@ -395,24 +400,22 @@ public class FFmpegOutputBuilder {
    * @return this
    */
   public FFmpegOutputBuilder setAudioBitRate(long bit_rate) {
-    Preconditions.checkArgument(bit_rate > 0, "bit rate must be positive");
+    checkArgument(bit_rate > 0, "bit rate must be positive");
     this.audio_enabled = true;
     this.audio_bit_rate = bit_rate;
     return this;
   }
 
   public FFmpegOutputBuilder setAudioQuality(int quality) {
-    Preconditions.checkArgument(Range.closed(1, 5).contains(quality),
-        "quality must be in the range 1..5");
+    checkArgument(Range.closed(1, 5).contains(quality), "quality must be in the range 1..5");
     this.audio_enabled = true;
     this.audio_quality = quality;
     return this;
   }
 
   public FFmpegOutputBuilder setAudioBitStreamFilter(String filter) {
-    Preconditions
-        .checkArgument(!Strings.isNullOrEmpty(filter), "filter should be declared by name");
-    this.audio_bit_stream_filter = filter;
+    this.audio_enabled = true;
+    this.audio_bit_stream_filter = checkNotEmpty(filter, "filter must not be empty");
     return this;
   }
 
@@ -423,7 +426,7 @@ public class FFmpegOutputBuilder {
    * @return this
    */
   public FFmpegOutputBuilder setTargetSize(long targetSize) {
-    Preconditions.checkArgument(targetSize > 0, "target size must be positive");
+    checkArgument(targetSize > 0, "target size must be positive");
     this.targetSize = targetSize;
     return this;
   }
@@ -472,7 +475,7 @@ public class FFmpegOutputBuilder {
    * @return this
    */
   public FFmpegOutputBuilder setPassPaddingBitrate(long bitrate) {
-    Preconditions.checkArgument(bitrate > 0, "bitrate must be positive");
+    checkArgument(bitrate > 0, "bitrate must be positive");
     this.pass_padding_bitrate = bitrate;
     return this;
   }
@@ -528,8 +531,8 @@ public class FFmpegOutputBuilder {
 
     if (pass > 0) {
       // TODO Write a test for this:
-      Preconditions.checkArgument(format != null, "Format must be specified when using two-pass");
-      Preconditions.checkArgument(targetSize != 0 || video_bit_rate != 0,
+      checkArgument(format != null, "Format must be specified when using two-pass");
+      checkArgument(targetSize != 0 || video_bit_rate != 0,
           "Target size, or video bitrate must be specified when using two-pass");
     }
 

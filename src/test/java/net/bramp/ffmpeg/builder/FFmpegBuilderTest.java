@@ -122,7 +122,7 @@ public class FFmpegBuilderTest {
         new AudioEncodingOptions(true, "aac", 1, FFmpeg.AUDIO_SAMPLE_48000, FFmpeg.AUDIO_DEPTH_S16,
             1, 2);
     VideoEncodingOptions video =
-        new VideoEncodingOptions(true, "libx264", FFmpeg.FPS_30, 320, 240, 1, null, "", "");
+        new VideoEncodingOptions(true, "libx264", FFmpeg.FPS_30, 320, 240, 1, null, null, null);
 
     // @formatter:off
     EncodingOptions options = new FFmpegBuilder()
