@@ -3,8 +3,8 @@ sudo: false
 language: java
 
 env:
-  - LANG=en_US.UTF-8
-  - LANG=de_DE.UTF-8
+  - USER_LANGUAGE=en USER_COUNTRY=US
+  - USER_LANGUAGE=de USER_COUNTRY=DE
 
 jdk:
   - openjdk7
@@ -26,6 +26,9 @@ before_install:
 
 install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true -B -V
+
+before_script:
+- echo "MAVEN_OPTS='-Duser.language=$USER_LANGUAGE -Duser.country=$USER_COUNTRY'" > ~/.mavenrc
 
 script:
   - mvn test -Dgpg.skip=true -B
