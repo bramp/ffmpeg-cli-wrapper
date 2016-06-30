@@ -432,6 +432,36 @@
 				<version>2.4</version>
 				<configuration>
 					<aggregate>true</aggregate>
+					<tagListOptions>
+						<tagClasses>
+							<tagClass>
+								<displayName>Todo Work</displayName>
+								<tags>
+									<tag>
+										<matchString>TODO</matchString>
+										<matchType>ignoreCase</matchType>
+									</tag>
+									<tag>
+										<matchString>@todo</matchString>
+										<matchType>exact</matchType>
+									</tag>
+									<tag>
+										<matchString>FIXME</matchString>
+										<matchType>exact</matchType>
+									</tag>
+								</tags>
+							</tagClass>
+							<tagClass>
+								<displayName>Deprecated</displayName>
+								<tags>
+									<tag>
+										<matchString>@Deprecated</matchString>
+										<matchType>exact</matchType>
+									</tag>
+								</tags>
+							</tagClass>
+						</tagClasses>
+					</tagListOptions>
 				</configuration>
 			</plugin>
 
