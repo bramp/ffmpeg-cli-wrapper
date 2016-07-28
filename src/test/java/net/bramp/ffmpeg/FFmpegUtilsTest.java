@@ -10,11 +10,11 @@ public class FFmpegUtilsTest {
 
   @Test
   public void testMillisecondsToString() throws Exception {
-    assertEquals("00:01:03.123", millisecondsToString(63123));
-    assertEquals("00:01:03", millisecondsToString(63000));
-    assertEquals("01:23:45.678", millisecondsToString(5025678));
-    assertEquals("00:00:00", millisecondsToString(0));
-    assertEquals("2562047788015:12:55.807", millisecondsToString(Long.MAX_VALUE));
+    assertEquals("63.123", millisecondsToString(63123));
+    assertEquals("63", millisecondsToString(63000));
+    assertEquals("5025.678", millisecondsToString(5025678));
+    assertEquals("0", millisecondsToString(0));
+    assertEquals("9223372036854775.807", millisecondsToString(Long.MAX_VALUE));
   }
 
   @Test(expected = IllegalArgumentException.class)
