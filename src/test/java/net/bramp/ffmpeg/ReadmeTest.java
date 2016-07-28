@@ -1,27 +1,30 @@
 package net.bramp.ffmpeg;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
+import java.io.IOException;
+import java.util.Locale;
+
+import org.junit.Test;
+
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.probe.FFmpegFormat;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import net.bramp.ffmpeg.probe.FFmpegStream;
-import org.junit.Test;
-
-import java.io.IOException;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
 /**
  * Ensures the examples in the README continue to work.
  */
 public class ReadmeTest {
 
+  final Locale locale = Locale.US;
   final FFmpeg ffmpeg = new FFmpeg();
   final FFprobe ffprobe = new FFprobe();
-
+ 
   public ReadmeTest() throws IOException {}
-
+  
   @Test
   public void testVideoEncoding() throws IOException {
 
@@ -68,12 +71,12 @@ public class ReadmeTest {
 
     FFmpegFormat format = probeResult.getFormat();
     String line1 =
-        String.format("File: '%s' ; Format: '%s' ; Duration: %.3fs", format.filename,
+        String.format(locale, "File: '%s' ; Format: '%s' ; Duration: %.3fs", format.filename,
             format.format_long_name, format.duration);
 
     FFmpegStream stream = probeResult.getStreams().get(0);
     String line2 =
-        String.format("Codec: '%s' ; Width: %dpx ; Height: %dpx", stream.codec_long_name,
+        String.format(locale, "Codec: '%s' ; Width: %dpx ; Height: %dpx", stream.codec_long_name,
             stream.width, stream.height);
 
     assertThat(

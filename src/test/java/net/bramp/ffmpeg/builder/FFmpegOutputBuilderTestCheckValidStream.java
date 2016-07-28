@@ -41,5 +41,4 @@ public class FFmpegOutputBuilderTestCheckValidStream {
   public void testUri() {
     FFmpegOutputBuilder.checkValidStream(uri);
   }
-
 }

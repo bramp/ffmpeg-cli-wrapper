@@ -1,9 +1,10 @@
 package net.bramp.ffmpeg.fixtures;
 
-import com.google.common.collect.ImmutableList;
-import net.bramp.ffmpeg.info.Codec;
-
 import java.util.List;
+
+import com.google.common.collect.ImmutableList;
+
+import net.bramp.ffmpeg.info.Codec;
 
 /**
  * Class that contains all codecs as defined in the unit tests This should not be used as a concise
@@ -13,7 +14,11 @@ import java.util.List;
  * @author bramp
  *
  */
-public class Codecs {
+public final class Codecs {
+
+  private Codecs() {
+    throw new AssertionError("No instances for you!");
+  }
 
   public final static List<Codec> CODECS = new ImmutableList.Builder<Codec>().add(
       // @formatter:off

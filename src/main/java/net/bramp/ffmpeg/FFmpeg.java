@@ -1,6 +1,5 @@
 package net.bramp.ffmpeg;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -24,12 +23,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.apache.commons.io.output.NullOutputStream.NULL_OUTPUT_STREAM;
 
 public class FFmpeg {
 
@@ -111,7 +112,7 @@ public class FFmpeg {
   }
 
   private static BufferedReader wrapInReader(Process p) {
-    return new BufferedReader(new InputStreamReader(p.getInputStream(), Charsets.UTF_8));
+    return new BufferedReader(new InputStreamReader(p.getInputStream(), StandardCharsets.UTF_8));
   }
 
   public synchronized @Nonnull String version() throws IOException {
@@ -120,8 +121,8 @@ public class FFmpeg {
       try {
         BufferedReader r = wrapInReader(p);
         this.version = r.readLine();
-        IOUtils.copy(r, NullOutputStream.NULL_OUTPUT_STREAM, Charsets.UTF_8); // Throw away rest of
-                                                                              // the output
+        IOUtils.copy(r, NULL_OUTPUT_STREAM, StandardCharsets.UTF_8); // Throw away rest of the
+                                                                     // output
         FFmpegUtils.throwOnError(FFMPEG, p);
       } finally {
         p.destroy();
@@ -209,8 +210,8 @@ public class FFmpeg {
       // TODO Move the IOUtils onto a thread, so that FFmpegProgressListener can be on this thread.
 
       // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
-      IOUtils.copy(wrapInReader(p), System.out, Charsets.UTF_8); // TODO Should I be outputting to
-                                                                 // stdout?
+      IOUtils.copy(wrapInReader(p), System.out, StandardCharsets.UTF_8); // TODO Should I be
+                                                                         // outputting to stdout?
 
       FFmpegUtils.throwOnError(FFMPEG, p);
 

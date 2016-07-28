@@ -59,6 +59,7 @@ public class FFmpegBuilder {
   String pass_prefix;
   Verbosity verbosity = Verbosity.ERROR;
   URI progress;
+  String user_agent;
 
   // Input settings
   String format;
@@ -97,6 +98,11 @@ public class FFmpegBuilder {
     return this;
   }
 
+  public FFmpegBuilder setUserAgent(String userAgent) {
+    this.user_agent = checkNotNull(userAgent);
+    return this;
+  }
+
   public FFmpegBuilder readAtNativeFrameRate() {
     this.read_at_native_frame_rate = true;
     return this;
@@ -121,13 +127,11 @@ public class FFmpegBuilder {
   }
 
   public FFmpegBuilder setInput(FFmpegProbeResult result) {
-    checkNotNull(result);
     clearInputs();
     return addInput(result);
   }
 
   public FFmpegBuilder setInput(String filename) {
-    checkNotNull(filename);
     clearInputs();
     return addInput(filename);
   }
@@ -199,6 +203,10 @@ public class FFmpegBuilder {
 
     args.add(override ? "-y" : "-n");
     args.add("-v", this.verbosity.toString());
+
+    if (user_agent != null) {
+      args.add("-user-agent", user_agent);
+    }
 
     if (startOffset != null) {
       args.add("-ss", FFmpegUtils.millisecondsToString(startOffset));

@@ -1,9 +1,10 @@
 package net.bramp.ffmpeg.fixtures;
 
-import com.google.common.collect.ImmutableList;
-import net.bramp.ffmpeg.info.Format;
-
 import java.util.List;
+
+import com.google.common.collect.ImmutableList;
+
+import net.bramp.ffmpeg.info.Format;
 
 /**
  * Class that contains all formats as defined in the unit tests This should not be used to test if a
@@ -13,7 +14,11 @@ import java.util.List;
  * @author bramp
  *
  */
-public class Formats {
+public final class Formats {
+
+  private Formats() {
+    throw new AssertionError("No instances for you!");
+  }
 
   public final static List<Format> FORMATS = new ImmutableList.Builder<Format>().add(
       // @formatter:off

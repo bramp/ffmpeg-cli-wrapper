@@ -18,7 +18,7 @@ import static net.bramp.ffmpeg.builder.MetadataSpecifier.*;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.tag;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.usable;
 import static net.bramp.ffmpeg.builder.StreamSpecifierType.*;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -36,6 +36,7 @@ public class FFmpegBuilderTest {
     // @formatter:off
     List<String> args = new FFmpegBuilder()
         .setVerbosity(Verbosity.DEBUG)
+        .setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36")
         .setInput("input")
         .setStartOffset(1500, TimeUnit.MILLISECONDS)
         .overrideOutputFiles(true)
@@ -54,9 +55,17 @@ public class FFmpegBuilderTest {
         .build();
     // @formatter:on
 
-    assertThat(args, is(Arrays.asList("-y", "-v", "debug", "-ss", "00:00:01.500", "-i", "input",
-        "-f", "mp4", "-ss", "00:00:00.500", "-vcodec", "libx264", "-s", "320x240", "-r", "30/1",
-        "-bsf:v", "foo", "-acodec", "aac", "-ac", "1", "-ar", "48000", "-bsf:a", "bar", "output")));
+    assertThat(
+        args,
+        contains(
+            "-y",
+            "-v",
+            "debug",
+            "-user-agent",
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36",
+            "-ss", "1.500", "-i", "input", "-f", "mp4", "-ss", "0.500", "-vcodec",
+            "libx264", "-s", "320x240", "-r", "30/1", "-bsf:v", "foo", "-acodec", "aac", "-ac",
+            "1", "-ar", "48000", "-bsf:a", "bar", "output"));
   }
 
   @Test
@@ -73,8 +82,7 @@ public class FFmpegBuilderTest {
         .build();
     // @formatter:on
 
-    assertThat(args,
-        is(Arrays.asList("-y", "-v", "error", "-i", "input", "-vn", "-an", "-sn", "output")));
+    assertThat(args, contains("-y", "-v", "error", "-i", "input", "-vn", "-an", "-sn", "output"));
   }
 
   @Test
@@ -91,8 +99,10 @@ public class FFmpegBuilderTest {
         .build();
     // @formatter:on
 
-    assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-vf",
-        "scale='trunc(ow/a/2)*2:320'", "-an", "-sn", "output")));
+    assertThat(
+        args,
+        contains("-y", "-v", "error", "-i", "input", "-vf", "scale='trunc(ow/a/2)*2:320'", "-an",
+            "-sn", "output"));
   }
 
   @Test
@@ -108,8 +118,10 @@ public class FFmpegBuilderTest {
         .build();
     // @formatter:on
 
-    assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-s", "320x240", "-vf",
-        "scale='trunc(ow/a/2)*2:320'", "output")));
+    assertThat(
+        args,
+        contains("-y", "-v", "error", "-i", "input", "-s", "320x240", "-vf",
+            "scale='trunc(ow/a/2)*2:320'", "output"));
   }
 
   /**
@@ -122,7 +134,7 @@ public class FFmpegBuilderTest {
         new AudioEncodingOptions(true, "aac", 1, FFmpeg.AUDIO_SAMPLE_48000, FFmpeg.AUDIO_DEPTH_S16,
             1, 2);
     VideoEncodingOptions video =
-        new VideoEncodingOptions(true, "libx264", FFmpeg.FPS_30, 320, 240, 1, null, "", "");
+        new VideoEncodingOptions(true, "libx264", FFmpeg.FPS_30, 320, 240, 1, null, null, null);
 
     // @formatter:off
     EncodingOptions options = new FFmpegBuilder()
@@ -150,11 +162,29 @@ public class FFmpegBuilderTest {
         .addOutput("output2")
           .setVideoResolution(640, 480)
           .done()
+        .addOutput("output3")
+          .setVideoResolution("ntsc")
+          .done()
         .build();
     // @formatter:on
 
-    assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-s", "320x240",
-        "output1", "-s", "640x480", "output2")));
+    assertThat(
+        args,
+        contains("-y", "-v", "error", "-i", "input", "-s", "320x240", "output1", "-s", "640x480",
+            "output2", "-s", "ntsc", "output3"));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testConflictingVideoSize() {
+    // @formatter:off
+    new FFmpegBuilder()
+        .setInput("input")
+        .addOutput("output")
+          .setVideoResolution(320, 240)
+          .setVideoResolution("ntsc")
+          .done()
+        .build();
+    // @formatter:on
   }
 
   @Test
@@ -168,8 +198,8 @@ public class FFmpegBuilderTest {
         .build();
     // @formatter:on
 
-    assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-s", "320x240",
-        "udp://10.1.0.102:1234")));
+    assertThat(args,
+        contains("-y", "-v", "error", "-i", "input", "-s", "320x240", "udp://10.1.0.102:1234"));
   }
 
   @Test
@@ -185,9 +215,10 @@ public class FFmpegBuilderTest {
         .build();
     // @formatter:on
 
-    assertThat(args,
-        is(Arrays.asList("-y", "-v", "error", "-i", "input", "-metadata", "comment=My Comment",
-            "-metadata", "title=\"Video\"", "-metadata", "author=a=b:c", "output")));
+    assertThat(
+        args,
+        contains("-y", "-v", "error", "-i", "input", "-metadata", "comment=My Comment",
+            "-metadata", "title=\"Video\"", "-metadata", "author=a=b:c", "output"));
   }
 
   @Test
@@ -211,12 +242,14 @@ public class FFmpegBuilderTest {
         .build();
     // @formatter:on
 
-    assertThat(args, is(Arrays.asList("-y", "-v", "error", "-i", "input", "-metadata",
-        "title=Movie Title", "-metadata:c:0", "author=Bob", "-metadata:p:0", "comment=Awesome",
-        "-metadata:s:0", "copyright=Megacorp", "-metadata:s:v", "framerate=24fps",
-        "-metadata:s:v:0", "artist=Joe", "-metadata:s:a:0", "language=eng", "-metadata:s:s:0",
-        "language=fre", "-metadata:s:u", "year=2010", "-metadata:s:m:key", "a=b",
-        "-metadata:s:m:key:value", "a=b", "output")));
+    assertThat(
+        args,
+        contains("-y", "-v", "error", "-i", "input", "-metadata", "title=Movie Title",
+            "-metadata:c:0", "author=Bob", "-metadata:p:0", "comment=Awesome", "-metadata:s:0",
+            "copyright=Megacorp", "-metadata:s:v", "framerate=24fps", "-metadata:s:v:0",
+            "artist=Joe", "-metadata:s:a:0", "language=eng", "-metadata:s:s:0", "language=fre",
+            "-metadata:s:u", "year=2010", "-metadata:s:m:key", "a=b", "-metadata:s:m:key:value",
+            "a=b", "output"));
   }
 
   @Test
@@ -233,14 +266,22 @@ public class FFmpegBuilderTest {
         .build();
     // @formatter:on
 
-    assertThat(args, is(Arrays.asList("-y", "-v", "error", "-a", "b", "-i", "input", "-an", "-sn",
-        "-c", "d", "output")));
+    assertThat(args,
+        contains("-y", "-v", "error", "-a", "b", "-i", "input", "-an", "-sn", "-c", "d", "output"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testNothing() {
     FFmpegBuilder builder = new FFmpegBuilder();
     builder.build();
+  }
+
+  @Test
+  public void testMultipleInput() {
+    List<String> args =
+        new FFmpegBuilder().addInput("input1").addInput("input2").addOutput("output").done()
+            .build();
+    assertThat(args, contains("-y", "-v", "error", "-i", "input1", "-i", "input2", "output"));
   }
 
 }

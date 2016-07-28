@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -69,8 +70,12 @@ public class FFprobe {
     return new BufferedReader(new InputStreamReader(p.getInputStream(), Charsets.UTF_8));
   }
 
-  // TODO Add Probe Inputstream
   public FFmpegProbeResult probe(String mediaPath) throws IOException {
+    return probe(mediaPath, null);
+  }
+
+  // TODO Add Probe Inputstream
+  public FFmpegProbeResult probe(String mediaPath, @Nullable String userAgent) throws IOException {
     ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
 
     // TODO Add:
@@ -79,7 +84,12 @@ public class FFprobe {
 
     // @formatter:off
     args.add(path)
-        .add("-v", "quiet")
+        .add("-v", "quiet");
+
+    if (userAgent != null)
+      args.add("-user-agent", userAgent);
+
+      args
         .add("-print_format", "json")
         .add("-show_error")
         .add("-show_format")

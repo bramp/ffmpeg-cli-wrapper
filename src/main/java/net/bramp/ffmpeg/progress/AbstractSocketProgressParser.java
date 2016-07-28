@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.CountDownLatch;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -38,7 +39,7 @@ public abstract class AbstractSocketProgressParser implements ProgressParser {
 
   protected abstract String getThreadName();
 
-  protected abstract Runnable getRunnable();
+  protected abstract Runnable getRunnable(CountDownLatch startSignal);
 
   /**
    *
@@ -50,8 +51,19 @@ public abstract class AbstractSocketProgressParser implements ProgressParser {
     }
 
     String name = getThreadName() + "(" + getUri().toString() + ")";
-    thread = new Thread(getRunnable(), name);
+
+    CountDownLatch startSignal = new CountDownLatch(1);
+    Runnable runnable = getRunnable(startSignal);
+
+    thread = new Thread(runnable, name);
     thread.start();
+
+    // Block until the thread has started
+    try {
+      startSignal.await();
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
   }
 
   @Override
@@ -61,9 +73,8 @@ public abstract class AbstractSocketProgressParser implements ProgressParser {
 
       try {
         thread.join();
-        thread = null;
       } catch (InterruptedException e) {
-        // Ignore and return
+        Thread.currentThread().interrupt();
       }
     }
   }
