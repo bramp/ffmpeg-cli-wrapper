@@ -17,8 +17,11 @@ import java.io.IOException;
 import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,6 +36,9 @@ public class FFprobeTest {
 
   @Before
   public void before() throws IOException {
+    when(runFunc.run(argThatHasItem("-version"))).thenAnswer(
+        new NewProcessAnswer("ffprobe-version"));
+
     when(runFunc.run(argThatHasItem(Samples.big_buck_bunny_720p_1mb))).thenAnswer(
         new NewProcessAnswer("ffprobe-big_buck_bunny_720p_1mb.mp4"));
 
@@ -43,6 +49,16 @@ public class FFprobeTest {
         new NewProcessAnswer("ffprobe-divide-by-zero"));
 
     ffprobe = new FFprobe(runFunc);
+  }
+
+  @Test
+  public void testVersion() throws Exception {
+    assertEquals("ffprobe version 3.0.2 Copyright (c) 2007-2016 the FFmpeg developers",
+        ffprobe.version());
+    assertEquals("ffprobe version 3.0.2 Copyright (c) 2007-2016 the FFmpeg developers",
+        ffprobe.version());
+
+    verify(runFunc, times(1)).run(argThatHasItem("-version"));
   }
 
   @Test

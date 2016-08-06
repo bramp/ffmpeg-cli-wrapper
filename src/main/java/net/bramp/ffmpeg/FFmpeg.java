@@ -32,9 +32,13 @@ import java.util.regex.Pattern;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.apache.commons.io.output.NullOutputStream.NULL_OUTPUT_STREAM;
 
-public class FFmpeg {
-
-  final static Logger LOG = LoggerFactory.getLogger(FFmpeg.class);
+/**
+ * Wrapper around FFmpeg
+ *
+ * @author bramp
+ *
+ */
+public class FFmpeg extends FFcommon {
 
   final static String FFMPEG = "ffmpeg";
   final static String DEFAULT_PATH = MoreObjects.firstNonNull(System.getenv("FFMPEG"), FFMPEG);
@@ -68,16 +72,6 @@ public class FFmpeg {
   final static Pattern FORMATS_REGEX = Pattern.compile("^ ([ D][ E]) (\\S+)\\s+(.*)$");
 
   /**
-   * Path to FFmpeg (e.g. /usr/bin/ffmpeg)
-   */
-  final String path;
-
-  /**
-   * Function to run FFmpeg. We define it like this so we can swap it out (during testing)
-   */
-  final ProcessFunction runFunc;
-
-  /**
    * Supported codecs
    */
   List<Codec> codecs = null;
@@ -87,17 +81,8 @@ public class FFmpeg {
    */
   List<Format> formats = null;
 
-  /**
-   * Version string
-   */
-  String version = null;
-
   public FFmpeg() throws IOException {
     this(DEFAULT_PATH, new RunProcessFunction());
-  }
-
-  public FFmpeg(@Nonnull String path) throws IOException {
-    this(path, new RunProcessFunction());
   }
 
   public FFmpeg(@Nonnull ProcessFunction runFunction) throws IOException {
@@ -105,33 +90,36 @@ public class FFmpeg {
   }
 
   public FFmpeg(@Nonnull String path, @Nonnull ProcessFunction runFunction) throws IOException {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(path));
-    this.runFunc = checkNotNull(runFunction);
-    this.path = path;
+    super(path, runFunction);
     version();
   }
 
-  private static BufferedReader wrapInReader(Process p) {
-    return new BufferedReader(new InputStreamReader(p.getInputStream(), StandardCharsets.UTF_8));
+  /**
+   * Returns true if the binary we are using is the true ffmpeg. This is to avoid conflict with
+   * avconv (from the libav project), that some symlink to ffmpeg.
+   * 
+   * @return
+   */
+  public boolean isFFmpeg() throws IOException {
+    return version().startsWith("ffmpeg");
   }
 
-  public synchronized @Nonnull String version() throws IOException {
-    if (this.version == null) {
-      Process p = runFunc.run(ImmutableList.of(path, "-version"));
-      try {
-        BufferedReader r = wrapInReader(p);
-        this.version = r.readLine();
-        IOUtils.copy(r, NULL_OUTPUT_STREAM, StandardCharsets.UTF_8); // Throw away rest of the
-                                                                     // output
-        FFmpegUtils.throwOnError(FFMPEG, p);
-      } finally {
-        p.destroy();
-      }
+  /**
+   * Throws an exception if this is an unsupported version of ffmpeg.
+   * 
+   * @throws IllegalArgumentException
+   * @throws IOException
+   */
+  private void checkIfFFmpeg() throws IllegalArgumentException, IOException {
+    if (!isFFmpeg()) {
+      throw new IllegalArgumentException("This binary '" + path
+          + "' is not a supported version of ffmpeg");
     }
-    return version;
   }
 
   public synchronized @Nonnull List<Codec> codecs() throws IOException {
+    checkIfFFmpeg();
+
     if (this.codecs == null) {
       codecs = new ArrayList<>();
 
@@ -147,7 +135,7 @@ public class FFmpeg {
           codecs.add(new Codec(m.group(2), m.group(3), m.group(1)));
         }
 
-        FFmpegUtils.throwOnError(FFMPEG, p);
+        throwOnError(p);
         this.codecs = ImmutableList.copyOf(codecs);
       } finally {
         p.destroy();
@@ -159,6 +147,8 @@ public class FFmpeg {
 
 
   public synchronized @Nonnull List<Format> formats() throws IOException {
+    checkIfFFmpeg();
+
     if (this.formats == null) {
       formats = new ArrayList<>();
 
@@ -174,7 +164,7 @@ public class FFmpeg {
           formats.add(new Format(m.group(2), m.group(3), m.group(1)));
         }
 
-        FFmpegUtils.throwOnError(FFMPEG, p);
+        throwOnError(p);
         this.formats = ImmutableList.copyOf(formats);
       } finally {
         p.destroy();
@@ -194,34 +184,14 @@ public class FFmpeg {
     }
   }
 
-  /**
-   * Runs ffmpeg with the supplied args. Blocking until finished.
-   * 
-   * @param args
-   * @throws IOException
-   */
   public void run(List<String> args) throws IOException {
-    checkNotNull(args);
-
-    List<String> newArgs = ImmutableList.<String>builder().add(path).addAll(args).build();
-
-    Process p = runFunc.run(newArgs);
-    try {
-      // TODO Move the IOUtils onto a thread, so that FFmpegProgressListener can be on this thread.
-
-      // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
-      IOUtils.copy(wrapInReader(p), System.out, StandardCharsets.UTF_8); // TODO Should I be
-                                                                         // outputting to stdout?
-
-      FFmpegUtils.throwOnError(FFMPEG, p);
-
-    } finally {
-      p.destroy();
-    }
+    checkIfFFmpeg();
+    super.run(args);
   }
 
   public void run(FFmpegBuilder builder, @Nullable ProgressListener listener) throws IOException {
     checkNotNull(builder);
+    checkIfFFmpeg();
 
     if (listener != null) {
       try (ProgressParser progressParser = createProgressParser(listener)) {

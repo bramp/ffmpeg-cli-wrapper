@@ -70,18 +70,6 @@ public final class FFmpegUtils {
     return (long) (Float.parseFloat(m.group(1)) * 1000);
   }
 
-  public static void throwOnError(String cmd, Process p) throws IOException {
-    try {
-      // TODO In java 8 use waitFor(long timeout, TimeUnit unit)
-      if (ProcessUtils.waitForWithTimeout(p, 1, TimeUnit.SECONDS) != 0) {
-        // TODO Parse the error
-        throw new IOException(cmd + " returned non-zero exit status. Check stdout.");
-      }
-    } catch (TimeoutException e) {
-      throw new IOException("Timed out waiting for " + cmd + " to finish.");
-    }
-  }
-
   static Gson getGson() {
     return gson;
   }
