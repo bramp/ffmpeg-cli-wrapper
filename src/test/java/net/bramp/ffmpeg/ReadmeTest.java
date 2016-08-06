@@ -22,9 +22,9 @@ public class ReadmeTest {
   final Locale locale = Locale.US;
   final FFmpeg ffmpeg = new FFmpeg();
   final FFprobe ffprobe = new FFprobe();
- 
+
   public ReadmeTest() throws IOException {}
-  
+
   @Test
   public void testVideoEncoding() throws IOException {
 

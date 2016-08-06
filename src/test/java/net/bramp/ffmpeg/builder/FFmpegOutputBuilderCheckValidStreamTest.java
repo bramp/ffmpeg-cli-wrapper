@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RunWith(Parameterized.class)
-public class FFmpegOutputBuilderTestCheckValidStream {
+public class FFmpegOutputBuilderCheckValidStreamTest {
 
   @Parameters(name = "{0}")
   public static List<String> data() {
@@ -33,7 +33,7 @@ public class FFmpegOutputBuilderTestCheckValidStream {
 
   private final URI uri;
 
-  public FFmpegOutputBuilderTestCheckValidStream(String url) {
+  public FFmpegOutputBuilderCheckValidStreamTest(String url) {
     this.uri = URI.create(url);
   }
 
