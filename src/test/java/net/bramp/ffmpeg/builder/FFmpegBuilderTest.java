@@ -8,6 +8,7 @@ import net.bramp.ffmpeg.options.VideoEncodingOptions;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -188,11 +189,11 @@ public class FFmpegBuilderTest {
   }
 
   @Test
-  public void testURLOutput() {
+  public void testURIOutput() {
     // @formatter:off
     List<String> args = new FFmpegBuilder()
         .setInput("input")
-        .addOutput("udp://10.1.0.102:1234")
+        .addOutput(URI.create("udp://10.1.0.102:1234"))
           .setVideoResolution(320, 240)
           .done()
         .build();
@@ -200,6 +201,41 @@ public class FFmpegBuilderTest {
 
     assertThat(args,
         contains("-y", "-v", "error", "-i", "input", "-s", "320x240", "udp://10.1.0.102:1234"));
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testURIAndFilenameOutput() {
+    // @formatter:off
+    List<String> args = new FFmpegBuilder()
+        .setInput("input")
+        .addOutput(URI.create("udp://10.1.0.102:1234"))
+          .setFilename("filename")
+          .done()
+        .build();
+    // @formatter:on
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddEmptyFilename() {
+    // @formatter:off
+    List<String> args = new FFmpegBuilder()
+        .setInput("input")
+        .addOutput("")
+          .done()
+        .build();
+    // @formatter:on
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testSetEmptyFilename() {
+    // @formatter:off
+    List<String> args = new FFmpegBuilder()
+        .setInput("input")
+        .addOutput("output")
+          .setFilename("")
+          .done()
+        .build();
+    // @formatter:on
   }
 
   @Test
@@ -278,9 +314,15 @@ public class FFmpegBuilderTest {
 
   @Test
   public void testMultipleInput() {
-    List<String> args =
-        new FFmpegBuilder().addInput("input1").addInput("input2").addOutput("output").done()
-            .build();
+    // @formatter:off
+    List<String> args = new FFmpegBuilder()
+        .addInput("input1")
+        .addInput("input2")
+        .addOutput("output")
+          .done()
+        .build();
+    // @formatter:on
+
     assertThat(args, contains("-y", "-v", "error", "-i", "input1", "-i", "input2", "output"));
   }
 

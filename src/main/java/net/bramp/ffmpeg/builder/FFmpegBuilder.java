@@ -171,7 +171,7 @@ public class FFmpegBuilder {
 
 
   /**
-   * Create new output file.
+   * Adds new output file.
    * 
    * @param filename output file path
    * @return A new {@link FFmpegOutputBuilder}
@@ -182,6 +182,12 @@ public class FFmpegBuilder {
     return output;
   }
 
+  /**
+   * Adds new output file.
+   *
+   * @param uri output file uri typically a stream
+   * @return A new {@link FFmpegOutputBuilder}
+   */
   public FFmpegOutputBuilder addOutput(URI uri) {
     FFmpegOutputBuilder output = new FFmpegOutputBuilder(this, uri);
     outputs.add(output);
