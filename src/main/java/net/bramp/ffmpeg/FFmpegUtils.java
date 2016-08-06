@@ -5,13 +5,9 @@ import com.google.gson.GsonBuilder;
 import net.bramp.commons.lang3.math.gson.FractionAdapter;
 import net.bramp.ffmpeg.gson.LowercaseEnumTypeAdapterFactory;
 import net.bramp.ffmpeg.gson.NamedBitsetAdapter;
-import net.bramp.ffmpeg.io.ProcessUtils;
 import net.bramp.ffmpeg.probe.FFmpegDisposition;
 import org.apache.commons.lang3.math.Fraction;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,8 +19,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 public final class FFmpegUtils {
 
   final static Gson gson = FFmpegUtils.setupGson();
+  final static Pattern BITRATE_REGEX = Pattern.compile("(\\d+(?:\\.\\d+)?)kbits/s");
 
-  private FFmpegUtils() {
+
+  FFmpegUtils() {
     throw new AssertionError("No instances for you!");
   }
 
@@ -61,8 +59,7 @@ public final class FFmpegUtils {
    * @return
    */
   public static long parseBitrate(String bitrate) {
-    Pattern p = Pattern.compile("(\\d+(?:\\.\\d+)?)kbits/s");
-    Matcher m = p.matcher(bitrate);
+    Matcher m = BITRATE_REGEX.matcher(bitrate);
     if (!m.find()) {
       throw new IllegalArgumentException("Invalid bitrate '" + bitrate + "'");
     }
