@@ -12,9 +12,30 @@ import java.lang.reflect.Field;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Converts a json object which represents a set of booleans. For example public class Set { public
- * boolean a = true; public boolean b = false; public int c = 1; public int d = 0; } is turned into
- * Json Object: {"a": true, "b": false, "c": true, "d": false}
+ * Converts a json object which represents a set of booleans. For example:
+ * 
+ * <pre>
+ * <code>
+ * public class Set {
+ *   public boolean a = true;
+ *   public boolean b = false;
+ *   public int c = 1;
+ *   public int d = 0;
+ * }
+ * </code>
+ * </pre>
+ * 
+ * is turned into:
+ * 
+ * <pre>
+ * {
+ *   "a": true,
+ *   "b": false,
+ *   "c": true,
+ *   "d": false
+ * }
+ * </pre>
+ *
  */
 public class NamedBitsetAdapter<T> extends TypeAdapter<T> {
 
