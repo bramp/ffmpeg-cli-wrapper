@@ -13,16 +13,13 @@ import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.math.Fraction;
 
+import javax.annotation.Nullable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.*;
-import com.google.common.collect.Range;
-
-import javax.annotation.Nullable;
-
 import static net.bramp.ffmpeg.FFmpegUtils.millisecondsToString;
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
 

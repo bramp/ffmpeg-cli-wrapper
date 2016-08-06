@@ -1,6 +1,5 @@
 package net.bramp.ffmpeg.job;
 
-import com.google.common.base.Optional;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.progress.ProgressListener;
 

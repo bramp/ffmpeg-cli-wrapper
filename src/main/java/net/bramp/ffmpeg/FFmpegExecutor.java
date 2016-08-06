@@ -1,6 +1,5 @@
 package net.bramp.ffmpeg;
 
-import com.google.common.base.Optional;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.job.FFmpegJob;
 import net.bramp.ffmpeg.job.SinglePassFFmpegJob;

@@ -1,28 +1,18 @@
 package net.bramp.ffmpeg;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import net.bramp.ffmpeg.io.LoggingFilterReader;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.apache.commons.io.output.NullOutputStream.NULL_OUTPUT_STREAM;
 
 /**
  * Wrapper around FFprobe

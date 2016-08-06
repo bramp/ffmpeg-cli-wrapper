@@ -1,10 +1,6 @@
 package net.bramp.ffmpeg;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
-import net.bramp.ffmpeg.fixtures.Codecs;
-import net.bramp.ffmpeg.fixtures.Formats;
-import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +13,6 @@ import java.util.Collections;
 
 import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**

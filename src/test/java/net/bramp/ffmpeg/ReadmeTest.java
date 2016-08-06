@@ -1,18 +1,17 @@
 package net.bramp.ffmpeg;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-
-import java.io.IOException;
-import java.util.Locale;
-
-import org.junit.Test;
-
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.probe.FFmpegFormat;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import net.bramp.ffmpeg.probe.FFmpegStream;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Locale;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Ensures the examples in the README continue to work.
