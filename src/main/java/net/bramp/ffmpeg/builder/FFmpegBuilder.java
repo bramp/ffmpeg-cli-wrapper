@@ -56,6 +56,7 @@ public class FFmpegBuilder {
   // Global Settings
   boolean override = true;
   int pass = 0;
+  String pass_directory;
   String pass_prefix;
   Verbosity verbosity = Verbosity.ERROR;
   URI progress;
@@ -84,6 +85,11 @@ public class FFmpegBuilder {
 
   public FFmpegBuilder setPass(int pass) {
     this.pass = pass;
+    return this;
+  }
+
+  public FFmpegBuilder setPassDirectory(String directory) {
+    this.pass_directory = checkNotNull(directory);
     return this;
   }
 
@@ -172,7 +178,7 @@ public class FFmpegBuilder {
 
   /**
    * Adds new output file.
-   * 
+   *
    * @param filename output file path
    * @return A new {@link FFmpegOutputBuilder}
    */
@@ -240,7 +246,7 @@ public class FFmpegBuilder {
       args.add("-pass", Integer.toString(pass));
 
       if (pass_prefix != null) {
-        args.add("-passlogfile", pass_prefix);
+        args.add("-passlogfile", pass_directory + pass_prefix);
       }
     }
 
