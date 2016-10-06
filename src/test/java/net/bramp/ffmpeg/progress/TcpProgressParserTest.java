@@ -1,7 +1,7 @@
 package net.bramp.ffmpeg.progress;
 
+import com.google.common.io.ByteStreams;
 import net.bramp.ffmpeg.fixtures.Progresses;
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class TcpProgressParserTest extends AbstractProgressParserTest {
     InputStream inputStream = combineResource(Progresses.allFiles);
     OutputStream outputStream = client.getOutputStream();
 
-    int bytes = IOUtils.copy(inputStream, outputStream);
+    long bytes = ByteStreams.copy(inputStream, outputStream);
 
     // HACK, but give the TcpProgressParser thread time to actually handle the connection/data
     // before the client is closed, and the parser is stopped.
@@ -42,7 +42,7 @@ public class TcpProgressParserTest extends AbstractProgressParserTest {
     client.close();
     parser.stop();
 
-    assertThat(bytes, greaterThan(0));
+    assertThat(bytes, greaterThan(0L));
     assertThat(progesses, equalTo(Progresses.allProgresses));
   }
 

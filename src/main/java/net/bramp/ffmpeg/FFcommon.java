@@ -3,8 +3,8 @@ package net.bramp.ffmpeg;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.google.common.io.CharStreams;
 import net.bramp.ffmpeg.io.ProcessUtils;
-import org.apache.commons.io.IOUtils;
 
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.apache.commons.io.output.NullOutputStream.NULL_OUTPUT_STREAM;
 
 /**
  * Private class to contain common methods for both FFmpeg and FFprobe.
@@ -70,8 +69,8 @@ abstract class FFcommon {
       try {
         BufferedReader r = wrapInReader(p);
         this.version = r.readLine();
-        IOUtils.copy(r, NULL_OUTPUT_STREAM, StandardCharsets.UTF_8); // Throw away rest of the
-        // output
+        CharStreams.copy(r, CharStreams.nullWriter()); // Throw away rest of the output
+
         throwOnError(p);
       } finally {
         p.destroy();
@@ -97,11 +96,10 @@ abstract class FFcommon {
 
     Process p = runFunc.run(newArgs);
     try {
-      // TODO Move the IOUtils onto a thread, so that FFmpegProgressListener can be on this thread.
+      // TODO Move the copy onto a thread, so that FFmpegProgressListener can be on this thread.
 
       // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
-      IOUtils.copy(wrapInReader(p), System.out, StandardCharsets.UTF_8); // TODO Should I be
-      // outputting to stdout?
+      CharStreams.copy(wrapInReader(p), System.out); // TODO Should I be outputting to stdout?
 
       throwOnError(p);
 
