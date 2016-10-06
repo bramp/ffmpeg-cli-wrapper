@@ -1,5 +1,8 @@
 package net.bramp.ffmpeg;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.CountingOutputStream;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.job.FFmpegJob;
@@ -85,6 +88,41 @@ public class FFmpegExecutorTest {
     runAndWait(job);
 
     assertEquals(FFmpegJob.State.FINISHED, job.getState());
+  }
+
+  /**
+   * Test if addStdoutOutput() actually works, and the output can be correctly captured.
+   *
+   * @throws InterruptedException
+   * @throws ExecutionException
+   * @throws IOException
+   */
+  @Test
+  public void testStdout() throws InterruptedException, ExecutionException, IOException {
+
+    // @formatter:off
+    FFmpegBuilder builder = new FFmpegBuilder()
+        .setInput(Samples.big_buck_bunny_720p_1mb)
+        .addStdoutOutput()
+          .setFormat("s8")
+          .setAudioChannels(1)
+          .done();
+
+    List<String> newArgs = ImmutableList.<String>builder()
+        .add(FFmpeg.FFMPEG)
+        .addAll(builder.build())
+        .build();
+    // @formatter:on
+
+    Process p = new ProcessBuilder(newArgs).start();
+
+    CountingOutputStream out = new CountingOutputStream(ByteStreams.nullOutputStream());
+    ByteStreams.copy(p.getInputStream(), out);
+
+    p.waitFor();
+
+    // This is perhaps fragile, but one byte per audio sample
+    assertEquals(254976, out.getCount());
   }
 
   @Test
