@@ -56,7 +56,7 @@ public class FFmpegBuilder {
   // Global Settings
   boolean override = true;
   int pass = 0;
-  String pass_directory;
+  String pass_directory = "";
   String pass_prefix;
   Verbosity verbosity = Verbosity.ERROR;
   URI progress;
