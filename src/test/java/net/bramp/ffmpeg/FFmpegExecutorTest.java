@@ -109,7 +109,7 @@ public class FFmpegExecutorTest {
           .done();
 
     List<String> newArgs = ImmutableList.<String>builder()
-        .add(FFmpeg.FFMPEG)
+        .add(ffmpeg.getPath())
         .addAll(builder.build())
         .build();
     // @formatter:on
