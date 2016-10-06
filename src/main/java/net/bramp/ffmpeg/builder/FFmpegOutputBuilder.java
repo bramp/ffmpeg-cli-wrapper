@@ -32,7 +32,7 @@ public class FFmpegOutputBuilder {
   final private static List<String> rtps = ImmutableList.of("rtsp", "rtp", "rtmp");
   final private static List<String> udpTcp = ImmutableList.of("udp", "tcp");
 
-  FFmpegBuilder parent;
+  final FFmpegBuilder parent;
 
   /**
    * Output filename or uri. Only one may be set
@@ -111,7 +111,9 @@ public class FFmpegOutputBuilder {
     return arg;
   }
 
-  public FFmpegOutputBuilder() {}
+  public FFmpegOutputBuilder() {
+    this.parent = null;
+  }
 
   protected FFmpegOutputBuilder(FFmpegBuilder parent, String filename) {
     this.parent = checkNotNull(parent);
@@ -532,15 +534,21 @@ public class FFmpegOutputBuilder {
             video_bit_rate, video_frames, video_filter, video_preset));
   }
 
+  protected List<String> build(int pass) {
+    Preconditions.checkState(parent != null, "Can not build without parent being set");
+    return build(parent, pass);
+  }
+
   /**
    * Builds the arguments
-   * 
+   *
+   * @param parent The parent FFmpegBuilder
    * @param pass The particular pass. For one-pass this value will be zero, for multi-pass, it will
    *        be 1 for the first pass, 2 for the second, and so on.
    * @return
    */
-  protected List<String> build(int pass) {
-    Preconditions.checkState(parent != null, "Can not build without parent being set");
+  protected List<String> build(FFmpegBuilder parent, int pass) {
+    checkNotNull(parent);
 
     if (pass > 0) {
       // TODO Write a test for this:

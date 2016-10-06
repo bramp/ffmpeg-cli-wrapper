@@ -201,6 +201,26 @@ public class FFmpegBuilder {
   }
 
   /**
+   * Adds an existing FFmpegOutputBuilder. This is similar to calling the other addOuput methods but
+   * instead allows an existing FFmpegOutputBuilder to be used, and reused.
+   *
+   * <pre>
+   * <code>List&lt;String&gt; args = new FFmpegBuilder()
+   *   .addOutput(new FFmpegOutputBuilder()
+   *     .setFilename(&quot;output.flv&quot;)
+   *     .setVideoCodec(&quot;flv&quot;)
+   *   )
+   *   .build();</code>
+   * </pre>
+   *
+   * @param output FFmpegOutputBuilder to add
+   */
+  public FFmpegBuilder addOutput(FFmpegOutputBuilder output) {
+    outputs.add(output);
+    return this;
+  }
+
+  /**
    * Create new output (to stdout)
    */
   public FFmpegOutputBuilder addStdoutOutput() {
@@ -251,7 +271,7 @@ public class FFmpegBuilder {
     }
 
     for (FFmpegOutputBuilder output : this.outputs) {
-      args.addAll(output.build(pass));
+      args.addAll(output.build(this, pass));
     }
 
     return args.build();

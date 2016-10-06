@@ -325,4 +325,26 @@ public class FFmpegBuilderTest {
     assertThat(args, contains("-y", "-v", "error", "-i", "input1", "-i", "input2", "output"));
   }
 
+  @Test
+  public void testAlternativeBuilderPattern() {
+    // @formatter:off
+    List<String> args = new FFmpegBuilder()
+        .addInput("input")
+        .addOutput(new FFmpegOutputBuilder()
+            .setFilename("output.mp4")
+            .setVideoCodec("libx264")
+        )
+        .addOutput(new FFmpegOutputBuilder()
+            .setFilename("output.flv")
+            .setVideoCodec("flv")
+        )
+        .build();
+    // @formatter:on
+
+    assertThat(
+        args,
+        contains("-y", "-v", "error", "-i", "input", "-vcodec", "libx264", "output.mp4", "-vcodec",
+            "flv", "output.flv"));
+  }
+
 }
