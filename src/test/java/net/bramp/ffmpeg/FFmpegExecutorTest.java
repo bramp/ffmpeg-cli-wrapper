@@ -46,14 +46,21 @@ public class FFmpegExecutorTest {
   @Test
   public void testTwoPass() throws InterruptedException, ExecutionException, IOException {
     FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
-
     assertFalse(in.hasError());
 
-    FFmpegBuilder builder =
-        new FFmpegBuilder().setInput(in).overrideOutputFiles(true).addOutput(Samples.output_mp4)
-            .setFormat("mp4").disableAudio().setVideoCodec("mpeg4")
-            .setVideoFrameRate(FFmpeg.FPS_30).setVideoResolution(320, 240)
-            .setTargetSize(1024 * 1024).done();
+    // @formatter:off
+    FFmpegBuilder builder = new FFmpegBuilder()
+      .setInput(in)
+      .overrideOutputFiles(true)
+      .addOutput(Samples.output_mp4)
+        .setFormat("mp4")
+        .disableAudio()
+        .setVideoCodec("mpeg4")
+        .setVideoFrameRate(FFmpeg.FPS_30)
+        .setVideoResolution(320, 240)
+        .setTargetSize(1024 * 1024)
+        .done();
+    // @formatter:on
 
 
     FFmpegJob job = ffExecutor.createTwoPassJob(builder);
@@ -65,10 +72,17 @@ public class FFmpegExecutorTest {
   @Test
   public void testFilter() throws InterruptedException, ExecutionException, IOException {
 
-    FFmpegBuilder builder =
-        new FFmpegBuilder().setInput(Samples.big_buck_bunny_720p_1mb).overrideOutputFiles(true)
-            .addOutput(Samples.output_mp4).setFormat("mp4").disableAudio().setVideoCodec("mpeg4")
-            .setVideoFilter("scale=320:trunc(ow/a/2)*2").done();
+    // @formatter:off
+    FFmpegBuilder builder = new FFmpegBuilder()
+      .setInput(Samples.big_buck_bunny_720p_1mb)
+      .overrideOutputFiles(true)
+      .addOutput(Samples.output_mp4)
+        .setFormat("mp4")
+        .disableAudio()
+        .setVideoCodec("mpeg4")
+        .setVideoFilter("scale=320:trunc(ow/a/2)*2")
+        .done();
+    // @formatter:on
 
     FFmpegJob job = ffExecutor.createJob(builder);
     runAndWait(job);
@@ -79,10 +93,18 @@ public class FFmpegExecutorTest {
   @Test
   public void testMetaTags() throws InterruptedException, ExecutionException, IOException {
 
-    FFmpegBuilder builder =
-        new FFmpegBuilder().setInput(Samples.big_buck_bunny_720p_1mb).overrideOutputFiles(true)
-            .addOutput(Samples.output_mp4).setFormat("mp4").disableAudio().setVideoCodec("mpeg4")
-            .addMetaTag("comment", "This=Nice!").addMetaTag("title", "Big Buck Bunny").done();
+    // @formatter:off
+    FFmpegBuilder builder = new FFmpegBuilder()
+      .setInput(Samples.big_buck_bunny_720p_1mb)
+      .overrideOutputFiles(true)
+      .addOutput(Samples.output_mp4)
+        .setFormat("mp4")
+        .disableAudio()
+        .setVideoCodec("mpeg4")
+        .addMetaTag("comment", "This=Nice!")
+        .addMetaTag("title", "Big Buck Bunny")
+        .done();
+    // @formatter:on
 
     FFmpegJob job = ffExecutor.createJob(builder);
     runAndWait(job);
@@ -102,16 +124,16 @@ public class FFmpegExecutorTest {
 
     // @formatter:off
     FFmpegBuilder builder = new FFmpegBuilder()
-        .setInput(Samples.big_buck_bunny_720p_1mb)
-        .addStdoutOutput()
-          .setFormat("s8")
-          .setAudioChannels(1)
-          .done();
+      .setInput(Samples.big_buck_bunny_720p_1mb)
+      .addStdoutOutput()
+        .setFormat("s8")
+        .setAudioChannels(1)
+        .done();
 
     List<String> newArgs = ImmutableList.<String>builder()
-        .add(ffmpeg.getPath())
-        .addAll(builder.build())
-        .build();
+      .add(ffmpeg.getPath())
+      .addAll(builder.build())
+      .build();
     // @formatter:on
 
     // TODO Add support to the FFmpegJob to export the stream
@@ -132,9 +154,14 @@ public class FFmpegExecutorTest {
 
     assertFalse(in.hasError());
 
-    FFmpegBuilder builder = new FFmpegBuilder().readAtNativeFrameRate()
-    // Slows the test down
-        .setInput(in).overrideOutputFiles(true).addOutput(Samples.output_mp4).done();
+    // @formatter:off
+    FFmpegBuilder builder = new FFmpegBuilder()
+      .readAtNativeFrameRate() // Slows the test down
+      .setInput(in)
+      .overrideOutputFiles(true)
+      .addOutput(Samples.output_mp4)
+      .done();
+    // @formatter:on
 
     RecordingProgressListener listener = new RecordingProgressListener();
 
