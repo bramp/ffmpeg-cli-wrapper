@@ -1,6 +1,5 @@
 package net.bramp.ffmpeg;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.info.Codec;
@@ -20,8 +19,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Wrapper around FFmpeg

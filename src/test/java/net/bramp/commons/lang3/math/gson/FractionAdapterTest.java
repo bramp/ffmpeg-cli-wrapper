@@ -10,7 +10,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 
 public class FractionAdapterTest {
