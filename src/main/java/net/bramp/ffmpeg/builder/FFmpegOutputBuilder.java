@@ -70,6 +70,7 @@ public class FFmpegOutputBuilder {
   public String video_filter;
   public String video_filter_complex;
   public String video_bit_stream_filter;
+  public String video_pixel_format;
 
   public boolean subtitle_enabled = true;
 
@@ -313,6 +314,12 @@ public class FFmpegOutputBuilder {
   public FFmpegOutputBuilder setComplexVideoFilter(String filter) {
     this.video_enabled = true;
     this.video_filter_complex = checkNotEmpty(filter, "filter must not be empty");
+    return this;
+  }
+
+  public FFmpegOutputBuilder setPixelFormat(String format) {
+    this.video_enabled = true;
+    this.video_pixel_format = checkNotEmpty(format, "format must not be empty");
     return this;
   }
 
@@ -611,6 +618,10 @@ public class FFmpegOutputBuilder {
 
       if (!Strings.isNullOrEmpty(video_codec)) {
         args.add("-vcodec", video_codec);
+      }
+
+      if (!Strings.isNullOrEmpty(video_pixel_format)) {
+        args.add("-pix_fmt", video_pixel_format);
       }
 
       if (video_copyinkf) {
