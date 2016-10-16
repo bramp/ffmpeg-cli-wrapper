@@ -19,6 +19,10 @@ public class FFmpegExecutor {
     this(new FFmpeg(), new FFprobe());
   }
 
+  public FFmpegExecutor(FFmpeg ffmpeg) throws IOException {
+    this(ffmpeg, new FFprobe());
+  }
+
   public FFmpegExecutor(FFmpeg ffmpeg, FFprobe ffprobe) {
     this.ffmpeg = checkNotNull(ffmpeg);
     this.ffprobe = checkNotNull(ffprobe);

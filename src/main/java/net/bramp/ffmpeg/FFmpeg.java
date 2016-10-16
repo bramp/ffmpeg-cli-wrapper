@@ -21,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.MoreObjects.firstNonNull;
 
 /**
  * Wrapper around FFmpeg
@@ -30,8 +31,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class FFmpeg extends FFcommon {
 
-  final static String FFMPEG = "ffmpeg";
-  final static String DEFAULT_PATH = MoreObjects.firstNonNull(System.getenv("FFMPEG"), FFMPEG);
+  public final static String FFMPEG = "ffmpeg";
+  public final static String DEFAULT_PATH = firstNonNull(System.getenv("FFMPEG"), FFMPEG);
 
   public final static Fraction FPS_30 = Fraction.getFraction(30, 1);
   public final static Fraction FPS_29_97 = Fraction.getFraction(30000, 1001);
@@ -77,6 +78,10 @@ public class FFmpeg extends FFcommon {
 
   public FFmpeg(@Nonnull ProcessFunction runFunction) throws IOException {
     this(DEFAULT_PATH, runFunction);
+  }
+
+  public FFmpeg(@Nonnull String path) throws IOException {
+    this(path, new RunProcessFunction());
   }
 
   public FFmpeg(@Nonnull String path, @Nonnull ProcessFunction runFunction) throws IOException {
