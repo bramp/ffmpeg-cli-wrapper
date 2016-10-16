@@ -114,12 +114,13 @@ public class FFmpegExecutorTest {
         .build();
     // @formatter:on
 
+    // TODO Add support to the FFmpegJob to export the stream
     Process p = new ProcessBuilder(newArgs).start();
 
     CountingOutputStream out = new CountingOutputStream(ByteStreams.nullOutputStream());
     ByteStreams.copy(p.getInputStream(), out);
 
-    p.waitFor();
+    assertEquals(0, p.waitFor());
 
     // This is perhaps fragile, but one byte per audio sample
     assertEquals(254976, out.getCount());
