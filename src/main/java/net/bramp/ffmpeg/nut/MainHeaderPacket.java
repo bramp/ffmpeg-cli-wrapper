@@ -122,7 +122,7 @@ class MainHeaderPacket extends Packet {
 
         // Skip 'N' because that is an illegal frame code
         if (i == 'N') {
-          fc.flags = FrameCode.FLAG_INVALID;
+          fc.flags = Frame.FLAG_INVALID;
           j--;
           continue;
         }

@@ -16,7 +16,22 @@ import java.util.TreeMap;
 public class Frame {
   final static Logger LOG = LoggerFactory.getLogger(Frame.class);
 
+  // TODO Change this to a enum
+  static final long FLAG_KEY = 1 << 0;
+  static final long FLAG_EOR = 1 << 1;
+  static final long FLAG_CODED_PTS = 1 << 3;
+  static final long FLAG_STREAM_ID = 1 << 4;
+  static final long FLAG_SIZE_MSB = 1 << 5;
+  static final long FLAG_CHECKSUM = 1 << 6;
+  static final long FLAG_RESERVED = 1 << 7;
+  static final long FLAG_SM_DATA = 1 << 8;
+  static final long FLAG_HEADER_IDX = 1 << 10;
+  static final long FLAG_MATCH_TIME = 1 << 11;
+  static final long FLAG_CODED = 1 << 12;
+  static final long FLAG_INVALID = 1 << 13;
+
   Stream stream;
+  long flags;
   long pts;
   byte[] data;
 
@@ -70,14 +85,14 @@ public class Frame {
     }
 
     FrameCode fc = nut.header.frameCodes.get(code);
-    long frame_flags = fc.flags;
-    if ((frame_flags & FrameCode.FLAG_INVALID) == FrameCode.FLAG_INVALID) {
+    flags = fc.flags;
+    if ((flags & FLAG_INVALID) == FLAG_INVALID) {
       throw new IOException("Using invalid framecode: " + code);
     }
 
-    if ((frame_flags & FrameCode.FLAG_CODED) == FrameCode.FLAG_CODED) {
+    if ((flags & FLAG_CODED) == FLAG_CODED) {
       long coded_flags = in.readVarLong();
-      frame_flags ^= coded_flags;
+      flags ^= coded_flags;
     }
 
     int size = fc.data_size_lsb;
@@ -88,7 +103,7 @@ public class Frame {
     int header_idx = fc.header_idx;
     int frame_res = fc.reserved_count;
 
-    if ((frame_flags & FrameCode.FLAG_STREAM_ID) == FrameCode.FLAG_STREAM_ID) {
+    if ((flags & FLAG_STREAM_ID) == FLAG_STREAM_ID) {
       stream_id = in.readVarInt();
       if (stream_id >= nut.streams.size()) {
         throw new IOException("Illegal stream id value " + stream_id + " must be < "
@@ -101,7 +116,7 @@ public class Frame {
     stream = nut.streams.get(stream_id);
 
 
-    if ((frame_flags & FrameCode.FLAG_CODED_PTS) == FrameCode.FLAG_CODED_PTS) {
+    if ((flags & FLAG_CODED_PTS) == FLAG_CODED_PTS) {
       coded_pts = in.readVarLong();
       if (coded_pts < (1 << stream.header.msb_pts_shift)) {
         long mask = (1L << stream.header.msb_pts_shift) - 1;
@@ -115,21 +130,21 @@ public class Frame {
     }
     stream.last_pts = pts;
 
-    if ((frame_flags & FrameCode.FLAG_SIZE_MSB) == FrameCode.FLAG_SIZE_MSB) {
+    if ((flags & FLAG_SIZE_MSB) == FLAG_SIZE_MSB) {
       int data_size_msb = in.readVarInt();
       size += fc.data_size_mul * data_size_msb;
     }
-    if ((frame_flags & FrameCode.FLAG_MATCH_TIME) == FrameCode.FLAG_MATCH_TIME) {
+    if ((flags & FLAG_MATCH_TIME) == FLAG_MATCH_TIME) {
       match_time_delta = in.readSignedVarInt();
     }
-    if ((frame_flags & FrameCode.FLAG_HEADER_IDX) == FrameCode.FLAG_HEADER_IDX) {
+    if ((flags & FLAG_HEADER_IDX) == FLAG_HEADER_IDX) {
       header_idx = in.readVarInt();
       if (header_idx >= nut.header.elision.size()) {
         throw new IOException("Illegal header index " + header_idx + " must be < "
             + nut.header.elision.size());
       }
     }
-    if ((frame_flags & FrameCode.FLAG_RESERVED) == FrameCode.FLAG_RESERVED) {
+    if ((flags & FLAG_RESERVED) == FLAG_RESERVED) {
       frame_res = in.readVarInt();
     }
 
@@ -137,7 +152,7 @@ public class Frame {
       in.readVarLong(); // Discard
     }
 
-    if ((frame_flags & FrameCode.FLAG_CHECKSUM) == FrameCode.FLAG_CHECKSUM) {
+    if ((flags & FLAG_CHECKSUM) == FLAG_CHECKSUM) {
       long checksum = in.readInt();
       // TODO Test checksum
     }
@@ -147,7 +162,7 @@ public class Frame {
     }
 
     // Now data
-    if ((frame_flags & FrameCode.FLAG_SM_DATA) == FrameCode.FLAG_SM_DATA) {
+    if ((flags & FLAG_SM_DATA) == FLAG_SM_DATA) {
       // TODO Test this path.
 
       if (nut.header.version < 4) {
