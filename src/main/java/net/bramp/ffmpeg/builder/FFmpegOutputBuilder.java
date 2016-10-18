@@ -317,7 +317,7 @@ public class FFmpegOutputBuilder {
     return this;
   }
 
-  public FFmpegOutputBuilder setPixelFormat(String format) {
+  public FFmpegOutputBuilder setVideoPixelFormat(String format) {
     this.video_enabled = true;
     this.video_pixel_format = checkNotEmpty(format, "format must not be empty");
     return this;
