@@ -10,7 +10,13 @@ import org.junit.rules.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -22,13 +28,15 @@ public class NutReaderTest {
 
   final static Logger LOG = LoggerFactory.getLogger(NutReaderTest.class);
 
+  final boolean OUTPUT_AUDIO = false;
+  final boolean OUTPUT_IMAGES = false;
+
   @Rule
   public Timeout timeout = new Timeout(30, TimeUnit.SECONDS);
 
-  public NutReaderTest() throws IOException {}
-
   @Test
-  public void testNutReader() throws InterruptedException, ExecutionException, IOException {
+  public void testNutReader() throws InterruptedException, ExecutionException, IOException,
+      LineUnavailableException {
 
     // @formatter:off
     List<String> args = new FFmpegBuilder()
@@ -36,7 +44,7 @@ public class NutReaderTest {
       .addStdoutOutput()
         .setFormat("nut")
         .setVideoCodec("rawvideo")
-        //.setVideoPixelFormat("rgb24")
+        //.setVideoPixelFormat("rgb24") // TODO make 24bit / channel work
         .setVideoPixelFormat("argb") // 8 bits per channel
         .setAudioCodec("pcm_s32le")
         .done()
@@ -52,19 +60,62 @@ public class NutReaderTest {
     Process p = builder.start();
 
     new NutReader(p.getInputStream(), new NutReaderListener() {
+
+      SourceDataLine line;
+
+      @Override
+      public void stream(Stream stream) {
+
+        if (stream.header.type == StreamHeaderPacket.AUDIO) {
+
+          if (!OUTPUT_AUDIO) {
+            return;
+          }
+
+          if (line != null) {
+            throw new RuntimeException("Multiple audio streams not supported");
+          }
+
+          // Get System Audio Line
+          try {
+            line = AudioSystem.getSourceDataLine(null);
+
+            AudioFormat format = RawHandler.streamToAudioFormat(stream.header);
+            line.open(format);
+            line.start();
+
+            LOG.debug("New audio stream: {}", format);
+
+          } catch (LineUnavailableException e) {
+            LOG.debug("Failed to open audio device", e);
+          }
+        }
+      }
+
       @Override
       public void frame(Frame frame) {
+        LOG.debug("{}", frame);
 
-        if (frame.stream.header.stream_class != StreamHeaderPacket.VIDEO) {
-          return;
+        final StreamHeaderPacket header = frame.stream.header;
+
+        if (header.type == StreamHeaderPacket.VIDEO) {
+          BufferedImage img = RawHandler.toBufferedImage(frame);
+
+          if (!OUTPUT_IMAGES) {
+            return;
+          }
+
+          try {
+            ImageIO.write(img, "png", new File(String.format("test-%08d.png", frame.pts)));
+          } catch (IOException e) {
+            LOG.error("Failed to write png", e);
+          }
+
+        } else if (header.type == StreamHeaderPacket.AUDIO) {
+          if (line != null) {
+            line.write(frame.data, 0, frame.data.length);
+          }
         }
-
-        BufferedImage img = RawImageHandler.toBufferedImage(frame);
-
-        /*
-         * try { ImageIO.write(img, "png", new File("test.png")); } catch (IOException e) {
-         * LOG.error("Failed to write png", e); } System.exit(0);
-         */
       }
     }).read();
 
