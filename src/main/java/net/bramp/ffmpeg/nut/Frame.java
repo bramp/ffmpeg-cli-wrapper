@@ -14,8 +14,6 @@ import java.util.TreeMap;
  * A video or audio frame
  */
 public class Frame {
-  final static Logger LOG = LoggerFactory.getLogger(Frame.class);
-
   // TODO Change this to a enum
   static final long FLAG_KEY = 1 << 0;
   static final long FLAG_EOR = 1 << 1;
@@ -35,8 +33,8 @@ public class Frame {
   long pts;
   byte[] data;
 
-  Map<String, Object> side_data;
-  Map<String, Object> meta_data;
+  Map<String, Object> sideData;
+  Map<String, Object> metaData;
 
   protected Map<String, Object> readMetaData(NutDataInputStream in) throws IOException {
     Map<String, Object> data = new TreeMap<String, Object>();
@@ -60,7 +58,7 @@ public class Frame {
       } else if (type == -4) {
         /*
          * t (v coded universal timestamp) tmp v id= tmp % time_base_count value= (tmp /
-         * time_base_count) * time_base[id]
+         * time_base_count) * timeBase[id]
          */
         value = in.readVarLong(); // TODO Convert to timestamp
 
@@ -80,7 +78,7 @@ public class Frame {
 
 
   public void read(NutReader nut, NutDataInputStream in, int code) throws IOException {
-    if (code == 'N') { // TODO should 0/255 be illegal?
+    if (code == 'N') {
       throw new IOException("Illegal frame code: " + code);
     }
 
@@ -95,13 +93,12 @@ public class Frame {
       flags ^= coded_flags;
     }
 
-    int size = fc.data_size_lsb;
+    int size = fc.dataSizeLsb;
 
     int stream_id;
     long coded_pts;
-    long match_time_delta;
-    int header_idx = fc.header_idx;
-    int frame_res = fc.reserved_count;
+    int header_idx = fc.headerIdx;
+    int frame_res = fc.reservedCount;
 
     if ((flags & FLAG_STREAM_ID) == FLAG_STREAM_ID) {
       stream_id = in.readVarInt();
@@ -110,7 +107,7 @@ public class Frame {
             + nut.streams.size());
       }
     } else {
-      stream_id = fc.stream_id;
+      stream_id = fc.streamId;
     }
 
     stream = nut.streams.get(stream_id);
@@ -118,24 +115,24 @@ public class Frame {
 
     if ((flags & FLAG_CODED_PTS) == FLAG_CODED_PTS) {
       coded_pts = in.readVarLong();
-      if (coded_pts < (1 << stream.header.msb_pts_shift)) {
-        long mask = (1L << stream.header.msb_pts_shift) - 1;
+      if (coded_pts < (1 << stream.header.msbPtsShift)) {
+        long mask = (1L << stream.header.msbPtsShift) - 1;
         long delta = stream.last_pts - mask / 2;
         pts = ((coded_pts - delta) & mask) + delta;
       } else
-        pts = coded_pts - (1L << stream.header.msb_pts_shift);
+        pts = coded_pts - (1L << stream.header.msbPtsShift);
     } else {
       // TODO Test this code path
-      pts = stream.last_pts + fc.pts_delta;
+      pts = stream.last_pts + fc.ptsDelta;
     }
     stream.last_pts = pts;
 
     if ((flags & FLAG_SIZE_MSB) == FLAG_SIZE_MSB) {
       int data_size_msb = in.readVarInt();
-      size += fc.data_size_mul * data_size_msb;
+      size += fc.dataSizeMul * data_size_msb;
     }
     if ((flags & FLAG_MATCH_TIME) == FLAG_MATCH_TIME) {
-      match_time_delta = in.readSignedVarInt();
+      fc.matchTimeDelta = in.readSignedVarInt();
     }
     if ((flags & FLAG_HEADER_IDX) == FLAG_HEADER_IDX) {
       header_idx = in.readVarInt();
@@ -169,13 +166,13 @@ public class Frame {
         throw new IOException("Frame SM Data not allowed in version 4 or less");
       }
       long pos = in.offset();
-      side_data = readMetaData(in);
-      meta_data = readMetaData(in);
+      sideData = readMetaData(in);
+      metaData = readMetaData(in);
       size -= (in.offset() - pos);
 
     } else {
-      side_data = null;
-      meta_data = null;
+      sideData = null;
+      metaData = null;
     }
 
     // TODO Use some kind of byte pool
@@ -184,14 +181,12 @@ public class Frame {
     byte[] elision = nut.header.elision.get(header_idx);
     System.arraycopy(elision, 0, data, 0, elision.length);
     in.readFully(data, elision.length, size - elision.length);
-
-    LOG.debug("{}", this);
   }
 
 
   @Override
   public String toString() {
-    return MoreObjects.toStringHelper(this).add("stream_id", stream.header.stream_id)
-        .add("pts", pts).add("data", String.format("(%d bytes)", data.length)).toString();
+    return MoreObjects.toStringHelper(this).add("id", stream.header.id).add("pts", pts)
+        .add("data", String.format("(%d bytes)", data.length)).toString();
   }
 }

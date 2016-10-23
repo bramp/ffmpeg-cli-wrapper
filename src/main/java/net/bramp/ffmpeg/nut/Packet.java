@@ -73,8 +73,6 @@ public class Packet {
     readBody(in);
     seekToPacketFooter(in);
     footer.read(in);
-
-    LOG.debug("{}", this);
   }
 
   public void seekToPacketFooter(NutDataInputStream in) throws IOException {

@@ -7,15 +7,15 @@ import java.io.IOException;
 public class Stream {
   final StreamHeaderPacket header;
 
-  final Fraction time_base;
+  final Fraction timeBase;
   long last_pts = 0;
 
   public Stream(MainHeaderPacket header, StreamHeaderPacket streamHeader) throws IOException {
     this.header = streamHeader;
-    if (streamHeader.time_base_id >= header.time_base.length) {
-      throw new IOException("Invalid time_base_id " + streamHeader.time_base_id + " must be < "
-          + header.time_base.length);
+    if (streamHeader.timeBaseId >= header.timeBase.length) {
+      throw new IOException("Invalid timeBaseId " + streamHeader.timeBaseId + " must be < "
+          + header.timeBase.length);
     }
-    this.time_base = header.time_base[streamHeader.time_base_id];
+    this.timeBase = header.timeBase[streamHeader.timeBaseId];
   }
 }

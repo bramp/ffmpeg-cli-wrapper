@@ -12,10 +12,10 @@ class MainHeaderPacket extends Packet {
   public final static int BROADCAST_MODE = 0;
 
   long version;
-  long minor_version;
-  int stream_count;
-  long max_distance;
-  Fraction[] time_base;
+  long minorVersion;
+  int streamCount;
+  long maxDistance;
+  Fraction[] timeBase;
   long flags;
 
   final List<FrameCode> frameCodes = new ArrayList<>();
@@ -28,25 +28,25 @@ class MainHeaderPacket extends Packet {
 
     version = in.readVarLong();
     if (version > 3) {
-      minor_version = in.readVarLong();
+      minorVersion = in.readVarLong();
     }
 
-    stream_count = in.readVarInt();
-    if (stream_count >= 250) {
-      throw new IOException("Illegal stream count " + stream_count + " must be < 250");
+    streamCount = in.readVarInt();
+    if (streamCount >= 250) {
+      throw new IOException("Illegal stream count " + streamCount + " must be < 250");
     }
 
-    max_distance = in.readVarLong();
-    if (max_distance > 65536) {
-      max_distance = 65536;
+    maxDistance = in.readVarLong();
+    if (maxDistance > 65536) {
+      maxDistance = 65536;
     }
 
     int time_base_count = in.readVarInt();
-    time_base = new Fraction[time_base_count];
+    timeBase = new Fraction[time_base_count];
     for (int i = 0; i < time_base_count; i++) {
       int time_base_num = (int) in.readVarLong();
       int time_base_denom = (int) in.readVarLong();
-      time_base[i] = Fraction.getFraction(time_base_num, time_base_denom);
+      timeBase[i] = Fraction.getFraction(time_base_num, time_base_denom);
     }
 
     long pts = 0;
@@ -73,9 +73,9 @@ class MainHeaderPacket extends Packet {
       }
       if (fields > 2) {
         stream_id = in.readVarInt();
-        if (stream_id >= stream_count) {
+        if (stream_id >= streamCount) {
           throw new IOException("Illegal stream id value " + stream_id + " must be < "
-              + stream_count);
+              + streamCount);
         }
       }
       if (fields > 3) {
@@ -106,9 +106,9 @@ class MainHeaderPacket extends Packet {
         in.readVarLong(); // Throw away
       }
 
-      if (stream_id >= stream_count) {
+      if (stream_id >= streamCount) {
         throw new IOException(String.format("Invalid stream value %d, must be < %d", stream_id,
-            stream_count));
+            streamCount));
       }
 
       if (count <= 0 || (count > 256 - i - (i <= 'N' ? 1 : 0))) {
@@ -128,17 +128,16 @@ class MainHeaderPacket extends Packet {
         }
 
         fc.flags = flags;
-        fc.stream_id = stream_id;
-        fc.data_size_mul = mul;
-        fc.data_size_lsb = size + j;
-        fc.pts_delta = pts;
-        fc.reserved_count = reserved;
-        fc.match_time_delta = match;
-        fc.header_idx = header_idx;
+        fc.streamId = stream_id;
+        fc.dataSizeMul = mul;
+        fc.dataSizeLsb = size + j;
+        fc.ptsDelta = pts;
+        fc.reservedCount = reserved;
+        fc.matchTimeDelta = match;
+        fc.headerIdx = header_idx;
 
-        if (fc.data_size_lsb >= 16384) {
-          throw new IOException("Illegal data_size_lsb value " + fc.data_size_lsb
-              + " must be < 16384");
+        if (fc.dataSizeLsb >= 16384) {
+          throw new IOException("Illegal dataSizeLsb value " + fc.dataSizeLsb + " must be < 16384");
         }
       }
     }
@@ -174,8 +173,8 @@ class MainHeaderPacket extends Packet {
   @Override
   public String toString() {
     return MoreObjects.toStringHelper(this).add("header", header).add("version", version)
-        .add("minor_version", minor_version).add("stream_count", stream_count)
-        .add("max_distance", max_distance).add("time_base", time_base).add("flags", flags)
+        .add("minorVersion", minorVersion).add("streamCount", streamCount)
+        .add("maxDistance", maxDistance).add("timeBase", timeBase).add("flags", flags)
         .add("frameCodes", frameCodes.size()).add("elision", elision).add("footer", footer)
         .toString();
 

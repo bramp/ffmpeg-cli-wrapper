@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static net.bramp.ffmpeg.nut.Packet.Startcode;
 
 /**
@@ -32,7 +33,7 @@ public class NutReader {
 
   public NutReader(InputStream in, NutReaderListener listener) {
     this.in = new NutDataInputStream(in);
-    this.listener = listener;
+    this.listener = checkNotNull(listener);
   }
 
   public static boolean isKnownStartcode(long startcode) {
@@ -93,7 +94,7 @@ public class NutReader {
       startcode = readReservedHeaders();
 
       streams.clear();
-      for (int i = 0; i < header.stream_count; i++) {
+      for (int i = 0; i < header.streamCount; i++) {
         if (!Startcode.STREAM.equals(startcode)) {
           throw new IOException(String.format("expected stream header found: %X", startcode));
         }
@@ -103,6 +104,7 @@ public class NutReader {
 
         Stream stream = new Stream(header, streamHeader);
         streams.add(stream);
+        listener.stream(stream);
 
         startcode = readReservedHeaders();
       }

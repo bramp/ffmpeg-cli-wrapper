@@ -11,6 +11,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * A DataInputStream that implements a couple of custom FFmpeg Nut datatypes.
  */
@@ -25,6 +27,7 @@ public class NutDataInputStream implements DataInput {
   long endCrcRange;
 
   public NutDataInputStream(InputStream in) {
+    checkNotNull(in);
     this.count = new CountingInputStream(in);
     this.crc = new CRC32InputStream(count);
     this.in = new DataInputStream(crc);
@@ -49,7 +52,7 @@ public class NutDataInputStream implements DataInput {
       more = (b & 0x80) == 0x80;
       result = 128 * result + (b & 0x7F);
 
-      // TODO Check for long overflow
+      // TODO Check for int overflow
     } while (more);
 
     return result;
