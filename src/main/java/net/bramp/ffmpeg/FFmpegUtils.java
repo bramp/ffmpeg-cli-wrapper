@@ -8,6 +8,7 @@ import net.bramp.ffmpeg.gson.NamedBitsetAdapter;
 import net.bramp.ffmpeg.probe.FFmpegDisposition;
 import org.apache.commons.lang3.math.Fraction;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,29 +28,29 @@ public final class FFmpegUtils {
   }
 
   /**
-   * Convert milliseconds to "hh:mm:ss.ms" String representation.
-   *
+   * Convert milliseconds to {@code [-]S+[.m...]} String representation.
+   * 
+   * <p>
+   * "{@code S}" expresses the number of seconds, with the optional decimal part "{@code m}".
+   * The optional "{@code -}" indicates negative duration.
+   * 
    * @param milliseconds time duration in milliseconds
-   * @return time duration in human-readable format
+   * @return time duration in seconds 
+   * @see <a href="https://www.ffmpeg.org/ffmpeg-utils.html#Time-duration">FFmpeg - Time duration</a>
    */
-  public static String millisecondsToString(long milliseconds) {
+  public static String millisecondsToString(final long milliseconds) {
     // FIXME Negative durations are also supported.
     // https://www.ffmpeg.org/ffmpeg-utils.html#Time-duration
     checkArgument(milliseconds >= 0, "milliseconds must be positive");
 
-    long seconds = milliseconds / 1000;
-    milliseconds = milliseconds - (seconds * 1000);
+    final long seconds = milliseconds / 1000;
+    final long decimalPart = milliseconds - (seconds * 1000);
+   
+    if (decimalPart == 0) {
+      return String.format(Locale.US, "%s", seconds);
+    }
 
-    long minutes = seconds / 60;
-    seconds = seconds - (minutes * 60);
-
-    long hours = minutes / 60;
-    minutes = minutes - (hours * 60);
-
-    if (milliseconds == 0)
-      return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-
-    return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds);
+    return String.format(Locale.US, "%s.%s", seconds, decimalPart);
   }
 
   /**
