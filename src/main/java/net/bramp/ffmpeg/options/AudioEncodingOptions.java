@@ -16,12 +16,12 @@ public class AudioEncodingOptions {
   public final int sample_rate;
   public final String bit_depth;
   public final long bit_rate;
-  public final int quality;
+  public final Integer quality;
 
   @ConstructorProperties({"enabled", "codec", "channels", "sample_rate", "bit_depth", "bit_rate",
       "quality"})
   public AudioEncodingOptions(boolean enabled, String codec, int channels, int sample_rate,
-      String bit_depth, long bit_rate, int quality) {
+      String bit_depth, long bit_rate, Integer quality) {
     this.enabled = enabled;
     this.codec = codec;
     this.channels = channels;

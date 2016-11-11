@@ -47,10 +47,12 @@ public class FFmpegBuilderTest {
           .setAudioChannels(1)
           .setAudioSampleRate(48000)
           .setAudioBitStreamFilter("bar")
+          .setAudioQuality(1)
           .setVideoCodec("libx264")
           .setVideoFrameRate(FFmpeg.FPS_30)
           .setVideoResolution(320, 240)
           .setVideoBitStreamFilter("foo")
+          .setVideoQuality(2)
           .done()
         .build();
     // @formatter:on
@@ -64,8 +66,8 @@ public class FFmpegBuilderTest {
             "-user-agent",
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36",
             "-ss", "00:00:01.500", "-i", "input", "-f", "mp4", "-ss", "00:00:00.500", "-vcodec",
-            "libx264", "-s", "320x240", "-r", "30/1", "-bsf:v", "foo", "-acodec", "aac", "-ac",
-            "1", "-ar", "48000", "-bsf:a", "bar", "output"));
+            "libx264", "-s", "320x240", "-r", "30/1", "-qscale:v", "2", "-bsf:v", "foo", "-acodec",
+            "aac", "-ac", "1", "-ar", "48000", "-qscale:a", "1", "-bsf:a", "bar", "output"));
   }
 
   @Test

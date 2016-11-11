@@ -53,8 +53,9 @@ public class FFmpegOutputBuilder {
   public int audio_sample_rate;
   public String audio_bit_depth;
   public long audio_bit_rate;
-  public int audio_quality;
+  public Integer audio_quality;
   public String audio_bit_stream_filter;
+
 
   public boolean video_enabled = true;
   public String video_codec;
@@ -65,6 +66,7 @@ public class FFmpegOutputBuilder {
   public String video_size;
   public String video_movflags;
   public long video_bit_rate;
+  public Integer video_quality;
   public Integer video_frames;
   public String video_preset;
   public String video_filter;
@@ -188,6 +190,13 @@ public class FFmpegOutputBuilder {
     checkArgument(bit_rate > 0, "bit rate must be positive");
     this.video_enabled = true;
     this.video_bit_rate = bit_rate;
+    return this;
+  }
+
+  public FFmpegOutputBuilder setVideoQuality(int quality) {
+    checkArgument(quality > 0, "quality must be positive");
+    this.video_enabled = true;
+    this.video_quality = quality;
     return this;
   }
 
@@ -429,7 +438,7 @@ public class FFmpegOutputBuilder {
   }
 
   public FFmpegOutputBuilder setAudioQuality(int quality) {
-    checkArgument(Range.closed(1, 5).contains(quality), "quality must be in the range 1..5");
+    checkArgument(quality > 0, "quality must be positive");
     this.audio_enabled = true;
     this.audio_quality = quality;
     return this;
@@ -527,10 +536,11 @@ public class FFmpegOutputBuilder {
 
   /**
    * Returns a representation of this Builder that can be safely serialised.
-   *
+   * 
    * @return
    */
   public EncodingOptions buildOptions() {
+    // TODO This method is horribly out of date, and its use should be rethought.
     // TODO When/if modelmapper supports @ConstructorProperties, we map this
     // object, instead of doing new XXX(...)
     // https://github.com/jhalterman/modelmapper/issues/44
@@ -647,8 +657,17 @@ public class FFmpegOutputBuilder {
         args.add("-r", video_frame_rate.toString());
       }
 
+      if (video_bit_rate > 0 && video_quality != null) {
+        // I'm not sure, but it seems video_quality overrides video_bit_rate, so don't allow both
+        throw new IllegalStateException("Only one of video_bit_rate and video_quality can be set");
+      }
+
       if (video_bit_rate > 0) {
         args.add("-b:v", String.valueOf(video_bit_rate));
+      }
+
+      if (video_quality != null) {
+        args.add("-qscale:v", String.valueOf(video_quality));
       }
 
       if (!Strings.isNullOrEmpty(video_preset)) {
@@ -690,9 +709,8 @@ public class FFmpegOutputBuilder {
         args.add("-sample_fmt", audio_bit_depth);
       }
 
-      if (audio_bit_rate > 0 && audio_quality > 0 && throwWarnings) {
-        // I'm not sure, but it seems audio_quality overrides
-        // audio_bit_rate, so don't allow both
+      if (audio_bit_rate > 0 && audio_quality != null && throwWarnings) {
+        // I'm not sure, but it seems audio_quality overrides audio_bit_rate, so don't allow both
         throw new IllegalStateException("Only one of audio_bit_rate and audio_quality can be set");
       }
 
@@ -700,8 +718,8 @@ public class FFmpegOutputBuilder {
         args.add("-b:a", String.valueOf(audio_bit_rate));
       }
 
-      if (audio_quality > 0) {
-        args.add("-aq", String.valueOf(audio_quality));
+      if (audio_quality != null) {
+        args.add("-qscale:a", String.valueOf(audio_quality));
       }
 
       if (!Strings.isNullOrEmpty(audio_bit_stream_filter)) {
