@@ -31,12 +31,12 @@ public class ExamplesTest {
   public void before() throws IOException {
     when(runFunc.run(argThatHasItem("-version")))
         .thenAnswer(new NewProcessAnswer("ffmpeg-version"));
-    ffmpeg = new FFmpeg(runFunc);
+    ffmpeg = new FFmpeg("ffmpeg", runFunc);
   }
 
   @Test
   public void testExample1() throws IOException {
-    FFmpeg ffmpeg = new FFmpeg("ffmpeg\\win64\\bin\\ffmpeg.exe", runFunc);
+    ffmpeg = new FFmpeg("ffmpeg\\win64\\bin\\ffmpeg.exe", runFunc);
 
     // @formatter:off
     FFmpegBuilder builder =  new FFmpegBuilder()
