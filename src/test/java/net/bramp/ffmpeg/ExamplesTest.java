@@ -2,12 +2,7 @@ package net.bramp.ffmpeg;
 
 import com.google.common.base.Joiner;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
-import net.bramp.ffmpeg.fixtures.Samples;
-import net.bramp.ffmpeg.job.FFmpegJob;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
-import net.bramp.ffmpeg.probe.FFmpegFormat;
-import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-import net.bramp.ffmpeg.probe.FFmpegStream;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,12 +10,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 /**

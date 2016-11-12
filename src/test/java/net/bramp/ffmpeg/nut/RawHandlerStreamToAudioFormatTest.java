@@ -12,8 +12,7 @@ import java.util.List;
 
 import static javax.sound.sampled.AudioFormat.Encoding.*;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.*;
-import static javax.sound.sampled.AudioFormat.Encoding;
+import static org.junit.Assert.assertThat;
 
 @RunWith(Parameterized.class)
 public class RawHandlerStreamToAudioFormatTest {

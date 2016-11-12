@@ -1,6 +1,5 @@
 package net.bramp.ffmpeg;
 
-import com.google.gson.Gson;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
 import org.junit.Before;
 import org.junit.Test;

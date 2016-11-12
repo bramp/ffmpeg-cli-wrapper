@@ -3,8 +3,6 @@ package net.bramp.ffmpeg.nut;
 
 import com.google.common.io.CountingInputStream;
 import net.bramp.ffmpeg.io.CRC32InputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.DataInput;
 import java.io.DataInputStream;

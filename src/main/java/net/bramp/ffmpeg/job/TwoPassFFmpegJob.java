@@ -4,8 +4,6 @@ import com.google.common.base.Throwables;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.progress.ProgressListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -18,8 +16,6 @@ import java.util.UUID;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class TwoPassFFmpegJob extends FFmpegJob {
-
-  final static Logger LOG = LoggerFactory.getLogger(TwoPassFFmpegJob.class);
 
   final String passlogPrefix;
   final FFmpegBuilder builder;

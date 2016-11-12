@@ -2,8 +2,6 @@ package net.bramp.ffmpeg.nut;
 
 import com.google.common.base.MoreObjects;
 import org.apache.commons.lang3.math.Fraction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

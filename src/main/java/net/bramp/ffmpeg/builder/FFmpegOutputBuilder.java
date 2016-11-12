@@ -3,7 +3,6 @@ package net.bramp.ffmpeg.builder;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Range;
 import net.bramp.ffmpeg.modelmapper.Mapper;
 import net.bramp.ffmpeg.options.AudioEncodingOptions;
 import net.bramp.ffmpeg.options.EncodingOptions;
