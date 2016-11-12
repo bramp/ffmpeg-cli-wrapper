@@ -29,19 +29,18 @@ public class FFmpegExecutor {
   }
 
   public FFmpegJob createJob(FFmpegBuilder builder) {
-    // Single Pass
     return new SinglePassFFmpegJob(ffmpeg, builder);
   }
 
   public FFmpegJob createJob(FFmpegBuilder builder, ProgressListener listener) {
-    // Single Pass
     return new SinglePassFFmpegJob(ffmpeg, builder, listener);
   }
 
   /**
-   * Info: https://trac.ffmpeg.org/wiki/x264EncodingGuide#twopass
+   * Creates a two pass job, which will execute FFmpeg twice to produce a better quality output.
+   * More info: https://trac.ffmpeg.org/wiki/x264EncodingGuide#twopass
    * 
-   * @param builder
+   * @param builder The FFmpegBuilder
    * @return A new two-pass FFmpegJob
    */
   public FFmpegJob createTwoPassJob(FFmpegBuilder builder) {

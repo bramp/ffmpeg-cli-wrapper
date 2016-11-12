@@ -21,7 +21,7 @@ import static net.bramp.ffmpeg.nut.Packet.Startcode;
  */
 public class NutReader {
 
-  // "nut/multimedia container\0"
+  // HEADER is the string "nut/multimedia container\0"
   static final byte[] HEADER = {0x6e, 0x75, 0x74, 0x2f, 0x6d, 0x75, 0x6c, 0x74, 0x69, 0x6d, 0x65,
       0x64, 0x69, 0x61, 0x20, 0x63, 0x6f, 0x6e, 0x74, 0x61, 0x69, 0x6e, 0x65, 0x72, 0x00};
 
@@ -43,7 +43,7 @@ public class NutReader {
   /**
    * Read the magic at the beginning of the file.
    * 
-   * @throws IOException
+   * @throws IOException If a I/O error occurs
    */
   protected void readFileId() throws IOException {
     byte[] b = new byte[HEADER.length];
@@ -57,8 +57,8 @@ public class NutReader {
   /**
    * Read headers we don't know how to parse yet, returning the next startcode.
    * 
-   * @return
-   * @throws IOException
+   * @return The next startcode
+   * @throws IOException If a I/O error occurs
    */
   protected long readReservedHeaders() throws IOException {
     long startcode = in.readStartCode();
@@ -72,8 +72,8 @@ public class NutReader {
 
   /**
    * Demux the inputstream
-   * 
-   * @throws IOException
+   *
+   * @throws IOException If a I/O error occurs
    */
   public void read() throws IOException {
     readFileId();

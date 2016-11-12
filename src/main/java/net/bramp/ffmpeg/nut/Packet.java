@@ -35,8 +35,8 @@ public class Packet {
     /**
      * Returns the Startcode enum for this code.
      * 
-     * @param startcode
-     * @return
+     * @param startcode The numeric code for this Startcode.
+     * @return The Startcode
      */
     public static Startcode of(long startcode) {
       for (Startcode c : Startcode.values()) {

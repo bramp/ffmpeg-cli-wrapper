@@ -90,8 +90,8 @@ abstract class FFcommon {
   /**
    * Runs ffmpeg with the supplied args. Blocking until finished.
    *
-   * @param args
-   * @throws IOException
+   * @param args The arguments to pass to the binary.
+   * @throws IOException If there is a problem executing the binary.
    */
   public void run(List<String> args) throws IOException {
     checkNotNull(args);

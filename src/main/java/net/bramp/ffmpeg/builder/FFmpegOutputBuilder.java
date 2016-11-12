@@ -88,10 +88,11 @@ public class FFmpegOutputBuilder {
   /**
    * Checks if the URI is valid for streaming to
    * 
-   * @param uri
-   * @return
+   * @param uri The URI to check
+   * @return The passed in URI if it is valid
+   * @throws IllegalArgumentException if the URI is not valid.
    */
-  public static URI checkValidStream(URI uri) {
+  public static URI checkValidStream(URI uri) throws IllegalArgumentException {
     String scheme = checkNotNull(uri).getScheme();
     scheme = checkNotNull(scheme, "URI is missing a scheme").toLowerCase();
 
@@ -233,9 +234,9 @@ public class FFmpegOutputBuilder {
    * Set the video frame rate in terms of frames per interval. For example 24fps would be 24/1,
    * however NTSC TV at 23.976fps would be 24000 per 1001
    *
-   * @param frames Number of frames
-   * @param per Number of seconds
-   * @return
+   * @param frames The number of frames within the given seconds
+   * @param per The number of seconds
+   * @return this
    */
   public FFmpegOutputBuilder setVideoFrameRate(int frames, int per) {
     return setVideoFrameRate(Fraction.getFraction(frames, per));
@@ -248,7 +249,7 @@ public class FFmpegOutputBuilder {
   /**
    * Set the number of video frames to record.
    *
-   * @param frames
+   * @param frames The number of frames
    * @return this
    */
   public FFmpegOutputBuilder setFrames(int frames) {
@@ -300,7 +301,7 @@ public class FFmpegOutputBuilder {
    *
    * @param abbreviation The abbreviation size. No validation is done, instead the value is passed
    *        as is to ffmpeg.
-   * @return
+   * @return this
    */
   public FFmpegOutputBuilder setVideoResolution(String abbreviation) {
     this.video_enabled = true;
@@ -309,9 +310,11 @@ public class FFmpegOutputBuilder {
   }
 
   /**
-   * Sets Video Filter TODO Build a fluent Filter builder
+   * Sets Video Filter
    *
-   * @param filter
+   * TODO Build a fluent Filter builder
+   *
+   * @param filter The video filter.
    * @return this
    */
   public FFmpegOutputBuilder setVideoFilter(String filter) {
@@ -400,10 +403,21 @@ public class FFmpegOutputBuilder {
   }
 
   /**
-   * Sets the Audio Sample Rate, for example 44_000
+   * Sets the Audio sample rate, for example 44_000.
    *
-   * @param sample_rate
+   * @param sample_rate Samples measured in Hz
    * @return this
+   *
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_SAMPLE_8000
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_SAMPLE_11025
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_SAMPLE_12000
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_SAMPLE_16000
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_SAMPLE_22050
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_SAMPLE_32000
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_SAMPLE_44100
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_SAMPLE_48000
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_SAMPLE_96000
+   *
    */
   public FFmpegOutputBuilder setAudioSampleRate(int sample_rate) {
     checkArgument(sample_rate > 0, "sample rate must be positive");
@@ -413,12 +427,20 @@ public class FFmpegOutputBuilder {
   }
 
   /**
-   * Sets the Audio Bit Depth. Samples given in the FFmpeg.AUDIO_DEPTH_* constants.
+   * Sets the audio bit depth.
    *
-   * @param bit_depth
+   * @param bit_depth The sample format, one of the net.bramp.ffmpeg.FFmpeg#AUDIO_DEPTH_* constants.
    * @return this
+   *
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_DEPTH_U8
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_DEPTH_S16
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_DEPTH_S32
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_DEPTH_FLT
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_DEPTH_DBL
    */
   public FFmpegOutputBuilder setAudioBitDepth(String bit_depth) {
+    // TODO Rename to "setAudioSampleFormat"
+
     this.audio_enabled = true;
     this.audio_bit_depth = checkNotEmpty(bit_depth, "bit depth must not be empty");
     return this;
@@ -427,7 +449,7 @@ public class FFmpegOutputBuilder {
   /**
    * Sets the Audio bit rate
    *
-   * @param bit_rate
+   * @param bit_rate Audio bitrate in bits per second.
    * @return this
    */
   public FFmpegOutputBuilder setAudioBitRate(long bit_rate) {
@@ -453,7 +475,7 @@ public class FFmpegOutputBuilder {
   /**
    * Target output file size (in bytes)
    *
-   * @param targetSize
+   * @param targetSize The target size in bytes
    * @return this
    */
   public FFmpegOutputBuilder setTargetSize(long targetSize) {
@@ -463,30 +485,28 @@ public class FFmpegOutputBuilder {
   }
 
   /**
-   * Decodes but discards input until the duration
+   * Decodes but discards input until the offset.
    *
-   * @param duration
-   * @param units
+   * @param offset The offset
+   * @param units The units the offset is in
    * @return this
    */
-  public FFmpegOutputBuilder setStartOffset(long duration, TimeUnit units) {
-    checkNotNull(duration);
+  public FFmpegOutputBuilder setStartOffset(long offset, TimeUnit units) {
     checkNotNull(units);
 
-    this.startOffset = units.toMillis(duration);
+    this.startOffset = units.toMillis(offset);
 
     return this;
   }
 
   /**
-   * Stop writing the output after its duration reaches duration
+   * Stop writing the output after duration is reached.
    *
-   * @param duration
-   * @param units
+   * @param duration The duration
+   * @param units The units the duration is in
    * @return this
    */
   public FFmpegOutputBuilder setDuration(long duration, TimeUnit units) {
-    checkNotNull(duration);
     checkNotNull(units);
 
     this.duration = units.toMillis(duration);
@@ -514,7 +534,8 @@ public class FFmpegOutputBuilder {
   /**
    * Add additional ouput arguments (for flags which aren't currently supported).
    *
-   * @param values
+   * @param values The extra arguments
+   * @return this
    */
   public FFmpegOutputBuilder addExtraArgs(String... values) {
     checkArgument(values.length > 0, "One or more values must be supplied");
@@ -536,11 +557,12 @@ public class FFmpegOutputBuilder {
 
   /**
    * Returns a representation of this Builder that can be safely serialised.
-   * 
-   * @return
+   *
+   * NOTE: This method is horribly out of date, and its use should be rethought.
+   *
+   * @return A new EncodingOptions capturing this Builder's state
    */
   public EncodingOptions buildOptions() {
-    // TODO This method is horribly out of date, and its use should be rethought.
     // TODO When/if modelmapper supports @ConstructorProperties, we map this
     // object, instead of doing new XXX(...)
     // https://github.com/jhalterman/modelmapper/issues/44
@@ -562,7 +584,7 @@ public class FFmpegOutputBuilder {
    * @param parent The parent FFmpegBuilder
    * @param pass The particular pass. For one-pass this value will be zero, for multi-pass, it will
    *        be 1 for the first pass, 2 for the second, and so on.
-   * @return
+   * @return The arguments
    */
   protected List<String> build(FFmpegBuilder parent, int pass) {
     checkNotNull(parent);

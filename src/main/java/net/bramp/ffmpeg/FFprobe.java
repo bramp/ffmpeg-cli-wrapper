@@ -48,18 +48,19 @@ public class FFprobe extends FFcommon {
   /**
    * Returns true if the binary we are using is the true ffprobe. This is to avoid conflict with
    * avprobe (from the libav project), that some symlink to ffprobe.
-   * 
-   * @return
+   *
+   * @return true iff this is the official ffprobe binary.
+   * @throws IOException If a I/O error occurs while executing ffprobe.
    */
   public boolean isFFprobe() throws IOException {
     return version().startsWith("ffprobe");
   }
 
   /**
-   * Throws an exception if this is an unsupported version of ffmpeg.
-   * 
-   * @throws IllegalArgumentException
-   * @throws IOException
+   * Throws an exception if this is an unsupported version of ffprobe.
+   *
+   * @throws IllegalArgumentException if this is not the official ffprobe binary.
+   * @throws IOException If a I/O error occurs while executing ffprobe.
    */
   private void checkIfFFprobe() throws IllegalArgumentException, IOException {
     if (!isFFprobe()) {

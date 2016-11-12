@@ -14,9 +14,9 @@ public interface ProgressParser extends Closeable {
   void stop() throws IOException;
 
   /**
-   * The URL to parse to FFMpeg to communicate with this parser
+   * The URL to parse to FFmpeg to communicate with this parser
    *
-   * @return
+   * @return The URI to communicate with FFmpeg.
    */
   URI getUri();
 

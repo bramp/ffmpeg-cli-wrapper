@@ -47,17 +47,18 @@ public class RawHandler {
   }
 
   /**
-   * Parses a FourCC into a AudioEncoding based on the following rules:<br/>
-   * ALAW = A-LAW<br/>
-   * ULAW = MU-LAW<br/>
-   * P<type><interleaving><bits> -> little-endian PCM<br/>
-   * <bits><interleaving><type>P -> big-endian PCM<br/>
-   * <type> is S for signed integer, U for unsigned integer, F for IEEE float<br/>
-   * <interleaving> is D for default, P is for planar.<br/>
-   * <bits> is 8/16/24/32<br/>
+   * Parses a FourCC into a AudioEncoding based on the following rules:<br>
+   * "ALAW" = A-LAW<br>
+   * "ULAW" = MU-LAW<br>
+   * P[type][interleaving][bits] = little-endian PCM<br>
+   * [bits][interleaving][type]P = big-endian PCM<br>
+   * Where:<br>
+   * &nbsp;&nbsp;[type] is S for signed integer, U for unsigned integer, F for IEEE float<br>
+   * &nbsp;&nbsp;[interleaving] is D for default, P is for planar.<br>
+   * &nbsp;&nbsp;[bits] is 8/16/24/32<br>
    *
-   * @param header
-   * @return
+   * @param header The stream's header.
+   * @return The AudioFormat matching this header.
    */
   public static AudioFormat streamToAudioFormat(final StreamHeaderPacket header) {
     checkNotNull(header);

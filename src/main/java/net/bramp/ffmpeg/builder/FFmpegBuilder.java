@@ -165,7 +165,8 @@ public class FFmpegBuilder {
   /**
    * Add additional ouput arguments (for flags which aren't currently supported).
    *
-   * @param values
+   * @param values The extra arguments.
+   * @return this
    */
   public FFmpegBuilder addExtraArgs(String... values) {
     checkArgument(values.length > 0, "One or more values must be supplied");
@@ -214,6 +215,7 @@ public class FFmpegBuilder {
    * </pre>
    *
    * @param output FFmpegOutputBuilder to add
+   * @return this
    */
   public FFmpegBuilder addOutput(FFmpegOutputBuilder output) {
     outputs.add(output);
@@ -222,6 +224,8 @@ public class FFmpegBuilder {
 
   /**
    * Create new output (to stdout)
+   * 
+   * @return A new {@link FFmpegOutputBuilder}
    */
   public FFmpegOutputBuilder addStdoutOutput() {
     return addOutput("-");

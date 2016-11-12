@@ -91,8 +91,9 @@ public class FFmpeg extends FFcommon {
   /**
    * Returns true if the binary we are using is the true ffmpeg. This is to avoid conflict with
    * avconv (from the libav project), that some symlink to ffmpeg.
-   * 
-   * @return
+   *
+   * @return true iff this is the official ffmpeg binary.
+   * @throws IOException If a I/O error occurs while executing ffmpeg.
    */
   public boolean isFFmpeg() throws IOException {
     return version().startsWith("ffmpeg");
@@ -101,8 +102,8 @@ public class FFmpeg extends FFcommon {
   /**
    * Throws an exception if this is an unsupported version of ffmpeg.
    * 
-   * @throws IllegalArgumentException
-   * @throws IOException
+   * @throws IllegalArgumentException if this is not the official ffmpeg binary.
+   * @throws IOException If a I/O error occurs while executing ffmpeg.
    */
   private void checkIfFFmpeg() throws IllegalArgumentException, IOException {
     if (!isFFmpeg()) {

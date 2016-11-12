@@ -22,8 +22,8 @@ public class StreamSpecifier {
   /**
    * Matches the stream with this index.
    * 
-   * @param index
-   * @return
+   * @param index The stream index
+   * @return A new StreamSpecifier
    */
   public static StreamSpecifier stream(int index) {
     return new StreamSpecifier(String.valueOf(index));
@@ -32,8 +32,8 @@ public class StreamSpecifier {
   /**
    * Matches all streams of this type.
    * 
-   * @param type
-   * @return
+   * @param type The stream type
+   * @return A new StreamSpecifier
    */
   public static StreamSpecifier stream(StreamSpecifierType type) {
     checkNotNull(type);
@@ -43,9 +43,9 @@ public class StreamSpecifier {
   /**
    * Matches the stream number stream_index of this type.
    * 
-   * @param type
-   * @param index
-   * @return
+   * @param type The stream type
+   * @param index The stream index
+   * @return A new StreamSpecifier
    */
   public static StreamSpecifier stream(StreamSpecifierType type, int index) {
     checkNotNull(type);
@@ -55,8 +55,8 @@ public class StreamSpecifier {
   /**
    * Matches all streams in the program.
    * 
-   * @param program_id
-   * @return
+   * @param program_id The program id
+   * @return A new StreamSpecifier
    */
   public static StreamSpecifier program(int program_id) {
     return new StreamSpecifier("p:" + program_id);
@@ -65,9 +65,9 @@ public class StreamSpecifier {
   /**
    * Matches the stream with number stream_index in the program with the id program_id.
    * 
-   * @param program_id
-   * @param stream_index
-   * @return
+   * @param program_id The program id
+   * @param stream_index The stream index
+   * @return A new StreamSpecifier
    */
   public static StreamSpecifier program(int program_id, int stream_index) {
     return new StreamSpecifier("p:" + program_id + ":" + stream_index);
@@ -76,8 +76,8 @@ public class StreamSpecifier {
   /**
    * Match the stream by stream id (e.g. PID in MPEG-TS container).
    *
-   * @param stream_id
-   * @return
+   * @param stream_id The stream id
+   * @return A new StreamSpecifier
    */
   public static StreamSpecifier id(int stream_id) {
     return new StreamSpecifier("i:" + stream_id);
@@ -86,8 +86,8 @@ public class StreamSpecifier {
   /**
    * Matches all streams with the given metadata tag.
    * 
-   * @param key
-   * @return
+   * @param key The metadata tag
+   * @return A new StreamSpecifier
    */
   public static StreamSpecifier tag(String key) {
     return new StreamSpecifier("m:" + checkValidKey(key));
@@ -96,9 +96,9 @@ public class StreamSpecifier {
   /**
    * Matches streams with the metadata tag key having the specified value.
    * 
-   * @param key
-   * @param value
-   * @return
+   * @param key The metadata tag
+   * @param value The metatdata's value
+   * @return A new StreamSpecifier
    */
   public static StreamSpecifier tag(String key, String value) {
     checkValidKey(key);
@@ -110,7 +110,7 @@ public class StreamSpecifier {
    * Matches streams with usable configuration, the codec must be defined and the essential
    * information such as video dimension or audio sample rate must be present.
    * 
-   * @return
+   * @return A new StreamSpecifier
    */
   public static StreamSpecifier usable() {
     return new StreamSpecifier("u");

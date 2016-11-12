@@ -46,7 +46,7 @@ public class Progress {
   /**
    * Parses values from the line, into this object.
    *
-   * @param line
+   * @param line A single line of output from ffmpeg
    * @return true if the record is finished
    */
   protected boolean parseLine(String line) {
