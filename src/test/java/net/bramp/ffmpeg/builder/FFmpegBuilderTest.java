@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.nitorcreations.Matchers.reflectEquals;
+import static net.bramp.ffmpeg.FFmpeg.AUDIO_FORMAT_S16;
+import static net.bramp.ffmpeg.FFmpeg.AUDIO_SAMPLE_48000;
+import static net.bramp.ffmpeg.FFmpeg.FPS_30;
 import static net.bramp.ffmpeg.builder.FFmpegBuilder.Verbosity;
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.*;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.tag;
@@ -49,7 +52,7 @@ public class FFmpegBuilderTest {
           .setAudioBitStreamFilter("bar")
           .setAudioQuality(1)
           .setVideoCodec("libx264")
-          .setVideoFrameRate(FFmpeg.FPS_30)
+          .setVideoFrameRate(FPS_30)
           .setVideoResolution(320, 240)
           .setVideoBitStreamFilter("foo")
           .setVideoQuality(2)
@@ -133,10 +136,9 @@ public class FFmpegBuilderTest {
   public void testSetOptions() {
     MainEncodingOptions main = new MainEncodingOptions("mp4", 1500L, 2L);
     AudioEncodingOptions audio =
-        new AudioEncodingOptions(true, "aac", 1, FFmpeg.AUDIO_SAMPLE_48000, FFmpeg.AUDIO_DEPTH_S16,
-            1, 2);
+        new AudioEncodingOptions(true, "aac", 1, AUDIO_SAMPLE_48000, AUDIO_FORMAT_S16, 1, 2);
     VideoEncodingOptions video =
-        new VideoEncodingOptions(true, "libx264", FFmpeg.FPS_30, 320, 240, 1, null, null, null);
+        new VideoEncodingOptions(true, "libx264", FPS_30, 320, 240, 1, null, null, null);
 
     // @formatter:off
     EncodingOptions options = new FFmpegBuilder()

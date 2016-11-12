@@ -50,7 +50,7 @@ public class FFmpegOutputBuilder {
   public String audio_codec;
   public int audio_channels;
   public int audio_sample_rate;
-  public String audio_bit_depth;
+  public String audio_sample_format;
   public long audio_bit_rate;
   public Integer audio_quality;
   public String audio_bit_stream_filter;
@@ -436,12 +436,30 @@ public class FFmpegOutputBuilder {
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_DEPTH_S32
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_DEPTH_FLT
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_DEPTH_DBL
+   *
+   * @deprecated use {@link #setAudioSampleFormat} instead.
    */
+  @Deprecated
   public FFmpegOutputBuilder setAudioBitDepth(String bit_depth) {
-    // TODO Rename to "setAudioSampleFormat"
+    return setAudioSampleFormat(bit_depth);
+  }
 
+  /**
+   * Sets the audio sample format.
+   *
+   * @param sample_format The sample format, one of the net.bramp.ffmpeg.FFmpeg#AUDIO_FORMAT_*
+   *        constants.
+   * @return this
+   *
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_FORMAT_U8
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_FORMAT_S16
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_FORMAT_S32
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_FORMAT_FLT
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_FORMAT_DBL
+   */
+  public FFmpegOutputBuilder setAudioSampleFormat(String sample_format) {
     this.audio_enabled = true;
-    this.audio_bit_depth = checkNotEmpty(bit_depth, "bit depth must not be empty");
+    this.audio_sample_format = checkNotEmpty(sample_format, "sample format must not be empty");
     return this;
   }
 
@@ -567,7 +585,7 @@ public class FFmpegOutputBuilder {
     // https://github.com/jhalterman/modelmapper/issues/44
     return new EncodingOptions(new MainEncodingOptions(format, startOffset, duration),
         new AudioEncodingOptions(audio_enabled, audio_codec, audio_channels, audio_sample_rate,
-            audio_bit_depth, audio_bit_rate, audio_quality), new VideoEncodingOptions(
+            audio_sample_format, audio_bit_rate, audio_quality), new VideoEncodingOptions(
             video_enabled, video_codec, video_frame_rate, video_width, video_height,
             video_bit_rate, video_frames, video_filter, video_preset));
   }
@@ -726,8 +744,8 @@ public class FFmpegOutputBuilder {
         args.add("-ar", String.valueOf(audio_sample_rate));
       }
 
-      if (!Strings.isNullOrEmpty(audio_bit_depth)) {
-        args.add("-sample_fmt", audio_bit_depth);
+      if (!Strings.isNullOrEmpty(audio_sample_format)) {
+        args.add("-sample_fmt", audio_sample_format);
       }
 
       if (audio_bit_rate > 0 && audio_quality != null && throwWarnings) {

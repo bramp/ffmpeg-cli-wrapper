@@ -41,11 +41,23 @@ public class FFmpeg extends FFcommon {
   public final static int AUDIO_MONO = 1;
   public final static int AUDIO_STEREO = 2;
 
-  public final static String AUDIO_DEPTH_U8 = "u8"; // 8
-  public final static String AUDIO_DEPTH_S16 = "s16"; // 16
-  public final static String AUDIO_DEPTH_S32 = "s32"; // 32
-  public final static String AUDIO_DEPTH_FLT = "flt"; // 32
-  public final static String AUDIO_DEPTH_DBL = "dbl"; // 64
+  public final static String AUDIO_FORMAT_U8 = "u8"; // 8
+  public final static String AUDIO_FORMAT_S16 = "s16"; // 16
+  public final static String AUDIO_FORMAT_S32 = "s32"; // 32
+  public final static String AUDIO_FORMAT_FLT = "flt"; // 32
+  public final static String AUDIO_FORMAT_DBL = "dbl"; // 64
+
+  @Deprecated
+  public final static String AUDIO_DEPTH_U8 = AUDIO_FORMAT_U8;
+  @Deprecated
+  public final static String AUDIO_DEPTH_S16 = AUDIO_FORMAT_S16;
+  @Deprecated
+  public final static String AUDIO_DEPTH_S32 = AUDIO_FORMAT_S32;
+  @Deprecated
+  public final static String AUDIO_DEPTH_FLT = AUDIO_FORMAT_FLT;
+  @Deprecated
+  public final static String AUDIO_DEPTH_DBL = AUDIO_FORMAT_DBL;
+
 
   public final static int AUDIO_SAMPLE_8000 = 8000;
   public final static int AUDIO_SAMPLE_11025 = 11025;
