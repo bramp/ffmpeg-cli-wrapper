@@ -83,6 +83,10 @@ abstract class FFcommon {
     return path;
   }
 
+  public List<String> path(List<String> args) throws IOException {
+    return ImmutableList.<String>builder().add(path).addAll(args).build();
+  }
+
   /**
    * Runs ffmpeg with the supplied args. Blocking until finished.
    *
@@ -92,9 +96,7 @@ abstract class FFcommon {
   public void run(List<String> args) throws IOException {
     checkNotNull(args);
 
-    List<String> newArgs = ImmutableList.<String>builder().add(path).addAll(args).build();
-
-    Process p = runFunc.run(newArgs);
+    Process p = runFunc.run(path(args));
     try {
       // TODO Move the copy onto a thread, so that FFmpegProgressListener can be on this thread.
 
