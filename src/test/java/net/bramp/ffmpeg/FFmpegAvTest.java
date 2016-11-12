@@ -26,8 +26,6 @@ public class FFmpegAvTest {
 
   FFmpeg ffmpeg;
 
-  final static Gson gson = FFmpegUtils.getGson();
-
   @Before
   public void before() throws IOException {
     when(runFunc.run(argThatHasItem("-version")))
