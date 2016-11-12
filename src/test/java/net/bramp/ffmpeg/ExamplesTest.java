@@ -100,9 +100,13 @@ public class ExamplesTest {
         .done();
     // @formatter:on
 
-    String expected =
-        "ffmpeg -y -v error" + " -i input.mkv" + " -vcodec libtheora" + " -acodec libvorbis"
-            + " -qscale:v 7" + " -qscale:a 5" + " output.ogv";
+    String expected = "ffmpeg -y -v error"
+        + " -i input.mkv"
+        + " -vcodec libtheora"
+        + " -acodec libvorbis"
+        + " -qscale:v 7"
+        + " -qscale:a 5"
+        + " output.ogv";
 
     String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
     assertEquals(expected, actual);
@@ -119,9 +123,10 @@ public class ExamplesTest {
         .done();
     // @formatter:on
 
-    String expected =
-        "ffmpeg -y -v error" + " -i sample.avi"
-            + " -vframes 1 -vf select='gte(n\\,10)',scale=200:-1" + " thumbnail.png";
+    String expected = "ffmpeg -y -v error"
+        + " -i sample.avi"
+        + " -vframes 1 -vf select='gte(n\\,10)',scale=200:-1"
+        + " thumbnail.png";
 
     String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
     assertEquals(expected, actual);

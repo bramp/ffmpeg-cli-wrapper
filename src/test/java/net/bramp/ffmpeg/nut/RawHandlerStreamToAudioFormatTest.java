@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
+import static javax.sound.sampled.AudioFormat.Encoding.*;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 import static javax.sound.sampled.AudioFormat.Encoding;
@@ -20,15 +21,13 @@ public class RawHandlerStreamToAudioFormatTest {
   @Parameterized.Parameters(name = "{4}")
   public static List<Object[]> data() {
     return Arrays.asList(new Object[][] {
-      // @formatter:off
-      {"ALAW", 48000, 1, 2, new AudioFormat(Encoding.ALAW, 48000, 8, 2, 2, 48000, false)},
-      {"ULAW", 48000, 1, 3, new AudioFormat(Encoding.ULAW, 48000, 8, 3, 3, 48000, false)},
+        {"ALAW", 48000, 1, 2, new AudioFormat(ALAW, 48000, 8, 2, 2, 48000, false)},
+        {"ULAW", 48000, 1, 3, new AudioFormat(ULAW, 48000, 8, 3, 3, 48000, false)},
 
-      {"PSD\u0008", 48000, 1, 4, new AudioFormat(Encoding.PCM_SIGNED, 48000, 8, 4, 4, 48000, false)},
-      {"\u0010DUP", 48000, 1, 6, new AudioFormat(Encoding.PCM_UNSIGNED, 48000, 16, 6, 12, 48000, true)},
-      {"PFD\u0020", 48000, 1, 8, new AudioFormat(Encoding.PCM_FLOAT, 48000, 32, 8, 32, 48000, false)},
-      // @formatter:on
-        });
+        {"PSD\u0008", 48000, 1, 4, new AudioFormat(PCM_SIGNED, 48000, 8, 4, 4, 48000, false)},
+        {"\u0010DUP", 48000, 1, 6, new AudioFormat(PCM_UNSIGNED, 48000, 16, 6, 12, 48000, true)},
+        {"PFD\u0020", 48000, 1, 8, new AudioFormat(PCM_FLOAT, 48000, 32, 8, 32, 48000, false)},
+    });
   }
 
   final StreamHeaderPacket stream;

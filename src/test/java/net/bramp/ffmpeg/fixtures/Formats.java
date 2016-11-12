@@ -20,7 +20,6 @@ public final class Formats {
   }
 
   public final static List<Format> FORMATS = new ImmutableList.Builder<Format>().add(
-      // @formatter:off
       new Format("3g2", "3GP2 format", " E"),
       new Format("3gp", "3GP format", " E"),
       new Format("4xm", "4X Technologies format", "D "),
@@ -124,7 +123,6 @@ public final class Formats {
       new Format("md5", "MD5 testing format", " E"),
       new Format("microdvd", "MicroDVD subtitle format", "DE"),
       new Format("mjpeg", "raw MJPEG video", "DE"),
-      new Format("mkvtimestamp_v2", "extract pts as timecode v2 format, as defined by mkvtoolnix", " E"),
       new Format("mlp", "raw MLP", "DE"),
       new Format("mm", "American Laser Games MM format", "D "),
       new Format("mmf", "Yamaha SMAF", "DE"),
@@ -230,6 +228,5 @@ public final class Formats {
       new Format("xwma", "Microsoft xWMA", "D "),
       new Format("yop", "Psygnosis YOP Format", "D "),
       new Format("yuv4mpegpipe", "YUV4MPEG pipe format", "DE")
-      // @formatter:on
       ).build();
 }

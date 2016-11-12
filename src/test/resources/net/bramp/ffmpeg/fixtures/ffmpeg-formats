@@ -105,7 +105,6 @@ File formats:
   E md5             MD5 testing format
  DE microdvd        MicroDVD subtitle format
  DE mjpeg           raw MJPEG video
-  E mkvtimestamp_v2 extract pts as timecode v2 format, as defined by mkvtoolnix
  DE mlp             raw MLP
  D  mm              American Laser Games MM format
  DE mmf             Yamaha SMAF

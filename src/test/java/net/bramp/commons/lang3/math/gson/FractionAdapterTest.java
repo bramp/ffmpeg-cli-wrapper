@@ -35,7 +35,8 @@ public class FractionAdapterTest {
 
   final static List<TestData> readTests = ImmutableList.of(new TestData("null", null),
 
-  new TestData("1", Fraction.getFraction(1, 1)), new TestData("1.0", Fraction.getFraction(1, 1)),
+      new TestData("1", Fraction.getFraction(1, 1)),
+      new TestData("1.0", Fraction.getFraction(1, 1)),
       new TestData("2", Fraction.getFraction(2, 1)),
       new TestData("0.5", Fraction.getFraction(1, 2)),
 

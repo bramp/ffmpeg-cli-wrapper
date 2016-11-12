@@ -139,7 +139,6 @@ public class Progress {
   @Override
   public String toString() {
     return MoreObjects.toStringHelper(this)
-        // @formatter:off
         .add("frame", frame)
         .add("fps", fps)
         .add("bitrate", bitrate)
@@ -149,7 +148,6 @@ public class Progress {
         .add("drop_frames", drop_frames)
         .add("speed", speed)
         .add("progress", progress)
-        // @formatter:on
         .toString();
   }
 }

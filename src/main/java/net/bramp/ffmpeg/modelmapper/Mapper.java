@@ -29,8 +29,8 @@ public class Mapper {
       Class<D> destinationType, Configuration config) {
 
     return mapper.createTypeMap(sourceType, destinationType, config)
-    // We setPropertyCondition because ModelMapper seems to ignore this in
-    // the config
+        // We setPropertyCondition because ModelMapper seems to ignore this in
+        // the config
         .setPropertyCondition(config.getPropertyCondition());
   }
 

@@ -83,7 +83,6 @@ public class FFprobe extends FFcommon {
     // .add("--show_packets")
     // .add("--show_frames")
 
-    // @formatter:off
     args.add(path)
         .add("-v", "quiet");
 
@@ -91,13 +90,11 @@ public class FFprobe extends FFcommon {
       args.add("-user-agent", userAgent);
     }
 
-    args
-      .add("-print_format", "json")
-      .add("-show_error")
-      .add("-show_format")
-      .add("-show_streams")
-      .add(mediaPath);
-    // @formatter:on
+    args.add("-print_format", "json")
+        .add("-show_error")
+        .add("-show_format")
+        .add("-show_streams")
+        .add(mediaPath);
 
     Process p = runFunc.run(args.build());
     try {

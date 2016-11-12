@@ -15,7 +15,6 @@ public class FFmpegOutputBuilderCheckInvalidStreamTest {
   @Parameters(name = "{0}")
   public static List<String> data() {
     return Arrays.asList(
-// @formatter:off
         // Illegal schemes
         "http://www.example.com/",
         "https://live.twitch.tv/app/live_",
@@ -24,7 +23,6 @@ public class FFmpegOutputBuilderCheckInvalidStreamTest {
         // Missing ports
         "udp://10.1.0.102/",
         "tcp://127.0.0.1/"
-        // @formatter:on
         );
   }
 
