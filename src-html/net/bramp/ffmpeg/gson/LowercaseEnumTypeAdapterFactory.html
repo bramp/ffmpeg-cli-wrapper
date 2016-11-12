@@ -34,7 +34,7 @@
 <span class="sourceLineNo">026</span>    }<a name="line.26"></a>
 <span class="sourceLineNo">027</span><a name="line.27"></a>
 <span class="sourceLineNo">028</span>    // Setup mapping of consts<a name="line.28"></a>
-<span class="sourceLineNo">029</span>    final Map&lt;String, T&gt; lowercaseToConstant = new HashMap&lt;String, T&gt;();<a name="line.29"></a>
+<span class="sourceLineNo">029</span>    final Map&lt;String, T&gt; lowercaseToConstant = new HashMap&lt;&gt;();<a name="line.29"></a>
 <span class="sourceLineNo">030</span>    for (T constant : rawType.getEnumConstants()) {<a name="line.30"></a>
 <span class="sourceLineNo">031</span>      lowercaseToConstant.put(toLowercase(constant), constant);<a name="line.31"></a>
 <span class="sourceLineNo">032</span>    }<a name="line.32"></a>

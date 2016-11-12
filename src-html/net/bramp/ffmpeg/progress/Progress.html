@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package net.bramp.ffmpeg.progress;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.google.common.base.MoreObjects;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import net.bramp.ffmpeg.FFmpegUtils;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import org.apache.commons.lang3.math.Fraction;<a name="line.5"></a>
+<span class="sourceLineNo">006</span><a name="line.6"></a>
+<span class="sourceLineNo">007</span>import java.util.Objects;<a name="line.7"></a>
+<span class="sourceLineNo">008</span><a name="line.8"></a>
+<span class="sourceLineNo">009</span>import static com.google.common.base.Preconditions.checkNotNull;<a name="line.9"></a>
+<span class="sourceLineNo">010</span><a name="line.10"></a>
+<span class="sourceLineNo">011</span>/**<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * TODO Change to be immutable<a name="line.12"></a>
+<span class="sourceLineNo">013</span> */<a name="line.13"></a>
+<span class="sourceLineNo">014</span>public class Progress {<a name="line.14"></a>
+<span class="sourceLineNo">015</span>  public long frame = 0;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>  public Fraction fps = Fraction.ZERO;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>  // TODO stream_0_0_q=0.0<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>  public long bitrate = 0;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>  public long total_size = 0;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>  public long out_time_ms = 0;<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>  public long dup_frames = 0;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>  public long drop_frames = 0;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>  public float speed = 0;<a name="line.26"></a>
+<span class="sourceLineNo">027</span>  public String progress = "";<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>  public Progress() {<a name="line.29"></a>
+<span class="sourceLineNo">030</span>    // Nothing<a name="line.30"></a>
+<span class="sourceLineNo">031</span>  }<a name="line.31"></a>
+<span class="sourceLineNo">032</span><a name="line.32"></a>
+<span class="sourceLineNo">033</span>  public Progress(long frame, float fps, long bitrate, long total_size, long out_time_ms,<a name="line.33"></a>
+<span class="sourceLineNo">034</span>      long dup_frames, long drop_frames, float speed, String progress) {<a name="line.34"></a>
+<span class="sourceLineNo">035</span>    this.frame = frame;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>    this.fps = Fraction.getFraction(fps);<a name="line.36"></a>
+<span class="sourceLineNo">037</span>    this.bitrate = bitrate;<a name="line.37"></a>
+<span class="sourceLineNo">038</span>    this.total_size = total_size;<a name="line.38"></a>
+<span class="sourceLineNo">039</span>    this.out_time_ms = out_time_ms;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>    this.dup_frames = dup_frames;<a name="line.40"></a>
+<span class="sourceLineNo">041</span>    this.drop_frames = drop_frames;<a name="line.41"></a>
+<span class="sourceLineNo">042</span>    this.speed = speed;<a name="line.42"></a>
+<span class="sourceLineNo">043</span>    this.progress = progress;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>  }<a name="line.44"></a>
+<span class="sourceLineNo">045</span><a name="line.45"></a>
+<span class="sourceLineNo">046</span>  /**<a name="line.46"></a>
+<span class="sourceLineNo">047</span>   * Parses values from the line, into this object.<a name="line.47"></a>
+<span class="sourceLineNo">048</span>   *<a name="line.48"></a>
+<span class="sourceLineNo">049</span>   * @param line A single line of output from ffmpeg<a name="line.49"></a>
+<span class="sourceLineNo">050</span>   * @return true if the record is finished<a name="line.50"></a>
+<span class="sourceLineNo">051</span>   */<a name="line.51"></a>
+<span class="sourceLineNo">052</span>  protected boolean parseLine(String line) {<a name="line.52"></a>
+<span class="sourceLineNo">053</span>    line = checkNotNull(line).trim();<a name="line.53"></a>
+<span class="sourceLineNo">054</span>    if (line.isEmpty()) {<a name="line.54"></a>
+<span class="sourceLineNo">055</span>      return false; // Skip empty lines<a name="line.55"></a>
+<span class="sourceLineNo">056</span>    }<a name="line.56"></a>
+<span class="sourceLineNo">057</span><a name="line.57"></a>
+<span class="sourceLineNo">058</span>    final String[] args = line.split("=", 2);<a name="line.58"></a>
+<span class="sourceLineNo">059</span>    if (args.length != 2) {<a name="line.59"></a>
+<span class="sourceLineNo">060</span>      // invalid argument, so skip<a name="line.60"></a>
+<span class="sourceLineNo">061</span>      return false;<a name="line.61"></a>
+<span class="sourceLineNo">062</span>    }<a name="line.62"></a>
+<span class="sourceLineNo">063</span><a name="line.63"></a>
+<span class="sourceLineNo">064</span>    final String key = checkNotNull(args[0]);<a name="line.64"></a>
+<span class="sourceLineNo">065</span>    final String value = checkNotNull(args[1]);<a name="line.65"></a>
+<span class="sourceLineNo">066</span><a name="line.66"></a>
+<span class="sourceLineNo">067</span>    switch (key) {<a name="line.67"></a>
+<span class="sourceLineNo">068</span>      case "frame":<a name="line.68"></a>
+<span class="sourceLineNo">069</span>        frame = Long.parseLong(value);<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        return false;<a name="line.70"></a>
+<span class="sourceLineNo">071</span>      case "fps":<a name="line.71"></a>
+<span class="sourceLineNo">072</span>        fps = Fraction.getFraction(value);<a name="line.72"></a>
+<span class="sourceLineNo">073</span>        return false;<a name="line.73"></a>
+<span class="sourceLineNo">074</span>      case "bitrate":<a name="line.74"></a>
+<span class="sourceLineNo">075</span>        // TODO bitrate could be "N/A"<a name="line.75"></a>
+<span class="sourceLineNo">076</span>        bitrate = FFmpegUtils.parseBitrate(value);<a name="line.76"></a>
+<span class="sourceLineNo">077</span>        return false;<a name="line.77"></a>
+<span class="sourceLineNo">078</span>      case "total_size":<a name="line.78"></a>
+<span class="sourceLineNo">079</span>        // TODO could be "N/A"<a name="line.79"></a>
+<span class="sourceLineNo">080</span>        total_size = Long.parseLong(value);<a name="line.80"></a>
+<span class="sourceLineNo">081</span>        return false;<a name="line.81"></a>
+<span class="sourceLineNo">082</span>      case "out_time_ms":<a name="line.82"></a>
+<span class="sourceLineNo">083</span>        out_time_ms = Long.parseLong(value);<a name="line.83"></a>
+<span class="sourceLineNo">084</span>        return false;<a name="line.84"></a>
+<span class="sourceLineNo">085</span>      case "out_time":<a name="line.85"></a>
+<span class="sourceLineNo">086</span>        // There is also out_time_ms, so we ignore out_time.<a name="line.86"></a>
+<span class="sourceLineNo">087</span>        // TODO maybe in the future actually parse out_time, if a out_time_ms wasn't provided.<a name="line.87"></a>
+<span class="sourceLineNo">088</span>        return false;<a name="line.88"></a>
+<span class="sourceLineNo">089</span>      case "dup_frames":<a name="line.89"></a>
+<span class="sourceLineNo">090</span>        dup_frames = Long.parseLong(value);<a name="line.90"></a>
+<span class="sourceLineNo">091</span>        return false;<a name="line.91"></a>
+<span class="sourceLineNo">092</span>      case "drop_frames":<a name="line.92"></a>
+<span class="sourceLineNo">093</span>        drop_frames = Long.parseLong(value);<a name="line.93"></a>
+<span class="sourceLineNo">094</span>        return false;<a name="line.94"></a>
+<span class="sourceLineNo">095</span>      case "speed":<a name="line.95"></a>
+<span class="sourceLineNo">096</span>        // TODO Could be "N/A"<a name="line.96"></a>
+<span class="sourceLineNo">097</span>        speed = Float.parseFloat(value.replace("x", ""));<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        return false;<a name="line.98"></a>
+<span class="sourceLineNo">099</span>      case "progress":<a name="line.99"></a>
+<span class="sourceLineNo">100</span>        // TODO Is only "continue" or "end". Change to enum<a name="line.100"></a>
+<span class="sourceLineNo">101</span>        // TODO After "end" stream is closed<a name="line.101"></a>
+<span class="sourceLineNo">102</span>        progress = value;<a name="line.102"></a>
+<span class="sourceLineNo">103</span>        return true; // The progress field is always last<a name="line.103"></a>
+<span class="sourceLineNo">104</span><a name="line.104"></a>
+<span class="sourceLineNo">105</span>      default:<a name="line.105"></a>
+<span class="sourceLineNo">106</span>        // TODO<a name="line.106"></a>
+<span class="sourceLineNo">107</span>        // stream_%d_%d_q= file_index, index, quality<a name="line.107"></a>
+<span class="sourceLineNo">108</span>        // stream_%d_%d_psnr_%c=%2.2f, file_index, index, type{Y, U, V}, quality // Enable with<a name="line.108"></a>
+<span class="sourceLineNo">109</span>        // AV_CODEC_FLAG_PSNR<a name="line.109"></a>
+<span class="sourceLineNo">110</span>        // stream_%d_%d_psnr_all<a name="line.110"></a>
+<span class="sourceLineNo">111</span>        return false; // Ignore for the moment<a name="line.111"></a>
+<span class="sourceLineNo">112</span>    }<a name="line.112"></a>
+<span class="sourceLineNo">113</span>  }<a name="line.113"></a>
+<span class="sourceLineNo">114</span><a name="line.114"></a>
+<span class="sourceLineNo">115</span>  public boolean isEnd() {<a name="line.115"></a>
+<span class="sourceLineNo">116</span>    return Objects.equals(progress, "end");<a name="line.116"></a>
+<span class="sourceLineNo">117</span>  }<a name="line.117"></a>
+<span class="sourceLineNo">118</span><a name="line.118"></a>
+<span class="sourceLineNo">119</span>  @Override<a name="line.119"></a>
+<span class="sourceLineNo">120</span>  public boolean equals(Object o) {<a name="line.120"></a>
+<span class="sourceLineNo">121</span>    if (this == o)<a name="line.121"></a>
+<span class="sourceLineNo">122</span>      return true;<a name="line.122"></a>
+<span class="sourceLineNo">123</span>    if (o == null || getClass() != o.getClass())<a name="line.123"></a>
+<span class="sourceLineNo">124</span>      return false;<a name="line.124"></a>
+<span class="sourceLineNo">125</span>    Progress progress1 = (Progress) o;<a name="line.125"></a>
+<span class="sourceLineNo">126</span>    return frame == progress1.frame &amp;&amp; bitrate == progress1.bitrate<a name="line.126"></a>
+<span class="sourceLineNo">127</span>        &amp;&amp; total_size == progress1.total_size &amp;&amp; out_time_ms == progress1.out_time_ms<a name="line.127"></a>
+<span class="sourceLineNo">128</span>        &amp;&amp; dup_frames == progress1.dup_frames &amp;&amp; drop_frames == progress1.drop_frames<a name="line.128"></a>
+<span class="sourceLineNo">129</span>        &amp;&amp; Float.compare(progress1.speed, speed) == 0 &amp;&amp; Objects.equals(fps, progress1.fps)<a name="line.129"></a>
+<span class="sourceLineNo">130</span>        &amp;&amp; Objects.equals(progress, progress1.progress);<a name="line.130"></a>
+<span class="sourceLineNo">131</span>  }<a name="line.131"></a>
+<span class="sourceLineNo">132</span><a name="line.132"></a>
+<span class="sourceLineNo">133</span>  @Override<a name="line.133"></a>
+<span class="sourceLineNo">134</span>  public int hashCode() {<a name="line.134"></a>
+<span class="sourceLineNo">135</span>    return Objects.hash(frame, fps, bitrate, total_size, out_time_ms, dup_frames, drop_frames,<a name="line.135"></a>
+<span class="sourceLineNo">136</span>        speed, progress);<a name="line.136"></a>
+<span class="sourceLineNo">137</span>  }<a name="line.137"></a>
+<span class="sourceLineNo">138</span><a name="line.138"></a>
+<span class="sourceLineNo">139</span>  @Override<a name="line.139"></a>
+<span class="sourceLineNo">140</span>  public String toString() {<a name="line.140"></a>
+<span class="sourceLineNo">141</span>    return MoreObjects.toStringHelper(this)<a name="line.141"></a>
+<span class="sourceLineNo">142</span>        .add("frame", frame)<a name="line.142"></a>
+<span class="sourceLineNo">143</span>        .add("fps", fps)<a name="line.143"></a>
+<span class="sourceLineNo">144</span>        .add("bitrate", bitrate)<a name="line.144"></a>
+<span class="sourceLineNo">145</span>        .add("total_size", total_size)<a name="line.145"></a>
+<span class="sourceLineNo">146</span>        .add("out_time_ms", out_time_ms)<a name="line.146"></a>
+<span class="sourceLineNo">147</span>        .add("dup_frames", dup_frames)<a name="line.147"></a>
+<span class="sourceLineNo">148</span>        .add("drop_frames", drop_frames)<a name="line.148"></a>
+<span class="sourceLineNo">149</span>        .add("speed", speed)<a name="line.149"></a>
+<span class="sourceLineNo">150</span>        .add("progress", progress)<a name="line.150"></a>
+<span class="sourceLineNo">151</span>        .toString();<a name="line.151"></a>
+<span class="sourceLineNo">152</span>  }<a name="line.152"></a>
+<span class="sourceLineNo">153</span>}<a name="line.153"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

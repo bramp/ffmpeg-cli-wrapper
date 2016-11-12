@@ -1,0 +1,259 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package net.bramp.ffmpeg.nut;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span><a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.google.common.io.CountingInputStream;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import net.bramp.ffmpeg.io.CRC32InputStream;<a name="line.5"></a>
+<span class="sourceLineNo">006</span><a name="line.6"></a>
+<span class="sourceLineNo">007</span>import java.io.DataInput;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import java.io.DataInputStream;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import java.io.IOException;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import java.io.InputStream;<a name="line.10"></a>
+<span class="sourceLineNo">011</span><a name="line.11"></a>
+<span class="sourceLineNo">012</span>import static com.google.common.base.Preconditions.checkNotNull;<a name="line.12"></a>
+<span class="sourceLineNo">013</span><a name="line.13"></a>
+<span class="sourceLineNo">014</span>/**<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * A DataInputStream that implements a couple of custom FFmpeg Nut datatypes.<a name="line.15"></a>
+<span class="sourceLineNo">016</span> */<a name="line.16"></a>
+<span class="sourceLineNo">017</span>public class NutDataInputStream implements DataInput {<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>  final DataInputStream in;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>  final CRC32InputStream crc;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>  final CountingInputStream count;<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>  // These are for debugging, remove later<a name="line.23"></a>
+<span class="sourceLineNo">024</span>  long startCrcRange;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>  long endCrcRange;<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>  public NutDataInputStream(InputStream in) {<a name="line.27"></a>
+<span class="sourceLineNo">028</span>    checkNotNull(in);<a name="line.28"></a>
+<span class="sourceLineNo">029</span>    this.count = new CountingInputStream(in);<a name="line.29"></a>
+<span class="sourceLineNo">030</span>    this.crc = new CRC32InputStream(count);<a name="line.30"></a>
+<span class="sourceLineNo">031</span>    this.in = new DataInputStream(crc);<a name="line.31"></a>
+<span class="sourceLineNo">032</span>  }<a name="line.32"></a>
+<span class="sourceLineNo">033</span><a name="line.33"></a>
+<span class="sourceLineNo">034</span>  public void resetCRC() {<a name="line.34"></a>
+<span class="sourceLineNo">035</span>    startCrcRange = count.getCount();<a name="line.35"></a>
+<span class="sourceLineNo">036</span>    crc.resetCrc();<a name="line.36"></a>
+<span class="sourceLineNo">037</span>  }<a name="line.37"></a>
+<span class="sourceLineNo">038</span><a name="line.38"></a>
+<span class="sourceLineNo">039</span>  public long getCRC() {<a name="line.39"></a>
+<span class="sourceLineNo">040</span>    endCrcRange = count.getCount();<a name="line.40"></a>
+<span class="sourceLineNo">041</span>    return crc.getValue();<a name="line.41"></a>
+<span class="sourceLineNo">042</span>  }<a name="line.42"></a>
+<span class="sourceLineNo">043</span><a name="line.43"></a>
+<span class="sourceLineNo">044</span>  // Read a simple var int up to 32 bits<a name="line.44"></a>
+<span class="sourceLineNo">045</span>  public int readVarInt() throws IOException {<a name="line.45"></a>
+<span class="sourceLineNo">046</span>    boolean more;<a name="line.46"></a>
+<span class="sourceLineNo">047</span>    int result = 0;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>    do {<a name="line.48"></a>
+<span class="sourceLineNo">049</span>      int b = in.readUnsignedByte();<a name="line.49"></a>
+<span class="sourceLineNo">050</span>      more = (b &amp; 0x80) == 0x80;<a name="line.50"></a>
+<span class="sourceLineNo">051</span>      result = 128 * result + (b &amp; 0x7F);<a name="line.51"></a>
+<span class="sourceLineNo">052</span><a name="line.52"></a>
+<span class="sourceLineNo">053</span>      // TODO Check for int overflow<a name="line.53"></a>
+<span class="sourceLineNo">054</span>    } while (more);<a name="line.54"></a>
+<span class="sourceLineNo">055</span><a name="line.55"></a>
+<span class="sourceLineNo">056</span>    return result;<a name="line.56"></a>
+<span class="sourceLineNo">057</span>  }<a name="line.57"></a>
+<span class="sourceLineNo">058</span><a name="line.58"></a>
+<span class="sourceLineNo">059</span>  // Read a simple var int up to 64 bits<a name="line.59"></a>
+<span class="sourceLineNo">060</span>  public long readVarLong() throws IOException {<a name="line.60"></a>
+<span class="sourceLineNo">061</span>    boolean more;<a name="line.61"></a>
+<span class="sourceLineNo">062</span>    long result = 0;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>    do {<a name="line.63"></a>
+<span class="sourceLineNo">064</span>      int b = in.readUnsignedByte();<a name="line.64"></a>
+<span class="sourceLineNo">065</span>      more = (b &amp; 0x80) == 0x80;<a name="line.65"></a>
+<span class="sourceLineNo">066</span>      result = 128 * result + (b &amp; 0x7F);<a name="line.66"></a>
+<span class="sourceLineNo">067</span><a name="line.67"></a>
+<span class="sourceLineNo">068</span>      // TODO Check for long overflow<a name="line.68"></a>
+<span class="sourceLineNo">069</span>    } while (more);<a name="line.69"></a>
+<span class="sourceLineNo">070</span><a name="line.70"></a>
+<span class="sourceLineNo">071</span>    return result;<a name="line.71"></a>
+<span class="sourceLineNo">072</span>  }<a name="line.72"></a>
+<span class="sourceLineNo">073</span><a name="line.73"></a>
+<span class="sourceLineNo">074</span>  // Read a signed var int<a name="line.74"></a>
+<span class="sourceLineNo">075</span>  public long readSignedVarInt() throws IOException {<a name="line.75"></a>
+<span class="sourceLineNo">076</span>    long temp = readVarLong() + 1;<a name="line.76"></a>
+<span class="sourceLineNo">077</span>    if ((temp &amp; 1) == 1) {<a name="line.77"></a>
+<span class="sourceLineNo">078</span>      return -(temp &gt;&gt; 1);<a name="line.78"></a>
+<span class="sourceLineNo">079</span>    }<a name="line.79"></a>
+<span class="sourceLineNo">080</span>    return temp &gt;&gt; 1;<a name="line.80"></a>
+<span class="sourceLineNo">081</span>  }<a name="line.81"></a>
+<span class="sourceLineNo">082</span><a name="line.82"></a>
+<span class="sourceLineNo">083</span>  // Read a array with a varint prefixed length<a name="line.83"></a>
+<span class="sourceLineNo">084</span>  public byte[] readVarArray() throws IOException {<a name="line.84"></a>
+<span class="sourceLineNo">085</span>    int len = (int) readVarLong();<a name="line.85"></a>
+<span class="sourceLineNo">086</span>    byte[] result = new byte[len];<a name="line.86"></a>
+<span class="sourceLineNo">087</span>    in.read(result);<a name="line.87"></a>
+<span class="sourceLineNo">088</span>    return result;<a name="line.88"></a>
+<span class="sourceLineNo">089</span>  }<a name="line.89"></a>
+<span class="sourceLineNo">090</span><a name="line.90"></a>
+<span class="sourceLineNo">091</span>  // Returns the start code, OR frame_code if the code doesn't start with 'N'<a name="line.91"></a>
+<span class="sourceLineNo">092</span>  public long readStartCode() throws IOException {<a name="line.92"></a>
+<span class="sourceLineNo">093</span>    byte frameCode = in.readByte();<a name="line.93"></a>
+<span class="sourceLineNo">094</span>    if (frameCode != 'N') {<a name="line.94"></a>
+<span class="sourceLineNo">095</span>      return (long) (frameCode &amp; 0xff);<a name="line.95"></a>
+<span class="sourceLineNo">096</span>    }<a name="line.96"></a>
+<span class="sourceLineNo">097</span><a name="line.97"></a>
+<span class="sourceLineNo">098</span>    // Otherwise read the remaining 64bit startCode<a name="line.98"></a>
+<span class="sourceLineNo">099</span>    byte[] buffer = new byte[8];<a name="line.99"></a>
+<span class="sourceLineNo">100</span>    buffer[0] = frameCode;<a name="line.100"></a>
+<span class="sourceLineNo">101</span>    readFully(buffer, 1, 7);<a name="line.101"></a>
+<span class="sourceLineNo">102</span>    return (((long) buffer[0] &lt;&lt; 56) + ((long) (buffer[1] &amp; 255) &lt;&lt; 48)<a name="line.102"></a>
+<span class="sourceLineNo">103</span>        + ((long) (buffer[2] &amp; 255) &lt;&lt; 40) + ((long) (buffer[3] &amp; 255) &lt;&lt; 32)<a name="line.103"></a>
+<span class="sourceLineNo">104</span>        + ((long) (buffer[4] &amp; 255) &lt;&lt; 24) + ((buffer[5] &amp; 255) &lt;&lt; 16) + ((buffer[6] &amp; 255) &lt;&lt; 8) + ((buffer[7] &amp; 255) &lt;&lt; 0));<a name="line.104"></a>
+<span class="sourceLineNo">105</span>  }<a name="line.105"></a>
+<span class="sourceLineNo">106</span><a name="line.106"></a>
+<span class="sourceLineNo">107</span>  public long offset() {<a name="line.107"></a>
+<span class="sourceLineNo">108</span>    return count.getCount();<a name="line.108"></a>
+<span class="sourceLineNo">109</span>  }<a name="line.109"></a>
+<span class="sourceLineNo">110</span><a name="line.110"></a>
+<span class="sourceLineNo">111</span>  @Override<a name="line.111"></a>
+<span class="sourceLineNo">112</span>  public void readFully(byte[] b) throws IOException {<a name="line.112"></a>
+<span class="sourceLineNo">113</span>    in.readFully(b);<a name="line.113"></a>
+<span class="sourceLineNo">114</span>  }<a name="line.114"></a>
+<span class="sourceLineNo">115</span><a name="line.115"></a>
+<span class="sourceLineNo">116</span>  @Override<a name="line.116"></a>
+<span class="sourceLineNo">117</span>  public void readFully(byte[] b, int off, int len) throws IOException {<a name="line.117"></a>
+<span class="sourceLineNo">118</span>    in.readFully(b, off, len);<a name="line.118"></a>
+<span class="sourceLineNo">119</span>  }<a name="line.119"></a>
+<span class="sourceLineNo">120</span><a name="line.120"></a>
+<span class="sourceLineNo">121</span>  @Override<a name="line.121"></a>
+<span class="sourceLineNo">122</span>  public int skipBytes(int n) throws IOException {<a name="line.122"></a>
+<span class="sourceLineNo">123</span>    return in.skipBytes(n);<a name="line.123"></a>
+<span class="sourceLineNo">124</span>  }<a name="line.124"></a>
+<span class="sourceLineNo">125</span><a name="line.125"></a>
+<span class="sourceLineNo">126</span>  @Override<a name="line.126"></a>
+<span class="sourceLineNo">127</span>  public boolean readBoolean() throws IOException {<a name="line.127"></a>
+<span class="sourceLineNo">128</span>    return in.readBoolean();<a name="line.128"></a>
+<span class="sourceLineNo">129</span>  }<a name="line.129"></a>
+<span class="sourceLineNo">130</span><a name="line.130"></a>
+<span class="sourceLineNo">131</span>  @Override<a name="line.131"></a>
+<span class="sourceLineNo">132</span>  public byte readByte() throws IOException {<a name="line.132"></a>
+<span class="sourceLineNo">133</span>    return in.readByte();<a name="line.133"></a>
+<span class="sourceLineNo">134</span>  }<a name="line.134"></a>
+<span class="sourceLineNo">135</span><a name="line.135"></a>
+<span class="sourceLineNo">136</span>  @Override<a name="line.136"></a>
+<span class="sourceLineNo">137</span>  public int readUnsignedByte() throws IOException {<a name="line.137"></a>
+<span class="sourceLineNo">138</span>    return in.readUnsignedByte();<a name="line.138"></a>
+<span class="sourceLineNo">139</span>  }<a name="line.139"></a>
+<span class="sourceLineNo">140</span><a name="line.140"></a>
+<span class="sourceLineNo">141</span>  @Override<a name="line.141"></a>
+<span class="sourceLineNo">142</span>  public short readShort() throws IOException {<a name="line.142"></a>
+<span class="sourceLineNo">143</span>    return in.readShort();<a name="line.143"></a>
+<span class="sourceLineNo">144</span>  }<a name="line.144"></a>
+<span class="sourceLineNo">145</span><a name="line.145"></a>
+<span class="sourceLineNo">146</span>  @Override<a name="line.146"></a>
+<span class="sourceLineNo">147</span>  public int readUnsignedShort() throws IOException {<a name="line.147"></a>
+<span class="sourceLineNo">148</span>    return in.readUnsignedShort();<a name="line.148"></a>
+<span class="sourceLineNo">149</span>  }<a name="line.149"></a>
+<span class="sourceLineNo">150</span><a name="line.150"></a>
+<span class="sourceLineNo">151</span>  @Override<a name="line.151"></a>
+<span class="sourceLineNo">152</span>  public char readChar() throws IOException {<a name="line.152"></a>
+<span class="sourceLineNo">153</span>    return in.readChar();<a name="line.153"></a>
+<span class="sourceLineNo">154</span>  }<a name="line.154"></a>
+<span class="sourceLineNo">155</span><a name="line.155"></a>
+<span class="sourceLineNo">156</span>  @Override<a name="line.156"></a>
+<span class="sourceLineNo">157</span>  public int readInt() throws IOException {<a name="line.157"></a>
+<span class="sourceLineNo">158</span>    return in.readInt();<a name="line.158"></a>
+<span class="sourceLineNo">159</span>  }<a name="line.159"></a>
+<span class="sourceLineNo">160</span><a name="line.160"></a>
+<span class="sourceLineNo">161</span>  @Override<a name="line.161"></a>
+<span class="sourceLineNo">162</span>  public long readLong() throws IOException {<a name="line.162"></a>
+<span class="sourceLineNo">163</span>    return in.readLong();<a name="line.163"></a>
+<span class="sourceLineNo">164</span>  }<a name="line.164"></a>
+<span class="sourceLineNo">165</span><a name="line.165"></a>
+<span class="sourceLineNo">166</span>  @Override<a name="line.166"></a>
+<span class="sourceLineNo">167</span>  public float readFloat() throws IOException {<a name="line.167"></a>
+<span class="sourceLineNo">168</span>    return in.readFloat();<a name="line.168"></a>
+<span class="sourceLineNo">169</span>  }<a name="line.169"></a>
+<span class="sourceLineNo">170</span><a name="line.170"></a>
+<span class="sourceLineNo">171</span>  @Override<a name="line.171"></a>
+<span class="sourceLineNo">172</span>  public double readDouble() throws IOException {<a name="line.172"></a>
+<span class="sourceLineNo">173</span>    return in.readDouble();<a name="line.173"></a>
+<span class="sourceLineNo">174</span>  }<a name="line.174"></a>
+<span class="sourceLineNo">175</span><a name="line.175"></a>
+<span class="sourceLineNo">176</span>  @Override<a name="line.176"></a>
+<span class="sourceLineNo">177</span>  @Deprecated<a name="line.177"></a>
+<span class="sourceLineNo">178</span>  public String readLine() throws IOException {<a name="line.178"></a>
+<span class="sourceLineNo">179</span>    return in.readLine();<a name="line.179"></a>
+<span class="sourceLineNo">180</span>  }<a name="line.180"></a>
+<span class="sourceLineNo">181</span><a name="line.181"></a>
+<span class="sourceLineNo">182</span>  @Override<a name="line.182"></a>
+<span class="sourceLineNo">183</span>  public String readUTF() throws IOException {<a name="line.183"></a>
+<span class="sourceLineNo">184</span>    return in.readUTF();<a name="line.184"></a>
+<span class="sourceLineNo">185</span>  }<a name="line.185"></a>
+<span class="sourceLineNo">186</span><a name="line.186"></a>
+<span class="sourceLineNo">187</span>}<a name="line.187"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

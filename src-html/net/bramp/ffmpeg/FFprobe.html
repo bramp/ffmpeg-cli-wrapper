@@ -8,120 +8,125 @@
 <div class="sourceContainer">
 <pre><span class="sourceLineNo">001</span>package net.bramp.ffmpeg;<a name="line.1"></a>
 <span class="sourceLineNo">002</span><a name="line.2"></a>
-<span class="sourceLineNo">003</span>import com.google.common.base.Charsets;<a name="line.3"></a>
-<span class="sourceLineNo">004</span>import com.google.common.base.MoreObjects;<a name="line.4"></a>
-<span class="sourceLineNo">005</span>import com.google.common.base.Objects;<a name="line.5"></a>
-<span class="sourceLineNo">006</span>import com.google.common.base.Preconditions;<a name="line.6"></a>
-<span class="sourceLineNo">007</span>import com.google.common.base.Strings;<a name="line.7"></a>
-<span class="sourceLineNo">008</span>import com.google.common.collect.ImmutableList;<a name="line.8"></a>
-<span class="sourceLineNo">009</span>import com.google.gson.Gson;<a name="line.9"></a>
-<span class="sourceLineNo">010</span>import com.google.gson.GsonBuilder;<a name="line.10"></a>
-<span class="sourceLineNo">011</span>import net.bramp.commons.lang3.math.gson.FractionAdapter;<a name="line.11"></a>
-<span class="sourceLineNo">012</span>import net.bramp.ffmpeg.io.LoggingFilterReader;<a name="line.12"></a>
-<span class="sourceLineNo">013</span>import net.bramp.ffmpeg.io.ProcessUtils;<a name="line.13"></a>
-<span class="sourceLineNo">014</span>import net.bramp.ffmpeg.probe.FFmpegProbeResult;<a name="line.14"></a>
-<span class="sourceLineNo">015</span>import org.apache.commons.lang3.math.Fraction;<a name="line.15"></a>
-<span class="sourceLineNo">016</span>import org.slf4j.Logger;<a name="line.16"></a>
-<span class="sourceLineNo">017</span>import org.slf4j.LoggerFactory;<a name="line.17"></a>
-<span class="sourceLineNo">018</span><a name="line.18"></a>
-<span class="sourceLineNo">019</span>import javax.annotation.Nonnull;<a name="line.19"></a>
-<span class="sourceLineNo">020</span>import java.io.BufferedReader;<a name="line.20"></a>
-<span class="sourceLineNo">021</span>import java.io.IOException;<a name="line.21"></a>
-<span class="sourceLineNo">022</span>import java.io.InputStreamReader;<a name="line.22"></a>
-<span class="sourceLineNo">023</span>import java.io.Reader;<a name="line.23"></a>
-<span class="sourceLineNo">024</span>import java.util.concurrent.TimeUnit;<a name="line.24"></a>
-<span class="sourceLineNo">025</span><a name="line.25"></a>
-<span class="sourceLineNo">026</span>import static com.google.common.base.Preconditions.checkNotNull;<a name="line.26"></a>
-<span class="sourceLineNo">027</span><a name="line.27"></a>
-<span class="sourceLineNo">028</span>/**<a name="line.28"></a>
-<span class="sourceLineNo">029</span> * Wrapper around FFprobe<a name="line.29"></a>
-<span class="sourceLineNo">030</span> * <a name="line.30"></a>
-<span class="sourceLineNo">031</span> * TODO ffprobe -v quiet -print_format json -show_format -show_streams mobileedge_1280x720.mp4<a name="line.31"></a>
-<span class="sourceLineNo">032</span> * <a name="line.32"></a>
-<span class="sourceLineNo">033</span> * @author bramp<a name="line.33"></a>
-<span class="sourceLineNo">034</span> *<a name="line.34"></a>
-<span class="sourceLineNo">035</span> */<a name="line.35"></a>
-<span class="sourceLineNo">036</span>public class FFprobe {<a name="line.36"></a>
-<span class="sourceLineNo">037</span><a name="line.37"></a>
-<span class="sourceLineNo">038</span>  final static Logger LOG = LoggerFactory.getLogger(FFprobe.class);<a name="line.38"></a>
+<span class="sourceLineNo">003</span>import com.google.common.base.MoreObjects;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.google.common.collect.ImmutableList;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.google.gson.Gson;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import net.bramp.ffmpeg.io.LoggingFilterReader;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import net.bramp.ffmpeg.probe.FFmpegProbeResult;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import org.slf4j.Logger;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import org.slf4j.LoggerFactory;<a name="line.9"></a>
+<span class="sourceLineNo">010</span><a name="line.10"></a>
+<span class="sourceLineNo">011</span>import javax.annotation.Nonnull;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import javax.annotation.Nullable;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import java.io.IOException;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import java.io.Reader;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import java.util.List;<a name="line.15"></a>
+<span class="sourceLineNo">016</span><a name="line.16"></a>
+<span class="sourceLineNo">017</span>/**<a name="line.17"></a>
+<span class="sourceLineNo">018</span> * Wrapper around FFprobe<a name="line.18"></a>
+<span class="sourceLineNo">019</span> *<a name="line.19"></a>
+<span class="sourceLineNo">020</span> * @author bramp<a name="line.20"></a>
+<span class="sourceLineNo">021</span> *<a name="line.21"></a>
+<span class="sourceLineNo">022</span> */<a name="line.22"></a>
+<span class="sourceLineNo">023</span>public class FFprobe extends FFcommon {<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span>  final static Logger LOG = LoggerFactory.getLogger(FFprobe.class);<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>  final static String FFPROBE = "ffprobe";<a name="line.27"></a>
+<span class="sourceLineNo">028</span>  final static String DEFAULT_PATH = MoreObjects.firstNonNull(System.getenv("FFPROBE"), FFPROBE);<a name="line.28"></a>
+<span class="sourceLineNo">029</span><a name="line.29"></a>
+<span class="sourceLineNo">030</span>  final static Gson gson = FFmpegUtils.getGson();<a name="line.30"></a>
+<span class="sourceLineNo">031</span><a name="line.31"></a>
+<span class="sourceLineNo">032</span>  public FFprobe() throws IOException {<a name="line.32"></a>
+<span class="sourceLineNo">033</span>    this(DEFAULT_PATH, new RunProcessFunction());<a name="line.33"></a>
+<span class="sourceLineNo">034</span>  }<a name="line.34"></a>
+<span class="sourceLineNo">035</span><a name="line.35"></a>
+<span class="sourceLineNo">036</span>  public FFprobe(@Nonnull ProcessFunction runFunction) throws IOException {<a name="line.36"></a>
+<span class="sourceLineNo">037</span>    this(DEFAULT_PATH, runFunction);<a name="line.37"></a>
+<span class="sourceLineNo">038</span>  }<a name="line.38"></a>
 <span class="sourceLineNo">039</span><a name="line.39"></a>
-<span class="sourceLineNo">040</span>  final static String FFPROBE = "ffprobe";<a name="line.40"></a>
-<span class="sourceLineNo">041</span>  final static String DEFAULT_PATH = MoreObjects.firstNonNull(System.getenv("FFPROBE"), FFPROBE);<a name="line.41"></a>
-<span class="sourceLineNo">042</span><a name="line.42"></a>
-<span class="sourceLineNo">043</span>  final static Gson gson = FFmpegUtils.getGson();<a name="line.43"></a>
-<span class="sourceLineNo">044</span><a name="line.44"></a>
-<span class="sourceLineNo">045</span>  final String path;<a name="line.45"></a>
-<span class="sourceLineNo">046</span><a name="line.46"></a>
-<span class="sourceLineNo">047</span>  /**<a name="line.47"></a>
-<span class="sourceLineNo">048</span>   * Function to run FFprobe. We define it like this so we can swap it out (during testing)<a name="line.48"></a>
-<span class="sourceLineNo">049</span>   */<a name="line.49"></a>
-<span class="sourceLineNo">050</span>  final ProcessFunction runFunc;<a name="line.50"></a>
-<span class="sourceLineNo">051</span><a name="line.51"></a>
-<span class="sourceLineNo">052</span>  public FFprobe() {<a name="line.52"></a>
-<span class="sourceLineNo">053</span>    this(DEFAULT_PATH, new RunProcessFunction());<a name="line.53"></a>
-<span class="sourceLineNo">054</span>  }<a name="line.54"></a>
-<span class="sourceLineNo">055</span><a name="line.55"></a>
-<span class="sourceLineNo">056</span>  public FFprobe(@Nonnull String path) {<a name="line.56"></a>
-<span class="sourceLineNo">057</span>    this(path, new RunProcessFunction());<a name="line.57"></a>
-<span class="sourceLineNo">058</span>  }<a name="line.58"></a>
-<span class="sourceLineNo">059</span><a name="line.59"></a>
-<span class="sourceLineNo">060</span>  public FFprobe(@Nonnull ProcessFunction runFunction) {<a name="line.60"></a>
-<span class="sourceLineNo">061</span>    this(DEFAULT_PATH, runFunction);<a name="line.61"></a>
-<span class="sourceLineNo">062</span>  }<a name="line.62"></a>
-<span class="sourceLineNo">063</span><a name="line.63"></a>
-<span class="sourceLineNo">064</span>  public FFprobe(@Nonnull String path, @Nonnull ProcessFunction runFunction) {<a name="line.64"></a>
-<span class="sourceLineNo">065</span>    Preconditions.checkArgument(!Strings.isNullOrEmpty(path));<a name="line.65"></a>
-<span class="sourceLineNo">066</span>    this.runFunc = checkNotNull(runFunction);<a name="line.66"></a>
-<span class="sourceLineNo">067</span>    this.path = path;<a name="line.67"></a>
-<span class="sourceLineNo">068</span>  }<a name="line.68"></a>
-<span class="sourceLineNo">069</span><a name="line.69"></a>
-<span class="sourceLineNo">070</span>  public String getPath() {<a name="line.70"></a>
-<span class="sourceLineNo">071</span>    return path;<a name="line.71"></a>
-<span class="sourceLineNo">072</span>  }<a name="line.72"></a>
-<span class="sourceLineNo">073</span><a name="line.73"></a>
-<span class="sourceLineNo">074</span>  private static BufferedReader wrapInReader(Process p) {<a name="line.74"></a>
-<span class="sourceLineNo">075</span>    return new BufferedReader(new InputStreamReader(p.getInputStream(), Charsets.UTF_8));<a name="line.75"></a>
-<span class="sourceLineNo">076</span>  }<a name="line.76"></a>
-<span class="sourceLineNo">077</span><a name="line.77"></a>
-<span class="sourceLineNo">078</span>  public FFmpegProbeResult probe(String mediaPath) throws IOException {<a name="line.78"></a>
-<span class="sourceLineNo">079</span>    ImmutableList.Builder&lt;String&gt; args = new ImmutableList.Builder&lt;String&gt;();<a name="line.79"></a>
+<span class="sourceLineNo">040</span>  public FFprobe(@Nonnull String path, @Nonnull ProcessFunction runFunction) {<a name="line.40"></a>
+<span class="sourceLineNo">041</span>    super(path, runFunction);<a name="line.41"></a>
+<span class="sourceLineNo">042</span>  }<a name="line.42"></a>
+<span class="sourceLineNo">043</span><a name="line.43"></a>
+<span class="sourceLineNo">044</span>  public FFmpegProbeResult probe(String mediaPath) throws IOException {<a name="line.44"></a>
+<span class="sourceLineNo">045</span>    return probe(mediaPath, null);<a name="line.45"></a>
+<span class="sourceLineNo">046</span>  }<a name="line.46"></a>
+<span class="sourceLineNo">047</span><a name="line.47"></a>
+<span class="sourceLineNo">048</span>  /**<a name="line.48"></a>
+<span class="sourceLineNo">049</span>   * Returns true if the binary we are using is the true ffprobe. This is to avoid conflict with<a name="line.49"></a>
+<span class="sourceLineNo">050</span>   * avprobe (from the libav project), that some symlink to ffprobe.<a name="line.50"></a>
+<span class="sourceLineNo">051</span>   *<a name="line.51"></a>
+<span class="sourceLineNo">052</span>   * @return true iff this is the official ffprobe binary.<a name="line.52"></a>
+<span class="sourceLineNo">053</span>   * @throws IOException If a I/O error occurs while executing ffprobe.<a name="line.53"></a>
+<span class="sourceLineNo">054</span>   */<a name="line.54"></a>
+<span class="sourceLineNo">055</span>  public boolean isFFprobe() throws IOException {<a name="line.55"></a>
+<span class="sourceLineNo">056</span>    return version().startsWith("ffprobe");<a name="line.56"></a>
+<span class="sourceLineNo">057</span>  }<a name="line.57"></a>
+<span class="sourceLineNo">058</span><a name="line.58"></a>
+<span class="sourceLineNo">059</span>  /**<a name="line.59"></a>
+<span class="sourceLineNo">060</span>   * Throws an exception if this is an unsupported version of ffprobe.<a name="line.60"></a>
+<span class="sourceLineNo">061</span>   *<a name="line.61"></a>
+<span class="sourceLineNo">062</span>   * @throws IllegalArgumentException if this is not the official ffprobe binary.<a name="line.62"></a>
+<span class="sourceLineNo">063</span>   * @throws IOException If a I/O error occurs while executing ffprobe.<a name="line.63"></a>
+<span class="sourceLineNo">064</span>   */<a name="line.64"></a>
+<span class="sourceLineNo">065</span>  private void checkIfFFprobe() throws IllegalArgumentException, IOException {<a name="line.65"></a>
+<span class="sourceLineNo">066</span>    if (!isFFprobe()) {<a name="line.66"></a>
+<span class="sourceLineNo">067</span>      throw new IllegalArgumentException("This binary '" + path<a name="line.67"></a>
+<span class="sourceLineNo">068</span>          + "' is not a supported version of ffprobe");<a name="line.68"></a>
+<span class="sourceLineNo">069</span>    }<a name="line.69"></a>
+<span class="sourceLineNo">070</span>  }<a name="line.70"></a>
+<span class="sourceLineNo">071</span><a name="line.71"></a>
+<span class="sourceLineNo">072</span>  public void run(List&lt;String&gt; args) throws IOException {<a name="line.72"></a>
+<span class="sourceLineNo">073</span>    checkIfFFprobe();<a name="line.73"></a>
+<span class="sourceLineNo">074</span>    super.run(args);<a name="line.74"></a>
+<span class="sourceLineNo">075</span>  }<a name="line.75"></a>
+<span class="sourceLineNo">076</span><a name="line.76"></a>
+<span class="sourceLineNo">077</span>  // TODO Add Probe Inputstream<a name="line.77"></a>
+<span class="sourceLineNo">078</span>  public FFmpegProbeResult probe(String mediaPath, @Nullable String userAgent) throws IOException {<a name="line.78"></a>
+<span class="sourceLineNo">079</span>    checkIfFFprobe();<a name="line.79"></a>
 <span class="sourceLineNo">080</span><a name="line.80"></a>
-<span class="sourceLineNo">081</span>    // TODO Add:<a name="line.81"></a>
-<span class="sourceLineNo">082</span>    // .add("--show_packets")<a name="line.82"></a>
-<span class="sourceLineNo">083</span>    // .add("--show_frames")<a name="line.83"></a>
-<span class="sourceLineNo">084</span><a name="line.84"></a>
-<span class="sourceLineNo">085</span>    // @formatter:off<a name="line.85"></a>
-<span class="sourceLineNo">086</span>    args.add(path)<a name="line.86"></a>
-<span class="sourceLineNo">087</span>        .add("-v", "quiet")<a name="line.87"></a>
-<span class="sourceLineNo">088</span>        .add("-print_format", "json")<a name="line.88"></a>
-<span class="sourceLineNo">089</span>        .add("-show_error")<a name="line.89"></a>
-<span class="sourceLineNo">090</span>        .add("-show_format")<a name="line.90"></a>
-<span class="sourceLineNo">091</span>        .add("-show_streams")<a name="line.91"></a>
-<span class="sourceLineNo">092</span>        .add(mediaPath);<a name="line.92"></a>
-<span class="sourceLineNo">093</span>    // @formatter:on<a name="line.93"></a>
-<span class="sourceLineNo">094</span><a name="line.94"></a>
-<span class="sourceLineNo">095</span>    Process p = runFunc.run(args.build());<a name="line.95"></a>
-<span class="sourceLineNo">096</span>    try {<a name="line.96"></a>
-<span class="sourceLineNo">097</span>      Reader reader = wrapInReader(p);<a name="line.97"></a>
-<span class="sourceLineNo">098</span>      if (LOG.isDebugEnabled()) {<a name="line.98"></a>
-<span class="sourceLineNo">099</span>        reader = new LoggingFilterReader(reader, LOG);<a name="line.99"></a>
-<span class="sourceLineNo">100</span>      }<a name="line.100"></a>
-<span class="sourceLineNo">101</span><a name="line.101"></a>
-<span class="sourceLineNo">102</span>      FFmpegProbeResult result = gson.fromJson(reader, FFmpegProbeResult.class);<a name="line.102"></a>
-<span class="sourceLineNo">103</span><a name="line.103"></a>
-<span class="sourceLineNo">104</span>      FFmpegUtils.throwOnError(FFPROBE, p);<a name="line.104"></a>
-<span class="sourceLineNo">105</span><a name="line.105"></a>
-<span class="sourceLineNo">106</span>      if (result == null) {<a name="line.106"></a>
-<span class="sourceLineNo">107</span>        throw new IllegalStateException("Gson returned null, which shouldn't happen :(");<a name="line.107"></a>
-<span class="sourceLineNo">108</span>      }<a name="line.108"></a>
-<span class="sourceLineNo">109</span><a name="line.109"></a>
-<span class="sourceLineNo">110</span>      return result;<a name="line.110"></a>
-<span class="sourceLineNo">111</span><a name="line.111"></a>
-<span class="sourceLineNo">112</span>    } finally {<a name="line.112"></a>
-<span class="sourceLineNo">113</span>      p.destroy();<a name="line.113"></a>
-<span class="sourceLineNo">114</span>    }<a name="line.114"></a>
-<span class="sourceLineNo">115</span>  }<a name="line.115"></a>
-<span class="sourceLineNo">116</span>}<a name="line.116"></a>
+<span class="sourceLineNo">081</span>    ImmutableList.Builder&lt;String&gt; args = new ImmutableList.Builder&lt;String&gt;();<a name="line.81"></a>
+<span class="sourceLineNo">082</span><a name="line.82"></a>
+<span class="sourceLineNo">083</span>    // TODO Add:<a name="line.83"></a>
+<span class="sourceLineNo">084</span>    // .add("--show_packets")<a name="line.84"></a>
+<span class="sourceLineNo">085</span>    // .add("--show_frames")<a name="line.85"></a>
+<span class="sourceLineNo">086</span><a name="line.86"></a>
+<span class="sourceLineNo">087</span>    args.add(path)<a name="line.87"></a>
+<span class="sourceLineNo">088</span>        .add("-v", "quiet");<a name="line.88"></a>
+<span class="sourceLineNo">089</span><a name="line.89"></a>
+<span class="sourceLineNo">090</span>    if (userAgent != null) {<a name="line.90"></a>
+<span class="sourceLineNo">091</span>      args.add("-user-agent", userAgent);<a name="line.91"></a>
+<span class="sourceLineNo">092</span>    }<a name="line.92"></a>
+<span class="sourceLineNo">093</span><a name="line.93"></a>
+<span class="sourceLineNo">094</span>    args.add("-print_format", "json")<a name="line.94"></a>
+<span class="sourceLineNo">095</span>        .add("-show_error")<a name="line.95"></a>
+<span class="sourceLineNo">096</span>        .add("-show_format")<a name="line.96"></a>
+<span class="sourceLineNo">097</span>        .add("-show_streams")<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        .add(mediaPath);<a name="line.98"></a>
+<span class="sourceLineNo">099</span><a name="line.99"></a>
+<span class="sourceLineNo">100</span>    Process p = runFunc.run(args.build());<a name="line.100"></a>
+<span class="sourceLineNo">101</span>    try {<a name="line.101"></a>
+<span class="sourceLineNo">102</span>      Reader reader = wrapInReader(p);<a name="line.102"></a>
+<span class="sourceLineNo">103</span>      if (LOG.isDebugEnabled()) {<a name="line.103"></a>
+<span class="sourceLineNo">104</span>        reader = new LoggingFilterReader(reader, LOG);<a name="line.104"></a>
+<span class="sourceLineNo">105</span>      }<a name="line.105"></a>
+<span class="sourceLineNo">106</span><a name="line.106"></a>
+<span class="sourceLineNo">107</span>      FFmpegProbeResult result = gson.fromJson(reader, FFmpegProbeResult.class);<a name="line.107"></a>
+<span class="sourceLineNo">108</span><a name="line.108"></a>
+<span class="sourceLineNo">109</span>      throwOnError(p);<a name="line.109"></a>
+<span class="sourceLineNo">110</span><a name="line.110"></a>
+<span class="sourceLineNo">111</span>      if (result == null) {<a name="line.111"></a>
+<span class="sourceLineNo">112</span>        throw new IllegalStateException("Gson returned null, which shouldn't happen :(");<a name="line.112"></a>
+<span class="sourceLineNo">113</span>      }<a name="line.113"></a>
+<span class="sourceLineNo">114</span><a name="line.114"></a>
+<span class="sourceLineNo">115</span>      return result;<a name="line.115"></a>
+<span class="sourceLineNo">116</span><a name="line.116"></a>
+<span class="sourceLineNo">117</span>    } finally {<a name="line.117"></a>
+<span class="sourceLineNo">118</span>      p.destroy();<a name="line.118"></a>
+<span class="sourceLineNo">119</span>    }<a name="line.119"></a>
+<span class="sourceLineNo">120</span>  }<a name="line.120"></a>
+<span class="sourceLineNo">121</span>}<a name="line.121"></a>
 
 
 

@@ -6,5 +6,7 @@ net.bramp.ffmpeg.info
 net.bramp.ffmpeg.io
 net.bramp.ffmpeg.job
 net.bramp.ffmpeg.modelmapper
+net.bramp.ffmpeg.nut
 net.bramp.ffmpeg.options
 net.bramp.ffmpeg.probe
+net.bramp.ffmpeg.progress

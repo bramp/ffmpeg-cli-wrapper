@@ -8,22 +8,22 @@
 <div class="sourceContainer">
 <pre><span class="sourceLineNo">001</span>package net.bramp.ffmpeg.info;<a name="line.1"></a>
 <span class="sourceLineNo">002</span><a name="line.2"></a>
-<span class="sourceLineNo">003</span>import com.google.common.base.Objects;<a name="line.3"></a>
-<span class="sourceLineNo">004</span>import com.google.common.base.Preconditions;<a name="line.4"></a>
-<span class="sourceLineNo">005</span>import org.apache.commons.lang3.builder.EqualsBuilder;<a name="line.5"></a>
-<span class="sourceLineNo">006</span>import org.apache.commons.lang3.builder.HashCodeBuilder;<a name="line.6"></a>
-<span class="sourceLineNo">007</span><a name="line.7"></a>
-<span class="sourceLineNo">008</span>/**<a name="line.8"></a>
-<span class="sourceLineNo">009</span> * Information about supported Codecs<a name="line.9"></a>
-<span class="sourceLineNo">010</span> * <a name="line.10"></a>
-<span class="sourceLineNo">011</span> * @author bramp<a name="line.11"></a>
-<span class="sourceLineNo">012</span> *<a name="line.12"></a>
-<span class="sourceLineNo">013</span> */<a name="line.13"></a>
-<span class="sourceLineNo">014</span>public class Codec {<a name="line.14"></a>
-<span class="sourceLineNo">015</span><a name="line.15"></a>
-<span class="sourceLineNo">016</span>  enum Type {<a name="line.16"></a>
-<span class="sourceLineNo">017</span>    VIDEO, AUDIO, SUBTITLE<a name="line.17"></a>
-<span class="sourceLineNo">018</span>  };<a name="line.18"></a>
+<span class="sourceLineNo">003</span>import com.google.common.base.Preconditions;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import org.apache.commons.lang3.builder.EqualsBuilder;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import org.apache.commons.lang3.builder.HashCodeBuilder;<a name="line.5"></a>
+<span class="sourceLineNo">006</span><a name="line.6"></a>
+<span class="sourceLineNo">007</span>/**<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * Information about supported Codecs<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * <a name="line.9"></a>
+<span class="sourceLineNo">010</span> * @author bramp<a name="line.10"></a>
+<span class="sourceLineNo">011</span> *<a name="line.11"></a>
+<span class="sourceLineNo">012</span> */<a name="line.12"></a>
+<span class="sourceLineNo">013</span>public class Codec {<a name="line.13"></a>
+<span class="sourceLineNo">014</span><a name="line.14"></a>
+<span class="sourceLineNo">015</span>  enum Type {<a name="line.15"></a>
+<span class="sourceLineNo">016</span>    VIDEO, AUDIO, SUBTITLE<a name="line.16"></a>
+<span class="sourceLineNo">017</span>  }<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
 <span class="sourceLineNo">019</span><a name="line.19"></a>
 <span class="sourceLineNo">020</span>  final String name;<a name="line.20"></a>
 <span class="sourceLineNo">021</span>  final String longName;<a name="line.21"></a>

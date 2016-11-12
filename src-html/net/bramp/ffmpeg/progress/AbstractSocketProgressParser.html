@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package net.bramp.ffmpeg.progress;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.google.common.net.InetAddresses;<a name="line.3"></a>
+<span class="sourceLineNo">004</span><a name="line.4"></a>
+<span class="sourceLineNo">005</span>import java.io.IOException;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import java.net.InetAddress;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import java.net.URI;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import java.net.URISyntaxException;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import java.util.concurrent.CountDownLatch;<a name="line.9"></a>
+<span class="sourceLineNo">010</span><a name="line.10"></a>
+<span class="sourceLineNo">011</span>import static com.google.common.base.Preconditions.checkNotNull;<a name="line.11"></a>
+<span class="sourceLineNo">012</span><a name="line.12"></a>
+<span class="sourceLineNo">013</span>public abstract class AbstractSocketProgressParser implements ProgressParser {<a name="line.13"></a>
+<span class="sourceLineNo">014</span><a name="line.14"></a>
+<span class="sourceLineNo">015</span>  final StreamProgressParser parser;<a name="line.15"></a>
+<span class="sourceLineNo">016</span><a name="line.16"></a>
+<span class="sourceLineNo">017</span>  Thread thread; // Thread for handling incoming connections<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>  public AbstractSocketProgressParser(ProgressListener listener) {<a name="line.19"></a>
+<span class="sourceLineNo">020</span>    this.parser = new StreamProgressParser(listener);<a name="line.20"></a>
+<span class="sourceLineNo">021</span>  }<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>  /**<a name="line.23"></a>
+<span class="sourceLineNo">024</span>   * Creates a URL to parse to FFmpeg based on the scheme, address and port.<a name="line.24"></a>
+<span class="sourceLineNo">025</span>   *<a name="line.25"></a>
+<span class="sourceLineNo">026</span>   * TODO Move this method to somewhere better.<a name="line.26"></a>
+<span class="sourceLineNo">027</span>   *<a name="line.27"></a>
+<span class="sourceLineNo">028</span>   * @param scheme<a name="line.28"></a>
+<span class="sourceLineNo">029</span>   * @param address<a name="line.29"></a>
+<span class="sourceLineNo">030</span>   * @param port<a name="line.30"></a>
+<span class="sourceLineNo">031</span>   * @return<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   * @throws URISyntaxException<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   */<a name="line.33"></a>
+<span class="sourceLineNo">034</span>  static URI createUri(String scheme, InetAddress address, int port) throws URISyntaxException {<a name="line.34"></a>
+<span class="sourceLineNo">035</span>    checkNotNull(address);<a name="line.35"></a>
+<span class="sourceLineNo">036</span>    return new URI(scheme, null /* userInfo */, InetAddresses.toUriString(address), port,<a name="line.36"></a>
+<span class="sourceLineNo">037</span>        null /* path */, null /* query */, null /* fragment */);<a name="line.37"></a>
+<span class="sourceLineNo">038</span>  }<a name="line.38"></a>
+<span class="sourceLineNo">039</span><a name="line.39"></a>
+<span class="sourceLineNo">040</span>  protected abstract String getThreadName();<a name="line.40"></a>
+<span class="sourceLineNo">041</span><a name="line.41"></a>
+<span class="sourceLineNo">042</span>  protected abstract Runnable getRunnable(CountDownLatch startSignal);<a name="line.42"></a>
+<span class="sourceLineNo">043</span><a name="line.43"></a>
+<span class="sourceLineNo">044</span>  /**<a name="line.44"></a>
+<span class="sourceLineNo">045</span>   *<a name="line.45"></a>
+<span class="sourceLineNo">046</span>   * @exception IllegalThreadStateException if the parser was already started.<a name="line.46"></a>
+<span class="sourceLineNo">047</span>   */<a name="line.47"></a>
+<span class="sourceLineNo">048</span>  public synchronized void start() {<a name="line.48"></a>
+<span class="sourceLineNo">049</span>    if (thread != null) {<a name="line.49"></a>
+<span class="sourceLineNo">050</span>      throw new IllegalThreadStateException("Parser already started");<a name="line.50"></a>
+<span class="sourceLineNo">051</span>    }<a name="line.51"></a>
+<span class="sourceLineNo">052</span><a name="line.52"></a>
+<span class="sourceLineNo">053</span>    String name = getThreadName() + "(" + getUri().toString() + ")";<a name="line.53"></a>
+<span class="sourceLineNo">054</span><a name="line.54"></a>
+<span class="sourceLineNo">055</span>    CountDownLatch startSignal = new CountDownLatch(1);<a name="line.55"></a>
+<span class="sourceLineNo">056</span>    Runnable runnable = getRunnable(startSignal);<a name="line.56"></a>
+<span class="sourceLineNo">057</span><a name="line.57"></a>
+<span class="sourceLineNo">058</span>    thread = new Thread(runnable, name);<a name="line.58"></a>
+<span class="sourceLineNo">059</span>    thread.start();<a name="line.59"></a>
+<span class="sourceLineNo">060</span><a name="line.60"></a>
+<span class="sourceLineNo">061</span>    // Block until the thread has started<a name="line.61"></a>
+<span class="sourceLineNo">062</span>    try {<a name="line.62"></a>
+<span class="sourceLineNo">063</span>      startSignal.await();<a name="line.63"></a>
+<span class="sourceLineNo">064</span>    } catch (InterruptedException e) {<a name="line.64"></a>
+<span class="sourceLineNo">065</span>      Thread.currentThread().interrupt();<a name="line.65"></a>
+<span class="sourceLineNo">066</span>    }<a name="line.66"></a>
+<span class="sourceLineNo">067</span>  }<a name="line.67"></a>
+<span class="sourceLineNo">068</span><a name="line.68"></a>
+<span class="sourceLineNo">069</span>  @Override<a name="line.69"></a>
+<span class="sourceLineNo">070</span>  public void stop() throws IOException {<a name="line.70"></a>
+<span class="sourceLineNo">071</span>    if (thread != null) {<a name="line.71"></a>
+<span class="sourceLineNo">072</span>      thread.interrupt(); // This unblocks processStream();<a name="line.72"></a>
+<span class="sourceLineNo">073</span><a name="line.73"></a>
+<span class="sourceLineNo">074</span>      try {<a name="line.74"></a>
+<span class="sourceLineNo">075</span>        thread.join();<a name="line.75"></a>
+<span class="sourceLineNo">076</span>      } catch (InterruptedException e) {<a name="line.76"></a>
+<span class="sourceLineNo">077</span>        Thread.currentThread().interrupt();<a name="line.77"></a>
+<span class="sourceLineNo">078</span>      }<a name="line.78"></a>
+<span class="sourceLineNo">079</span>    }<a name="line.79"></a>
+<span class="sourceLineNo">080</span>  }<a name="line.80"></a>
+<span class="sourceLineNo">081</span><a name="line.81"></a>
+<span class="sourceLineNo">082</span>  @Override<a name="line.82"></a>
+<span class="sourceLineNo">083</span>  public void close() throws IOException {<a name="line.83"></a>
+<span class="sourceLineNo">084</span>    stop();<a name="line.84"></a>
+<span class="sourceLineNo">085</span>  }<a name="line.85"></a>
+<span class="sourceLineNo">086</span>}<a name="line.86"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
