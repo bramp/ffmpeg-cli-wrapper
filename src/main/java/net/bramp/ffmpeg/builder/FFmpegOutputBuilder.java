@@ -218,6 +218,17 @@ public class FFmpegOutputBuilder {
     return this;
   }
 
+  /**
+   * Sets the video's frame rate
+   *
+   * @param frame_rate Frames per second
+   * @return this
+   *
+   * @see net.bramp.ffmpeg.FFmpeg#FPS_30
+   * @see net.bramp.ffmpeg.FFmpeg#FPS_29_97
+   * @see net.bramp.ffmpeg.FFmpeg#FPS_24
+   * @see net.bramp.ffmpeg.FFmpeg#FPS_23_976
+   */
   public FFmpegOutputBuilder setVideoFrameRate(Fraction frame_rate) {
     this.video_enabled = true;
     this.video_frame_rate = checkNotNull(frame_rate);
@@ -231,7 +242,7 @@ public class FFmpegOutputBuilder {
 
   /**
    * Set the video frame rate in terms of frames per interval. For example 24fps would be 24/1,
-   * however NTSC TV at 23.976fps would be 24000 per 1001
+   * however NTSC TV at 23.976fps would be 24000 per 1001.
    *
    * @param frames The number of frames within the given seconds
    * @param per The number of seconds
