@@ -405,6 +405,15 @@ public class FFmpegOutputBuilder {
     return this;
   }
 
+  /**
+   * Sets the number of audio channels
+   *
+   * @param channels Number of channels
+   * @return this
+   *
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_MONO
+   * @see net.bramp.ffmpeg.FFmpeg#AUDIO_STEREO
+   */
   public FFmpegOutputBuilder setAudioChannels(int channels) {
     checkArgument(channels > 0, "channels must be positive");
     this.audio_enabled = true;
