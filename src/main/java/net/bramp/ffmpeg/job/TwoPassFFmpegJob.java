@@ -71,7 +71,9 @@ public class TwoPassFFmpegJob extends FFmpegJob {
 
     } catch (Throwable t) {
       state = State.FAILED;
-      Throwables.propagate(t);
+
+      Throwables.throwIfUnchecked(t);
+      throw new RuntimeException(t);
     }
   }
 }

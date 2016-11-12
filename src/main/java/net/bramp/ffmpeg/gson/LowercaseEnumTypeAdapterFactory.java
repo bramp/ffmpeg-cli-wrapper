@@ -26,7 +26,7 @@ public class LowercaseEnumTypeAdapterFactory implements TypeAdapterFactory {
     }
 
     // Setup mapping of consts
-    final Map<String, T> lowercaseToConstant = new HashMap<String, T>();
+    final Map<String, T> lowercaseToConstant = new HashMap<>();
     for (T constant : rawType.getEnumConstants()) {
       lowercaseToConstant.put(toLowercase(constant), constant);
     }
