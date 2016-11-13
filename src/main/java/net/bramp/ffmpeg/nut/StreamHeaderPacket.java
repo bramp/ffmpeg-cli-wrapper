@@ -5,7 +5,7 @@ import org.apache.commons.lang3.math.Fraction;
 
 import java.io.IOException;
 
-class StreamHeaderPacket extends Packet {
+public class StreamHeaderPacket extends Packet {
 
   public final static int VIDEO = 0;
   public final static int AUDIO = 1;

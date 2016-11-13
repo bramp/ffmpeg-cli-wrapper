@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-class MainHeaderPacket extends Packet {
+public class MainHeaderPacket extends Packet {
 
   public final static int BROADCAST_MODE = 0;
 

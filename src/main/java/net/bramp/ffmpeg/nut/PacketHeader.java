@@ -4,7 +4,7 @@ import com.google.common.base.MoreObjects;
 
 import java.io.IOException;
 
-class PacketHeader {
+public class PacketHeader {
 
   long startcode;
   long forwardPtr;

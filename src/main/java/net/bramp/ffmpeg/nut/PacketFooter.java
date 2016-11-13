@@ -4,7 +4,7 @@ import com.google.common.base.MoreObjects;
 
 import java.io.IOException;
 
-class PacketFooter {
+public class PacketFooter {
   int checksum;
 
   public void read(NutDataInputStream in) throws IOException {
