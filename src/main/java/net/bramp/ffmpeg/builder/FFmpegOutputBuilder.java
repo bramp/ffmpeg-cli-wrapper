@@ -382,10 +382,6 @@ public class FFmpegOutputBuilder {
    * }
    * </pre>
    *
-   * assertThat(global().spec(), is("g")); assertThat(chapter(1).spec(), is("c:1"));
-   * assertThat(program(1).spec(), is("p:1")); assertThat(stream(1).spec(), is("s:1"));
-   * assertThat(stream(id(1)).spec(), is("s:i:1"));
-   *
    * @param spec Metadata specifier, e.g `MetadataSpec.stream(Audio, 0)`
    * @param key Metadata key, e.g. "comment"
    * @param value Value to set for key

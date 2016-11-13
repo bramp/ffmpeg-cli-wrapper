@@ -357,6 +357,12 @@
                     <destDir>apidocs</destDir>
                     <nohelp>true</nohelp>
                     <linksource>true</linksource>
+                    <links>
+                        <link>https://google.github.io/gson/apidocs/</link>
+                        <link>https://commons.apache.org/proper/commons-lang/javadocs/api-release/</link>
+                        <link>http://modelmapper.org/javadoc/</link>
+                        <link>http://findbugs.sourceforge.net/api/</link>
+                    </links>
                 </configuration>
                 <executions>
                     <execution>
