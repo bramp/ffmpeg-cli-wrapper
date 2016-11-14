@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package net.bramp.ffmpeg.nut;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.google.common.base.MoreObjects;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import org.apache.commons.lang3.math.Fraction;<a name="line.4"></a>
+<span class="sourceLineNo">005</span><a name="line.5"></a>
+<span class="sourceLineNo">006</span>import java.io.IOException;<a name="line.6"></a>
+<span class="sourceLineNo">007</span><a name="line.7"></a>
+<span class="sourceLineNo">008</span>public class StreamHeaderPacket extends Packet {<a name="line.8"></a>
+<span class="sourceLineNo">009</span><a name="line.9"></a>
+<span class="sourceLineNo">010</span>  public final static int VIDEO = 0;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>  public final static int AUDIO = 1;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>  public final static int SUBTITLE = 2;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>  public final static int USER_DATA = 3;<a name="line.13"></a>
+<span class="sourceLineNo">014</span><a name="line.14"></a>
+<span class="sourceLineNo">015</span>  int id;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>  long type; // One of VIDEO/AUDIO/SUBTITLE/USER_DATA // TODO Convert to enum.<a name="line.16"></a>
+<span class="sourceLineNo">017</span>  byte[] fourcc;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>  int timeBaseId;<a name="line.18"></a>
+<span class="sourceLineNo">019</span>  int msbPtsShift;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>  int maxPtsDistance;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>  long decodeDelay;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>  long flags;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>  byte[] codecSpecificData;<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span>  // If video<a name="line.25"></a>
+<span class="sourceLineNo">026</span>  int width;<a name="line.26"></a>
+<span class="sourceLineNo">027</span>  int height;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>  int sampleWidth;<a name="line.28"></a>
+<span class="sourceLineNo">029</span>  int sampleHeight;<a name="line.29"></a>
+<span class="sourceLineNo">030</span>  long colorspaceType;<a name="line.30"></a>
+<span class="sourceLineNo">031</span><a name="line.31"></a>
+<span class="sourceLineNo">032</span>  // If audio<a name="line.32"></a>
+<span class="sourceLineNo">033</span>  Fraction sampleRate = Fraction.ZERO;<a name="line.33"></a>
+<span class="sourceLineNo">034</span>  int channels;<a name="line.34"></a>
+<span class="sourceLineNo">035</span><a name="line.35"></a>
+<span class="sourceLineNo">036</span>  protected void readBody(NutDataInputStream in) throws IOException {<a name="line.36"></a>
+<span class="sourceLineNo">037</span><a name="line.37"></a>
+<span class="sourceLineNo">038</span>    id = in.readVarInt();<a name="line.38"></a>
+<span class="sourceLineNo">039</span>    type = in.readVarLong();<a name="line.39"></a>
+<span class="sourceLineNo">040</span>    fourcc = in.readVarArray();<a name="line.40"></a>
+<span class="sourceLineNo">041</span><a name="line.41"></a>
+<span class="sourceLineNo">042</span>    if (fourcc.length != 2 &amp;&amp; fourcc.length != 4) {<a name="line.42"></a>
+<span class="sourceLineNo">043</span>      // TODO In future fourcc could be a different size, but for sanity checking lets leave this<a name="line.43"></a>
+<span class="sourceLineNo">044</span>      // check in.<a name="line.44"></a>
+<span class="sourceLineNo">045</span>      throw new IOException("Unexpected fourcc length: " + fourcc.length);<a name="line.45"></a>
+<span class="sourceLineNo">046</span>    }<a name="line.46"></a>
+<span class="sourceLineNo">047</span><a name="line.47"></a>
+<span class="sourceLineNo">048</span>    timeBaseId = in.readVarInt();<a name="line.48"></a>
+<span class="sourceLineNo">049</span>    msbPtsShift = in.readVarInt();<a name="line.49"></a>
+<span class="sourceLineNo">050</span>    if (msbPtsShift &gt;= 16) {<a name="line.50"></a>
+<span class="sourceLineNo">051</span>      throw new IOException("invalid msbPtsShift " + msbPtsShift + " want &lt; 16");<a name="line.51"></a>
+<span class="sourceLineNo">052</span>    }<a name="line.52"></a>
+<span class="sourceLineNo">053</span>    maxPtsDistance = in.readVarInt();<a name="line.53"></a>
+<span class="sourceLineNo">054</span>    decodeDelay = in.readVarLong();<a name="line.54"></a>
+<span class="sourceLineNo">055</span>    flags = in.readVarLong();<a name="line.55"></a>
+<span class="sourceLineNo">056</span>    codecSpecificData = in.readVarArray();<a name="line.56"></a>
+<span class="sourceLineNo">057</span><a name="line.57"></a>
+<span class="sourceLineNo">058</span>    if (type == VIDEO) {<a name="line.58"></a>
+<span class="sourceLineNo">059</span>      width = in.readVarInt();<a name="line.59"></a>
+<span class="sourceLineNo">060</span>      height = in.readVarInt();<a name="line.60"></a>
+<span class="sourceLineNo">061</span><a name="line.61"></a>
+<span class="sourceLineNo">062</span>      if (width == 0 || height == 0) {<a name="line.62"></a>
+<span class="sourceLineNo">063</span>        throw new IOException("invalid video dimensions " + width + "x" + height);<a name="line.63"></a>
+<span class="sourceLineNo">064</span>      }<a name="line.64"></a>
+<span class="sourceLineNo">065</span><a name="line.65"></a>
+<span class="sourceLineNo">066</span>      sampleWidth = in.readVarInt();<a name="line.66"></a>
+<span class="sourceLineNo">067</span>      sampleHeight = in.readVarInt();<a name="line.67"></a>
+<span class="sourceLineNo">068</span><a name="line.68"></a>
+<span class="sourceLineNo">069</span>      // Both MUST be 0 if unknown otherwise both MUST be nonzero.<a name="line.69"></a>
+<span class="sourceLineNo">070</span>      if ((sampleWidth == 0 || sampleHeight == 0) &amp;&amp; sampleWidth != sampleHeight) {<a name="line.70"></a>
+<span class="sourceLineNo">071</span>        throw new IOException("invalid video sample dimensions " + sampleWidth + "x" + sampleHeight);<a name="line.71"></a>
+<span class="sourceLineNo">072</span>      }<a name="line.72"></a>
+<span class="sourceLineNo">073</span><a name="line.73"></a>
+<span class="sourceLineNo">074</span>      colorspaceType = in.readVarLong();<a name="line.74"></a>
+<span class="sourceLineNo">075</span><a name="line.75"></a>
+<span class="sourceLineNo">076</span>    } else if (type == AUDIO) {<a name="line.76"></a>
+<span class="sourceLineNo">077</span>      int samplerateNum = in.readVarInt();<a name="line.77"></a>
+<span class="sourceLineNo">078</span>      int samplerateDenom = in.readVarInt();<a name="line.78"></a>
+<span class="sourceLineNo">079</span>      sampleRate = Fraction.getFraction(samplerateNum, samplerateDenom);<a name="line.79"></a>
+<span class="sourceLineNo">080</span>      channels = in.readVarInt();<a name="line.80"></a>
+<span class="sourceLineNo">081</span>    }<a name="line.81"></a>
+<span class="sourceLineNo">082</span>  }<a name="line.82"></a>
+<span class="sourceLineNo">083</span><a name="line.83"></a>
+<span class="sourceLineNo">084</span>  @Override<a name="line.84"></a>
+<span class="sourceLineNo">085</span>  public String toString() {<a name="line.85"></a>
+<span class="sourceLineNo">086</span>    return MoreObjects.toStringHelper(this).add("header", header).add("id", id).add("type", type)<a name="line.86"></a>
+<span class="sourceLineNo">087</span>        .add("fourcc", new String(fourcc)).add("timeBaseId", timeBaseId)<a name="line.87"></a>
+<span class="sourceLineNo">088</span>        .add("msbPtsShift", msbPtsShift).add("maxPtsDistance", maxPtsDistance)<a name="line.88"></a>
+<span class="sourceLineNo">089</span>        .add("decodeDelay", decodeDelay).add("flags", flags)<a name="line.89"></a>
+<span class="sourceLineNo">090</span>        .add("codecSpecificData", codecSpecificData).add("width", width).add("height", height)<a name="line.90"></a>
+<span class="sourceLineNo">091</span>        .add("sampleWidth", sampleWidth).add("sampleHeight", sampleHeight)<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        .add("colorspaceType", colorspaceType).add("sampleRate", sampleRate)<a name="line.92"></a>
+<span class="sourceLineNo">093</span>        .add("channels", channels).add("footer", footer).toString();<a name="line.93"></a>
+<span class="sourceLineNo">094</span>  }<a name="line.94"></a>
+<span class="sourceLineNo">095</span>}<a name="line.95"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
