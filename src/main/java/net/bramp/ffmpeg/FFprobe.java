@@ -37,6 +37,10 @@ public class FFprobe extends FFcommon {
     this(DEFAULT_PATH, runFunction);
   }
 
+  public FFprobe(@Nonnull String path) throws IOException {
+    this(path, new RunProcessFunction());
+  }
+
   public FFprobe(@Nonnull String path, @Nonnull ProcessFunction runFunction) {
     super(path, runFunction);
   }

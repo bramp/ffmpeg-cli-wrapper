@@ -25,6 +25,15 @@ public class ReadmeTest {
   public ReadmeTest() throws IOException {}
 
   @Test
+  public void testCreateFF() throws IOException {
+    FFmpeg ffmpeg = new FFmpeg(FFmpeg.DEFAULT_PATH);
+    FFprobe ffprobe = new FFprobe(FFmpeg.DEFAULT_PATH);
+
+    // Construct them, and do nothing with them
+  }
+
+
+  @Test
   public void testVideoEncoding() throws IOException {
 
     // String in = Samples.big_buck_bunny_720p_1mb;
