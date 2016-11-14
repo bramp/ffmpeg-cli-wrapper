@@ -36,13 +36,14 @@ public class ReadmeTest {
   @Test
   public void testVideoEncoding() throws IOException {
 
-    // String in = Samples.big_buck_bunny_720p_1mb;
-    FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
+    String inFilename = Samples.big_buck_bunny_720p_1mb;
+    FFmpegProbeResult in = ffprobe.probe(inFilename);
 
     // @formatter:off
     FFmpegBuilder builder = new FFmpegBuilder()
 
-      .setInput(in)              // Filename, or a FFmpegProbeResult
+      .setInput(inFilename)      // Filename, or a FFmpegProbeResult
+      .setInput(in)
       .overrideOutputFiles(true) // Override the output if it exists
 
       .addOutput("output.mp4")   // Filename for the destination
@@ -78,14 +79,12 @@ public class ReadmeTest {
     FFmpegProbeResult probeResult = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
 
     FFmpegFormat format = probeResult.getFormat();
-    String line1 =
-        String.format(locale, "File: '%s' ; Format: '%s' ; Duration: %.3fs", format.filename,
-            format.format_long_name, format.duration);
+    String line1 = String.format(locale, "File: '%s' ; Format: '%s' ; Duration: %.3fs",
+        format.filename, format.format_long_name, format.duration);
 
     FFmpegStream stream = probeResult.getStreams().get(0);
-    String line2 =
-        String.format(locale, "Codec: '%s' ; Width: %dpx ; Height: %dpx", stream.codec_long_name,
-            stream.width, stream.height);
+    String line2 = String.format(locale, "Codec: '%s' ; Width: %dpx ; Height: %dpx",
+        stream.codec_long_name, stream.width, stream.height);
 
     assertThat(
         line1,
