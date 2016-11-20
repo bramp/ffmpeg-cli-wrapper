@@ -1,16 +1,21 @@
 package net.bramp.ffmpeg;
 
+import com.google.common.base.MoreObjects;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.fixtures.Samples;
+import net.bramp.ffmpeg.job.FFmpegJob;
 import net.bramp.ffmpeg.probe.FFmpegFormat;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import net.bramp.ffmpeg.probe.FFmpegStream;
+import net.bramp.ffmpeg.progress.Progress;
+import net.bramp.ffmpeg.progress.ProgressListener;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Locale;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -91,5 +96,43 @@ public class ReadmeTest {
         is("File: 'src/test/resources/net/bramp/ffmpeg/samples/big_buck_bunny_720p_1mb.mp4' ; Format: 'QuickTime / MOV' ; Duration: 5.312s"));
     assertThat(line2,
         is("Codec: 'H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10' ; Width: 1280px ; Height: 720px"));
+  }
+
+  @Test
+  public void testProgress() throws IOException {
+    FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+
+    final FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
+
+    FFmpegBuilder builder = new FFmpegBuilder()
+        .setInput(in) // Or filename
+        .addOutput("output.mp4")
+        .done();
+
+    FFmpegJob job = executor.createJob(builder, new ProgressListener() {
+
+      // Using the FFmpegProbeResult determine the duraction of the input
+      final double duration_us = in.getFormat().duration * 1000000.0;
+
+      @Override
+      public void progress(Progress progress) {
+        double percentage = progress.out_time_us / duration_us;
+
+        // Print out interesting information about the progress
+        System.out.println(String.format(locale,
+            "[%.0f%%] status:%s frame:%d time:%d ms fps:%.0f speed:%.2fx",
+            percentage * 100,
+            progress.status,
+            progress.frame,
+            progress.out_time_us,
+            progress.fps.doubleValue(),
+            progress.speed
+            ));
+      }
+    });
+
+    job.run();
+
+    assertEquals(FFmpegJob.State.FINISHED, job.getState());
   }
 }

@@ -87,6 +87,42 @@ System.out.format("%nCodec: '%s' ; Width: %dpx ; Height: %dpx",
 );
 ```
 
+### Get progress while encoding
+```java
+FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+
+FFmpegProbeResult in = ffprobe.probe("input.flv");
+
+FFmpegBuilder builder = new FFmpegBuilder()
+	.setInput(in) // Or filename
+	.addOutput("output.mp4")
+	.done();
+
+FFmpegJob job = executor.createJob(builder, new ProgressListener() {
+
+	// Using the FFmpegProbeResult determine the duraction of the input
+	final double duration_us = in.getFormat().duration * 1000000.0;
+
+	@Override
+	public void progress(Progress progress) {
+		double percentage = progress.out_time_us / duration_us;
+
+		// Print out interesting information about the progress
+		System.out.println(String.format(locale,
+			"[%.0f%%] status:%s frame:%d time:%d ms fps:%.0f speed:%.2fx",
+			percentage * 100,
+			progress.status,
+			progress.frame,
+			progress.out_time_us,
+			progress.fps.doubleValue(),
+			progress.speed
+		));
+	}
+});
+
+job.run();
+```
+
 Building & Releasing
 --------------
 If you wish to make changes, then building and releasing is simple:
