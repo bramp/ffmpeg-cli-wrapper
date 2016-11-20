@@ -19,6 +19,7 @@ public class FFmpegFormat {
   /**
    * Duration in seconds
    */
+  // TODO Change this to a JodaTime
   public double duration;
 
   /**

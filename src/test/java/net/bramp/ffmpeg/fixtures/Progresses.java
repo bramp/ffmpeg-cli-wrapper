@@ -16,8 +16,8 @@ public final class Progresses {
       );
 
   public final static List<Progress> allProgresses = ImmutableList.of(
-      new Progress(5, 0.0f, 800, 48, 512000, 0, 0, 1.01f, "continue"),
-      new Progress(118, 23.4f, 1230200, 774209, 5034667, 0, 0, 0.998f, "continue"),
-      new Progress(132, 23.1f, 1935500, 1285168, 5312000, 0, 0, 0.929f, "end")
+      new Progress(5, 0.0f, 800, 48, 512000, 0, 0, 1.01f, Progress.Status.CONTINUE),
+      new Progress(118, 23.4f, 1230200, 774209, 5034667, 0, 0, 0.998f, Progress.Status.CONTINUE),
+      new Progress(132, 23.1f, 1935500, 1285168, 5312000, 0, 0, 0.929f, Progress.Status.END)
       );
 }

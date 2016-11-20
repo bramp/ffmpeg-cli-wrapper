@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.util.List;
 
 import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
 import static org.junit.Assert.assertEquals;
