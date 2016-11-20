@@ -166,7 +166,9 @@ public class FFmpegBuilder {
    * @return this
    */
   public FFmpegBuilder addExtraArgs(String... values) {
-    checkArgument(values.length > 0, "One or more values must be supplied");
+    checkArgument(values.length > 0, "one or more values must be supplied");
+    checkNotEmpty(values[0], "first extra arg may not be empty");
+
     for (String value : values) {
       extra_args.add(checkNotNull(value));
     }
