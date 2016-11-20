@@ -1,4 +1,4 @@
-package net.bramp.ffmpeg.builder;
+package net.bramp.ffmpeg;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RunWith(Parameterized.class)
-public class FFmpegOutputBuilderCheckInvalidStreamTest {
+public class PreconditionsCheckInvalidStreamTest {
 
   @Parameters(name = "{0}")
   public static List<String> data() {
@@ -28,12 +28,12 @@ public class FFmpegOutputBuilderCheckInvalidStreamTest {
 
   private final URI uri;
 
-  public FFmpegOutputBuilderCheckInvalidStreamTest(String url) {
+  public PreconditionsCheckInvalidStreamTest(String url) {
     this.uri = URI.create(url);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testUri() {
-    FFmpegOutputBuilder.checkValidStream(uri);
+    Preconditions.checkValidStream(uri);
   }
 }

@@ -4,8 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.FFmpegUtils;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -16,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 
 /**
  * Builds a ffmpeg command line
@@ -23,8 +22,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author bramp
  */
 public class FFmpegBuilder {
-
-  final static Logger LOG = LoggerFactory.getLogger(FFmpegBuilder.class);
 
   public enum Strict {
     VERY, // strictly conform to a older more strict version of the specifications or reference

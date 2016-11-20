@@ -12,7 +12,6 @@ import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.math.Fraction;
 
-import javax.annotation.Nullable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +19,8 @@ import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.*;
 import static net.bramp.ffmpeg.FFmpegUtils.millisecondsToString;
+import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
+import static net.bramp.ffmpeg.Preconditions.checkValidStream;
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
 
 /**
@@ -28,8 +29,6 @@ import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
 public class FFmpegOutputBuilder {
 
   final private static String DEVNULL = SystemUtils.IS_OS_WINDOWS ? "NUL" : "/dev/null";
-  final private static List<String> rtps = ImmutableList.of("rtsp", "rtp", "rtmp");
-  final private static List<String> udpTcp = ImmutableList.of("udp", "tcp");
 
   final FFmpegBuilder parent;
 
@@ -83,36 +82,6 @@ public class FFmpegOutputBuilder {
   public long pass_padding_bitrate = 1024; // in bits per second
 
   public boolean throwWarnings = true; // TODO Either delete this, or apply it consistently
-
-  /**
-   * Checks if the URI is valid for streaming to
-   * 
-   * @param uri The URI to check
-   * @return The passed in URI if it is valid
-   * @throws IllegalArgumentException if the URI is not valid.
-   */
-  public static URI checkValidStream(URI uri) throws IllegalArgumentException {
-    String scheme = checkNotNull(uri).getScheme();
-    scheme = checkNotNull(scheme, "URI is missing a scheme").toLowerCase();
-
-    if (rtps.contains(scheme)) {
-      return uri;
-    }
-
-    if (udpTcp.contains(scheme)) {
-      if (uri.getPort() == -1) {
-        throw new IllegalArgumentException("must set port when using udp or tcp scheme");
-      }
-      return uri;
-    }
-
-    throw new IllegalArgumentException("not a valid output URL, must use rtp/tcp/udp scheme");
-  }
-
-  private static String checkNotEmpty(String arg, @Nullable Object errorMessage) {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(arg), errorMessage);
-    return arg;
-  }
 
   public FFmpegOutputBuilder() {
     this.parent = null;
