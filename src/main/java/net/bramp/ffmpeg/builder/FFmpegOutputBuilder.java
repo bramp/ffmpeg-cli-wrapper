@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.*;
-import static net.bramp.ffmpeg.FFmpegUtils.millisecondsToString;
+import static net.bramp.ffmpeg.FFmpegUtils.toTimecode;
 import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 import static net.bramp.ffmpeg.Preconditions.checkValidStream;
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
@@ -637,11 +637,11 @@ public class FFmpegOutputBuilder {
     }
 
     if (startOffset != null) {
-      args.add("-ss", millisecondsToString(startOffset));
+      args.add("-ss", toTimecode(startOffset, TimeUnit.MILLISECONDS));
     }
 
     if (duration != null) {
-      args.add("-t", millisecondsToString(duration));
+      args.add("-t", toTimecode(duration, TimeUnit.MILLISECONDS));
     }
 
     args.addAll(meta_tags);

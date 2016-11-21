@@ -1,5 +1,6 @@
 package net.bramp.ffmpeg;
 
+import com.google.common.base.CharMatcher;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.bramp.commons.lang3.math.gson.FractionAdapter;
@@ -8,10 +9,13 @@ import net.bramp.ffmpeg.gson.NamedBitsetAdapter;
 import net.bramp.ffmpeg.probe.FFmpegDisposition;
 import org.apache.commons.lang3.math.Fraction;
 
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.concurrent.TimeUnit.*;
+import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 
 /**
  * Helper class with commonly used methods
@@ -20,6 +24,8 @@ public final class FFmpegUtils {
 
   final static Gson gson = FFmpegUtils.setupGson();
   final static Pattern BITRATE_REGEX = Pattern.compile("(\\d+(?:\\.\\d+)?)kbits/s");
+  final static Pattern TIME_REGEX = Pattern.compile("(\\d+):(\\d+):(\\d+(?:\\.\\d+)?)");
+  final static CharMatcher ZERO = CharMatcher.is('0');
 
 
   FFmpegUtils() {
@@ -31,25 +37,62 @@ public final class FFmpegUtils {
    *
    * @param milliseconds time duration in milliseconds
    * @return time duration in human-readable format
+   * @deprecated please use #toTimecode() instead.
    */
+  @Deprecated
   public static String millisecondsToString(long milliseconds) {
+    return toTimecode(milliseconds, MILLISECONDS);
+  }
+
+  /**
+   * Convert the duration to "hh:mm:ss" timecode representation, where ss (seconds) can be decimal.
+   *
+   * @param duration
+   * @param units
+   * @return
+   */
+  public static String toTimecode(long duration, TimeUnit units) {
     // FIXME Negative durations are also supported.
     // https://www.ffmpeg.org/ffmpeg-utils.html#Time-duration
-    checkArgument(milliseconds >= 0, "milliseconds must be positive");
+    checkArgument(duration >= 0, "duration must be positive");
 
-    long seconds = milliseconds / 1000;
-    milliseconds = milliseconds - (seconds * 1000);
+    long nanoseconds = units.toNanos(duration); // TODO This will clip at Long.MAX_VALUE
+    long seconds = units.toSeconds(duration);
+    long ns = nanoseconds - SECONDS.toNanos(seconds);
 
-    long minutes = seconds / 60;
-    seconds = seconds - (minutes * 60);
+    long minutes = SECONDS.toMinutes(seconds);
+    seconds -= MINUTES.toSeconds(minutes);
 
-    long hours = minutes / 60;
-    minutes = minutes - (hours * 60);
+    long hours = MINUTES.toHours(minutes);
+    minutes -= HOURS.toMinutes(hours);
 
-    if (milliseconds == 0)
+    if (ns == 0)
       return String.format("%02d:%02d:%02d", hours, minutes, seconds);
 
-    return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds);
+    return ZERO.trimTrailingFrom(
+        String.format("%02d:%02d:%02d.%09d", hours, minutes, seconds, ns)
+        );
+  }
+
+  /**
+   * Returns the number of nanoseconds this timecode represents. The string is expected to be in the
+   * format "hour:minute:second", where second can be a decimal number.
+   * 
+   * @param time
+   * @return
+   */
+  public static long fromTimecode(String time) {
+    checkNotEmpty(time, "time must not be empty string");
+    Matcher m = TIME_REGEX.matcher(time);
+    if (!m.find()) {
+      throw new IllegalArgumentException("invalid time '" + time + "'");
+    }
+
+    long hours = Long.parseLong(m.group(1));
+    long mins = Long.parseLong(m.group(2));
+    double secs = Double.parseDouble(m.group(3));
+
+    return HOURS.toNanos(hours) + MINUTES.toNanos(mins) + (long) (SECONDS.toNanos(1) * secs);
   }
 
   /**

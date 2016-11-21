@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
@@ -111,12 +112,12 @@ public class ReadmeTest {
 
     FFmpegJob job = executor.createJob(builder, new ProgressListener() {
 
-      // Using the FFmpegProbeResult determine the duraction of the input
-      final double duration_us = in.getFormat().duration * 1000000.0;
+      // Using the FFmpegProbeResult determine the duration of the input
+      final double duration_ns = in.getFormat().duration * TimeUnit.SECONDS.toNanos(1);
 
       @Override
       public void progress(Progress progress) {
-        double percentage = progress.out_time_us / duration_us;
+        double percentage = progress.out_time_ns / duration_ns;
 
         // Print out interesting information about the progress
         System.out.println(String.format(locale,
@@ -124,7 +125,7 @@ public class ReadmeTest {
             percentage * 100,
             progress.status,
             progress.frame,
-            progress.out_time_us,
+            FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
             progress.fps.doubleValue(),
             progress.speed
             ));

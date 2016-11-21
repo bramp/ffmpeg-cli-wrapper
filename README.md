@@ -100,20 +100,20 @@ FFmpegBuilder builder = new FFmpegBuilder()
 
 FFmpegJob job = executor.createJob(builder, new ProgressListener() {
 
-	// Using the FFmpegProbeResult determine the duraction of the input
-	final double duration_us = in.getFormat().duration * 1000000.0;
+	// Using the FFmpegProbeResult determine the duration of the input
+	final double duration_ns = in.getFormat().duration * TimeUnit.SECONDS.toNanos(1);
 
 	@Override
 	public void progress(Progress progress) {
-		double percentage = progress.out_time_us / duration_us;
+		double percentage = progress.out_time_ns / duration_ns;
 
 		// Print out interesting information about the progress
-		System.out.println(String.format(locale,
-			"[%.0f%%] status:%s frame:%d time:%d ms fps:%.0f speed:%.2fx",
+		System.out.println(String.format(
+			"[%.0f%%] status:%s frame:%d time:%s ms fps:%.0f speed:%.2fx",
 			percentage * 100,
 			progress.status,
 			progress.frame,
-			progress.out_time_us,
+			FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
 			progress.fps.doubleValue(),
 			progress.speed
 		));

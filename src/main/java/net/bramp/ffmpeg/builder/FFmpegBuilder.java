@@ -244,7 +244,7 @@ public class FFmpegBuilder {
     }
 
     if (startOffset != null) {
-      args.add("-ss", FFmpegUtils.millisecondsToString(startOffset));
+      args.add("-ss", FFmpegUtils.toTimecode(startOffset, TimeUnit.MILLISECONDS));
     }
 
     if (format != null) {

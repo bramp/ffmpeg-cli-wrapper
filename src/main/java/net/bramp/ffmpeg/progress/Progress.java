@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static net.bramp.ffmpeg.FFmpegUtils.fromTimecode;
 
 /**
  *
@@ -58,15 +59,15 @@ public class Progress {
   public long bitrate = 0;
 
   /**
-   * Output file size
+   * Output file size (in bytes)
    */
   public long total_size = 0;
 
   /**
-   * Output time (in microseconds)
+   * Output time (in nanoseconds)
    */
-  // TODO Change this to a JodaTime
-  public long out_time_us = 0;
+  // TODO Change this to a java.time.Duration
+  public long out_time_ns = 0;
 
   public long dup_frames = 0;
 
@@ -89,13 +90,13 @@ public class Progress {
     // Nothing
   }
 
-  public Progress(long frame, float fps, long bitrate, long total_size, long out_time_us,
+  public Progress(long frame, float fps, long bitrate, long total_size, long out_time_ns,
       long dup_frames, long drop_frames, float speed, Status status) {
     this.frame = frame;
     this.fps = Fraction.getFraction(fps);
     this.bitrate = bitrate;
     this.total_size = total_size;
-    this.out_time_us = out_time_us;
+    this.out_time_ns = out_time_ns;
     this.dup_frames = dup_frames;
     this.drop_frames = drop_frames;
     this.speed = speed;
@@ -104,6 +105,9 @@ public class Progress {
 
   /**
    * Parses values from the line, into this object.
+   *
+   * The value options are defined in ffmpeg.c's print_report function
+   * https://github.com/FFmpeg/FFmpeg/blob/master/ffmpeg.c
    *
    * @param line A single line of output from ffmpeg
    * @return true if the record is finished
@@ -142,15 +146,15 @@ public class Progress {
         total_size = Long.parseLong(value);
         return false;
 
-      case "out_time_ms": // This is microseconds, not milliseconds
-        // TODO Stop using out_time_ms, because it is based on AV_TIME_BASE which could change.
-        // instead use "out_time", which is normalised, and outputted in standard units.
-        out_time_us = Long.parseLong(value);
+      case "out_time_ms":
+        // This is a duplicate of the "out_time" field, but expressed as a int instead of string.
+        // Note this value is in microseconds, not milliseconds, and is based on AV_TIME_BASE which
+        // could change.
+        // out_time_ns = Long.parseLong(value) * 1000;
         return false;
 
       case "out_time":
-        // There is also out_time_ms, so we ignore out_time.
-        // TODO maybe in the future actually parse out_time, if a out_time_ms wasn't provided.
+        out_time_ns = fromTimecode(value);
         return false;
 
       case "dup_frames":
@@ -198,7 +202,7 @@ public class Progress {
       return false;
     Progress progress1 = (Progress) o;
     return frame == progress1.frame && bitrate == progress1.bitrate
-        && total_size == progress1.total_size && out_time_us == progress1.out_time_us
+        && total_size == progress1.total_size && out_time_ns == progress1.out_time_ns
         && dup_frames == progress1.dup_frames && drop_frames == progress1.drop_frames
         && Float.compare(progress1.speed, speed) == 0 && Objects.equals(fps, progress1.fps)
         && Objects.equals(status, progress1.status);
@@ -206,7 +210,7 @@ public class Progress {
 
   @Override
   public int hashCode() {
-    return Objects.hash(frame, fps, bitrate, total_size, out_time_us, dup_frames, drop_frames,
+    return Objects.hash(frame, fps, bitrate, total_size, out_time_ns, dup_frames, drop_frames,
         speed, status);
   }
 
@@ -217,7 +221,7 @@ public class Progress {
         .add("fps", fps)
         .add("bitrate", bitrate)
         .add("total_size", total_size)
-        .add("out_time_us", out_time_us)
+        .add("out_time_ns", out_time_ns)
         .add("dup_frames", dup_frames)
         .add("drop_frames", drop_frames)
         .add("speed", speed)
