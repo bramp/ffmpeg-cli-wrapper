@@ -137,13 +137,19 @@ public class Progress {
         return false;
 
       case "bitrate":
-        // TODO bitrate could be "N/A"
-        bitrate = FFmpegUtils.parseBitrate(value);
+        if (value.equals("N/A")) {
+          bitrate = -1;
+        } else {
+          bitrate = FFmpegUtils.parseBitrate(value);
+        }
         return false;
 
       case "total_size":
-        // TODO could be "N/A"
-        total_size = Long.parseLong(value);
+        if (value.equals("N/A")) {
+          total_size = -1;
+        } else {
+          total_size = Long.parseLong(value);
+        }
         return false;
 
       case "out_time_ms":
@@ -166,8 +172,11 @@ public class Progress {
         return false;
 
       case "speed":
-        // TODO Could be "N/A"
-        speed = Float.parseFloat(value.replace("x", ""));
+        if (value.equals("N/A")) {
+          speed = -1;
+        } else {
+          speed = Float.parseFloat(value.replace("x", ""));
+        }
         return false;
 
       case "progress":
