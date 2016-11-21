@@ -240,7 +240,7 @@ public class FFmpegBuilder {
     args.add("-v", this.verbosity.toString());
 
     if (user_agent != null) {
-      args.add("-user-agent", user_agent);
+      args.add("-user_agent", user_agent);
     }
 
     if (startOffset != null) {
