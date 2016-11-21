@@ -53,6 +53,7 @@ public class FFmpegOutputBuilder {
   public long audio_bit_rate;
   public Integer audio_quality;
   public String audio_bit_stream_filter;
+  public String audio_filter;
 
 
   public boolean video_enabled = true;
@@ -475,6 +476,21 @@ public class FFmpegOutputBuilder {
   }
 
   /**
+   * Sets Audio Filter
+   *
+   * TODO Build a fluent Filter builder
+   *
+   * @param filter The audio filter.
+   * @return this
+   */
+  public FFmpegOutputBuilder setAudioFilter(String filter) {
+    this.audio_enabled = true;
+    this.audio_filter = checkNotEmpty(filter, "filter must not be empty");
+    return this;
+  }
+
+
+  /**
    * Target output file size (in bytes)
    *
    * @param targetSize The target size in bytes
@@ -746,6 +762,10 @@ public class FFmpegOutputBuilder {
 
       if (audio_quality != null) {
         args.add("-qscale:a", String.valueOf(audio_quality));
+      }
+
+      if (!Strings.isNullOrEmpty(audio_filter)) {
+        args.add("-af", audio_filter);
       }
 
       if (!Strings.isNullOrEmpty(audio_bit_stream_filter)) {
