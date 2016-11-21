@@ -149,6 +149,15 @@ We only the support the original FFmpeg, not the libav version. Before Ubuntu 12
 and later the original FFmpeg is shipped. If you have to run on a version with libav, you can install
 FFmpeg from a PPA, or using the static build. More information [here](http://askubuntu.com/q/373322/34845)
 
+Get invovled!
+-------------
+
+We welcome contributions. Please check the [issue tracker](https://github.com/bramp/ffmpeg-cli-wrapper/issues).
+If you see something you wish to work on, please either comment on the issue, or just send a pull
+request. Want to work on something else, then just open a issue, and we can discuss! We appreciate
+documentation improvements, code cleanup, or new features. Please be mindful that all work is done
+on a volunteer basis, thus we can be slow to reply.
+
 Licence (Simplified BSD License)
 --------------------------------
 ```
