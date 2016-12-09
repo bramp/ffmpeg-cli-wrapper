@@ -21,11 +21,11 @@ public final class Preconditions {
   }
 
   /**
-   * Ensures the arg is not null, empty string, or just whitespace.
+   * Ensures the argument is not null, empty string, or just whitespace.
    * 
-   * @param arg
-   * @param errorMessage
-   * @return
+   * @param arg The argument
+   * @param errorMessage The exception message to use if the check fails
+   * @return The passed in argument if it is not blank
    */
   public static String checkNotEmpty(String arg, @Nullable Object errorMessage) {
     boolean empty = Strings.isNullOrEmpty(arg) || CharMatcher.whitespace().matchesAllOf(arg);
@@ -34,7 +34,7 @@ public final class Preconditions {
   }
 
   /**
-   * Checks if the URI is valid for streaming to
+   * Checks if the URI is valid for streaming to.
    *
    * @param uri The URI to check
    * @return The passed in URI if it is valid
