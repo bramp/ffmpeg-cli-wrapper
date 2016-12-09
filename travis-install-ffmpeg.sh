@@ -6,7 +6,7 @@ URL=https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz
 FILE=$(basename ${URL})
 DIST=$HOME/.dist
 DISTFILE=${DIST}/${FILE}
-DEST=ffmpeg-release-64bit-static
+DEST=${FILE%%.*}
 
 [ -d ${DIST} ] || mkdir ${DIST}
 [ -d ${DEST} ] || mkdir ${DEST}
