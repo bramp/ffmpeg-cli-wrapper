@@ -1,5 +1,6 @@
 package net.bramp.ffmpeg.builder;
 
+import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.options.AudioEncodingOptions;
 import net.bramp.ffmpeg.options.EncodingOptions;
 import net.bramp.ffmpeg.options.MainEncodingOptions;
@@ -20,7 +21,7 @@ import static net.bramp.ffmpeg.builder.MetadataSpecifier.*;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.tag;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.usable;
 import static net.bramp.ffmpeg.builder.StreamSpecifierType.*;
-import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 /** @author bramp */
@@ -55,13 +56,13 @@ public class FFmpegBuilderTest {
             .done()
             .build();
 
-    assertThat(
+    assertEquals(
         args,
-        contains(
+        ImmutableList.of(
             "-y",
             "-v",
             "debug",
-            "-user-agent",
+            "-user_agent",
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36",
             "-ss",
             "00:00:01.5",
@@ -107,7 +108,8 @@ public class FFmpegBuilderTest {
             .done()
             .build();
 
-    assertThat(args, contains("-y", "-v", "error", "-i", "input", "-vn", "-an", "-sn", "output"));
+    assertEquals(
+        args, ImmutableList.of("-y", "-v", "error", "-i", "input", "-vn", "-an", "-sn", "output"));
   }
 
   @Test
@@ -123,9 +125,9 @@ public class FFmpegBuilderTest {
             .done()
             .build();
 
-    assertThat(
+    assertEquals(
         args,
-        contains(
+        ImmutableList.of(
             "-y",
             "-v",
             "error",
@@ -150,9 +152,9 @@ public class FFmpegBuilderTest {
             .done()
             .build();
 
-    assertThat(
+    assertEquals(
         args,
-        contains(
+        ImmutableList.of(
             "-y",
             "-v",
             "error",
@@ -205,9 +207,9 @@ public class FFmpegBuilderTest {
             .done()
             .build();
 
-    assertThat(
+    assertEquals(
         args,
-        contains(
+        ImmutableList.of(
             "-y", "-v", "error", "-i", "input", "-s", "320x240", "output1", "-s", "640x480",
             "output2", "-s", "ntsc", "output3"));
   }
@@ -235,9 +237,10 @@ public class FFmpegBuilderTest {
             .done()
             .build();
 
-    assertThat(
+    assertEquals(
         args,
-        contains("-y", "-v", "error", "-i", "input", "-s", "320x240", "udp://10.1.0.102:1234"));
+        ImmutableList.of(
+            "-y", "-v", "error", "-i", "input", "-s", "320x240", "udp://10.1.0.102:1234"));
   }
 
   @Test(expected = IllegalStateException.class)
@@ -254,15 +257,12 @@ public class FFmpegBuilderTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testAddEmptyFilename() {
-
-    List<String> args = new FFmpegBuilder().setInput("input").addOutput("").done().build();
+    new FFmpegBuilder().setInput("input").addOutput("").done().build();
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testSetEmptyFilename() {
-
-    List<String> args =
-        new FFmpegBuilder().setInput("input").addOutput("output").setFilename("").done().build();
+    new FFmpegBuilder().setInput("input").addOutput("output").setFilename("").done().build();
   }
 
   @Test
@@ -278,9 +278,9 @@ public class FFmpegBuilderTest {
             .done()
             .build();
 
-    assertThat(
+    assertEquals(
         args,
-        contains(
+        ImmutableList.of(
             "-y",
             "-v",
             "error",
@@ -316,9 +316,9 @@ public class FFmpegBuilderTest {
             .done()
             .build();
 
-    assertThat(
+    assertEquals(
         args,
-        contains(
+        ImmutableList.of(
             "-y",
             "-v",
             "error",
@@ -363,9 +363,10 @@ public class FFmpegBuilderTest {
             .done()
             .build();
 
-    assertThat(
+    assertEquals(
         args,
-        contains("-y", "-v", "error", "-a", "b", "-i", "input", "-an", "-sn", "-c", "d", "output"));
+        ImmutableList.of(
+            "-y", "-v", "error", "-a", "b", "-i", "input", "-an", "-sn", "-c", "d", "output"));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -385,7 +386,8 @@ public class FFmpegBuilderTest {
             .done()
             .build();
 
-    assertThat(args, contains("-y", "-v", "error", "-i", "input1", "-i", "input2", "output"));
+    assertEquals(
+        args, ImmutableList.of("-y", "-v", "error", "-i", "input1", "-i", "input2", "output"));
   }
 
   @Test
@@ -398,9 +400,9 @@ public class FFmpegBuilderTest {
             .addOutput(new FFmpegOutputBuilder().setFilename("output.flv").setVideoCodec("flv"))
             .build();
 
-    assertThat(
+    assertEquals(
         args,
-        contains(
+        ImmutableList.of(
             "-y",
             "-v",
             "error",
