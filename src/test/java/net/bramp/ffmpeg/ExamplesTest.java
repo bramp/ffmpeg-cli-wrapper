@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -143,6 +144,7 @@ public class ExamplesTest {
   }
 
   // Set the working directory of ffmpeg
+  @Ignore("because this test will invoke /path/to/ffmpeg.")
   @Test
   public void testExample5() throws IOException {
 
@@ -157,6 +159,6 @@ public class ExamplesTest {
     FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 
     // Run a two-pass encode
-    executor.createTwoPassJob(builder);//.run();
+    executor.createTwoPassJob(builder).run();
   }
 }
