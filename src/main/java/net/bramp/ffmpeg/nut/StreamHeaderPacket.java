@@ -7,10 +7,10 @@ import java.io.IOException;
 
 public class StreamHeaderPacket extends Packet {
 
-  public final static int VIDEO = 0;
-  public final static int AUDIO = 1;
-  public final static int SUBTITLE = 2;
-  public final static int USER_DATA = 3;
+  public static final int VIDEO = 0;
+  public static final int AUDIO = 1;
+  public static final int SUBTITLE = 2;
+  public static final int USER_DATA = 3;
 
   int id;
   long type; // One of VIDEO/AUDIO/SUBTITLE/USER_DATA // TODO Convert to enum.
@@ -68,7 +68,8 @@ public class StreamHeaderPacket extends Packet {
 
       // Both MUST be 0 if unknown otherwise both MUST be nonzero.
       if ((sampleWidth == 0 || sampleHeight == 0) && sampleWidth != sampleHeight) {
-        throw new IOException("invalid video sample dimensions " + sampleWidth + "x" + sampleHeight);
+        throw new IOException(
+            "invalid video sample dimensions " + sampleWidth + "x" + sampleHeight);
       }
 
       colorspaceType = in.readVarLong();
@@ -83,13 +84,25 @@ public class StreamHeaderPacket extends Packet {
 
   @Override
   public String toString() {
-    return MoreObjects.toStringHelper(this).add("header", header).add("id", id).add("type", type)
-        .add("fourcc", new String(fourcc)).add("timeBaseId", timeBaseId)
-        .add("msbPtsShift", msbPtsShift).add("maxPtsDistance", maxPtsDistance)
-        .add("decodeDelay", decodeDelay).add("flags", flags)
-        .add("codecSpecificData", codecSpecificData).add("width", width).add("height", height)
-        .add("sampleWidth", sampleWidth).add("sampleHeight", sampleHeight)
-        .add("colorspaceType", colorspaceType).add("sampleRate", sampleRate)
-        .add("channels", channels).add("footer", footer).toString();
+    return MoreObjects.toStringHelper(this)
+        .add("header", header)
+        .add("id", id)
+        .add("type", type)
+        .add("fourcc", new String(fourcc))
+        .add("timeBaseId", timeBaseId)
+        .add("msbPtsShift", msbPtsShift)
+        .add("maxPtsDistance", maxPtsDistance)
+        .add("decodeDelay", decodeDelay)
+        .add("flags", flags)
+        .add("codecSpecificData", codecSpecificData)
+        .add("width", width)
+        .add("height", height)
+        .add("sampleWidth", sampleWidth)
+        .add("sampleHeight", sampleHeight)
+        .add("colorspaceType", colorspaceType)
+        .add("sampleRate", sampleRate)
+        .add("channels", channels)
+        .add("footer", footer)
+        .toString();
   }
 }

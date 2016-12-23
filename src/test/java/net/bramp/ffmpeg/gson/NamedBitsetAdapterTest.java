@@ -9,7 +9,6 @@ import static com.nitorcreations.Matchers.reflectEquals;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
-
 public class NamedBitsetAdapterTest {
 
   static class Set {
@@ -29,7 +28,6 @@ public class NamedBitsetAdapterTest {
   private static final SetWithSkipField testSetWithSkip = testSetWithSkip();
   private static final String testDataWithSkipField =
       "{\"e\":\"skip\",\"a\":true,\"b\":false,\"c\":true,\"d\":false}";
-
 
   private static Set testSet() {
     Set s = new Set();
@@ -60,8 +58,8 @@ public class NamedBitsetAdapterTest {
   public static void setupGson() {
     GsonBuilder builder = new GsonBuilder();
     builder.registerTypeAdapter(Set.class, new NamedBitsetAdapter<>(Set.class));
-    builder.registerTypeAdapter(SetWithSkipField.class, new NamedBitsetAdapter<>(
-        SetWithSkipField.class));
+    builder.registerTypeAdapter(
+        SetWithSkipField.class, new NamedBitsetAdapter<>(SetWithSkipField.class));
     gson = builder.create();
   }
 

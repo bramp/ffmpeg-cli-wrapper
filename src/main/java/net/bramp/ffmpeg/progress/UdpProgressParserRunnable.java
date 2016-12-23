@@ -11,14 +11,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 class UdpProgressParserRunnable implements Runnable {
 
-  final static int MAX_PACKET_SIZE = 1500;
+  static final int MAX_PACKET_SIZE = 1500;
 
   final StreamProgressParser parser;
   final DatagramSocket socket;
   final CountDownLatch startSignal;
 
-  public UdpProgressParserRunnable(StreamProgressParser parser, DatagramSocket socket,
-      CountDownLatch startSignal) {
+  public UdpProgressParserRunnable(
+      StreamProgressParser parser, DatagramSocket socket, CountDownLatch startSignal) {
     this.parser = checkNotNull(parser);
     this.socket = checkNotNull(socket);
     this.startSignal = checkNotNull(startSignal);

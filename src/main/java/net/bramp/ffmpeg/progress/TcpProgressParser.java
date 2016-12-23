@@ -23,7 +23,6 @@ public class TcpProgressParser extends AbstractSocketProgressParser {
     this.address = createUri("tcp", server.getInetAddress(), server.getLocalPort());
   }
 
-
   @Override
   public synchronized void stop() throws IOException {
     if (server.isClosed()) {
@@ -47,5 +46,4 @@ public class TcpProgressParser extends AbstractSocketProgressParser {
   public URI getUri() {
     return address;
   }
-
 }

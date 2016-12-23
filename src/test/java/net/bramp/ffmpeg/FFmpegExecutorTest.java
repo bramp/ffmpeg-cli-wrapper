@@ -27,18 +27,14 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-/**
- * Tests actually shelling out ffmpeg and ffprobe. Could be flakey if ffmpeg or ffprobe change.
- */
+/** Tests actually shelling out ffmpeg and ffprobe. Could be flakey if ffmpeg or ffprobe change. */
 public class FFmpegExecutorTest {
 
-  @Rule
-  public Timeout timeout = new Timeout(30, TimeUnit.SECONDS);
+  @Rule public Timeout timeout = new Timeout(30, TimeUnit.SECONDS);
 
   final FFmpeg ffmpeg = new FFmpeg();
   final FFprobe ffprobe = new FFprobe();
   final FFmpegExecutor ffExecutor = new FFmpegExecutor(ffmpeg, ffprobe);
-
   final ExecutorService executor = Executors.newSingleThreadExecutor();
 
   public FFmpegExecutorTest() throws IOException {}
@@ -48,20 +44,18 @@ public class FFmpegExecutorTest {
     FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
     assertFalse(in.hasError());
 
-    // @formatter:off
-    FFmpegBuilder builder = new FFmpegBuilder()
-      .setInput(in)
-      .overrideOutputFiles(true)
-      .addOutput(Samples.output_mp4)
-        .setFormat("mp4")
-        .disableAudio()
-        .setVideoCodec("mpeg4")
-        .setVideoFrameRate(FFmpeg.FPS_30)
-        .setVideoResolution(320, 240)
-        .setTargetSize(1024 * 1024)
-        .done();
-    // @formatter:on
-
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .setInput(in)
+            .overrideOutputFiles(true)
+            .addOutput(Samples.output_mp4)
+            .setFormat("mp4")
+            .disableAudio()
+            .setVideoCodec("mpeg4")
+            .setVideoFrameRate(FFmpeg.FPS_30)
+            .setVideoResolution(320, 240)
+            .setTargetSize(1024 * 1024)
+            .done();
 
     FFmpegJob job = ffExecutor.createTwoPassJob(builder);
     runAndWait(job);
@@ -72,17 +66,16 @@ public class FFmpegExecutorTest {
   @Test
   public void testFilter() throws InterruptedException, ExecutionException, IOException {
 
-    // @formatter:off
-    FFmpegBuilder builder = new FFmpegBuilder()
-      .setInput(Samples.big_buck_bunny_720p_1mb)
-      .overrideOutputFiles(true)
-      .addOutput(Samples.output_mp4)
-        .setFormat("mp4")
-        .disableAudio()
-        .setVideoCodec("mpeg4")
-        .setVideoFilter("scale=320:trunc(ow/a/2)*2")
-        .done();
-    // @formatter:on
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .setInput(Samples.big_buck_bunny_720p_1mb)
+            .overrideOutputFiles(true)
+            .addOutput(Samples.output_mp4)
+            .setFormat("mp4")
+            .disableAudio()
+            .setVideoCodec("mpeg4")
+            .setVideoFilter("scale=320:trunc(ow/a/2)*2")
+            .done();
 
     FFmpegJob job = ffExecutor.createJob(builder);
     runAndWait(job);
@@ -93,18 +86,17 @@ public class FFmpegExecutorTest {
   @Test
   public void testMetaTags() throws InterruptedException, ExecutionException, IOException {
 
-    // @formatter:off
-    FFmpegBuilder builder = new FFmpegBuilder()
-      .setInput(Samples.big_buck_bunny_720p_1mb)
-      .overrideOutputFiles(true)
-      .addOutput(Samples.output_mp4)
-        .setFormat("mp4")
-        .disableAudio()
-        .setVideoCodec("mpeg4")
-        .addMetaTag("comment", "This=Nice!")
-        .addMetaTag("title", "Big Buck Bunny")
-        .done();
-    // @formatter:on
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .setInput(Samples.big_buck_bunny_720p_1mb)
+            .overrideOutputFiles(true)
+            .addOutput(Samples.output_mp4)
+            .setFormat("mp4")
+            .disableAudio()
+            .setVideoCodec("mpeg4")
+            .addMetaTag("comment", "This=Nice!")
+            .addMetaTag("title", "Big Buck Bunny")
+            .done();
 
     FFmpegJob job = ffExecutor.createJob(builder);
     runAndWait(job);
@@ -122,19 +114,16 @@ public class FFmpegExecutorTest {
   @Test
   public void testStdout() throws InterruptedException, ExecutionException, IOException {
 
-    // @formatter:off
-    FFmpegBuilder builder = new FFmpegBuilder()
-      .setInput(Samples.big_buck_bunny_720p_1mb)
-      .addStdoutOutput()
-        .setFormat("s8")
-        .setAudioChannels(1)
-        .done();
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .setInput(Samples.big_buck_bunny_720p_1mb)
+            .addStdoutOutput()
+            .setFormat("s8")
+            .setAudioChannels(1)
+            .done();
 
-    List<String> newArgs = ImmutableList.<String>builder()
-      .add(ffmpeg.getPath())
-      .addAll(builder.build())
-      .build();
-    // @formatter:on
+    List<String> newArgs =
+        ImmutableList.<String>builder().add(ffmpeg.getPath()).addAll(builder.build()).build();
 
     // TODO Add support to the FFmpegJob to export the stream
     Process p = new ProcessBuilder(newArgs).start();
@@ -154,14 +143,13 @@ public class FFmpegExecutorTest {
 
     assertFalse(in.hasError());
 
-    // @formatter:off
-    FFmpegBuilder builder = new FFmpegBuilder()
-      .readAtNativeFrameRate() // Slows the test down
-      .setInput(in)
-      .overrideOutputFiles(true)
-      .addOutput(Samples.output_mp4)
-      .done();
-    // @formatter:on
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .readAtNativeFrameRate() // Slows the test down
+            .setInput(in)
+            .overrideOutputFiles(true)
+            .addOutput(Samples.output_mp4)
+            .done();
 
     RecordingProgressListener listener = new RecordingProgressListener();
 

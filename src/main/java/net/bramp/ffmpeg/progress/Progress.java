@@ -11,16 +11,15 @@ import java.util.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static net.bramp.ffmpeg.FFmpegUtils.fromTimecode;
 
-/**
- *
- */
+/** */
 // TODO Change to be immutable
 public class Progress {
 
-  final static Logger LOG = LoggerFactory.getLogger(Progress.class);
+  static final Logger LOG = LoggerFactory.getLogger(Progress.class);
 
   public enum Status {
-    CONTINUE("continue"), END("end");
+    CONTINUE("continue"),
+    END("end");
 
     private final String status;
 
@@ -43,55 +42,47 @@ public class Progress {
     }
   }
 
-  /**
-   * The frame number being processed
-   */
+  /** The frame number being processed */
   public long frame = 0;
 
-  /**
-   * The current frames per second
-   */
+  /** The current frames per second */
   public Fraction fps = Fraction.ZERO;
 
-  /**
-   * Current bitrate
-   */
+  /** Current bitrate */
   public long bitrate = 0;
 
-  /**
-   * Output file size (in bytes)
-   */
+  /** Output file size (in bytes) */
   public long total_size = 0;
 
-  /**
-   * Output time (in nanoseconds)
-   */
+  /** Output time (in nanoseconds) */
   // TODO Change this to a java.time.Duration
   public long out_time_ns = 0;
 
   public long dup_frames = 0;
 
-  /**
-   * Number of frames dropped
-   */
+  /** Number of frames dropped */
   public long drop_frames = 0;
 
-  /**
-   * Speed of transcoding. 1 means realtime, 2 means twice realtime.
-   */
+  /** Speed of transcoding. 1 means realtime, 2 means twice realtime. */
   public float speed = 0;
 
-  /**
-   * Current status, can be one of "continue", or "end"
-   */
+  /** Current status, can be one of "continue", or "end" */
   public Status status = null;
 
   public Progress() {
     // Nothing
   }
 
-  public Progress(long frame, float fps, long bitrate, long total_size, long out_time_ns,
-      long dup_frames, long drop_frames, float speed, Status status) {
+  public Progress(
+      long frame,
+      float fps,
+      long bitrate,
+      long total_size,
+      long out_time_ns,
+      long dup_frames,
+      long drop_frames,
+      float speed,
+      Status status) {
     this.frame = frame;
     this.fps = Fraction.getFraction(fps);
     this.bitrate = bitrate;
@@ -106,7 +97,7 @@ public class Progress {
   /**
    * Parses values from the line, into this object.
    *
-   * The value options are defined in ffmpeg.c's print_report function
+   * <p>The value options are defined in ffmpeg.c's print_report function
    * https://github.com/FFmpeg/FFmpeg/blob/master/ffmpeg.c
    *
    * @param line A single line of output from ffmpeg
@@ -205,22 +196,24 @@ public class Progress {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o)
-      return true;
-    if (o == null || getClass() != o.getClass())
-      return false;
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
     Progress progress1 = (Progress) o;
-    return frame == progress1.frame && bitrate == progress1.bitrate
-        && total_size == progress1.total_size && out_time_ns == progress1.out_time_ns
-        && dup_frames == progress1.dup_frames && drop_frames == progress1.drop_frames
-        && Float.compare(progress1.speed, speed) == 0 && Objects.equals(fps, progress1.fps)
+    return frame == progress1.frame
+        && bitrate == progress1.bitrate
+        && total_size == progress1.total_size
+        && out_time_ns == progress1.out_time_ns
+        && dup_frames == progress1.dup_frames
+        && drop_frames == progress1.drop_frames
+        && Float.compare(progress1.speed, speed) == 0
+        && Objects.equals(fps, progress1.fps)
         && Objects.equals(status, progress1.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(frame, fps, bitrate, total_size, out_time_ns, dup_frames, drop_frames,
-        speed, status);
+    return Objects.hash(
+        frame, fps, bitrate, total_size, out_time_ns, dup_frames, drop_frames, speed, status);
   }
 
   @Override

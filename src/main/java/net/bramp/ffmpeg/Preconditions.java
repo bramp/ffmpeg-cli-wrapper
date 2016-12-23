@@ -13,8 +13,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class Preconditions {
 
-  final private static List<String> rtps = ImmutableList.of("rtsp", "rtp", "rtmp");
-  final private static List<String> udpTcp = ImmutableList.of("udp", "tcp");
+  private static final List<String> rtps = ImmutableList.of("rtsp", "rtp", "rtmp");
+  private static final List<String> udpTcp = ImmutableList.of("udp", "tcp");
 
   Preconditions() {
     throw new AssertionError("No instances for you!");
@@ -22,7 +22,7 @@ public final class Preconditions {
 
   /**
    * Ensures the argument is not null, empty string, or just whitespace.
-   * 
+   *
    * @param arg The argument
    * @param errorMessage The exception message to use if the check fails
    * @return The passed in argument if it is not blank
@@ -57,5 +57,4 @@ public final class Preconditions {
 
     throw new IllegalArgumentException("not a valid output URL, must use rtp/tcp/udp scheme");
   }
-
 }

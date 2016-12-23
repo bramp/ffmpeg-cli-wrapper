@@ -17,20 +17,20 @@ import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractProgressParserTest {
 
-  @Rule
-  public Timeout timeout = new Timeout(10, TimeUnit.SECONDS);
+  @Rule public Timeout timeout = new Timeout(10, TimeUnit.SECONDS);
 
   final List<Progress> progesses = Collections.synchronizedList(new ArrayList<Progress>());
 
   ProgressParser parser;
   URI uri;
 
-  final ProgressListener listener = new ProgressListener() {
-    @Override
-    public void progress(Progress p) {
-      progesses.add(p);
-    }
-  };
+  final ProgressListener listener =
+      new ProgressListener() {
+        @Override
+        public void progress(Progress p) {
+          progesses.add(p);
+        }
+      };
 
   @Before
   public void setupParser() throws IOException, URISyntaxException {
@@ -42,8 +42,8 @@ public abstract class AbstractProgressParserTest {
     uri = parser.getUri();
   }
 
-  public abstract ProgressParser newParser(ProgressListener listener) throws IOException,
-      URISyntaxException;
+  public abstract ProgressParser newParser(ProgressListener listener)
+      throws IOException, URISyntaxException;
 
   @Test
   public void testNoConnection() throws IOException, InterruptedException {

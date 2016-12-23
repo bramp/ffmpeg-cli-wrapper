@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Converts a json object which represents a set of booleans. For example:
- * 
+ *
  * <pre>
  * <code>
  * public class Set {
@@ -24,9 +24,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * }
  * </code>
  * </pre>
- * 
+ *
  * is turned into:
- * 
+ *
  * <pre>
  * {
  *   "a": true,
@@ -35,7 +35,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *   "d": false
  * }
  * </pre>
- *
  */
 public class NamedBitsetAdapter<T> extends TypeAdapter<T> {
 

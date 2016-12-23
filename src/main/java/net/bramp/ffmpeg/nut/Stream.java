@@ -13,8 +13,8 @@ public class Stream {
   public Stream(MainHeaderPacket header, StreamHeaderPacket streamHeader) throws IOException {
     this.header = streamHeader;
     if (streamHeader.timeBaseId >= header.timeBase.length) {
-      throw new IOException("Invalid timeBaseId " + streamHeader.timeBaseId + " must be < "
-          + header.timeBase.length);
+      throw new IOException(
+          "Invalid timeBaseId " + streamHeader.timeBaseId + " must be < " + header.timeBase.length);
     }
     this.timeBase = header.timeBase[streamHeader.timeBaseId];
   }

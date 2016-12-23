@@ -71,5 +71,4 @@ public class FFmpegUtilsTest {
   public void testParseBitrateInvalidNumber() {
     parseBitrate("12.3");
   }
-
 }

@@ -1,6 +1,5 @@
 package net.bramp.ffmpeg.nut;
 
-
 import com.google.common.base.MoreObjects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,14 +8,14 @@ import java.io.IOException;
 
 public class Packet {
 
-  final static Logger LOG = LoggerFactory.getLogger(Packet.class);
+  static final Logger LOG = LoggerFactory.getLogger(Packet.class);
 
   public enum Startcode {
-    MAIN(0x7A561F5F04ADL + (((long) ('N' << 8) + 'M') << 48)), STREAM(
-        0x11405BF2F9DBL + (((long) ('N' << 8) + 'S') << 48)), SYNCPOINT(
-        0xE4ADEECA4569L + (((long) ('N' << 8) + 'K') << 48)), INDEX(
-        0xDD672F23E64EL + (((long) ('N' << 8) + 'X') << 48)), INFO(
-        0xAB68B596BA78L + (((long) ('N' << 8) + 'I') << 48));
+    MAIN(0x7A561F5F04ADL + (((long) ('N' << 8) + 'M') << 48)),
+    STREAM(0x11405BF2F9DBL + (((long) ('N' << 8) + 'S') << 48)),
+    SYNCPOINT(0xE4ADEECA4569L + (((long) ('N' << 8) + 'K') << 48)),
+    INDEX(0xDD672F23E64EL + (((long) ('N' << 8) + 'X') << 48)),
+    INFO(0xAB68B596BA78L + (((long) ('N' << 8) + 'I') << 48));
 
     private final long startcode;
 
@@ -34,7 +33,7 @@ public class Packet {
 
     /**
      * Returns the Startcode enum for this code.
-     * 
+     *
      * @param startcode The numeric code for this Startcode.
      * @return The Startcode
      */
@@ -62,7 +61,6 @@ public class Packet {
 
   public final PacketHeader header = new PacketHeader();
   public final PacketFooter footer = new PacketFooter();
-
 
   protected void readBody(NutDataInputStream in) throws IOException {
     // Default implementation does nothing

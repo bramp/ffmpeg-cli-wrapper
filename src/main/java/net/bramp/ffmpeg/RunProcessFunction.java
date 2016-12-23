@@ -11,13 +11,12 @@ import java.util.List;
 /**
  * Simple function that creates a Process with the arguments, and returns a BufferedReader reading
  * stdout
- * 
- * @author bramp
  *
+ * @author bramp
  */
 public class RunProcessFunction implements ProcessFunction {
 
-  final static Logger LOG = LoggerFactory.getLogger(RunProcessFunction.class);
+  static final Logger LOG = LoggerFactory.getLogger(RunProcessFunction.class);
 
   public Process run(List<String> args) throws IOException {
 
@@ -32,5 +31,4 @@ public class RunProcessFunction implements ProcessFunction {
     builder.redirectErrorStream(true);
     return builder.start();
   }
-
 }

@@ -18,7 +18,8 @@ import static org.junit.Assert.assertThat;
 public class UdpProgressParserTest extends AbstractProgressParserTest {
 
   @Override
-  public ProgressParser newParser(ProgressListener listener) throws IOException, URISyntaxException {
+  public ProgressParser newParser(ProgressListener listener)
+      throws IOException, URISyntaxException {
     return new UdpProgressParser(listener);
   }
 

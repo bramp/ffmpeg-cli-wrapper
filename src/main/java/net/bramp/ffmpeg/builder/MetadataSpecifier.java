@@ -7,7 +7,6 @@ package net.bramp.ffmpeg.builder;
 // p:program_index
 // index is meant to be zero based, by negitive is allowed as dummy values
 
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -70,5 +69,4 @@ public class MetadataSpecifier {
     checkNotNull(spec);
     return new MetadataSpecifier("s", spec);
   }
-
 }

@@ -17,16 +17,13 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.concurrent.TimeUnit.*;
 import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 
-/**
- * Helper class with commonly used methods
- */
+/** Helper class with commonly used methods */
 public final class FFmpegUtils {
 
-  final static Gson gson = FFmpegUtils.setupGson();
-  final static Pattern BITRATE_REGEX = Pattern.compile("(\\d+(?:\\.\\d+)?)kbits/s");
-  final static Pattern TIME_REGEX = Pattern.compile("(\\d+):(\\d+):(\\d+(?:\\.\\d+)?)");
-  final static CharMatcher ZERO = CharMatcher.is('0');
-
+  static final Gson gson = FFmpegUtils.setupGson();
+  static final Pattern BITRATE_REGEX = Pattern.compile("(\\d+(?:\\.\\d+)?)kbits/s");
+  static final Pattern TIME_REGEX = Pattern.compile("(\\d+):(\\d+):(\\d+(?:\\.\\d+)?)");
+  static final CharMatcher ZERO = CharMatcher.is('0');
 
   FFmpegUtils() {
     throw new AssertionError("No instances for you!");
@@ -66,18 +63,15 @@ public final class FFmpegUtils {
     long hours = MINUTES.toHours(minutes);
     minutes -= HOURS.toMinutes(hours);
 
-    if (ns == 0)
-      return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    if (ns == 0) return String.format("%02d:%02d:%02d", hours, minutes, seconds);
 
-    return ZERO.trimTrailingFrom(
-        String.format("%02d:%02d:%02d.%09d", hours, minutes, seconds, ns)
-        );
+    return ZERO.trimTrailingFrom(String.format("%02d:%02d:%02d.%09d", hours, minutes, seconds, ns));
   }
 
   /**
    * Returns the number of nanoseconds this timecode represents. The string is expected to be in the
    * format "hour:minute:second", where second can be a decimal number.
-   * 
+   *
    * @param time
    * @return
    */
@@ -119,8 +113,8 @@ public final class FFmpegUtils {
 
     builder.registerTypeAdapterFactory(new LowercaseEnumTypeAdapterFactory());
     builder.registerTypeAdapter(Fraction.class, new FractionAdapter());
-    builder.registerTypeAdapter(FFmpegDisposition.class, new NamedBitsetAdapter<>(
-        FFmpegDisposition.class));
+    builder.registerTypeAdapter(
+        FFmpegDisposition.class, new NamedBitsetAdapter<>(FFmpegDisposition.class));
 
     return builder.create();
   }

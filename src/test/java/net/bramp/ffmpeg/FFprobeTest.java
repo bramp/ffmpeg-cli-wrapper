@@ -23,36 +23,35 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class FFprobeTest {
 
-  @Mock
-  ProcessFunction runFunc;
+  @Mock ProcessFunction runFunc;
 
   FFprobe ffprobe;
 
-  final static Gson gson = FFmpegUtils.getGson();
+  static final Gson gson = FFmpegUtils.getGson();
 
   @Before
   public void before() throws IOException {
-    when(runFunc.run(argThatHasItem("-version"))).thenAnswer(
-        new NewProcessAnswer("ffprobe-version"));
+    when(runFunc.run(argThatHasItem("-version")))
+        .thenAnswer(new NewProcessAnswer("ffprobe-version"));
 
-    when(runFunc.run(argThatHasItem(Samples.big_buck_bunny_720p_1mb))).thenAnswer(
-        new NewProcessAnswer("ffprobe-big_buck_bunny_720p_1mb.mp4"));
+    when(runFunc.run(argThatHasItem(Samples.big_buck_bunny_720p_1mb)))
+        .thenAnswer(new NewProcessAnswer("ffprobe-big_buck_bunny_720p_1mb.mp4"));
 
-    when(runFunc.run(argThatHasItem(Samples.always_on_my_mind))).thenAnswer(
-        new NewProcessAnswer("ffprobe-Always On My Mind [Program Only] - Adelén.mp4"));
+    when(runFunc.run(argThatHasItem(Samples.always_on_my_mind)))
+        .thenAnswer(new NewProcessAnswer("ffprobe-Always On My Mind [Program Only] - Adelén.mp4"));
 
-    when(runFunc.run(argThatHasItem(Samples.divide_by_zero))).thenAnswer(
-        new NewProcessAnswer("ffprobe-divide-by-zero"));
+    when(runFunc.run(argThatHasItem(Samples.divide_by_zero)))
+        .thenAnswer(new NewProcessAnswer("ffprobe-divide-by-zero"));
 
     ffprobe = new FFprobe(runFunc);
   }
 
   @Test
   public void testVersion() throws Exception {
-    assertEquals("ffprobe version 3.0.2 Copyright (c) 2007-2016 the FFmpeg developers",
-        ffprobe.version());
-    assertEquals("ffprobe version 3.0.2 Copyright (c) 2007-2016 the FFmpeg developers",
-        ffprobe.version());
+    assertEquals(
+        "ffprobe version 3.0.2 Copyright (c) 2007-2016 the FFmpeg developers", ffprobe.version());
+    assertEquals(
+        "ffprobe version 3.0.2 Copyright (c) 2007-2016 the FFmpeg developers", ffprobe.version());
 
     verify(runFunc, times(1)).run(argThatHasItem("-version"));
   }
@@ -87,7 +86,8 @@ public class FFprobeTest {
     assertThat(info.getStreams().get(1).sample_rate, is(48_000));
 
     // Test a UTF-8 name
-    assertThat(info.getFormat().filename,
+    assertThat(
+        info.getFormat().filename,
         is("c:\\Users\\Bob\\Always On My Mind [Program Only] - Adelén.mp4"));
 
     // System.out.println(FFmpegUtils.getGson().toJson(info));

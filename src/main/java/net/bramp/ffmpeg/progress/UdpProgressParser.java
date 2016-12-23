@@ -54,5 +54,4 @@ public class UdpProgressParser extends AbstractSocketProgressParser {
   public URI getUri() {
     return address;
   }
-
 }

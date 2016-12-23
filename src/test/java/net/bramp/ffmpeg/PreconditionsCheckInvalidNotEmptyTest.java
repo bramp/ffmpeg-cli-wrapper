@@ -7,18 +7,11 @@ import org.junit.runners.Parameterized;
 import java.util.Arrays;
 import java.util.List;
 
-
 @RunWith(Parameterized.class)
 public class PreconditionsCheckInvalidNotEmptyTest {
   @Parameterized.Parameters(name = "{0}")
   public static List<String> data() {
-    return Arrays.asList(
-        null,
-        "",
-        "   ",
-        "\n",
-        " \n "
-        );
+    return Arrays.asList(null, "", "   ", "\n", " \n ");
   }
 
   private final String input;

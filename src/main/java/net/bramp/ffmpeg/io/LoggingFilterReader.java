@@ -13,7 +13,7 @@ import java.io.Reader;
  */
 public class LoggingFilterReader extends FilterReader {
 
-  final static char LOG_CHAR = '\n';
+  static final char LOG_CHAR = '\n';
 
   final Logger logger;
   final StringBuilder buffer = new StringBuilder();

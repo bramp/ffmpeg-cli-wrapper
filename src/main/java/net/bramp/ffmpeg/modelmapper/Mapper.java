@@ -23,12 +23,13 @@ public class Mapper {
     throw new InstantiationError("Must not instantiate this class");
   }
 
-  final private static ModelMapper mapper = newModelMapper();
+  private static final ModelMapper mapper = newModelMapper();
 
-  private static <S, D> TypeMap<S, D> createTypeMap(ModelMapper mapper, Class<S> sourceType,
-      Class<D> destinationType, Configuration config) {
+  private static <S, D> TypeMap<S, D> createTypeMap(
+      ModelMapper mapper, Class<S> sourceType, Class<D> destinationType, Configuration config) {
 
-    return mapper.createTypeMap(sourceType, destinationType, config)
+    return mapper
+        .createTypeMap(sourceType, destinationType, config)
         // We setPropertyCondition because ModelMapper seems to ignore this in
         // the config
         .setPropertyCondition(config.getPropertyCondition());
@@ -38,8 +39,12 @@ public class Mapper {
     final ModelMapper mapper = new ModelMapper();
 
     Configuration config =
-        mapper.getConfiguration().copy().setFieldMatchingEnabled(true)
-            .setPropertyCondition(notDefault).setSourceNameTokenizer(NameTokenizers.UNDERSCORE);
+        mapper
+            .getConfiguration()
+            .copy()
+            .setFieldMatchingEnabled(true)
+            .setPropertyCondition(notDefault)
+            .setSourceNameTokenizer(NameTokenizers.UNDERSCORE);
 
     createTypeMap(mapper, MainEncodingOptions.class, FFmpegOutputBuilder.class, config);
     createTypeMap(mapper, AudioWrapper.class, FFmpegOutputBuilder.class, config);
@@ -48,9 +53,7 @@ public class Mapper {
     return mapper;
   }
 
-  /**
-   * Simple wrapper object, to inject the word "audio" in the property name
-   */
+  /** Simple wrapper object, to inject the word "audio" in the property name */
   static class AudioWrapper {
     public final AudioEncodingOptions audio;
 
@@ -59,9 +62,7 @@ public class Mapper {
     }
   }
 
-  /**
-   * Simple wrapper object, to inject the word "video" in the property name
-   */
+  /** Simple wrapper object, to inject the word "video" in the property name */
   static class VideoWrapper {
     public final VideoEncodingOptions video;
 
@@ -92,5 +93,4 @@ public class Mapper {
       map(opts.getVideo(), dest);
     }
   }
-
 }

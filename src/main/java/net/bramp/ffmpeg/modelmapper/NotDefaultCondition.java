@@ -10,12 +10,11 @@ import org.modelmapper.spi.MappingContext;
  *
  * @param <S> source type
  * @param <D> destination type
- *
  * @author bramp
  */
 public class NotDefaultCondition<S, D> implements Condition<S, D> {
 
-  public final static NotDefaultCondition notDefault = new NotDefaultCondition();
+  public static final NotDefaultCondition notDefault = new NotDefaultCondition();
 
   @Override
   public boolean applies(MappingContext<S, D> context) {

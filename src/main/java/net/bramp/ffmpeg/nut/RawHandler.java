@@ -97,8 +97,8 @@ public class RawHandler {
       }
 
       if (interleaving != 'D') {
-        throw new IllegalArgumentException("unsupported interleaving '" + interleaving
-            + "' in fourcc value " + fourcc);
+        throw new IllegalArgumentException(
+            "unsupported interleaving '" + interleaving + "' in fourcc value " + fourcc);
       }
 
       switch (type) {
@@ -121,8 +121,8 @@ public class RawHandler {
     int frameSize = (bits * header.channels) / 8;
     float frameRate = sampleRate; // This may not be true for the compressed formats
 
-    return new AudioFormat(encoding, sampleRate, bits, header.channels, frameSize, frameRate,
-        bigEndian);
+    return new AudioFormat(
+        encoding, sampleRate, bits, header.channels, frameSize, frameRate, bigEndian);
   }
 
   public static AudioInputStream toAudioInputStream(Frame frame) {

@@ -4,9 +4,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
 
-/**
- * Parses the FFmpeg progress fields
- */
+/** Parses the FFmpeg progress fields */
 public interface ProgressParser extends Closeable {
 
   void start() throws IOException;
@@ -19,5 +17,4 @@ public interface ProgressParser extends Closeable {
    * @return The URI to communicate with FFmpeg.
    */
   URI getUri();
-
 }

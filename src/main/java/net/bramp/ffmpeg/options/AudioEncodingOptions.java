@@ -4,9 +4,8 @@ import java.beans.ConstructorProperties;
 
 /**
  * Encoding options for audio
- * 
- * @author bramp
  *
+ * @author bramp
  */
 public class AudioEncodingOptions {
 
@@ -18,11 +17,23 @@ public class AudioEncodingOptions {
   public final long bit_rate;
   public final Integer quality;
 
-  @ConstructorProperties({"enabled", "codec", "channels", "sample_rate", "sample_format",
-      "bit_rate",
-      "quality"})
-  public AudioEncodingOptions(boolean enabled, String codec, int channels, int sample_rate,
-      String sample_format, long bit_rate, Integer quality) {
+  @ConstructorProperties({
+    "enabled",
+    "codec",
+    "channels",
+    "sample_rate",
+    "sample_format",
+    "bit_rate",
+    "quality"
+  })
+  public AudioEncodingOptions(
+      boolean enabled,
+      String codec,
+      int channels,
+      int sample_rate,
+      String sample_format,
+      long bit_rate,
+      Integer quality) {
     this.enabled = enabled;
     this.codec = codec;
     this.channels = channels;
@@ -31,5 +42,4 @@ public class AudioEncodingOptions {
     this.bit_rate = bit_rate;
     this.quality = quality;
   }
-
 }

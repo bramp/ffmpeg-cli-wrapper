@@ -1,6 +1,5 @@
 package net.bramp.ffmpeg.nut;
 
-
 import com.google.common.io.CountingInputStream;
 import net.bramp.ffmpeg.io.CRC32InputStream;
 
@@ -11,9 +10,7 @@ import java.io.InputStream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * A DataInputStream that implements a couple of custom FFmpeg Nut datatypes.
- */
+/** A DataInputStream that implements a couple of custom FFmpeg Nut datatypes. */
 public class NutDataInputStream implements DataInput {
 
   final DataInputStream in;
@@ -99,9 +96,14 @@ public class NutDataInputStream implements DataInput {
     byte[] buffer = new byte[8];
     buffer[0] = frameCode;
     readFully(buffer, 1, 7);
-    return (((long) buffer[0] << 56) + ((long) (buffer[1] & 255) << 48)
-        + ((long) (buffer[2] & 255) << 40) + ((long) (buffer[3] & 255) << 32)
-        + ((long) (buffer[4] & 255) << 24) + ((buffer[5] & 255) << 16) + ((buffer[6] & 255) << 8) + ((buffer[7] & 255) << 0));
+    return (((long) buffer[0] << 56)
+        + ((long) (buffer[1] & 255) << 48)
+        + ((long) (buffer[2] & 255) << 40)
+        + ((long) (buffer[3] & 255) << 32)
+        + ((long) (buffer[4] & 255) << 24)
+        + ((buffer[5] & 255) << 16)
+        + ((buffer[6] & 255) << 8)
+        + ((buffer[7] & 255) << 0));
   }
 
   public long offset() {
@@ -183,5 +185,4 @@ public class NutDataInputStream implements DataInput {
   public String readUTF() throws IOException {
     return in.readUTF();
   }
-
 }

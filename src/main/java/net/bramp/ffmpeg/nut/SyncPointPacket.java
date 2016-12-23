@@ -1,5 +1,4 @@
 package net.bramp.ffmpeg.nut;
 
 // TODO
-public class SyncPointPacket {
-}
+public class SyncPointPacket {}

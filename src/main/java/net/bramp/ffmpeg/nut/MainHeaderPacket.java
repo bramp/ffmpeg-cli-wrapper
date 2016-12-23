@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MainHeaderPacket extends Packet {
 
-  public final static int BROADCAST_MODE = 0;
+  public static final int BROADCAST_MODE = 0;
 
   long version;
   long minorVersion;
@@ -59,7 +59,7 @@ public class MainHeaderPacket extends Packet {
     int reserved;
     long count;
 
-    for (int i = 0; i < 256;) {
+    for (int i = 0; i < 256; ) {
       long flags = in.readVarLong();
       long fields = in.readVarLong();
       if (fields > 0) {
@@ -74,8 +74,8 @@ public class MainHeaderPacket extends Packet {
       if (fields > 2) {
         stream_id = in.readVarInt();
         if (stream_id >= streamCount) {
-          throw new IOException("Illegal stream id value " + stream_id + " must be < "
-              + streamCount);
+          throw new IOException(
+              "Illegal stream id value " + stream_id + " must be < " + streamCount);
         }
       }
       if (fields > 3) {
@@ -107,13 +107,15 @@ public class MainHeaderPacket extends Packet {
       }
 
       if (stream_id >= streamCount) {
-        throw new IOException(String.format("Invalid stream value %d, must be < %d", stream_id,
-            streamCount));
+        throw new IOException(
+            String.format("Invalid stream value %d, must be < %d", stream_id, streamCount));
       }
 
       if (count <= 0 || (count > 256 - i - (i <= 'N' ? 1 : 0))) {
-        throw new IOException(String.format("Invalid count value %d, must be > 0 && < %d", count,
-            256 - i - (i <= 'N' ? 1 : 0)));
+        throw new IOException(
+            String.format(
+                "Invalid count value %d, must be > 0 && < %d",
+                count, 256 - i - (i <= 'N' ? 1 : 0)));
       }
 
       for (int j = 0; j < count && i < 256; j++, i++) {
@@ -157,8 +159,8 @@ public class MainHeaderPacket extends Packet {
           throw new IOException("Invalid elision length " + e.length + " must be > 0 and < 256");
         }
         if (e.length > remain) {
-          throw new IOException("Invalid elision length value " + e.length + " must be <= "
-              + remain);
+          throw new IOException(
+              "Invalid elision length value " + e.length + " must be <= " + remain);
         }
         remain -= e.length;
         elision.add(e);
@@ -172,11 +174,17 @@ public class MainHeaderPacket extends Packet {
 
   @Override
   public String toString() {
-    return MoreObjects.toStringHelper(this).add("header", header).add("version", version)
-        .add("minorVersion", minorVersion).add("streamCount", streamCount)
-        .add("maxDistance", maxDistance).add("timeBase", timeBase).add("flags", flags)
-        .add("frameCodes", frameCodes.size()).add("elision", elision).add("footer", footer)
+    return MoreObjects.toStringHelper(this)
+        .add("header", header)
+        .add("version", version)
+        .add("minorVersion", minorVersion)
+        .add("streamCount", streamCount)
+        .add("maxDistance", maxDistance)
+        .add("timeBase", timeBase)
+        .add("flags", flags)
+        .add("frameCodes", frameCodes.size())
+        .add("elision", elision)
+        .add("footer", footer)
         .toString();
-
   }
 }

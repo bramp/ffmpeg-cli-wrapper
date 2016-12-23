@@ -23,19 +23,16 @@ import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 import static net.bramp.ffmpeg.Preconditions.checkValidStream;
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
 
-/**
- * Builds a representation of a single output/encoding setting
- */
+/** Builds a representation of a single output/encoding setting */
 public class FFmpegOutputBuilder {
 
-  final private static String DEVNULL = SystemUtils.IS_OS_WINDOWS ? "NUL" : "/dev/null";
+  private static final String DEVNULL = SystemUtils.IS_OS_WINDOWS ? "NUL" : "/dev/null";
 
   final FFmpegBuilder parent;
 
-  /**
-   * Output filename or uri. Only one may be set
-   */
+  /** Output filename or uri. Only one may be set */
   public String filename;
+
   public URI uri;
 
   public String format;
@@ -54,7 +51,6 @@ public class FFmpegOutputBuilder {
   public Integer audio_quality;
   public String audio_bit_stream_filter;
   public String audio_filter;
-
 
   public boolean video_enabled = true;
   public String video_codec;
@@ -193,7 +189,6 @@ public class FFmpegOutputBuilder {
    *
    * @param frame_rate Frames per second
    * @return this
-   *
    * @see net.bramp.ffmpeg.FFmpeg#FPS_30
    * @see net.bramp.ffmpeg.FFmpeg#FPS_29_97
    * @see net.bramp.ffmpeg.FFmpeg#FPS_24
@@ -265,7 +260,8 @@ public class FFmpegOutputBuilder {
   }
 
   public FFmpegOutputBuilder setVideoResolution(int width, int height) {
-    checkArgument(isValidSize(width) && isValidSize(height),
+    checkArgument(
+        isValidSize(width) && isValidSize(height),
         "Both width and height must be -1 or greater than zero");
 
     this.video_enabled = true;
@@ -278,9 +274,8 @@ public class FFmpegOutputBuilder {
    * Sets video resolution based on an abbreviation, e.g. "ntsc" for 720x480, or "vga" for 640x480
    *
    * @see <a href="https://www.ffmpeg.org/ffmpeg-utils.html#Video-size">ffmpeg video size</a>
-   *
    * @param abbreviation The abbreviation size. No validation is done, instead the value is passed
-   *        as is to ffmpeg.
+   *     as is to ffmpeg.
    * @return this
    */
   public FFmpegOutputBuilder setVideoResolution(String abbreviation) {
@@ -292,7 +287,7 @@ public class FFmpegOutputBuilder {
   /**
    * Sets Video Filter
    *
-   * TODO Build a fluent Filter builder
+   * <p>TODO Build a fluent Filter builder
    *
    * @param filter The video filter.
    * @return this
@@ -317,7 +312,7 @@ public class FFmpegOutputBuilder {
 
   /**
    * Add metadata on output streams. Which keys are possible depends on the used codec.
-   * 
+   *
    * @param key Metadata key, e.g. "comment"
    * @param value Value to set for key
    * @return this
@@ -333,12 +328,11 @@ public class FFmpegOutputBuilder {
   /**
    * Add metadata on output streams. Which keys are possible depends on the used codec.
    *
-   * <pre>
-   * {@code
+   * <pre>{@code
    * import static net.bramp.ffmpeg.builder.MetadataSpecifier.*;
    * import static net.bramp.ffmpeg.builder.StreamSpecifier.*;
    * import static net.bramp.ffmpeg.builder.StreamSpecifierType.*;
-   * 
+   *
    * new FFmpegBuilder()
    *   .addMetaTag("title", "Movie Title") // Annotate whole file
    *   .addMetaTag(chapter(0), "author", "Bob") // Annotate first chapter
@@ -349,8 +343,7 @@ public class FFmpegOutputBuilder {
    *   .addMetaTag(stream(Audio, 0), "language", "eng") // Annotate first audio stream
    *   .addMetaTag(stream(Subtitle, 0), "language", "fre") // Annotate first subtitle stream
    *   .addMetaTag(usable(), "year", "2010") // Annotate all streams with a usable configuration
-   * }
-   * </pre>
+   * }</pre>
    *
    * @param spec Metadata specifier, e.g `MetadataSpec.stream(Audio, 0)`
    * @param key Metadata key, e.g. "comment"
@@ -376,7 +369,6 @@ public class FFmpegOutputBuilder {
    *
    * @param channels Number of channels
    * @return this
-   *
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_MONO
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_STEREO
    */
@@ -392,7 +384,6 @@ public class FFmpegOutputBuilder {
    *
    * @param sample_rate Samples measured in Hz
    * @return this
-   *
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_SAMPLE_8000
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_SAMPLE_11025
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_SAMPLE_12000
@@ -402,7 +393,6 @@ public class FFmpegOutputBuilder {
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_SAMPLE_44100
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_SAMPLE_48000
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_SAMPLE_96000
-   *
    */
   public FFmpegOutputBuilder setAudioSampleRate(int sample_rate) {
     checkArgument(sample_rate > 0, "sample rate must be positive");
@@ -416,13 +406,11 @@ public class FFmpegOutputBuilder {
    *
    * @param bit_depth The sample format, one of the net.bramp.ffmpeg.FFmpeg#AUDIO_DEPTH_* constants.
    * @return this
-   *
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_DEPTH_U8
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_DEPTH_S16
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_DEPTH_S32
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_DEPTH_FLT
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_DEPTH_DBL
-   *
    * @deprecated use {@link #setAudioSampleFormat} instead.
    */
   @Deprecated
@@ -434,9 +422,8 @@ public class FFmpegOutputBuilder {
    * Sets the audio sample format.
    *
    * @param sample_format The sample format, one of the net.bramp.ffmpeg.FFmpeg#AUDIO_FORMAT_*
-   *        constants.
+   *     constants.
    * @return this
-   *
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_FORMAT_U8
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_FORMAT_S16
    * @see net.bramp.ffmpeg.FFmpeg#AUDIO_FORMAT_S32
@@ -478,7 +465,7 @@ public class FFmpegOutputBuilder {
   /**
    * Sets Audio Filter
    *
-   * TODO Build a fluent Filter builder
+   * <p>TODO Build a fluent Filter builder
    *
    * @param filter The audio filter.
    * @return this
@@ -488,7 +475,6 @@ public class FFmpegOutputBuilder {
     this.audio_filter = checkNotEmpty(filter, "filter must not be empty");
     return this;
   }
-
 
   /**
    * Target output file size (in bytes)
@@ -578,7 +564,7 @@ public class FFmpegOutputBuilder {
   /**
    * Returns a representation of this Builder that can be safely serialised.
    *
-   * NOTE: This method is horribly out of date, and its use should be rethought.
+   * <p>NOTE: This method is horribly out of date, and its use should be rethought.
    *
    * @return A new EncodingOptions capturing this Builder's state
    */
@@ -586,11 +572,26 @@ public class FFmpegOutputBuilder {
     // TODO When/if modelmapper supports @ConstructorProperties, we map this
     // object, instead of doing new XXX(...)
     // https://github.com/jhalterman/modelmapper/issues/44
-    return new EncodingOptions(new MainEncodingOptions(format, startOffset, duration),
-        new AudioEncodingOptions(audio_enabled, audio_codec, audio_channels, audio_sample_rate,
-            audio_sample_format, audio_bit_rate, audio_quality), new VideoEncodingOptions(
-            video_enabled, video_codec, video_frame_rate, video_width, video_height,
-            video_bit_rate, video_frames, video_filter, video_preset));
+    return new EncodingOptions(
+        new MainEncodingOptions(format, startOffset, duration),
+        new AudioEncodingOptions(
+            audio_enabled,
+            audio_codec,
+            audio_channels,
+            audio_sample_rate,
+            audio_sample_format,
+            audio_bit_rate,
+            audio_quality),
+        new VideoEncodingOptions(
+            video_enabled,
+            video_codec,
+            video_frame_rate,
+            video_width,
+            video_height,
+            video_bit_rate,
+            video_frames,
+            video_filter,
+            video_preset));
   }
 
   protected List<String> build(int pass) {
@@ -603,7 +604,7 @@ public class FFmpegOutputBuilder {
    *
    * @param parent The parent FFmpegBuilder
    * @param pass The particular pass. For one-pass this value will be zero, for multi-pass, it will
-   *        be 1 for the first pass, 2 for the second, and so on.
+   *     be 1 for the first pass, 2 for the second, and so on.
    * @return The arguments
    */
   protected List<String> build(FFmpegBuilder parent, int pass) {
@@ -612,7 +613,8 @@ public class FFmpegOutputBuilder {
     if (pass > 0) {
       // TODO Write a test for this:
       checkArgument(format != null, "Format must be specified when using two-pass");
-      checkArgument(targetSize != 0 || video_bit_rate != 0,
+      checkArgument(
+          targetSize != 0 || video_bit_rate != 0,
           "Target size, or video bitrate must be specified when using two-pass");
     }
 
@@ -685,7 +687,8 @@ public class FFmpegOutputBuilder {
       }
 
       if (video_size != null) {
-        checkArgument(video_width == 0 && video_height == 0,
+        checkArgument(
+            video_width == 0 && video_height == 0,
             "Can not specific width or height, as well as an abbreviatied video size");
         args.add("-s", video_size);
 
@@ -717,7 +720,8 @@ public class FFmpegOutputBuilder {
       }
 
       if (!Strings.isNullOrEmpty(video_filter)) {
-        checkState(parent.inputs.size() == 1,
+        checkState(
+            parent.inputs.size() == 1,
             "Video filter only works with one input, instead use setVideoFilterComplex(..)");
         args.add("-vf", video_filter);
       }

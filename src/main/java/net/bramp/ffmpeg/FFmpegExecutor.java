@@ -39,7 +39,7 @@ public class FFmpegExecutor {
   /**
    * Creates a two pass job, which will execute FFmpeg twice to produce a better quality output.
    * More info: https://trac.ffmpeg.org/wiki/x264EncodingGuide#twopass
-   * 
+   *
    * @param builder The FFmpegBuilder
    * @return A new two-pass FFmpegJob
    */

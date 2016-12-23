@@ -23,7 +23,7 @@ public abstract class AbstractSocketProgressParser implements ProgressParser {
   /**
    * Creates a URL to parse to FFmpeg based on the scheme, address and port.
    *
-   * TODO Move this method to somewhere better.
+   * <p>TODO Move this method to somewhere better.
    *
    * @param scheme
    * @param address
@@ -33,18 +33,21 @@ public abstract class AbstractSocketProgressParser implements ProgressParser {
    */
   static URI createUri(String scheme, InetAddress address, int port) throws URISyntaxException {
     checkNotNull(address);
-    return new URI(scheme, null /* userInfo */, InetAddresses.toUriString(address), port,
-        null /* path */, null /* query */, null /* fragment */);
+    return new URI(
+        scheme,
+        null /* userInfo */,
+        InetAddresses.toUriString(address),
+        port,
+        null /* path */,
+        null /* query */,
+        null /* fragment */);
   }
 
   protected abstract String getThreadName();
 
   protected abstract Runnable getRunnable(CountDownLatch startSignal);
 
-  /**
-   *
-   * @exception IllegalThreadStateException if the parser was already started.
-   */
+  /** @exception IllegalThreadStateException if the parser was already started. */
   public synchronized void start() {
     if (thread != null) {
       throw new IllegalThreadStateException("Parser already started");

@@ -6,9 +6,8 @@ import java.beans.ConstructorProperties;
 
 /**
  * Encoding options for video
- * 
- * @author bramp
  *
+ * @author bramp
  */
 public class VideoEncodingOptions {
   public final boolean enabled;
@@ -21,10 +20,27 @@ public class VideoEncodingOptions {
   public final String filter;
   public final String preset;
 
-  @ConstructorProperties({"enabled", "codec", "frame_rate", "width", "height", "bit_rate",
-      "frames", "video_filter", "preset"})
-  public VideoEncodingOptions(boolean enabled, String codec, Fraction frame_rate, int width,
-      int height, long bit_rate, Integer frames, String filter, String preset) {
+  @ConstructorProperties({
+    "enabled",
+    "codec",
+    "frame_rate",
+    "width",
+    "height",
+    "bit_rate",
+    "frames",
+    "video_filter",
+    "preset"
+  })
+  public VideoEncodingOptions(
+      boolean enabled,
+      String codec,
+      Fraction frame_rate,
+      int width,
+      int height,
+      long bit_rate,
+      Integer frames,
+      String filter,
+      String preset) {
     this.enabled = enabled;
     this.codec = codec;
     this.frame_rate = frame_rate;
@@ -35,5 +51,4 @@ public class VideoEncodingOptions {
     this.filter = filter;
     this.preset = preset;
   }
-
 }

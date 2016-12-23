@@ -5,9 +5,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-/**
- * Converts bytes into hex output
- */
+/** Converts bytes into hex output */
 public class HexOutputStream extends OutputStream {
 
   final Writer writer;
@@ -17,8 +15,7 @@ public class HexOutputStream extends OutputStream {
    * Creates an output stream filter built on top of the specified underlying output stream.
    *
    * @param out the underlying output stream to be assigned to the field <tt>this.out</tt> for later
-   *        use, or <code>null</code> if this instance is to be created without an underlying
-   *        stream.
+   *     use, or <code>null</code> if this instance is to be created without an underlying stream.
    */
   public HexOutputStream(OutputStream out) {
     writer = new OutputStreamWriter(out);

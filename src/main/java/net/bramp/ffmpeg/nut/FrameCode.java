@@ -15,9 +15,15 @@ public class FrameCode {
 
   @Override
   public String toString() {
-    return MoreObjects.toStringHelper(this).add("flags", flags).add("id", streamId)
-        .add("dataSizeMul", dataSizeMul).add("dataSizeLsb", dataSizeLsb).add("ptsDelta", ptsDelta)
-        .add("reservedCount", reservedCount).add("matchTimeDelta", matchTimeDelta)
-        .add("headerIdx", headerIdx).toString();
+    return MoreObjects.toStringHelper(this)
+        .add("flags", flags)
+        .add("id", streamId)
+        .add("dataSizeMul", dataSizeMul)
+        .add("dataSizeLsb", dataSizeLsb)
+        .add("ptsDelta", ptsDelta)
+        .add("reservedCount", reservedCount)
+        .add("matchTimeDelta", matchTimeDelta)
+        .add("headerIdx", headerIdx)
+        .toString();
   }
 }

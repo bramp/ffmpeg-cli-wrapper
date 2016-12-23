@@ -17,24 +17,16 @@ import java.util.concurrent.TimeoutException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * Private class to contain common methods for both FFmpeg and FFprobe.
- */
+/** Private class to contain common methods for both FFmpeg and FFprobe. */
 abstract class FFcommon {
 
-  /**
-   * Path to the binary (e.g. /usr/bin/ffmpeg)
-   */
+  /** Path to the binary (e.g. /usr/bin/ffmpeg) */
   final String path;
 
-  /**
-   * Function to run FFmpeg. We define it like this so we can swap it out (during testing)
-   */
+  /** Function to run FFmpeg. We define it like this so we can swap it out (during testing) */
   final ProcessFunction runFunc;
 
-  /**
-   * Version string
-   */
+  /** Version string */
   String version = null;
 
   public FFcommon(@Nonnull String path) {

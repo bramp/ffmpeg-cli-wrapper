@@ -12,18 +12,13 @@ import java.io.IOException;
  * GSON TypeAdapter for Apache Commons Math Fraction Object
  *
  * @author bramp
- *
  */
 public class FractionAdapter extends TypeAdapter<Fraction> {
 
-  /**
-   * If set, 0/0 returns this value, instead of throwing a ArithmeticException
-   */
+  /** If set, 0/0 returns this value, instead of throwing a ArithmeticException */
   private final Fraction zeroByZero;
 
-  /**
-   * If set, N/0 returns this value, instead of throwing a ArithmeticException
-   */
+  /** If set, N/0 returns this value, instead of throwing a ArithmeticException */
   private final Fraction divideByZero;
 
   public FractionAdapter() {

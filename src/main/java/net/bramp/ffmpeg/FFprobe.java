@@ -18,16 +18,15 @@ import java.util.List;
  * Wrapper around FFprobe
  *
  * @author bramp
- *
  */
 public class FFprobe extends FFcommon {
 
-  final static Logger LOG = LoggerFactory.getLogger(FFprobe.class);
+  static final Logger LOG = LoggerFactory.getLogger(FFprobe.class);
 
-  final static String FFPROBE = "ffprobe";
-  final static String DEFAULT_PATH = MoreObjects.firstNonNull(System.getenv("FFPROBE"), FFPROBE);
+  static final String FFPROBE = "ffprobe";
+  static final String DEFAULT_PATH = MoreObjects.firstNonNull(System.getenv("FFPROBE"), FFPROBE);
 
-  final static Gson gson = FFmpegUtils.getGson();
+  static final Gson gson = FFmpegUtils.getGson();
 
   public FFprobe() throws IOException {
     this(DEFAULT_PATH, new RunProcessFunction());
@@ -68,8 +67,8 @@ public class FFprobe extends FFcommon {
    */
   private void checkIfFFprobe() throws IllegalArgumentException, IOException {
     if (!isFFprobe()) {
-      throw new IllegalArgumentException("This binary '" + path
-          + "' is not a supported version of ffprobe");
+      throw new IllegalArgumentException(
+          "This binary '" + path + "' is not a supported version of ffprobe");
     }
   }
 
@@ -88,8 +87,7 @@ public class FFprobe extends FFcommon {
     // .add("--show_packets")
     // .add("--show_frames")
 
-    args.add(path)
-        .add("-v", "quiet");
+    args.add(path).add("-v", "quiet");
 
     if (userAgent != null) {
       args.add("-user-agent", userAgent);

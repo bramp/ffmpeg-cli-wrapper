@@ -26,61 +26,50 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Wrapper around FFmpeg
  *
  * @author bramp
- *
  */
 public class FFmpeg extends FFcommon {
 
-  public final static String FFMPEG = "ffmpeg";
-  public final static String DEFAULT_PATH = firstNonNull(System.getenv("FFMPEG"), FFMPEG);
+  public static final String FFMPEG = "ffmpeg";
+  public static final String DEFAULT_PATH = firstNonNull(System.getenv("FFMPEG"), FFMPEG);
 
-  public final static Fraction FPS_30 = Fraction.getFraction(30, 1);
-  public final static Fraction FPS_29_97 = Fraction.getFraction(30000, 1001);
-  public final static Fraction FPS_24 = Fraction.getFraction(24, 1);
-  public final static Fraction FPS_23_976 = Fraction.getFraction(24000, 1001);
+  public static final Fraction FPS_30 = Fraction.getFraction(30, 1);
+  public static final Fraction FPS_29_97 = Fraction.getFraction(30000, 1001);
+  public static final Fraction FPS_24 = Fraction.getFraction(24, 1);
+  public static final Fraction FPS_23_976 = Fraction.getFraction(24000, 1001);
 
-  public final static int AUDIO_MONO = 1;
-  public final static int AUDIO_STEREO = 2;
+  public static final int AUDIO_MONO = 1;
+  public static final int AUDIO_STEREO = 2;
 
-  public final static String AUDIO_FORMAT_U8 = "u8"; // 8
-  public final static String AUDIO_FORMAT_S16 = "s16"; // 16
-  public final static String AUDIO_FORMAT_S32 = "s32"; // 32
-  public final static String AUDIO_FORMAT_FLT = "flt"; // 32
-  public final static String AUDIO_FORMAT_DBL = "dbl"; // 64
+  public static final String AUDIO_FORMAT_U8 = "u8"; // 8
+  public static final String AUDIO_FORMAT_S16 = "s16"; // 16
+  public static final String AUDIO_FORMAT_S32 = "s32"; // 32
+  public static final String AUDIO_FORMAT_FLT = "flt"; // 32
+  public static final String AUDIO_FORMAT_DBL = "dbl"; // 64
 
-  @Deprecated
-  public final static String AUDIO_DEPTH_U8 = AUDIO_FORMAT_U8;
-  @Deprecated
-  public final static String AUDIO_DEPTH_S16 = AUDIO_FORMAT_S16;
-  @Deprecated
-  public final static String AUDIO_DEPTH_S32 = AUDIO_FORMAT_S32;
-  @Deprecated
-  public final static String AUDIO_DEPTH_FLT = AUDIO_FORMAT_FLT;
-  @Deprecated
-  public final static String AUDIO_DEPTH_DBL = AUDIO_FORMAT_DBL;
+  @Deprecated public static final String AUDIO_DEPTH_U8 = AUDIO_FORMAT_U8;
+  @Deprecated public static final String AUDIO_DEPTH_S16 = AUDIO_FORMAT_S16;
+  @Deprecated public static final String AUDIO_DEPTH_S32 = AUDIO_FORMAT_S32;
+  @Deprecated public static final String AUDIO_DEPTH_FLT = AUDIO_FORMAT_FLT;
+  @Deprecated public static final String AUDIO_DEPTH_DBL = AUDIO_FORMAT_DBL;
 
+  public static final int AUDIO_SAMPLE_8000 = 8000;
+  public static final int AUDIO_SAMPLE_11025 = 11025;
+  public static final int AUDIO_SAMPLE_12000 = 12000;
+  public static final int AUDIO_SAMPLE_16000 = 16000;
+  public static final int AUDIO_SAMPLE_22050 = 22050;
+  public static final int AUDIO_SAMPLE_32000 = 32000;
+  public static final int AUDIO_SAMPLE_44100 = 44100;
+  public static final int AUDIO_SAMPLE_48000 = 48000;
+  public static final int AUDIO_SAMPLE_96000 = 96000;
 
-  public final static int AUDIO_SAMPLE_8000 = 8000;
-  public final static int AUDIO_SAMPLE_11025 = 11025;
-  public final static int AUDIO_SAMPLE_12000 = 12000;
-  public final static int AUDIO_SAMPLE_16000 = 16000;
-  public final static int AUDIO_SAMPLE_22050 = 22050;
-  public final static int AUDIO_SAMPLE_32000 = 32000;
-  public final static int AUDIO_SAMPLE_44100 = 44100;
-  public final static int AUDIO_SAMPLE_48000 = 48000;
-  public final static int AUDIO_SAMPLE_96000 = 96000;
+  static final Pattern CODECS_REGEX =
+      Pattern.compile("^ ([ D][ E][VAS][ S][ D][ T]) (\\S+)\\s+(.*)$");
+  static final Pattern FORMATS_REGEX = Pattern.compile("^ ([ D][ E]) (\\S+)\\s+(.*)$");
 
-  final static Pattern CODECS_REGEX = Pattern
-      .compile("^ ([ D][ E][VAS][ S][ D][ T]) (\\S+)\\s+(.*)$");
-  final static Pattern FORMATS_REGEX = Pattern.compile("^ ([ D][ E]) (\\S+)\\s+(.*)$");
-
-  /**
-   * Supported codecs
-   */
+  /** Supported codecs */
   List<Codec> codecs = null;
 
-  /**
-   * Supported formats
-   */
+  /** Supported formats */
   List<Format> formats = null;
 
   public FFmpeg() throws IOException {
@@ -113,14 +102,14 @@ public class FFmpeg extends FFcommon {
 
   /**
    * Throws an exception if this is an unsupported version of ffmpeg.
-   * 
+   *
    * @throws IllegalArgumentException if this is not the official ffmpeg binary.
    * @throws IOException If a I/O error occurs while executing ffmpeg.
    */
   private void checkIfFFmpeg() throws IllegalArgumentException, IOException {
     if (!isFFmpeg()) {
-      throw new IllegalArgumentException("This binary '" + path
-          + "' is not a supported version of ffmpeg");
+      throw new IllegalArgumentException(
+          "This binary '" + path + "' is not a supported version of ffmpeg");
     }
   }
 
@@ -136,8 +125,7 @@ public class FFmpeg extends FFcommon {
         String line;
         while ((line = r.readLine()) != null) {
           Matcher m = CODECS_REGEX.matcher(line);
-          if (!m.matches())
-            continue;
+          if (!m.matches()) continue;
 
           codecs.add(new Codec(m.group(2), m.group(3), m.group(1)));
         }
@@ -152,7 +140,6 @@ public class FFmpeg extends FFcommon {
     return codecs;
   }
 
-
   public synchronized @Nonnull List<Format> formats() throws IOException {
     checkIfFFmpeg();
 
@@ -165,8 +152,7 @@ public class FFmpeg extends FFcommon {
         String line;
         while ((line = r.readLine()) != null) {
           Matcher m = FORMATS_REGEX.matcher(line);
-          if (!m.matches())
-            continue;
+          if (!m.matches()) continue;
 
           formats.add(new Format(m.group(2), m.group(3), m.group(1)));
         }

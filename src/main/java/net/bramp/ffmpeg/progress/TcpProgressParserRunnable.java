@@ -15,8 +15,8 @@ class TcpProgressParserRunnable implements Runnable {
   final ServerSocket server;
   final CountDownLatch startSignal;
 
-  public TcpProgressParserRunnable(StreamProgressParser parser, ServerSocket server,
-      CountDownLatch startSignal) {
+  public TcpProgressParserRunnable(
+      StreamProgressParser parser, ServerSocket server, CountDownLatch startSignal) {
     this.parser = checkNotNull(parser);
     this.server = checkNotNull(server);
     this.startSignal = checkNotNull(startSignal);

@@ -22,11 +22,9 @@ import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 @RunWith(MockitoJUnitRunner.class)
 public class FFmpegTest {
 
-  @Mock
-  ProcessFunction runFunc;
+  @Mock ProcessFunction runFunc;
 
   FFmpeg ffmpeg;
-
 
   @Before
   public void before() throws IOException {

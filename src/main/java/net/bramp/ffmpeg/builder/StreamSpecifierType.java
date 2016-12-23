@@ -1,34 +1,22 @@
 package net.bramp.ffmpeg.builder;
 
 public enum StreamSpecifierType {
-  /**
-   * Video
-   */
+  /** Video */
   Video("v"),
 
-  /**
-   * Video streams which are not attached pictures, video thumbnails or cover arts.
-   */
+  /** Video streams which are not attached pictures, video thumbnails or cover arts. */
   PureVideo("V"),
 
-  /**
-   * Audio
-   */
+  /** Audio */
   Audio("a"),
 
-  /**
-   * Subtitles
-   */
+  /** Subtitles */
   Subtitle("s"),
 
-  /**
-   * Data
-   */
+  /** Data */
   Data("d"),
 
-  /**
-   * Attachment
-   */
+  /** Attachment */
   Attachment("t");
 
   final String prefix;

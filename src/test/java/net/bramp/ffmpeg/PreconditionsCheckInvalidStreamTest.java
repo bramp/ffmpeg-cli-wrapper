@@ -22,8 +22,7 @@ public class PreconditionsCheckInvalidStreamTest {
 
         // Missing ports
         "udp://10.1.0.102/",
-        "tcp://127.0.0.1/"
-        );
+        "tcp://127.0.0.1/");
   }
 
   private final URI uri;

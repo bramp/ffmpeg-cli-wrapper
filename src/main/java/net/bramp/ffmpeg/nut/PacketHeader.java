@@ -20,8 +20,8 @@ public class PacketHeader {
       checksum = in.readInt();
       if (checksum != expected) {
         // TODO This code path has never been tested.
-        throw new IOException(String.format("invalid header checksum %X want %X", expected,
-            checksum));
+        throw new IOException(
+            String.format("invalid header checksum %X want %X", expected, checksum));
       }
     }
 
@@ -32,7 +32,8 @@ public class PacketHeader {
   @Override
   public String toString() {
     MoreObjects.ToStringHelper helper =
-        MoreObjects.toStringHelper(this).add("startcode", Packet.Startcode.toString(startcode))
+        MoreObjects.toStringHelper(this)
+            .add("startcode", Packet.Startcode.toString(startcode))
             .add("forwardPtr", forwardPtr);
 
     if (forwardPtr > 4096) {

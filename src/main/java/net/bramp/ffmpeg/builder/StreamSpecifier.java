@@ -3,10 +3,7 @@ package net.bramp.ffmpeg.builder;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
 
-/**
- *
- * https://ffmpeg.org/ffmpeg.html#Stream-specifiers
- */
+/** https://ffmpeg.org/ffmpeg.html#Stream-specifiers */
 public class StreamSpecifier {
 
   final String spec;
@@ -21,7 +18,7 @@ public class StreamSpecifier {
 
   /**
    * Matches the stream with this index.
-   * 
+   *
    * @param index The stream index
    * @return A new StreamSpecifier
    */
@@ -31,7 +28,7 @@ public class StreamSpecifier {
 
   /**
    * Matches all streams of this type.
-   * 
+   *
    * @param type The stream type
    * @return A new StreamSpecifier
    */
@@ -42,7 +39,7 @@ public class StreamSpecifier {
 
   /**
    * Matches the stream number stream_index of this type.
-   * 
+   *
    * @param type The stream type
    * @param index The stream index
    * @return A new StreamSpecifier
@@ -54,7 +51,7 @@ public class StreamSpecifier {
 
   /**
    * Matches all streams in the program.
-   * 
+   *
    * @param program_id The program id
    * @return A new StreamSpecifier
    */
@@ -64,7 +61,7 @@ public class StreamSpecifier {
 
   /**
    * Matches the stream with number stream_index in the program with the id program_id.
-   * 
+   *
    * @param program_id The program id
    * @param stream_index The stream index
    * @return A new StreamSpecifier
@@ -85,7 +82,7 @@ public class StreamSpecifier {
 
   /**
    * Matches all streams with the given metadata tag.
-   * 
+   *
    * @param key The metadata tag
    * @return A new StreamSpecifier
    */
@@ -95,7 +92,7 @@ public class StreamSpecifier {
 
   /**
    * Matches streams with the metadata tag key having the specified value.
-   * 
+   *
    * @param key The metadata tag
    * @param value The metatdata's value
    * @return A new StreamSpecifier
@@ -109,7 +106,7 @@ public class StreamSpecifier {
   /**
    * Matches streams with usable configuration, the codec must be defined and the essential
    * information such as video dimension or audio sample rate must be present.
-   * 
+   *
    * @return A new StreamSpecifier
    */
   public static StreamSpecifier usable() {

@@ -12,7 +12,6 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-
 public class FractionAdapterTest {
   static Gson gson;
 
@@ -33,29 +32,32 @@ public class FractionAdapterTest {
     }
   }
 
-  final static List<TestData> readTests = ImmutableList.of(new TestData("null", null),
-
-      new TestData("1", Fraction.getFraction(1, 1)),
-      new TestData("1.0", Fraction.getFraction(1, 1)),
-      new TestData("2", Fraction.getFraction(2, 1)),
-      new TestData("0.5", Fraction.getFraction(1, 2)),
-
-      new TestData("\"1\"", Fraction.getFraction(1, 1)),
-      new TestData("\"1.0\"", Fraction.getFraction(1, 1)),
-      new TestData("\"2\"", Fraction.getFraction(2, 1)),
-      new TestData("\"0.5\"", Fraction.getFraction(1, 2)),
-      new TestData("\"1/2\"", Fraction.getFraction(1, 2)),
-      new TestData("\"1 1/2\"", Fraction.getFraction(1, 1, 2)));
+  static final List<TestData> readTests =
+      ImmutableList.of(
+          new TestData("null", null),
+          new TestData("1", Fraction.getFraction(1, 1)),
+          new TestData("1.0", Fraction.getFraction(1, 1)),
+          new TestData("2", Fraction.getFraction(2, 1)),
+          new TestData("0.5", Fraction.getFraction(1, 2)),
+          new TestData("\"1\"", Fraction.getFraction(1, 1)),
+          new TestData("\"1.0\"", Fraction.getFraction(1, 1)),
+          new TestData("\"2\"", Fraction.getFraction(2, 1)),
+          new TestData("\"0.5\"", Fraction.getFraction(1, 2)),
+          new TestData("\"1/2\"", Fraction.getFraction(1, 2)),
+          new TestData("\"1 1/2\"", Fraction.getFraction(1, 1, 2)));
 
   // Divide by zero
-  final static List<TestData> zerosTests = ImmutableList.of(new TestData("\"0/0\"", Fraction.ZERO),
-      new TestData("\"1/0\"", Fraction.ZERO));
+  static final List<TestData> zerosTests =
+      ImmutableList.of(
+          new TestData("\"0/0\"", Fraction.ZERO), new TestData("\"1/0\"", Fraction.ZERO));
 
-
-  final static List<TestData> writeTests = ImmutableList.of(new TestData("0", Fraction.ZERO),
-      new TestData("1", Fraction.getFraction(1, 1)), new TestData("2", Fraction.getFraction(2, 1)),
-      new TestData("1/2", Fraction.getFraction(1, 2)),
-      new TestData("1 1/2", Fraction.getFraction(1, 1, 2)));
+  static final List<TestData> writeTests =
+      ImmutableList.of(
+          new TestData("0", Fraction.ZERO),
+          new TestData("1", Fraction.getFraction(1, 1)),
+          new TestData("2", Fraction.getFraction(2, 1)),
+          new TestData("1/2", Fraction.getFraction(1, 2)),
+          new TestData("1 1/2", Fraction.getFraction(1, 1, 2)));
 
   @Test
   public void testRead() {

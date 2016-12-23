@@ -164,7 +164,6 @@
             <artifactId>logback-classic</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -307,12 +306,10 @@
             </plugin>
 
             <plugin>
-                <groupId>net.revelc.code</groupId>
-                <artifactId>formatter-maven-plugin</artifactId>
-                <configuration>
-                    <lineEnding>LF</lineEnding>
-                    <configFile>${project.basedir}/eclipse-java-google-style.xml</configFile>
-                </configuration>
+                <!-- mvn com.coveo:fmt-maven-plugin:format -->
+                <groupId>com.coveo</groupId>
+                <artifactId>fmt-maven-plugin</artifactId>
+                <version>1.3.0</version>
                 <executions>
                     <execution>
                         <goals>

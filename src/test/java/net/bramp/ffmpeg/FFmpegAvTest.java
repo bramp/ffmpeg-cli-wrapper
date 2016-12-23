@@ -14,14 +14,11 @@ import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-/**
- * Tests what happens when using avconv
- */
+/** Tests what happens when using avconv */
 @RunWith(MockitoJUnitRunner.class)
 public class FFmpegAvTest {
 
-  @Mock
-  ProcessFunction runFunc;
+  @Mock ProcessFunction runFunc;
 
   FFmpeg ffmpeg;
 
@@ -35,15 +32,15 @@ public class FFmpegAvTest {
 
   @Test
   public void testVersion() throws Exception {
-    assertEquals("avconv version 11.4, Copyright (c) 2000-2014 the Libav developers",
-        ffmpeg.version());
-    assertEquals("avconv version 11.4, Copyright (c) 2000-2014 the Libav developers",
-        ffmpeg.version());
+    assertEquals(
+        "avconv version 11.4, Copyright (c) 2000-2014 the Libav developers", ffmpeg.version());
+    assertEquals(
+        "avconv version 11.4, Copyright (c) 2000-2014 the Libav developers", ffmpeg.version());
   }
 
   /**
    * We don't support avconv, so all methods should throw an exception.
-   * 
+   *
    * @throws IOException
    */
   @Test(expected = IllegalArgumentException.class)

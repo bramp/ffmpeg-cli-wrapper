@@ -19,7 +19,8 @@ import static org.junit.Assert.assertTrue;
 public class TcpProgressParserTest extends AbstractProgressParserTest {
 
   @Override
-  public ProgressParser newParser(ProgressListener listener) throws IOException, URISyntaxException {
+  public ProgressParser newParser(ProgressListener listener)
+      throws IOException, URISyntaxException {
     return new TcpProgressParser(listener);
   }
 
@@ -47,8 +48,8 @@ public class TcpProgressParserTest extends AbstractProgressParserTest {
   }
 
   @Test
-  public void testPrematureDisconnect() throws IOException, InterruptedException,
-      URISyntaxException {
+  public void testPrematureDisconnect()
+      throws IOException, InterruptedException, URISyntaxException {
     parser.start();
     new Socket(uri.getHost(), uri.getPort()).close();
     parser.stop();

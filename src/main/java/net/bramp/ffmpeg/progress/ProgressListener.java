@@ -1,8 +1,6 @@
 package net.bramp.ffmpeg.progress;
 
-/**
- * Captures output from the ffmpeg command line as status occurs.
- */
+/** Captures output from the ffmpeg command line as status occurs. */
 // TODO Consider adding other stats. Start, end, stream, error
 public interface ProgressListener {
   // Called every time there is status, typically once a second, and at the end.

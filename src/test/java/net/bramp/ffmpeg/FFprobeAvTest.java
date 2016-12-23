@@ -15,33 +15,30 @@ import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-/**
- * Tests what happens when using avprobe
- */
+/** Tests what happens when using avprobe */
 @RunWith(MockitoJUnitRunner.class)
 public class FFprobeAvTest {
 
-  @Mock
-  ProcessFunction runFunc;
+  @Mock ProcessFunction runFunc;
 
   FFprobe ffprobe;
 
-  final static Gson gson = FFmpegUtils.getGson();
+  static final Gson gson = FFmpegUtils.getGson();
 
   @Before
   public void before() throws IOException {
-    when(runFunc.run(argThatHasItem("-version"))).thenAnswer(
-        new NewProcessAnswer("avprobe-version"));
+    when(runFunc.run(argThatHasItem("-version")))
+        .thenAnswer(new NewProcessAnswer("avprobe-version"));
 
     ffprobe = new FFprobe(runFunc);
   }
 
   @Test
   public void testVersion() throws Exception {
-    assertEquals("avprobe version 11.4, Copyright (c) 2007-2014 the Libav developers",
-        ffprobe.version());
-    assertEquals("avprobe version 11.4, Copyright (c) 2007-2014 the Libav developers",
-        ffprobe.version());
+    assertEquals(
+        "avprobe version 11.4, Copyright (c) 2007-2014 the Libav developers", ffprobe.version());
+    assertEquals(
+        "avprobe version 11.4, Copyright (c) 2007-2014 the Libav developers", ffprobe.version());
   }
 
   @Test(expected = IllegalArgumentException.class)

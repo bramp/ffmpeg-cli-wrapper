@@ -8,9 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * A video or audio frame
- */
+/** A video or audio frame */
 public class Frame {
   // TODO Change this to a enum
   static final long FLAG_KEY = 1 << 0;
@@ -74,7 +72,6 @@ public class Frame {
     return data;
   }
 
-
   public void read(NutReader nut, NutDataInputStream in, int code) throws IOException {
     if (code == 'N') {
       throw new IOException("Illegal frame code: " + code);
@@ -101,8 +98,8 @@ public class Frame {
     if ((flags & FLAG_STREAM_ID) == FLAG_STREAM_ID) {
       stream_id = in.readVarInt();
       if (stream_id >= nut.streams.size()) {
-        throw new IOException("Illegal stream id value " + stream_id + " must be < "
-            + nut.streams.size());
+        throw new IOException(
+            "Illegal stream id value " + stream_id + " must be < " + nut.streams.size());
       }
     } else {
       stream_id = fc.streamId;
@@ -110,15 +107,15 @@ public class Frame {
 
     stream = nut.streams.get(stream_id);
 
-
     if ((flags & FLAG_CODED_PTS) == FLAG_CODED_PTS) {
       coded_pts = in.readVarLong();
       if (coded_pts < (1 << stream.header.msbPtsShift)) {
         long mask = (1L << stream.header.msbPtsShift) - 1;
         long delta = stream.last_pts - mask / 2;
         pts = ((coded_pts - delta) & mask) + delta;
-      } else
+      } else {
         pts = coded_pts - (1L << stream.header.msbPtsShift);
+      }
     } else {
       // TODO Test this code path
       pts = stream.last_pts + fc.ptsDelta;
@@ -135,8 +132,8 @@ public class Frame {
     if ((flags & FLAG_HEADER_IDX) == FLAG_HEADER_IDX) {
       header_idx = in.readVarInt();
       if (header_idx >= nut.header.elision.size()) {
-        throw new IOException("Illegal header index " + header_idx + " must be < "
-            + nut.header.elision.size());
+        throw new IOException(
+            "Illegal header index " + header_idx + " must be < " + nut.header.elision.size());
       }
     }
     if ((flags & FLAG_RESERVED) == FLAG_RESERVED) {
@@ -181,10 +178,12 @@ public class Frame {
     in.readFully(data, elision.length, size - elision.length);
   }
 
-
   @Override
   public String toString() {
-    return MoreObjects.toStringHelper(this).add("id", stream.header.id).add("pts", pts)
-        .add("data", String.format("(%d bytes)", data.length)).toString();
+    return MoreObjects.toStringHelper(this)
+        .add("id", stream.header.id)
+        .add("pts", pts)
+        .add("data", String.format("(%d bytes)", data.length))
+        .toString();
   }
 }

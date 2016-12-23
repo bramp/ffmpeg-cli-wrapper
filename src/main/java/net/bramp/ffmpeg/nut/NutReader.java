@@ -12,18 +12,20 @@ import static net.bramp.ffmpeg.nut.Packet.Startcode;
 /**
  * Demuxer for the FFmpeg Nut file format.
  *
- * Lots of things not implemented, startcode searching, crc checks, etc
+ * <p>Lots of things not implemented, startcode searching, crc checks, etc
  *
  * @see <a
- *      href="https://www.ffmpeg.org/~michael/nut.txt">https://www.ffmpeg.org/~michael/nut.txt</a>
+ *     href="https://www.ffmpeg.org/~michael/nut.txt">https://www.ffmpeg.org/~michael/nut.txt</a>
  * @see <a
- *      href="https://github.com/FFmpeg/FFmpeg/blob/master/libavformat/nutdec.c">https://github.com/FFmpeg/FFmpeg/blob/master/libavformat/nutdec.c</a>
+ *     href="https://github.com/FFmpeg/FFmpeg/blob/master/libavformat/nutdec.c">https://github.com/FFmpeg/FFmpeg/blob/master/libavformat/nutdec.c</a>
  */
 public class NutReader {
 
   // HEADER is the string "nut/multimedia container\0"
-  static final byte[] HEADER = {0x6e, 0x75, 0x74, 0x2f, 0x6d, 0x75, 0x6c, 0x74, 0x69, 0x6d, 0x65,
-      0x64, 0x69, 0x61, 0x20, 0x63, 0x6f, 0x6e, 0x74, 0x61, 0x69, 0x6e, 0x65, 0x72, 0x00};
+  static final byte[] HEADER = {
+    0x6e, 0x75, 0x74, 0x2f, 0x6d, 0x75, 0x6c, 0x74, 0x69, 0x6d, 0x65, 0x64, 0x69, 0x61, 0x20, 0x63,
+    0x6f, 0x6e, 0x74, 0x61, 0x69, 0x6e, 0x65, 0x72, 0x00
+  };
 
   public MainHeaderPacket header;
   public final List<Stream> streams = new ArrayList<>();
@@ -42,7 +44,7 @@ public class NutReader {
 
   /**
    * Read the magic at the beginning of the file.
-   * 
+   *
    * @throws IOException If a I/O error occurs
    */
   protected void readFileId() throws IOException {
@@ -56,7 +58,7 @@ public class NutReader {
 
   /**
    * Read headers we don't know how to parse yet, returning the next startcode.
-   * 
+   *
    * @return The next startcode
    * @throws IOException If a I/O error occurs
    */

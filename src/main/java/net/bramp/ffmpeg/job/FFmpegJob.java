@@ -7,15 +7,14 @@ import javax.annotation.Nullable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- *
- * @author bramp
- *
- */
+/** @author bramp */
 public abstract class FFmpegJob implements Runnable {
 
   public enum State {
-    WAITING, RUNNING, FINISHED, FAILED,
+    WAITING,
+    RUNNING,
+    FINISHED,
+    FAILED,
   }
 
   final FFmpeg ffmpeg;
@@ -31,7 +30,6 @@ public abstract class FFmpegJob implements Runnable {
     this.ffmpeg = checkNotNull(ffmpeg);
     this.listener = listener;
   }
-
 
   public State getState() {
     return state;

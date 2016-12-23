@@ -6,51 +6,47 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Information about supported Codecs
- * 
- * @author bramp
  *
+ * @author bramp
  */
 public class Codec {
 
   enum Type {
-    VIDEO, AUDIO, SUBTITLE
+    VIDEO,
+    AUDIO,
+    SUBTITLE
   }
-
 
   final String name;
   final String longName;
 
-  /**
-   * Can I decode with this codec
-   */
+  /** Can I decode with this codec */
   final boolean canDecode;
 
-  /**
-   * Can I encode with this codec
-   */
+  /** Can I encode with this codec */
   final boolean canEncode;
 
-  /**
-   * What type of codec is this
-   */
+  /** What type of codec is this */
   final Type type;
 
+  /**
+   * @param name short codec name
+   * @param longName long codec name
+   * @param flags is expected to be in the following format:
+   *     <pre>
+   * D..... = Decoding supported
+   * .E.... = Encoding supported
+   * ..V... = Video codec
+   * ..A... = Audio codec
+   * ..S... = Subtitle codec
+   * ...S.. = Supports draw_horiz_band
+   * ....D. = Supports direct rendering method 1
+   * .....T = Supports weird frame truncation
+   * </pre>
+   */
   public Codec(String name, String longName, String flags) {
     this.name = Preconditions.checkNotNull(name).trim();
     this.longName = Preconditions.checkNotNull(longName).trim();
-
-    /**
-     * {@literal
-     * D..... = Decoding supported
-     * .E.... = Encoding supported
-     * ..V... = Video codec
-     * ..A... = Audio codec
-     * ..S... = Subtitle codec
-     * ...S.. = Supports draw_horiz_band
-     * ....D. = Supports direct rendering method 1
-     * .....T = Supports weird frame truncation
-		 * }
-     */
 
     Preconditions.checkNotNull(flags);
     Preconditions.checkArgument(flags.length() == 6, "Format flags is invalid '{}'", flags);
@@ -108,5 +104,4 @@ public class Codec {
   public Type getType() {
     return type;
   }
-
 }

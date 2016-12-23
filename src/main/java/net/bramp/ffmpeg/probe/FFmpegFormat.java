@@ -4,9 +4,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.Map;
 
-@SuppressFBWarnings(value = {"UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD",
-    "UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD"},
-    justification = "POJO objects where the fields are populated by gson")
+@SuppressFBWarnings(
+  value = {"UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD", "UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD"},
+  justification = "POJO objects where the fields are populated by gson"
+)
 public class FFmpegFormat {
   public String filename;
   public int nb_streams;
@@ -16,20 +17,14 @@ public class FFmpegFormat {
   public String format_long_name;
   public double start_time;
 
-  /**
-   * Duration in seconds
-   */
+  /** Duration in seconds */
   // TODO Change this to java.time.Duration
   public double duration;
 
-  /**
-   * File size in bytes
-   */
+  /** File size in bytes */
   public long size;
 
-  /**
-   * Bitrate
-   */
+  /** Bitrate */
   public long bit_rate;
 
   public int probe_score;

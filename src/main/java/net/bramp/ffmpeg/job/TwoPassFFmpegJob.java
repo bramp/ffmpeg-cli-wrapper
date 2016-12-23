@@ -24,7 +24,8 @@ public class TwoPassFFmpegJob extends FFmpegJob {
     this(ffmpeg, builder, null);
   }
 
-  public TwoPassFFmpegJob(FFmpeg ffmpeg, FFmpegBuilder builder, @Nullable ProgressListener listener) {
+  public TwoPassFFmpegJob(
+      FFmpeg ffmpeg, FFmpegBuilder builder, @Nullable ProgressListener listener) {
     super(ffmpeg, listener);
 
     // Random prefix so multiple runs don't clash

@@ -24,8 +24,7 @@ import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 public class FFmpegBuilder {
 
   public enum Strict {
-    VERY, // strictly conform to a older more strict version of the specifications or reference
-          // software
+    VERY, // strictly conform to a older more strict version of the specifications or reference software
     STRICT, // strictly conform to all the things in the specificiations no matter what consequences
     NORMAL, // normal
     UNOFFICAL, // allow unofficial extensions
@@ -38,11 +37,16 @@ public class FFmpegBuilder {
     }
   }
 
-  /**
-   * Log level options: https://ffmpeg.org/ffmpeg.html#Generic-options
-   */
+  /** Log level options: https://ffmpeg.org/ffmpeg.html#Generic-options */
   public enum Verbosity {
-    QUIET, PANIC, FATAL, ERROR, WARNING, INFO, VERBOSE, DEBUG;
+    QUIET,
+    PANIC,
+    FATAL,
+    ERROR,
+    WARNING,
+    INFO,
+    VERBOSE,
+    DEBUG;
 
     @Override
     public String toString() {
@@ -158,7 +162,6 @@ public class FFmpegBuilder {
     return this;
   }
 
-
   /**
    * Add additional ouput arguments (for flags which aren't currently supported).
    *
@@ -174,7 +177,6 @@ public class FFmpegBuilder {
     }
     return this;
   }
-
 
   /**
    * Adds new output file.
@@ -223,7 +225,7 @@ public class FFmpegBuilder {
 
   /**
    * Create new output (to stdout)
-   * 
+   *
    * @return A new {@link FFmpegOutputBuilder}
    */
   public FFmpegOutputBuilder addStdoutOutput() {

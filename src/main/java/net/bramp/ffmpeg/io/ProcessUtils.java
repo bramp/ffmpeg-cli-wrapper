@@ -3,9 +3,7 @@ package net.bramp.ffmpeg.io;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-/**
- * @author bramp
- */
+/** @author bramp */
 public final class ProcessUtils {
 
   private ProcessUtils() {
@@ -42,7 +40,7 @@ public final class ProcessUtils {
 
   /**
    * Waits until a process finishes or a timeout occurs
-   * 
+   *
    * @param p process
    * @param timeout timeout in given unit
    * @param unit time unit

@@ -10,7 +10,6 @@ import static net.bramp.ffmpeg.Helper.combineResource;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
-
 public class StreamProgressParserTest {
 
   RecordingProgressListener listener = new RecordingProgressListener();

@@ -11,14 +11,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class SinglePassFFmpegJob extends FFmpegJob {
 
-  final public FFmpegBuilder builder;
+  public final FFmpegBuilder builder;
 
   public SinglePassFFmpegJob(FFmpeg ffmpeg, FFmpegBuilder builder) {
     this(ffmpeg, builder, null);
   }
 
-  public SinglePassFFmpegJob(FFmpeg ffmpeg, FFmpegBuilder builder,
-      @Nullable ProgressListener listener) {
+  public SinglePassFFmpegJob(
+      FFmpeg ffmpeg, FFmpegBuilder builder, @Nullable ProgressListener listener) {
     super(ffmpeg, listener);
     this.builder = checkNotNull(builder);
 

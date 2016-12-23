@@ -6,9 +6,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Information about supported Format
- * 
- * @author bramp
  *
+ * @author bramp
  */
 public class Format {
   final String name;
@@ -17,16 +16,19 @@ public class Format {
   final boolean canDemux;
   final boolean canMux;
 
+  /**
+   * @param name short format name
+   * @param longName long format name
+   * @param flags is expected to be in the following format:
+   *     <pre>
+   * D. = Demuxing supported
+   * .E = Muxing supported
+   * </pre>
+   */
   public Format(String name, String longName, String flags) {
     this.name = Preconditions.checkNotNull(name).trim();
     this.longName = Preconditions.checkNotNull(longName).trim();
 
-    /**
-     * {@literal
-     * D. = Demuxing supported
-     * .E = Muxing supported
-     * }
-     */
     Preconditions.checkNotNull(flags);
     Preconditions.checkArgument(flags.length() == 2, "Format flags is invalid '{}'", flags);
     canDemux = flags.charAt(0) == 'D';
