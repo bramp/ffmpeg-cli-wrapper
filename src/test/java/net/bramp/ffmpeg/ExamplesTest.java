@@ -124,4 +124,21 @@ public class ExamplesTest {
     String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
     assertEquals(expected, actual);
   }
+
+  // Read from RTSP (IP camera)
+  @Test
+  public void testExample4() throws IOException {
+
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .setInput("rtsp://192.168.1.1:1234/")
+            .addOutput("img%03d.jpg")
+            .setFormat("image2")
+            .done();
+
+    String expected = "ffmpeg -y -v error -i rtsp://192.168.1.1:1234/ -f image2 img%03d.jpg";
+
+    String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
+    assertEquals(expected, actual);
+  }
 }
