@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -18,6 +19,8 @@ public class RunProcessFunction implements ProcessFunction {
 
   static final Logger LOG = LoggerFactory.getLogger(RunProcessFunction.class);
 
+  File workingDirectory;
+
   public Process run(List<String> args) throws IOException {
 
     Preconditions.checkNotNull(args, "Arguments must not be null");
@@ -28,7 +31,14 @@ public class RunProcessFunction implements ProcessFunction {
     }
 
     ProcessBuilder builder = new ProcessBuilder(args);
+    if (workingDirectory != null) {
+      builder.directory(workingDirectory);
+    }
     builder.redirectErrorStream(true);
     return builder.start();
+  }
+
+  public void setWorkingDirectory(File workingDirectory) {
+    this.workingDirectory = workingDirectory;
   }
 }
