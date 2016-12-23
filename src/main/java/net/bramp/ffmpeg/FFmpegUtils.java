@@ -44,9 +44,9 @@ public final class FFmpegUtils {
   /**
    * Convert the duration to "hh:mm:ss" timecode representation, where ss (seconds) can be decimal.
    *
-   * @param duration
-   * @param units
-   * @return
+   * @param duration the duration.
+   * @param units the unit the duration is in.
+   * @return the timecode representation.
    */
   public static String toTimecode(long duration, TimeUnit units) {
     // FIXME Negative durations are also supported.
@@ -63,7 +63,9 @@ public final class FFmpegUtils {
     long hours = MINUTES.toHours(minutes);
     minutes -= HOURS.toMinutes(hours);
 
-    if (ns == 0) return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    if (ns == 0) {
+      return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
 
     return ZERO.trimTrailingFrom(String.format("%02d:%02d:%02d.%09d", hours, minutes, seconds, ns));
   }
@@ -72,8 +74,8 @@ public final class FFmpegUtils {
    * Returns the number of nanoseconds this timecode represents. The string is expected to be in the
    * format "hour:minute:second", where second can be a decimal number.
    *
-   * @param time
-   * @return
+   * @param time the timecode to parse.
+   * @return the number of nanoseconds.
    */
   public static long fromTimecode(String time) {
     checkNotEmpty(time, "time must not be empty string");
