@@ -129,7 +129,7 @@ public class ReadmeTest {
                 System.out.println(
                     String.format(
                         locale,
-                        "[%.0f%%] status:%s frame:%d time:%d ms fps:%.0f speed:%.2fx",
+                        "[%.0f%%] status:%s frame:%d time:%s fps:%.0f speed:%.2fx",
                         percentage * 100,
                         progress.status,
                         progress.frame,
