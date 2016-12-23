@@ -415,4 +415,25 @@ public class FFmpegBuilderTest {
             "flv",
             "output.flv"));
   }
+
+  @Test
+  public void testPresets() {
+    List<String> args =
+        new FFmpegBuilder()
+            .addInput("input")
+            .addOutput("output")
+            .setPreset("a")
+            .setPresetFilename("b")
+            .setVideoPreset("c")
+            .setAudioPreset("d")
+            .setSubtitlePreset("e")
+            .done()
+            .build();
+
+    assertEquals(
+        args,
+        ImmutableList.of(
+            "-y", "-v", "error", "-i", "input", "-preset", "a", "-fpre", "b", "-vpre", "c", "-apre",
+            "d", "-spre", "e", "output"));
+  }
 }

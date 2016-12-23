@@ -36,6 +36,8 @@ public class FFmpegOutputBuilder {
   public URI uri;
 
   public String format;
+  public String preset;
+  public String presetFilename;
 
   public Long startOffset; // in milliseconds
   public Long duration; // in milliseconds
@@ -51,6 +53,7 @@ public class FFmpegOutputBuilder {
   public Integer audio_quality;
   public String audio_bit_stream_filter;
   public String audio_filter;
+  public String audio_preset;
 
   public boolean video_enabled = true;
   public String video_codec;
@@ -70,6 +73,7 @@ public class FFmpegOutputBuilder {
   public String video_pixel_format;
 
   public boolean subtitle_enabled = true;
+  public String subtitle_preset;
 
   public final List<String> extra_args = new ArrayList<>();
 
@@ -149,6 +153,32 @@ public class FFmpegOutputBuilder {
 
   public FFmpegOutputBuilder setFormat(String format) {
     this.format = checkNotEmpty(format, "format must not be empty");
+    return this;
+  }
+
+  /**
+   * Sets a file to use containing presets.
+   *
+   * <p>Uses `-fpre`.
+   *
+   * @param presetFilename the preset by filename
+   * @return this
+   */
+  public FFmpegOutputBuilder setPresetFilename(String presetFilename) {
+    this.presetFilename = checkNotEmpty(presetFilename, "file preset must not be empty");
+    return this;
+  }
+
+  /**
+   * Sets a preset by name (this only works with some codecs).
+   *
+   * <p>Uses `-preset`.
+   *
+   * @param preset the preset
+   * @return this
+   */
+  public FFmpegOutputBuilder setPreset(String preset) {
+    this.preset = checkNotEmpty(preset, "preset must not be empty");
     return this;
   }
 
@@ -233,6 +263,14 @@ public class FFmpegOutputBuilder {
     return this;
   }
 
+  /**
+   * Sets a video preset to use.
+   *
+   * <p>Uses `-vpre`.
+   *
+   * @param preset the preset
+   * @return this
+   */
   public FFmpegOutputBuilder setVideoPreset(String preset) {
     this.video_enabled = true;
     this.video_preset = checkNotEmpty(preset, "video preset must not be empty");
@@ -477,6 +515,34 @@ public class FFmpegOutputBuilder {
   }
 
   /**
+   * Sets a audio preset to use.
+   *
+   * <p>Uses `-apre`.
+   *
+   * @param preset the preset
+   * @return this
+   */
+  public FFmpegOutputBuilder setAudioPreset(String preset) {
+    this.audio_enabled = true;
+    this.audio_preset = checkNotEmpty(preset, "audio preset must not be empty");
+    return this;
+  }
+
+  /**
+   * Sets a subtitle preset to use.
+   *
+   * <p>Uses `-spre`.
+   *
+   * @param preset the preset
+   * @return this
+   */
+  public FFmpegOutputBuilder setSubtitlePreset(String preset) {
+    this.subtitle_enabled = true;
+    this.subtitle_preset = checkNotEmpty(preset, "subtitle preset must not be empty");
+    return this;
+  }
+
+  /**
    * Target output file size (in bytes)
    *
    * @param targetSize The target size in bytes
@@ -654,6 +720,14 @@ public class FFmpegOutputBuilder {
       args.add("-f", format);
     }
 
+    if (!Strings.isNullOrEmpty(preset)) {
+      args.add("-preset", preset);
+    }
+
+    if (!Strings.isNullOrEmpty(presetFilename)) {
+      args.add("-fpre", presetFilename);
+    }
+
     if (startOffset != null) {
       args.add("-ss", toTimecode(startOffset, TimeUnit.MILLISECONDS));
     }
@@ -768,6 +842,10 @@ public class FFmpegOutputBuilder {
         args.add("-qscale:a", String.valueOf(audio_quality));
       }
 
+      if (!Strings.isNullOrEmpty(audio_preset)) {
+        args.add("-apre", audio_preset);
+      }
+
       if (!Strings.isNullOrEmpty(audio_filter)) {
         args.add("-af", audio_filter);
       }
@@ -780,7 +858,12 @@ public class FFmpegOutputBuilder {
       args.add("-an");
     }
 
-    if (!subtitle_enabled) {
+    if (subtitle_enabled) {
+      if (!Strings.isNullOrEmpty(subtitle_preset)) {
+        args.add("-spre", subtitle_preset);
+      }
+
+    } else {
       args.add("-sn");
     }
 
