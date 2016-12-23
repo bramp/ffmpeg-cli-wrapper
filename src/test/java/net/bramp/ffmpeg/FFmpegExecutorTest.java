@@ -3,15 +3,24 @@ package net.bramp.ffmpeg;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CountingOutputStream;
+import com.google.common.net.HostAndPort;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.job.FFmpegJob;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import net.bramp.ffmpeg.progress.Progress;
 import net.bramp.ffmpeg.progress.RecordingProgressListener;
+import org.glassfish.grizzly.PortRange;
+import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.grizzly.http.server.NetworkListener;
+import org.glassfish.grizzly.http.util.MimeType;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,6 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static net.bramp.ffmpeg.FFmpeg.FPS_30;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -30,6 +40,8 @@ import static org.junit.Assert.assertFalse;
 /** Tests actually shelling out ffmpeg and ffprobe. Could be flakey if ffmpeg or ffprobe change. */
 public class FFmpegExecutorTest {
 
+  static final Logger LOG = LoggerFactory.getLogger(FFmpegExecutorTest.class);
+
   @Rule public Timeout timeout = new Timeout(30, TimeUnit.SECONDS);
 
   final FFmpeg ffmpeg = new FFmpeg();
@@ -38,6 +50,70 @@ public class FFmpegExecutorTest {
   final ExecutorService executor = Executors.newSingleThreadExecutor();
 
   public FFmpegExecutorTest() throws IOException {}
+
+  // Webserver which can be used for fetching files over HTTP
+  static HttpServer server;
+
+  @BeforeClass
+  public static void startWebserver() throws IOException {
+    MimeType.add("mp4", "video/mp4");
+
+    server =
+        HttpServer.createSimpleServer(
+            Samples.TEST_PREFIX, "127.0.0.1", new PortRange(10000, 60000));
+    server.start();
+
+    LOG.info("Started server at {}", getWebserverRoot());
+  }
+
+  @AfterClass
+  public static void stopWebserver() {
+    server.shutdownNow();
+  }
+
+  public static String getWebserverRoot() {
+    NetworkListener net = server.getListener("grizzly");
+    HostAndPort hp = HostAndPort.fromParts(net.getHost(), net.getPort());
+    return "http://" + hp.toString() + "/";
+  }
+
+  @Test
+  public void testNormal() throws InterruptedException, ExecutionException, IOException {
+
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .setVerbosity(FFmpegBuilder.Verbosity.DEBUG)
+            .setUserAgent(
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36")
+            .setInput(getWebserverRoot() + Samples.base_big_buck_bunny_720p_1mb)
+            .addExtraArgs("-probesize", "1000000")
+            //.setStartOffset(1500, TimeUnit.MILLISECONDS)
+            .overrideOutputFiles(true)
+            .addOutput(Samples.output_mp4)
+            .setFrames(100)
+            .setFormat("mp4")
+            .setStartOffset(500, TimeUnit.MILLISECONDS)
+            .setAudioCodec("aac")
+            .setAudioChannels(1)
+            .setAudioSampleRate(48000)
+            .setAudioBitStreamFilter("chomp")
+            .setAudioFilter("aecho=0.8:0.88:6:0.4")
+            .setAudioQuality(1)
+            .setVideoCodec("libx264")
+            .setVideoFrameRate(FPS_30)
+            .setVideoResolution(320, 240)
+            //.setVideoFilter("scale=320:trunc(ow/a/2)*2")
+            //.setVideoPixelFormat("yuv420p")
+            //.setVideoBitStreamFilter("noise")
+            .setVideoQuality(2)
+            .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
+            .done();
+
+    FFmpegJob job = ffExecutor.createJob(builder);
+    runAndWait(job);
+
+    assertEquals(FFmpegJob.State.FINISHED, job.getState());
+  }
 
   @Test
   public void testTwoPass() throws InterruptedException, ExecutionException, IOException {
