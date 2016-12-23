@@ -55,6 +55,12 @@ abstract class FFcommon {
     }
   }
 
+  /**
+   * Returns the version string for this binary.
+   *
+   * @return
+   * @throws IOException
+   */
   public synchronized @Nonnull String version() throws IOException {
     if (this.version == null) {
       Process p = runFunc.run(ImmutableList.of(path, "-version"));
@@ -75,12 +81,19 @@ abstract class FFcommon {
     return path;
   }
 
+  /**
+   * Returns the full path to the binary with arguments appended.
+   *
+   * @param args
+   * @return
+   * @throws IOException
+   */
   public List<String> path(List<String> args) throws IOException {
     return ImmutableList.<String>builder().add(path).addAll(args).build();
   }
 
   /**
-   * Runs ffmpeg with the supplied args. Blocking until finished.
+   * Runs the binary (ffmpeg) with the supplied args. Blocking until finished.
    *
    * @param args The arguments to pass to the binary.
    * @throws IOException If there is a problem executing the binary.

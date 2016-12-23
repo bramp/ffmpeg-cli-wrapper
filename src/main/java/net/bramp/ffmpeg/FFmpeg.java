@@ -182,9 +182,12 @@ public class FFmpeg extends FFcommon {
     super.run(args);
   }
 
+  public void run(FFmpegBuilder builder) throws IOException {
+    run(builder, null);
+  }
+
   public void run(FFmpegBuilder builder, @Nullable ProgressListener listener) throws IOException {
     checkNotNull(builder);
-    checkIfFFmpeg();
 
     if (listener != null) {
       try (ProgressParser progressParser = createProgressParser(listener)) {

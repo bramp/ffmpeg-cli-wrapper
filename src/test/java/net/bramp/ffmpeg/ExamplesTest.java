@@ -152,15 +152,11 @@ public class ExamplesTest {
     FFmpeg ffmpeg = new FFmpeg("/path/to/ffmpeg", func);
     FFprobe ffprobe = new FFprobe("/path/to/ffprobe", func);
 
-    FFmpegBuilder builder =
-        new FFmpegBuilder()
-            .setInput("input")
-            .addOutput("output.mp4")
-            .done();
+    FFmpegBuilder builder = new FFmpegBuilder().setInput("input").addOutput("output.mp4").done();
 
     FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 
     // Run a two-pass encode
-    executor.createTwoPassJob(builder).run();
+    executor.createTwoPassJob(builder);//.run();
   }
 }
