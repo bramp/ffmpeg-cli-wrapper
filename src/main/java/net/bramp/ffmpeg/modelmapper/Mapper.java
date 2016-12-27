@@ -1,5 +1,6 @@
 package net.bramp.ffmpeg.modelmapper;
 
+import net.bramp.ffmpeg.builder.AbstractFFmpegStreamBuilder;
 import net.bramp.ffmpeg.builder.FFmpegOutputBuilder;
 import net.bramp.ffmpeg.options.AudioEncodingOptions;
 import net.bramp.ffmpeg.options.EncodingOptions;
@@ -71,19 +72,23 @@ public class Mapper {
     }
   }
 
-  public static void map(MainEncodingOptions opts, FFmpegOutputBuilder dest) {
+  public static <T extends AbstractFFmpegStreamBuilder<T>> void map(
+      MainEncodingOptions opts, AbstractFFmpegStreamBuilder<T> dest) {
     mapper.map(opts, dest);
   }
 
-  public static void map(AudioEncodingOptions opts, FFmpegOutputBuilder dest) {
+  public static <T extends AbstractFFmpegStreamBuilder<T>> void map(
+      AudioEncodingOptions opts, AbstractFFmpegStreamBuilder<T> dest) {
     mapper.map(new AudioWrapper(opts), dest);
   }
 
-  public static void map(VideoEncodingOptions opts, FFmpegOutputBuilder dest) {
+  public static <T extends AbstractFFmpegStreamBuilder<T>> void map(
+      VideoEncodingOptions opts, AbstractFFmpegStreamBuilder<T> dest) {
     mapper.map(new VideoWrapper(opts), dest);
   }
 
-  public static void map(EncodingOptions opts, FFmpegOutputBuilder dest) {
+  public static <T extends AbstractFFmpegStreamBuilder<T>> void map(
+      EncodingOptions opts, AbstractFFmpegStreamBuilder<T> dest) {
     map(opts.getMain(), dest);
 
     if (opts.getAudio().enabled) {
