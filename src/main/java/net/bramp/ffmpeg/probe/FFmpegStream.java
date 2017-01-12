@@ -44,9 +44,9 @@ public class FFmpegStream {
   public Fraction avg_frame_rate;
   public Fraction time_base;
 
-  // Edge case found on encoder, changed from int to double
-  public double start_pts;
-  public double start_time;
+  // Edge case found on encoder, changed from int to long
+  public long start_pts;
+  public long start_time;
 
   public long duration_ts;
   public double duration;
