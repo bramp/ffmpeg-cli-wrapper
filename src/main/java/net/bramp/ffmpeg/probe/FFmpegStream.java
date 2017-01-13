@@ -46,7 +46,7 @@ public class FFmpegStream {
 
   // Edge case found on encoder, changed from int to long
   public long start_pts;
-  public long start_time;
+  public double start_time;
 
   public long duration_ts;
   public double duration;
