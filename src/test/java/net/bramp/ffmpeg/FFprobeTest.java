@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -54,6 +55,13 @@ public class FFprobeTest {
         "ffprobe version 3.0.2 Copyright (c) 2007-2016 the FFmpeg developers", ffprobe.version());
 
     verify(runFunc, times(1)).run(argThatHasItem("-version"));
+  }
+
+  @Test
+  public void testStartPtsType()
+  {
+    FFmpegStream ffStream = new FFmpegStream();
+    assertThat(ffStream.start_pts, instanceOf(long.class));
   }
 
   @Test
