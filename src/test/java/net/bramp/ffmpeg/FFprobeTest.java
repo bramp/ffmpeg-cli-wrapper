@@ -41,6 +41,9 @@ public class FFprobeTest {
     when(runFunc.run(argThatHasItem(Samples.always_on_my_mind)))
         .thenAnswer(new NewProcessAnswer("ffprobe-Always On My Mind [Program Only] - Adelén.mp4"));
 
+    when(runFunc.run(argThatHasItem(Samples.start_pts_test)))
+        .thenAnswer(new NewProcessAnswer("ffprobe-start_pts_test"));
+
     when(runFunc.run(argThatHasItem(Samples.divide_by_zero)))
         .thenAnswer(new NewProcessAnswer("ffprobe-divide-by-zero"));
 
@@ -55,13 +58,6 @@ public class FFprobeTest {
         "ffprobe version 3.0.2 Copyright (c) 2007-2016 the FFmpeg developers", ffprobe.version());
 
     verify(runFunc, times(1)).run(argThatHasItem("-version"));
-  }
-
-  @Test
-  public void testStartPtsType()
-  {
-    FFmpegStream ffStream = new FFmpegStream();
-    assertThat(ffStream.start_pts, instanceOf(long.class));
   }
 
   @Test
@@ -99,6 +95,15 @@ public class FFprobeTest {
         is("c:\\Users\\Bob\\Always On My Mind [Program Only] - Adelén.mp4"));
 
     // System.out.println(FFmpegUtils.getGson().toJson(info));
+  }
+
+  @Test
+  public void testProbeStartPts() throws IOException {
+    FFmpegProbeResult info = ffprobe.probe(Samples.start_pts_test);
+    assertFalse(info.hasError());
+
+    // Check edge case with a time larger than an integer
+    assertThat(info.getStreams().get(0).start_pts, is(8570867078L));
   }
 
   @Test
