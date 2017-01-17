@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -39,6 +40,9 @@ public class FFprobeTest {
 
     when(runFunc.run(argThatHasItem(Samples.always_on_my_mind)))
         .thenAnswer(new NewProcessAnswer("ffprobe-Always On My Mind [Program Only] - Adelén.mp4"));
+
+    when(runFunc.run(argThatHasItem(Samples.start_pts_test)))
+        .thenAnswer(new NewProcessAnswer("ffprobe-start_pts_test"));
 
     when(runFunc.run(argThatHasItem(Samples.divide_by_zero)))
         .thenAnswer(new NewProcessAnswer("ffprobe-divide-by-zero"));
@@ -91,6 +95,15 @@ public class FFprobeTest {
         is("c:\\Users\\Bob\\Always On My Mind [Program Only] - Adelén.mp4"));
 
     // System.out.println(FFmpegUtils.getGson().toJson(info));
+  }
+
+  @Test
+  public void testProbeStartPts() throws IOException {
+    FFmpegProbeResult info = ffprobe.probe(Samples.start_pts_test);
+    assertFalse(info.hasError());
+
+    // Check edge case with a time larger than an integer
+    assertThat(info.getStreams().get(0).start_pts, is(8570867078L));
   }
 
   @Test

@@ -44,7 +44,7 @@ public class FFmpegStream {
   public Fraction avg_frame_rate;
   public Fraction time_base;
 
-  public int start_pts;
+  public long start_pts;
   public double start_time;
 
   public long duration_ts;
