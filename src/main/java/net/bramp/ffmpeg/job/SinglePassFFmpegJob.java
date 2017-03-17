@@ -7,6 +7,8 @@ import net.bramp.ffmpeg.progress.ProgressListener;
 
 import javax.annotation.Nullable;
 
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class SinglePassFFmpegJob extends FFmpegJob {
@@ -25,9 +27,10 @@ public class SinglePassFFmpegJob extends FFmpegJob {
     // Build the args now (but throw away the results). This allows the illegal arguments to be
     // caught early, but also allows the ffmpeg command to actually alter the arguments when
     // running.
-    this.builder.build();
+    List<String> unused = this.builder.build();
   }
 
+  @Override
   public void run() {
 
     state = State.RUNNING;

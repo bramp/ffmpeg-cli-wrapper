@@ -8,10 +8,12 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static net.bramp.ffmpeg.nut.StreamHeaderPacket.fourccToString;
 
 public class RawHandler {
 
@@ -93,12 +95,17 @@ public class RawHandler {
         interleaving = fourcc[1];
         bits = fourcc[0];
       } else {
-        throw new IllegalArgumentException("unknown fourcc value: " + fourcc);
+        throw new IllegalArgumentException(
+            "unknown fourcc value: '" + fourccToString(fourcc) + "'");
       }
 
       if (interleaving != 'D') {
         throw new IllegalArgumentException(
-            "unsupported interleaving '" + interleaving + "' in fourcc value " + fourcc);
+            "unsupported interleaving '"
+                + interleaving
+                + "' in fourcc value '"
+                + fourccToString(fourcc)
+                + "'");
       }
 
       switch (type) {
@@ -112,10 +119,11 @@ public class RawHandler {
           encoding = AudioFormat.Encoding.PCM_FLOAT;
           break;
         default:
-          throw new IllegalArgumentException("unknown fourcc '" + fourcc + "' type: " + type);
+          throw new IllegalArgumentException(
+              "unknown fourcc '" + fourccToString(fourcc) + "' type: " + type);
       }
     } else {
-      throw new IllegalArgumentException("unknown fourcc value: " + fourcc);
+      throw new IllegalArgumentException("unknown fourcc value: '" + fourccToString(fourcc) + "'");
     }
 
     int frameSize = (bits * header.channels) / 8;

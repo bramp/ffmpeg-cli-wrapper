@@ -27,7 +27,7 @@ public class Packet {
       return startcode;
     }
 
-    public boolean equals(long startcode) {
+    public boolean equalsCode(long startcode) {
       return this.startcode == startcode;
     }
 
@@ -39,7 +39,7 @@ public class Packet {
      */
     public static Startcode of(long startcode) {
       for (Startcode c : Startcode.values()) {
-        if (c.equals(startcode)) {
+        if (c.equalsCode(startcode)) {
           return c;
         }
       }

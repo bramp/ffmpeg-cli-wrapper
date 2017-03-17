@@ -23,6 +23,7 @@ public class MainHeaderPacket extends Packet {
 
   public MainHeaderPacket() {}
 
+  @Override
   protected void readBody(NutDataInputStream in) throws IOException {
     frameCodes.clear();
 
@@ -54,7 +55,7 @@ public class MainHeaderPacket extends Packet {
     int stream_id = 0;
     int header_idx = 0;
 
-    long match = 1 - (1 << 62);
+    long match = 1L - (1L << 62);
     int size;
     int reserved;
     long count;

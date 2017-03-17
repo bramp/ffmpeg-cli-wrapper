@@ -216,14 +216,14 @@ public class FFmpegBuilderTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testConflictingVideoSize() {
-
-    new FFmpegBuilder()
-        .setInput("input")
-        .addOutput("output")
-        .setVideoResolution(320, 240)
-        .setVideoResolution("ntsc")
-        .done()
-        .build();
+    List<String> unused =
+        new FFmpegBuilder()
+            .setInput("input")
+            .addOutput("output")
+            .setVideoResolution(320, 240)
+            .setVideoResolution("ntsc")
+            .done()
+            .build();
   }
 
   @Test
@@ -245,8 +245,7 @@ public class FFmpegBuilderTest {
 
   @Test(expected = IllegalStateException.class)
   public void testURIAndFilenameOutput() {
-
-    List<String> args =
+    List<String> unused =
         new FFmpegBuilder()
             .setInput("input")
             .addOutput(URI.create("udp://10.1.0.102:1234"))
@@ -257,12 +256,13 @@ public class FFmpegBuilderTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testAddEmptyFilename() {
-    new FFmpegBuilder().setInput("input").addOutput("").done().build();
+    List<String> unused = new FFmpegBuilder().setInput("input").addOutput("").done().build();
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testSetEmptyFilename() {
-    new FFmpegBuilder().setInput("input").addOutput("output").setFilename("").done().build();
+    List<String> unused =
+        new FFmpegBuilder().setInput("input").addOutput("output").setFilename("").done().build();
   }
 
   @Test
@@ -371,8 +371,7 @@ public class FFmpegBuilderTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testNothing() {
-    FFmpegBuilder builder = new FFmpegBuilder();
-    builder.build();
+    List<String> unused = new FFmpegBuilder().build();
   }
 
   @Test

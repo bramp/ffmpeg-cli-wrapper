@@ -1,5 +1,7 @@
 package net.bramp.ffmpeg.io;
 
+import com.google.common.base.Charsets;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -18,9 +20,10 @@ public class HexOutputStream extends OutputStream {
    *     use, or <code>null</code> if this instance is to be created without an underlying stream.
    */
   public HexOutputStream(OutputStream out) {
-    writer = new OutputStreamWriter(out);
+    writer = new OutputStreamWriter(out, Charsets.UTF_8);
   }
 
+  @Override
   public void write(int b) throws IOException {
     writer.write(String.format("%02X ", b & 0xFF));
     count++;
@@ -30,12 +33,14 @@ public class HexOutputStream extends OutputStream {
     }
   }
 
+  @Override
   public void write(byte[] b, int off, int len) throws IOException {
     for (int i = 0; i < len; i++) {
       write(b[off++]);
     }
   }
 
+  @Override
   public void write(byte[] b) throws IOException {
     write(b, 0, b.length);
   }

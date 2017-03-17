@@ -11,6 +11,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -35,7 +36,7 @@ public class TwoPassFFmpegJob extends FFmpegJob {
     // Build the args now (but throw away the results). This allows the illegal arguments to be
     // caught early, but also allows the ffmpeg command to actually alter the arguments when
     // running.
-    this.builder.setPass(1).build();
+    List<String> unused = this.builder.setPass(1).build();
   }
 
   protected void deletePassLog() throws IOException {
@@ -47,6 +48,7 @@ public class TwoPassFFmpegJob extends FFmpegJob {
     }
   }
 
+  @Override
   public void run() {
     state = State.RUNNING;
 

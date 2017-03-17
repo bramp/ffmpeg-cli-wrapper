@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import static net.bramp.ffmpeg.Helper.combineResource;
 import static org.hamcrest.Matchers.greaterThan;
@@ -44,7 +45,7 @@ public class TcpProgressParserTest extends AbstractProgressParserTest {
     parser.stop();
 
     assertThat(bytes, greaterThan(0L));
-    assertThat(progesses, equalTo(Progresses.allProgresses));
+    assertThat(progesses, equalTo((List<Progress>) Progresses.allProgresses));
   }
 
   @Test

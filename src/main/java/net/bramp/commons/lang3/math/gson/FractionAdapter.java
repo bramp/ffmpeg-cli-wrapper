@@ -1,5 +1,6 @@
 package net.bramp.commons.lang3.math.gson;
 
+import com.google.errorprone.annotations.Immutable;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -13,12 +14,17 @@ import java.io.IOException;
  *
  * @author bramp
  */
+@Immutable
 public class FractionAdapter extends TypeAdapter<Fraction> {
 
   /** If set, 0/0 returns this value, instead of throwing a ArithmeticException */
+  @SuppressWarnings(
+      "Immutable") // TODO Remove when https://github.com/google/error-prone/issues/512 is fixed
   private final Fraction zeroByZero;
 
   /** If set, N/0 returns this value, instead of throwing a ArithmeticException */
+  @SuppressWarnings(
+      "Immutable") // TODO Remove when https://github.com/google/error-prone/issues/512 is fixed
   private final Fraction divideByZero;
 
   public FractionAdapter() {
@@ -30,6 +36,7 @@ public class FractionAdapter extends TypeAdapter<Fraction> {
     this.divideByZero = divideByZero;
   }
 
+  @Override
   public Fraction read(JsonReader reader) throws IOException {
     JsonToken next = reader.peek();
 
@@ -57,6 +64,7 @@ public class FractionAdapter extends TypeAdapter<Fraction> {
     return Fraction.getFraction(fraction);
   }
 
+  @Override
   public void write(JsonWriter writer, Fraction value) throws IOException {
     if (value == null) {
       writer.nullValue();

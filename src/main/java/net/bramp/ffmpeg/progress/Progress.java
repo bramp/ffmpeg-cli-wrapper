@@ -6,12 +6,12 @@ import org.apache.commons.lang3.math.Fraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.CheckReturnValue;
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static net.bramp.ffmpeg.FFmpegUtils.fromTimecode;
 
-/** */
 // TODO Change to be immutable
 public class Progress {
 
@@ -27,10 +27,18 @@ public class Progress {
       this.status = status;
     }
 
+    @Override
     public String toString() {
       return status;
     }
 
+    /**
+     * Returns the canonical status for this String or throws a IllegalArgumentException.
+     *
+     * @param status the status to convert to a Status enum.
+     * @return the Status enum.
+     * @throws IllegalArgumentException if the status is unknown.
+     */
     public static Status of(String status) {
       for (Status s : Status.values()) {
         if (status.equalsIgnoreCase(s.status)) {
@@ -190,6 +198,7 @@ public class Progress {
     }
   }
 
+  @CheckReturnValue
   public boolean isEnd() {
     return status == Status.END;
   }

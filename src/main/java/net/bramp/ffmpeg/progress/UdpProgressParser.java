@@ -42,6 +42,7 @@ public class UdpProgressParser extends AbstractSocketProgressParser {
     super.stop();
   }
 
+  @Override
   protected String getThreadName() {
     return "UdpProgressParser";
   }
@@ -51,6 +52,7 @@ public class UdpProgressParser extends AbstractSocketProgressParser {
     return new UdpProgressParserRunnable(parser, socket, startSignal);
   }
 
+  @Override
   public URI getUri() {
     return address;
   }

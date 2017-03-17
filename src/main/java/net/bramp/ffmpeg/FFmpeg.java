@@ -9,6 +9,7 @@ import net.bramp.ffmpeg.progress.ProgressParser;
 import net.bramp.ffmpeg.progress.TcpProgressParser;
 import org.apache.commons.lang3.math.Fraction;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
@@ -177,6 +178,7 @@ public class FFmpeg extends FFcommon {
     }
   }
 
+  @Override
   public void run(List<String> args) throws IOException {
     checkIfFFmpeg();
     super.run(args);
@@ -201,10 +203,12 @@ public class FFmpeg extends FFcommon {
     }
   }
 
+  @CheckReturnValue
   public FFmpegBuilder builder() {
     return new FFmpegBuilder();
   }
 
+  @Override
   public String getPath() {
     return path;
   }

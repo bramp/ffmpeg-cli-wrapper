@@ -58,8 +58,8 @@ abstract class FFcommon {
   /**
    * Returns the version string for this binary.
    *
-   * @return
-   * @throws IOException
+   * @return the version string.
+   * @throws IOException If there is an error capturing output from the binary.
    */
   public synchronized @Nonnull String version() throws IOException {
     if (this.version == null) {
@@ -84,9 +84,9 @@ abstract class FFcommon {
   /**
    * Returns the full path to the binary with arguments appended.
    *
-   * @param args
-   * @return
-   * @throws IOException
+   * @param args The arguments to pass to the binary.
+   * @return The full path and arguments to execute the binary.
+   * @throws IOException If there is an error capturing output from the binary
    */
   public List<String> path(List<String> args) throws IOException {
     return ImmutableList.<String>builder().add(path).addAll(args).build();

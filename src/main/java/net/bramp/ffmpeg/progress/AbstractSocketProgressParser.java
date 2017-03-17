@@ -2,6 +2,7 @@ package net.bramp.ffmpeg.progress;
 
 import com.google.common.net.InetAddresses;
 
+import javax.annotation.CheckReturnValue;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
@@ -31,6 +32,7 @@ public abstract class AbstractSocketProgressParser implements ProgressParser {
    * @return
    * @throws URISyntaxException
    */
+  @CheckReturnValue
   static URI createUri(String scheme, InetAddress address, int port) throws URISyntaxException {
     checkNotNull(address);
     return new URI(
@@ -43,11 +45,17 @@ public abstract class AbstractSocketProgressParser implements ProgressParser {
         null /* fragment */);
   }
 
+  @CheckReturnValue
   protected abstract String getThreadName();
 
   protected abstract Runnable getRunnable(CountDownLatch startSignal);
 
-  /** @exception IllegalThreadStateException if the parser was already started. */
+  /**
+   * Starts the ProgressParser waiting for progress.
+   *
+   * @exception IllegalThreadStateException if the parser was already started.
+   */
+  @Override
   public synchronized void start() {
     if (thread != null) {
       throw new IllegalThreadStateException("Parser already started");

@@ -34,6 +34,7 @@ public class TcpProgressParser extends AbstractSocketProgressParser {
     super.stop();
   }
 
+  @Override
   protected String getThreadName() {
     return "TcpProgressParser";
   }
@@ -43,6 +44,7 @@ public class TcpProgressParser extends AbstractSocketProgressParser {
     return new TcpProgressParserRunnable(parser, server, startSignal);
   }
 
+  @Override
   public URI getUri() {
     return address;
   }

@@ -18,7 +18,7 @@ public final class Codecs {
     throw new AssertionError("No instances for you!");
   }
 
-  public static final List<Codec> CODECS =
+  public static final ImmutableList<Codec> CODECS =
       new ImmutableList.Builder<Codec>()
           .add(
               new Codec("4xm", "4X Movie", "D V D "),

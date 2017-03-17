@@ -47,7 +47,7 @@ public class RawHandlerStreamToAudioFormatTest {
   public void testStreamToAudioFormat() {
     AudioFormat format = RawHandler.streamToAudioFormat(stream);
 
-    // Compare strings since AudioFormat does not have a good equals(..) method.
+    // Compare strings since AudioFormat does not have a good equalsCode(..) method.
     assertThat(format.toString(), equalTo(expected.toString()));
   }
 }

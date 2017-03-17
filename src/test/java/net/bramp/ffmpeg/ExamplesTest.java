@@ -81,7 +81,6 @@ public class ExamplesTest {
 
   @Test
   public void testExample2() throws IOException {
-
     FFmpegBuilder builder =
         new FFmpegBuilder()
             .setInput("input.mkv")
@@ -107,7 +106,6 @@ public class ExamplesTest {
 
   @Test
   public void testExample3() throws IOException {
-
     FFmpegBuilder builder =
         new FFmpegBuilder()
             .setInput("sample.avi")
@@ -147,7 +145,6 @@ public class ExamplesTest {
   @Ignore("because this test will invoke /path/to/ffmpeg.")
   @Test
   public void testExample5() throws IOException {
-
     RunProcessFunction func = new RunProcessFunction();
     func.setWorkingDirectory("/path/to/working/dir");
 

@@ -36,7 +36,7 @@ public class Frame {
     Map<String, Object> data = new TreeMap<String, Object>();
     long count = in.readVarLong();
     for (int i = 0; i < count; i++) {
-      byte[] name = in.readVarArray();
+      String name = new String(in.readVarArray(), StandardCharsets.UTF_8);
       long type = in.readSignedVarInt();
       Object value;
 
@@ -44,8 +44,8 @@ public class Frame {
         value = new String(in.readVarArray(), StandardCharsets.UTF_8);
 
       } else if (type == -2) {
-        String k = new String(in.readVarArray());
-        String v = new String(in.readVarArray());
+        String k = new String(in.readVarArray(), StandardCharsets.UTF_8);
+        String v = new String(in.readVarArray(), StandardCharsets.UTF_8);
         value = k + "=" + v; // TODO Change this some how
 
       } else if (type == -3) {
@@ -67,7 +67,7 @@ public class Frame {
         value = type;
       }
 
-      data.put(new String(name), value);
+      data.put(name, value);
     }
     return data;
   }

@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.FFmpegUtils;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
+import javax.annotation.CheckReturnValue;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -149,7 +150,6 @@ public class FFmpegBuilder {
   }
 
   public FFmpegBuilder setStartOffset(long duration, TimeUnit units) {
-    checkNotNull(duration);
     checkNotNull(units);
 
     this.startOffset = units.toMillis(duration);
@@ -232,6 +232,7 @@ public class FFmpegBuilder {
     return addOutput("-");
   }
 
+  @CheckReturnValue
   public List<String> build() {
     ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
 

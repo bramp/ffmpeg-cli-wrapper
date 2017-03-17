@@ -4,6 +4,7 @@ import com.google.common.base.MoreObjects;
 import org.apache.commons.lang3.math.Fraction;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class StreamHeaderPacket extends Packet {
 
@@ -33,6 +34,11 @@ public class StreamHeaderPacket extends Packet {
   Fraction sampleRate = Fraction.ZERO;
   int channels;
 
+  protected static String fourccToString(byte[] fourcc) {
+    return new String(fourcc, StandardCharsets.ISO_8859_1);
+  }
+
+  @Override
   protected void readBody(NutDataInputStream in) throws IOException {
 
     id = in.readVarInt();
@@ -88,7 +94,7 @@ public class StreamHeaderPacket extends Packet {
         .add("header", header)
         .add("id", id)
         .add("type", type)
-        .add("fourcc", new String(fourcc))
+        .add("fourcc", fourccToString(fourcc))
         .add("timeBaseId", timeBaseId)
         .add("msbPtsShift", msbPtsShift)
         .add("maxPtsDistance", maxPtsDistance)

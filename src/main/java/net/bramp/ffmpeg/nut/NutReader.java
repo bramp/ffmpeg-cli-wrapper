@@ -1,5 +1,7 @@
 package net.bramp.ffmpeg.nut;
 
+import com.google.common.base.Charsets;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -52,7 +54,8 @@ public class NutReader {
     in.readFully(b);
 
     if (!Arrays.equals(b, HEADER)) {
-      throw new IOException("file_id_string does not match. got: " + new String(b));
+      throw new IOException(
+          "file_id_string does not match. got: " + new String(b, Charsets.ISO_8859_1));
     }
   }
 
@@ -87,18 +90,17 @@ public class NutReader {
       // Start parsing main and stream information
       header = new MainHeaderPacket();
 
-      if (Startcode.MAIN.equals(startcode)) {
-        header.read(in, startcode);
-      } else {
-        throw new IOException(String.format("expected main header found: %X", startcode));
+      if (!Startcode.MAIN.equalsCode(startcode)) {
+        throw new IOException(String.format("expected main header found: 0x%X", startcode));
       }
 
+      header.read(in, startcode);
       startcode = readReservedHeaders();
 
       streams.clear();
       for (int i = 0; i < header.streamCount; i++) {
-        if (!Startcode.STREAM.equals(startcode)) {
-          throw new IOException(String.format("expected stream header found: %X", startcode));
+        if (!Startcode.STREAM.equalsCode(startcode)) {
+          throw new IOException(String.format("expected stream header found: 0x%X", startcode));
         }
 
         StreamHeaderPacket streamHeader = new StreamHeaderPacket();
@@ -111,20 +113,20 @@ public class NutReader {
         startcode = readReservedHeaders();
       }
 
-      while (Startcode.INFO.equals(startcode)) {
+      while (Startcode.INFO.equalsCode(startcode)) {
         new Packet().read(in, startcode); // Discard for the moment
         startcode = readReservedHeaders();
       }
 
-      if (Startcode.INDEX.equals(startcode)) {
+      if (Startcode.INDEX.equalsCode(startcode)) {
         new Packet().read(in, startcode); // Discard for the moment
         startcode = in.readStartCode();
       }
 
       // Now main frame parsing loop
-      while (!Startcode.MAIN.equals(startcode)) {
+      while (!Startcode.MAIN.equalsCode(startcode)) {
 
-        if (Startcode.SYNCPOINT.equals(startcode)) {
+        if (Startcode.SYNCPOINT.equalsCode(startcode)) {
           new Packet().read(in, startcode); // Discard for the moment
           startcode = in.readStartCode();
         }

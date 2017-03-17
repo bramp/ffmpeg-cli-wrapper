@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
+// TODO fix "invalid packet checksum" when running test
 public class NutReaderTest {
 
   static final Logger LOG = LoggerFactory.getLogger(NutReaderTest.class);

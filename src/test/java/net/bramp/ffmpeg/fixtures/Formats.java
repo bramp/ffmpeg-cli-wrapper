@@ -1,6 +1,7 @@
 package net.bramp.ffmpeg.fixtures;
 
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.annotations.DoNotCall;
 import net.bramp.ffmpeg.info.Format;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public final class Formats {
     throw new AssertionError("No instances for you!");
   }
 
-  public static final List<Format> FORMATS =
+  public static final ImmutableList<Format> FORMATS =
       new ImmutableList.Builder<Format>()
           .add(
               new Format("3g2", "3GP2 format", " E"),
