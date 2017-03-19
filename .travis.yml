@@ -8,8 +8,8 @@ env:
 
 jdk:
   - openjdk7
-  - oraclejdk8
   - oraclejdk7
+  - oraclejdk8
 
 os:
   - linux
@@ -23,7 +23,12 @@ before_install:
   - ./travis-install-ffmpeg.sh
   - export FFMPEG=$PWD/ffmpeg-release-64bit-static/ffmpeg
   - export FFPROBE=$PWD/ffmpeg-release-64bit-static/ffprobe
-  - echo "MAVEN_OPTS='-Duser.language=$USER_LANGUAGE -Duser.country=$USER_COUNTRY'" > ~/.mavenrc
+  - export MAVEN_OPTS="$MAVEN_OPTS -Duser.language=$USER_LANGUAGE -Duser.country=$USER_COUNTRY"
+
+before_script:
+  - echo $HOME
+  - echo $JAVA_OPTS
+  - echo $MAVEN_OPTS
 
 install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true -B -V
