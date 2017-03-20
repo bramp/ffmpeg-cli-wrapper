@@ -58,7 +58,7 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.21</version>
+                <version>1.7.25</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
@@ -100,7 +100,7 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.1.7</version>
+                <version>1.2.2</version>
             </dependency>
 
             <dependency>
@@ -111,7 +111,7 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>2.2.15</version>
+                <version>2.7.19</version>
             </dependency>
             <dependency>
                 <groupId>org.hamcrest</groupId>
@@ -126,7 +126,7 @@
             <dependency>
                 <groupId>org.glassfish.grizzly</groupId>
                 <artifactId>grizzly-http-server</artifactId>
-                <version>2.3.28</version>
+                <version>2.3.30</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -304,6 +304,16 @@
                     <artifactId>nexus-staging-maven-plugin</artifactId>
                     <version>1.6.7</version>
                 </plugin>
+                <plugin>
+                    <groupId>com.coveo</groupId>
+                    <artifactId>fmt-maven-plugin</artifactId>
+                    <version>1.5.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>1.4.1</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -323,7 +333,6 @@
                 <!-- mvn com.coveo:fmt-maven-plugin:format -->
                 <groupId>com.coveo</groupId>
                 <artifactId>fmt-maven-plugin</artifactId>
-                <version>1.3.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -457,7 +466,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.4.1</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.codehaus.mojo</groupId>
@@ -495,6 +503,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-maven-plugin</artifactId>
@@ -527,6 +536,7 @@
                     <aggregate>true</aggregate>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
@@ -534,7 +544,6 @@
                     <sourceEncoding>UTF-8</sourceEncoding>
                 </configuration>
             </plugin>
-
         </plugins>
 
         <defaultGoal>install</defaultGoal>
@@ -743,8 +752,6 @@
 					<outputDirectory>%{project.reporting.outputDirectory}/cobertura</outputDirectory>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</reporting>
-	
 </project>
