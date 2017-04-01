@@ -330,19 +330,6 @@
             </plugin>
 
             <plugin>
-                <!-- mvn com.coveo:fmt-maven-plugin:format -->
-                <groupId>com.coveo</groupId>
-                <artifactId>fmt-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>format</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <executions>
@@ -551,13 +538,26 @@
 
     <profiles>
         <profile>
-            <id>errorprone</id>
+            <!-- googlejavaformat and errorprone requires Java 8 -->
+            <id>java18</id>
             <activation>
-                <!-- errorprone requires Java 8 -->
                 <jdk>1.8</jdk>
             </activation>
             <build>
                 <plugins>
+                    <plugin>
+                        <!-- mvn com.coveo:fmt-maven-plugin:format -->
+                        <groupId>com.coveo</groupId>
+                        <artifactId>fmt-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>format</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
@@ -567,7 +567,6 @@
                             <showWarnings>true</showWarnings>
                             <compilerArgs>
                                 <arg>-Xlint:all</arg>
-                                <!--arg>-Werror</arg-->
                             </compilerArgs>
                         </configuration>
                         <dependencies>
