@@ -79,10 +79,6 @@ public class FFmpegOutputBuilder extends AbstractFFmpegStreamBuilder<FFmpegOutpu
     return this;
   }
 
-  protected static boolean isValidSize(int widthOrHeight) {
-    return widthOrHeight > 0 || widthOrHeight == -1;
-  }
-
   /**
    * Sets Video Filter
    *
