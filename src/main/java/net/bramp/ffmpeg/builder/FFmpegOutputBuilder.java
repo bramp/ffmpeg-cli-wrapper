@@ -22,6 +22,8 @@ public class FFmpegOutputBuilder extends AbstractFFmpegStreamBuilder<FFmpegOutpu
 
   static final Pattern trailingZero = Pattern.compile("\\.0*$");
 
+  public Double constantRateFactor;
+
   public String audio_sample_format;
   public long audio_bit_rate;
   public Double audio_quality;
@@ -44,6 +46,12 @@ public class FFmpegOutputBuilder extends AbstractFFmpegStreamBuilder<FFmpegOutpu
 
   protected FFmpegOutputBuilder(FFmpegBuilder parent, URI uri) {
     super(parent, uri);
+  }
+
+  public FFmpegOutputBuilder setConstantRateFactor(double factor) {
+    checkArgument(factor >= 0, "constant rate factor must be greater or equal to zero");
+    this.constantRateFactor = factor;
+    return this;
   }
 
   public FFmpegOutputBuilder setVideoBitRate(long bit_rate) {
@@ -229,6 +237,9 @@ public class FFmpegOutputBuilder extends AbstractFFmpegStreamBuilder<FFmpegOutpu
     if (targetSize > 0) {
       checkState(parent.inputs.size() == 1, "Target size does not support multiple inputs");
 
+      checkArgument(
+          constantRateFactor == null, "Target size can not be used with constantRateFactor");
+
       String firstInput = parent.inputs.iterator().next();
       FFmpegProbeResult input = parent.inputProbes.get(firstInput);
 
@@ -264,6 +275,14 @@ public class FFmpegOutputBuilder extends AbstractFFmpegStreamBuilder<FFmpegOutpu
    */
   protected static String formatDecimalInteger(double d) {
     return trailingZero.matcher(String.valueOf(d)).replaceAll("");
+  }
+
+  protected void addGlobalFlags(FFmpegBuilder parent, ImmutableList.Builder<String> args) {
+    super.addGlobalFlags(parent, args);
+
+    if (constantRateFactor != null) {
+      args.add("-crf", formatDecimalInteger(constantRateFactor));
+    }
   }
 
   @Override
