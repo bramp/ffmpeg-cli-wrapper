@@ -563,31 +563,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
 
     ImmutableList.Builder<String> args = new ImmutableList.Builder<>();
 
-    if (strict != FFmpegBuilder.Strict.NORMAL) {
-      args.add("-strict", strict.toString());
-    }
-
-    if (!Strings.isNullOrEmpty(format)) {
-      args.add("-f", format);
-    }
-
-    if (!Strings.isNullOrEmpty(preset)) {
-      args.add("-preset", preset);
-    }
-
-    if (!Strings.isNullOrEmpty(presetFilename)) {
-      args.add("-fpre", presetFilename);
-    }
-
-    if (startOffset != null) {
-      args.add("-ss", toTimecode(startOffset, TimeUnit.MILLISECONDS));
-    }
-
-    if (duration != null) {
-      args.add("-t", toTimecode(duration, TimeUnit.MILLISECONDS));
-    }
-
-    args.addAll(meta_tags);
+    addGlobalFlags(parent, args);
 
     if (video_enabled) {
       addVideoFlags(parent, args);
@@ -627,6 +603,34 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     }
 
     return args.build();
+  }
+
+  protected void addGlobalFlags(FFmpegBuilder parent, ImmutableList.Builder<String> args) {
+    if (strict != FFmpegBuilder.Strict.NORMAL) {
+      args.add("-strict", strict.toString());
+    }
+
+    if (!Strings.isNullOrEmpty(format)) {
+      args.add("-f", format);
+    }
+
+    if (!Strings.isNullOrEmpty(preset)) {
+      args.add("-preset", preset);
+    }
+
+    if (!Strings.isNullOrEmpty(presetFilename)) {
+      args.add("-fpre", presetFilename);
+    }
+
+    if (startOffset != null) {
+      args.add("-ss", toTimecode(startOffset, TimeUnit.MILLISECONDS));
+    }
+
+    if (duration != null) {
+      args.add("-t", toTimecode(duration, TimeUnit.MILLISECONDS));
+    }
+
+    args.addAll(meta_tags);
   }
 
   protected void addAudioFlags(ImmutableList.Builder<String> args) {
