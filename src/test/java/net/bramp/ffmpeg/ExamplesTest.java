@@ -158,4 +158,20 @@ public class ExamplesTest {
     // Run a two-pass encode
     executor.createTwoPassJob(builder).run();
   }
+
+  // Create a video from images
+  @Test
+  public void testExample6() throws IOException {
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .addInput("image%03d.png")
+            .addOutput("output.mp4")
+            .setVideoFrameRate(FFmpeg.FPS_24)
+            .done();
+
+    String expected = "ffmpeg -y -v error -i image%03d.png -r 24/1 output.mp4";
+
+    String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
+    assertEquals(expected, actual);
+  }
 }
