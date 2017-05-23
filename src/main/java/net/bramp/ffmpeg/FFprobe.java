@@ -78,27 +78,11 @@ public class FFprobe extends FFcommon {
     super.run(args);
   }
 
-  // TODO Add Probe Inputstream
-  public FFmpegProbeResult probe(String mediaPath, @Nullable String userAgent) throws IOException {
+  public FFmpegProbeResult probe(List<String> customArgs) throws IOException {
     checkIfFFprobe();
-
     ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
 
-    // TODO Add:
-    // .add("--show_packets")
-    // .add("--show_frames")
-
-    args.add(path).add("-v", "quiet");
-
-    if (userAgent != null) {
-      args.add("-user-agent", userAgent);
-    }
-
-    args.add("-print_format", "json")
-        .add("-show_error")
-        .add("-show_format")
-        .add("-show_streams")
-        .add(mediaPath);
+    args.add(path).add("-v", "quiet").addAll(customArgs).add("-print_format", "json");
 
     Process p = runFunc.run(args.build());
     try {
@@ -120,5 +104,22 @@ public class FFprobe extends FFcommon {
     } finally {
       p.destroy();
     }
+  }
+
+  // TODO Add Probe Inputstream
+  public FFmpegProbeResult probe(String mediaPath, @Nullable String userAgent) throws IOException {
+    ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
+
+    // TODO Add:
+    // .add("--show_packets")
+    // .add("--show_frames")
+
+    if (userAgent != null) {
+      args.add("-user-agent", userAgent);
+    }
+
+    args.add("-show_error").add("-show_format").add("-show_streams").add(mediaPath);
+
+    return probe(args.build());
   }
 }

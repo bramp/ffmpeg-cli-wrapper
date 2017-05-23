@@ -13,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
 import static org.hamcrest.Matchers.hasSize;
@@ -72,7 +74,20 @@ public class FFprobeTest {
     assertThat(info.getStreams().get(1).channels, is(6));
     assertThat(info.getStreams().get(1).sample_rate, is(48_000));
 
-    // System.out.println(FFmpegUtils.getGson().toJson(info));
+    System.out.println(FFmpegUtils.getGson().toJson(info));
+  }
+
+  @Test
+  public void testProbeVideoWithCustomArgs() throws IOException {
+    List<String> args =
+        Arrays.asList(
+            "-show_frames",
+            "-of compact=p=0",
+            "-f lavfi \"movie=" + Samples.big_buck_bunny_720p_1mb + ",select=gt(scene\\,.1)\"");
+    FFmpegProbeResult info = ffprobe.probe(args);
+    assertFalse(info.hasError());
+
+    //System.out.println(FFmpegUtils.getGson().toJson(info));
   }
 
   @Test
