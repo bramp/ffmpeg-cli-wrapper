@@ -116,6 +116,43 @@ public class FFmpegExecutorTest {
   }
 
   @Test
+  public void testInterruptNormal() throws InterruptedException {
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .setVerbosity(FFmpegBuilder.Verbosity.DEBUG)
+            .setUserAgent(
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36")
+            .setInput(getWebserverRoot() + Samples.base_big_buck_bunny_720p_1mb)
+            .addExtraArgs("-probesize", "1000000")
+            .overrideOutputFiles(true)
+            .addOutput(Samples.output_mp4)
+            .setFrames(100)
+            .setFormat("mp4")
+            .setStartOffset(500, TimeUnit.MILLISECONDS)
+            .setAudioCodec("aac")
+            .setAudioChannels(1)
+            .setAudioSampleRate(48000)
+            .setAudioBitStreamFilter("chomp")
+            .setAudioFilter("aecho=0.8:0.88:6:0.4")
+            .setAudioQuality(1)
+            .setVideoCodec("libx264")
+            .setVideoFrameRate(FPS_30)
+            .setVideoResolution(320, 240)
+            .setVideoQuality(2)
+            .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
+            .done();
+
+    FFmpegJob job = ffExecutor.createJob(builder);
+    job.run();
+
+    Thread.sleep(100);
+
+    job.interrupt();
+
+    assertEquals(FFmpegJob.State.INTERRUPTED, job.getState());
+  }
+
+  @Test
   public void testTwoPass() throws InterruptedException, ExecutionException, IOException {
     FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
     assertFalse(in.hasError());
@@ -137,6 +174,34 @@ public class FFmpegExecutorTest {
     runAndWait(job);
 
     assertEquals(FFmpegJob.State.FINISHED, job.getState());
+  }
+
+  @Test
+  public void testInterruptTwoPass() throws InterruptedException, ExecutionException, IOException {
+    FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
+    assertFalse(in.hasError());
+
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .setInput(in)
+            .overrideOutputFiles(true)
+            .addOutput(Samples.output_mp4)
+            .setFormat("mp4")
+            .disableAudio()
+            .setVideoCodec("mpeg4")
+            .setVideoFrameRate(FFmpeg.FPS_30)
+            .setVideoResolution(320, 240)
+            .setTargetSize(1024 * 1024)
+            .done();
+
+    FFmpegJob job = ffExecutor.createTwoPassJob(builder);
+    job.run();
+
+    Thread.sleep(100);
+
+    job.interrupt();
+
+    assertEquals(FFmpegJob.State.INTERRUPTED, job.getState());
   }
 
   @Test

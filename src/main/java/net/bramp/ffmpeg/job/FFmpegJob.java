@@ -15,6 +15,7 @@ public abstract class FFmpegJob implements Runnable {
     RUNNING,
     FINISHED,
     FAILED,
+    INTERRUPTED
   }
 
   final FFmpeg ffmpeg;
@@ -33,5 +34,10 @@ public abstract class FFmpegJob implements Runnable {
 
   public State getState() {
     return state;
+  }
+
+  public void interrupt() {
+    ffmpeg.interrupt();
+    this.state = State.INTERRUPTED;
   }
 }

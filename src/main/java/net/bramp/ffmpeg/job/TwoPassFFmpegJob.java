@@ -60,13 +60,18 @@ public class TwoPassFFmpegJob extends FFmpegJob {
         FFmpegBuilder b1 = builder.setPass(1).overrideOutputFiles(true);
         ffmpeg.run(b1, listener);
 
-        FFmpegBuilder b2 = builder.setPass(2).overrideOutputFiles(override);
-        ffmpeg.run(b2, listener);
+        if (state == State.RUNNING) {
+          FFmpegBuilder b2 = builder.setPass(2).overrideOutputFiles(override);
+          ffmpeg.run(b2, listener);
+        }
 
       } finally {
         deletePassLog();
       }
-      state = State.FINISHED;
+
+      if (state == State.RUNNING) {
+        state = State.FINISHED;
+      }
 
     } catch (Throwable t) {
       state = State.FAILED;
