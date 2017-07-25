@@ -29,6 +29,9 @@ abstract class FFcommon {
   /** Version string */
   String version = null;
 
+  private Process process;
+  private boolean interrupted = false;
+
   public FFcommon(@Nonnull String path) {
     this(path, new RunProcessFunction());
   }
@@ -97,21 +100,37 @@ abstract class FFcommon {
    *
    * @param args The arguments to pass to the binary.
    * @throws IOException If there is a problem executing the binary.
+   * @throws RuntimeException If a previous process is still running
    */
   public void run(List<String> args) throws IOException {
     checkNotNull(args);
 
-    Process p = runFunc.run(path(args));
+    if (process != null && process.isAlive()) {
+      throw new RuntimeException("Can't start a new process, a previous process is still alive!");
+    }
+
+    process = runFunc.run(path(args));
+    interrupted = false;
+
     try {
       // TODO Move the copy onto a thread, so that FFmpegProgressListener can be on this thread.
 
       // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
-      CharStreams.copy(wrapInReader(p), System.out); // TODO Should I be outputting to stdout?
+      CharStreams.copy(wrapInReader(process), System.out); // TODO Should I be outputting to stdout?
 
-      throwOnError(p);
+      if (!interrupted) {
+        throwOnError(process);
+      }
 
     } finally {
-      p.destroy();
+      process.destroy();
+    }
+  }
+
+  public void interrupt() {
+    if (process != null && process.isAlive()) {
+      interrupted = true;
+      process.destroyForcibly();
     }
   }
 }

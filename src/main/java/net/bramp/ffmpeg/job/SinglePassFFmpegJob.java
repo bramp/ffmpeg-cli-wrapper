@@ -37,7 +37,10 @@ public class SinglePassFFmpegJob extends FFmpegJob {
 
     try {
       ffmpeg.run(builder, listener);
-      state = State.FINISHED;
+
+      if (state == State.RUNNING) {
+        state = State.FINISHED;
+      }
 
     } catch (Throwable t) {
       state = State.FAILED;
