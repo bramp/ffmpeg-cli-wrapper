@@ -1,6 +1,7 @@
 package net.bramp.ffmpeg.builder;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.FFmpegUtils;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
@@ -75,6 +76,11 @@ public class FFmpegBuilder {
 
   // Output
   final List<FFmpegOutputBuilder> outputs = new ArrayList<>();
+
+  // Filters
+  String complexFilter;
+  String audioFilter;
+  String videoFilter;
 
   public FFmpegBuilder overrideOutputFiles(boolean override) {
     this.override = override;
@@ -159,6 +165,39 @@ public class FFmpegBuilder {
 
   public FFmpegBuilder addProgress(URI uri) {
     this.progress = checkNotNull(uri);
+    return this;
+  }
+
+  /**
+   * Sets the complex filter flag.
+   *
+   * @param filter
+   * @return
+   */
+  public FFmpegBuilder setComplexFilter(String filter) {
+    this.complexFilter = checkNotEmpty(filter, "filter must not be empty");
+    return this;
+  }
+
+  /**
+   * Sets the audio filter flag.
+   *
+   * @param filter
+   * @return
+   */
+  public FFmpegBuilder setAudioFilter(String filter) {
+    this.audioFilter = checkNotEmpty(filter, "filter must not be empty");
+    return this;
+  }
+
+  /**
+   * Sets the video filter flag.
+   *
+   * @param filter
+   * @return
+   */
+  public FFmpegBuilder setVideoFilter(String filter) {
+    this.videoFilter = checkNotEmpty(filter, "filter must not be empty");
     return this;
   }
 
@@ -274,6 +313,18 @@ public class FFmpegBuilder {
       if (pass_prefix != null) {
         args.add("-passlogfile", pass_directory + pass_prefix);
       }
+    }
+
+    if (!Strings.isNullOrEmpty(complexFilter)) {
+      args.add("-filter_complex", complexFilter);
+    }
+
+    if (!Strings.isNullOrEmpty(videoFilter)) {
+      args.add("-af", videoFilter);
+    }
+
+    if (!Strings.isNullOrEmpty(audioFilter)) {
+      args.add("-vf", audioFilter);
     }
 
     for (FFmpegOutputBuilder output : this.outputs) {

@@ -89,7 +89,6 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   public int video_height;
   public String video_size;
   public String video_movflags;
-  public String video_filter_complex;
   public Integer video_frames;
   public String video_pixel_format;
 
@@ -98,7 +97,6 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
 
   public String preset;
   public String presetFilename;
-
   public final List<String> extra_args = new ArrayList<>();
 
   public FFmpegBuilder.Strict strict = FFmpegBuilder.Strict.NORMAL;
@@ -223,12 +221,6 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   public T setVideoMovFlags(String movflags) {
     this.video_enabled = true;
     this.video_movflags = checkNotEmpty(movflags, "movflags must not be empty");
-    return getThis();
-  }
-
-  public T setComplexVideoFilter(String filter) {
-    this.video_enabled = true;
-    this.video_filter_complex = checkNotEmpty(filter, "filter must not be empty");
     return getThis();
   }
 
@@ -686,10 +678,6 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
 
     if (video_frame_rate != null) {
       args.add("-r", video_frame_rate.toString());
-    }
-
-    if (!Strings.isNullOrEmpty(video_filter_complex)) {
-      args.add("-filter_complex", video_filter_complex);
     }
   }
 }
