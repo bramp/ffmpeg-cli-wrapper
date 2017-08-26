@@ -5,10 +5,16 @@ public final class Samples {
     throw new AssertionError("No instances for you!");
   }
 
+  // Test sample files (only a handful to keep the repo small)
   public static final String TEST_PREFIX = "src/test/resources/net/bramp/ffmpeg/samples/";
 
   public static final String base_big_buck_bunny_720p_1mb = "big_buck_bunny_720p_1mb.mp4";
+  public static final String base_testscreen_jpg = "testscreen.jpg";
+  public static final String base_test_mp3 = "test.mp3";
+
   public static final String big_buck_bunny_720p_1mb = TEST_PREFIX + base_big_buck_bunny_720p_1mb;
+  public static final String testscreen_jpg = TEST_PREFIX + base_testscreen_jpg;
+  public static final String test_mp3 = TEST_PREFIX + base_test_mp3;
 
   // We don't have the following files
   public static final String FAKE_PREFIX = "fake/";

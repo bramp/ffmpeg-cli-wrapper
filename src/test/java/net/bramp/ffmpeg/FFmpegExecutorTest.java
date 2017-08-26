@@ -241,6 +241,31 @@ public class FFmpegExecutorTest {
     assertThat(progesses.get(progesses.size() - 1).status, is(Progress.Status.END));
   }
 
+  @Test
+  public void testIssue112() throws IOException {
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .setInput(Samples.testscreen_jpg)
+            .addInput(Samples.test_mp3)
+            .addExtraArgs("-loop", "1")
+            .overrideOutputFiles(true)
+            .addOutput(Samples.output_mp4)
+            .setFormat("mp4")
+            //.setDuration(30, TimeUnit.SECONDS)
+            .addExtraArgs("-shortest")
+            .setAudioCodec("aac")
+            .setAudioSampleRate(48_000)
+            .setAudioBitRate(32768)
+            .setVideoCodec("libx264")
+            .setVideoFrameRate(24, 1)
+            .setVideoResolution(640, 480)
+            .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL) // Allow FFmpeg to use experimental specs
+            .done();
+
+    // Run a one-pass encode
+    ffExecutor.createJob(builder).run();
+  }
+
   protected void runAndWait(FFmpegJob job) throws ExecutionException, InterruptedException {
     executor.submit(job).get();
   }
