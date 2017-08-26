@@ -173,4 +173,41 @@ public class ExamplesTest {
     String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
     assertEquals(expected, actual);
   }
+
+  @Test
+  public void testExample7() throws IOException {
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .addInput("original.mp4")
+            .addInput("spot.mp4")
+            .setComplexFilter(
+                "[1:v]scale=368:207,setpts=PTS-STARTPTS+5/TB [ov]; "
+                    + "[0:v][ov] overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h)/2:enable='between(t,5,15)' [v]")
+            .addOutput("with-video.mp4")
+            .addExtraArgs("-map", "[v]")
+            .addExtraArgs("-map", "0:a")
+            .setVideoCodec("libx264")
+            .setPreset("ultrafast")
+            .setConstantRateFactor(20)
+            .setAudioCodec("copy")
+            .addExtraArgs("-shortest")
+            .done();
+
+    String expected =
+        "ffmpeg -y -v error"
+            + " -i original.mp4"
+            + " -i spot.mp4"
+            + " -filter_complex [1:v]scale=368:207,setpts=PTS-STARTPTS+5/TB [ov]; [0:v][ov] overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h)/2:enable='between(t,5,15)' [v]"
+            + " -preset ultrafast"
+            + " -crf 20"
+            + " -vcodec libx264"
+            + " -acodec copy"
+            + " -map [v]"
+            + " -map 0:a"
+            + " -shortest"
+            + " with-video.mp4";
+
+    String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
+    assertEquals(expected, actual);
+  }
 }
