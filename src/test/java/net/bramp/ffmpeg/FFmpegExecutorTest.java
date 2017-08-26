@@ -79,7 +79,6 @@ public class FFmpegExecutorTest {
 
   @Test
   public void testNormal() throws InterruptedException, ExecutionException, IOException {
-
     FFmpegBuilder builder =
         new FFmpegBuilder()
             .setVerbosity(FFmpegBuilder.Verbosity.DEBUG)

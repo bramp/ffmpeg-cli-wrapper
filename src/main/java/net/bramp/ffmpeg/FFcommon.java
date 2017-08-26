@@ -102,6 +102,8 @@ abstract class FFcommon {
     checkNotNull(args);
 
     Process p = runFunc.run(path(args));
+    assert (p != null);
+
     try {
       // TODO Move the copy onto a thread, so that FFmpegProgressListener can be on this thread.
 

@@ -277,6 +277,7 @@ public class FFmpegOutputBuilder extends AbstractFFmpegStreamBuilder<FFmpegOutpu
     return trailingZero.matcher(String.valueOf(d)).replaceAll("");
   }
 
+  @Override
   protected void addGlobalFlags(FFmpegBuilder parent, ImmutableList.Builder<String> args) {
     super.addGlobalFlags(parent, args);
 

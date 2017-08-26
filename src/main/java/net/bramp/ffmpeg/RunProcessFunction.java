@@ -24,7 +24,6 @@ public class RunProcessFunction implements ProcessFunction {
 
   @Override
   public Process run(List<String> args) throws IOException {
-
     Preconditions.checkNotNull(args, "Arguments must not be null");
     Preconditions.checkArgument(!args.isEmpty(), "No arguments specified");
 
