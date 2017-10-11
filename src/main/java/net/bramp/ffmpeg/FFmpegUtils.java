@@ -95,9 +95,12 @@ public final class FFmpegUtils {
    * Converts a string representation of bitrate to a long of bits per second
    *
    * @param bitrate in the form of 12.3kbits/s
-   * @return the bitrate in bits per second.
+   * @return the bitrate in bits per second or -1 if bitrate is 'N/A'
    */
   public static long parseBitrate(String bitrate) {
+    if ("N/A".equals(bitrate)) {
+      return -1;
+    }
     Matcher m = BITRATE_REGEX.matcher(bitrate);
     if (!m.find()) {
       throw new IllegalArgumentException("Invalid bitrate '" + bitrate + "'");
