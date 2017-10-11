@@ -60,6 +60,7 @@ public class FFmpegUtilsTest {
     assertEquals(12300, parseBitrate("12.3kbits/s"));
     assertEquals(1000, parseBitrate("1kbits/s"));
     assertEquals(123, parseBitrate("0.123kbits/s"));
+    assertEquals(-1, parseBitrate("N/A"));
   }
 
   @Test(expected = IllegalArgumentException.class)
