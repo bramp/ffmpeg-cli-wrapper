@@ -98,6 +98,10 @@ public final class FFmpegUtils {
    * @return the bitrate in bits per second.
    */
   public static long parseBitrate(String bitrate) {
+    if (bitrate.equals("N/A")) {
+      return -1;
+    }
+
     Matcher m = BITRATE_REGEX.matcher(bitrate);
     if (!m.find()) {
       throw new IllegalArgumentException("Invalid bitrate '" + bitrate + "'");
