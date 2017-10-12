@@ -1,3 +1,4 @@
+dist: trusty
 sudo: false
 
 language: java
@@ -8,8 +9,9 @@ env:
 
 jdk:
   - openjdk7
-  - oraclejdk7
+  - openjdk8
   - oraclejdk8
+  - oraclejdk9
 
 os:
   - linux
