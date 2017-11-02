@@ -20,7 +20,7 @@ Maven:
 <dependency>
   <groupId>net.bramp.ffmpeg</groupId>
   <artifactId>ffmpeg</artifactId>
-  <version>0.6.1</version>
+  <version>0.6.2</version>
 </dependency>
 ```
 
