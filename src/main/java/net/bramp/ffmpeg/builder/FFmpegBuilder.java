@@ -65,6 +65,7 @@ public class FFmpegBuilder {
   URI progress;
   String user_agent;
 
+  int threads;
   // Input settings
   String format;
   Long startOffset; // in millis
@@ -150,7 +151,13 @@ public class FFmpegBuilder {
     return addInput(filename);
   }
 
-  public FFmpegBuilder setFormat(String format) {
+    public FFmpegBuilder setThreads(int threads) {
+        checkArgument(threads != 0, "threads must be greater than zero");
+        this.threads = threads;
+        return this;
+    }
+
+    public FFmpegBuilder setFormat(String format) {
     this.format = checkNotNull(format);
     return this;
   }
@@ -287,6 +294,10 @@ public class FFmpegBuilder {
 
     if (startOffset != null) {
       args.add("-ss", FFmpegUtils.toTimecode(startOffset, TimeUnit.MILLISECONDS));
+    }
+
+    if (threads > 0) {
+      args.add("-threads", String.valueOf(threads));
     }
 
     if (format != null) {
