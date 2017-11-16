@@ -320,11 +320,11 @@ public class FFmpegBuilder {
     }
 
     if (!Strings.isNullOrEmpty(videoFilter)) {
-      args.add("-af", videoFilter);
+      args.add("-vf", videoFilter);
     }
 
     if (!Strings.isNullOrEmpty(audioFilter)) {
-      args.add("-vf", audioFilter);
+      args.add("-af", audioFilter);
     }
 
     for (FFmpegOutputBuilder output : this.outputs) {
