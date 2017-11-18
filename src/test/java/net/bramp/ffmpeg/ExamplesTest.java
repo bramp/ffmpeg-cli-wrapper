@@ -210,4 +210,28 @@ public class ExamplesTest {
     String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
     assertEquals(expected, actual);
   }
+
+  // Transcode to iOS HEVC format, with video filter set before output
+  @Test
+  public void testExample8() throws IOException {
+    FFmpegBuilder builder =
+            new FFmpegBuilder()
+                    .addInput("original.mp4")
+                    .setVideoFilter("select='gte(n\\,10)',scale=200:-1")
+                    .addOutput("hevc-video.mp4")
+                    .addExtraArgs("-tag:v", "hvc1")
+                    .setVideoCodec("libx265")
+                    .done();
+
+    String expected =
+            "ffmpeg -y -v error"
+                    + " -i original.mp4"
+                    + " -vf select='gte(n\\,10)',scale=200:-1"
+                    + " -vcodec libx265"
+                    + " -tag:v hvc1"
+                    + " hevc-video.mp4";
+
+    String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
+    assertEquals(expected, actual);
+  }
 }
