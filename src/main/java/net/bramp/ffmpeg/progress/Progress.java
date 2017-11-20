@@ -198,6 +198,42 @@ public class Progress {
     }
   }
 
+  public long getFrame() {
+      return this.frame;
+  }
+
+  public Fraction getFps() {
+      return this.fps;
+  }
+
+  public long getBitrate() {
+      return this.bitrate;
+  }
+
+  public long getTotalSize() {
+      return this.total_size;
+  }
+
+  public long getOutTimeNs() {
+      return this.out_time_ns;
+  }
+
+  public long getDupFrames() {
+      return this.dup_frames;
+  }
+
+  public long getDropFrames() {
+      return this.drop_frames;
+  }
+
+  public float getSpeed() {
+      return this.speed;
+  }
+
+  public Status getStatus() {
+      return this.status;
+  }
+
   @CheckReturnValue
   public boolean isEnd() {
     return status == Status.END;
