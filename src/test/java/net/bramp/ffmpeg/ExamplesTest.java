@@ -234,4 +234,28 @@ public class ExamplesTest {
     String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
     assertEquals(expected, actual);
   }
+
+  // Convert a stereo mp3 into two mono tracks.
+  @Test
+  public void testExample8() throws IOException {
+    FFmpegBuilder builder = new FFmpegBuilder()
+      .setVerbosity(FFmpegBuilder.Verbosity.DEBUG)
+      .setInput("input.mp3")
+      .overrideOutputFiles(true) // Override the output if it exists
+      .addOutput("left.mp3")
+        .addExtraArgs("-map_channel", "0.0.0")
+        .done()
+      .addOutput("right.mp3")
+      .addExtraArgs("-map_channel", "0.0.1")
+      .done();
+
+    String expected =
+        "ffmpeg -y -v debug "
+            + "-i input.mp3 "
+            + "-map_channel 0.0.0 left.mp3 "
+            + "-map_channel 0.0.1 right.mp3";
+
+    String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
+    assertEquals(expected, actual);
+  }
 }
