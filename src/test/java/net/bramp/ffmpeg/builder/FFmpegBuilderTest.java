@@ -351,7 +351,6 @@ public class FFmpegBuilderTest {
 
   @Test
   public void testExtraArgs() {
-
     List<String> args =
         new FFmpegBuilder()
             .addExtraArgs("-a", "b")
@@ -376,7 +375,6 @@ public class FFmpegBuilderTest {
 
   @Test
   public void testMultipleInput() {
-
     List<String> args =
         new FFmpegBuilder()
             .addInput("input1")
@@ -391,7 +389,6 @@ public class FFmpegBuilderTest {
 
   @Test
   public void testAlternativeBuilderPattern() {
-
     List<String> args =
         new FFmpegBuilder()
             .addInput("input")

@@ -126,7 +126,6 @@ public class ExamplesTest {
   // Read from RTSP (IP camera)
   @Test
   public void testExample4() throws IOException {
-
     FFmpegBuilder builder =
         new FFmpegBuilder()
             .setInput("rtsp://192.168.1.1:1234/")
@@ -215,21 +214,21 @@ public class ExamplesTest {
   @Test
   public void testExample8() throws IOException {
     FFmpegBuilder builder =
-            new FFmpegBuilder()
-                    .addInput("original.mp4")
-                    .setVideoFilter("select='gte(n\\,10)',scale=200:-1")
-                    .addOutput("hevc-video.mp4")
-                    .addExtraArgs("-tag:v", "hvc1")
-                    .setVideoCodec("libx265")
-                    .done();
+        new FFmpegBuilder()
+            .addInput("original.mp4")
+            .setVideoFilter("select='gte(n\\,10)',scale=200:-1")
+            .addOutput("hevc-video.mp4")
+            .addExtraArgs("-tag:v", "hvc1")
+            .setVideoCodec("libx265")
+            .done();
 
     String expected =
-            "ffmpeg -y -v error"
-                    + " -i original.mp4"
-                    + " -vf select='gte(n\\,10)',scale=200:-1"
-                    + " -vcodec libx265"
-                    + " -tag:v hvc1"
-                    + " hevc-video.mp4";
+        "ffmpeg -y -v error"
+            + " -i original.mp4"
+            + " -vf select='gte(n\\,10)',scale=200:-1"
+            + " -vcodec libx265"
+            + " -tag:v hvc1"
+            + " hevc-video.mp4";
 
     String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
     assertEquals(expected, actual);
@@ -237,17 +236,18 @@ public class ExamplesTest {
 
   // Convert a stereo mp3 into two mono tracks.
   @Test
-  public void testExample8() throws IOException {
-    FFmpegBuilder builder = new FFmpegBuilder()
-      .setVerbosity(FFmpegBuilder.Verbosity.DEBUG)
-      .setInput("input.mp3")
-      .overrideOutputFiles(true) // Override the output if it exists
-      .addOutput("left.mp3")
-        .addExtraArgs("-map_channel", "0.0.0")
-        .done()
-      .addOutput("right.mp3")
-      .addExtraArgs("-map_channel", "0.0.1")
-      .done();
+  public void testExample9() throws IOException {
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .setVerbosity(FFmpegBuilder.Verbosity.DEBUG)
+            .setInput("input.mp3")
+            .overrideOutputFiles(true) // Override the output if it exists
+            .addOutput("left.mp3")
+            .addExtraArgs("-map_channel", "0.0.0")
+            .done()
+            .addOutput("right.mp3")
+            .addExtraArgs("-map_channel", "0.0.1")
+            .done();
 
     String expected =
         "ffmpeg -y -v debug "

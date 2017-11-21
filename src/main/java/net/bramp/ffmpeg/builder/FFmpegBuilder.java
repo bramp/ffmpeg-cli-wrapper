@@ -78,9 +78,9 @@ public class FFmpegBuilder {
   final List<FFmpegOutputBuilder> outputs = new ArrayList<>();
 
   // Filters
-  String complexFilter;
   String audioFilter;
   String videoFilter;
+  String complexFilter;
 
   public FFmpegBuilder overrideOutputFiles(boolean override) {
     this.override = override;
@@ -315,16 +315,16 @@ public class FFmpegBuilder {
       }
     }
 
-    if (!Strings.isNullOrEmpty(complexFilter)) {
-      args.add("-filter_complex", complexFilter);
+    if (!Strings.isNullOrEmpty(audioFilter)) {
+      args.add("-af", audioFilter);
     }
 
     if (!Strings.isNullOrEmpty(videoFilter)) {
       args.add("-vf", videoFilter);
     }
 
-    if (!Strings.isNullOrEmpty(audioFilter)) {
-      args.add("-af", audioFilter);
+    if (!Strings.isNullOrEmpty(complexFilter)) {
+      args.add("-filter_complex", complexFilter);
     }
 
     for (FFmpegOutputBuilder output : this.outputs) {
