@@ -202,8 +202,8 @@ public class Progress {
       return this.frame;
   }
 
-  public Fraction getFps() {
-      return this.fps;
+  public double getDoubleFps() {
+      return this.fps.doubleValue();
   }
 
   public long getBitrate() {
