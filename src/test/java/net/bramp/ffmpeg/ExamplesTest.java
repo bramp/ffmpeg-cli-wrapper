@@ -237,7 +237,7 @@ public class ExamplesTest {
 
   // Convert a stereo mp3 into two mono tracks.
   @Test
-  public void testExample8() throws IOException {
+  public void testExample9() throws IOException {
     FFmpegBuilder builder = new FFmpegBuilder()
       .setVerbosity(FFmpegBuilder.Verbosity.DEBUG)
       .setInput("input.mp3")
