@@ -91,6 +91,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   public String video_movflags;
   public Integer video_frames;
   public String video_pixel_format;
+  public String video_filter_complex;
 
   public boolean subtitle_enabled = true;
   public String subtitle_preset;
@@ -221,6 +222,12 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   public T setVideoMovFlags(String movflags) {
     this.video_enabled = true;
     this.video_movflags = checkNotEmpty(movflags, "movflags must not be empty");
+    return getThis();
+  }
+
+  public T setComplexVideoFilter(String filter) {
+    this.video_enabled = true;
+    this.video_filter_complex = checkNotEmpty(filter, "complex video filter must not be empty");
     return getThis();
   }
 
@@ -678,6 +685,10 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
 
     if (video_frame_rate != null) {
       args.add("-r", video_frame_rate.toString());
+    }
+
+    if (!Strings.isNullOrEmpty(video_filter_complex)) {
+      args.add("-filter_complex", video_filter_complex);
     }
   }
 }
