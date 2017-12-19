@@ -2,6 +2,7 @@ package net.bramp.ffmpeg;
 
 import com.google.common.base.Joiner;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import net.bramp.ffmpeg.builder.FFmpegOutputBuilder;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -11,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
 import static org.junit.Assert.assertEquals;
@@ -254,6 +256,46 @@ public class ExamplesTest {
             + "-i input.mp3 "
             + "-map_channel 0.0.0 left.mp3 "
             + "-map_channel 0.0.1 right.mp3";
+
+    String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
+    assertEquals(expected, actual);
+  }
+
+  // A test with videos added in a loop.
+  @Test
+  public void testExample10() throws IOException {
+    String expected = "ffmpeg -y -v error"
+        + " -f webm_dash_manifest"
+        + " -i audio.webm"
+        + " -i video_1.webm"
+        + " -i video_2.webm"
+        + " -i video_3.webm"
+        + " -vcodec copy -acodec copy"
+        + " -map 0 -map 1 -map 2 -map 3"
+        + " -adaptation_sets \"id=0,streams=0 id=1,streams=1,2,3\""
+        + " output.mpd";
+
+    ArrayList<String> streams = new ArrayList<>();
+    FFmpegBuilder builder = new FFmpegBuilder();
+
+    builder.addInput("audio.webm").setFormat("webm_dash_manifest");
+
+    for (int i = 1; i <= 3; i++) {
+      builder.addInput(String.format("video_%d.webm", i)).setFormat("webm_dash_manifest");
+      streams.add(String.format("%d", i));
+    }
+
+    FFmpegOutputBuilder out = builder.addOutput("output.mpd")
+        .setVideoCodec("copy").setAudioCodec("copy") // TODO Add a new setCodec(..) method.
+        .addExtraArgs("-map", "0");
+
+    for (String stream : streams) {
+      out.addExtraArgs("-map", stream);
+    }
+
+    out.addExtraArgs("-adaptation_sets",
+        String.format("\"id=0,streams=0 id=1,streams=%s\"", Joiner.on(",").join(streams)))
+        .done();
 
     String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
     assertEquals(expected, actual);
