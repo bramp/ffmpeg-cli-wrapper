@@ -368,6 +368,22 @@ public class FFmpegBuilderTest {
             "-y", "-v", "error", "-a", "b", "-i", "input", "-an", "-sn", "-c", "d", "output"));
   }
 
+  @Test
+  public void testVbr() {
+    List<String> args =
+        new FFmpegBuilder()
+            .setInput("input")
+            .setVBR(2)
+            .addOutput("output")
+            .done()
+            .build();
+
+    assertEquals(
+            args,
+            ImmutableList.of(
+                    "-y", "-v", "error", "-i", "input", "-qscale:a", "2", "output"));
+  }
+
   @Test(expected = IllegalArgumentException.class)
   public void testNothing() {
     List<String> unused = new FFmpegBuilder().build();
