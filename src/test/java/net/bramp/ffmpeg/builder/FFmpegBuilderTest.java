@@ -385,6 +385,28 @@ public class FFmpegBuilderTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
+  public void testVbrNegativeParam() {
+    List<String> args =
+        new FFmpegBuilder()
+            .setInput("input")
+            .setVBR(-3)
+            .addOutput("output")
+            .done()
+            .build();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testVbrQualityExceedsRange() {
+    List<String> args =
+        new FFmpegBuilder()
+            .setInput("input")
+            .setVBR(10)
+            .addOutput("output")
+            .done()
+            .build();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
   public void testNothing() {
     List<String> unused = new FFmpegBuilder().build();
   }

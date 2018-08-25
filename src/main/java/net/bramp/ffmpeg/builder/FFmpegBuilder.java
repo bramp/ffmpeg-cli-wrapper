@@ -208,7 +208,7 @@ public class FFmpegBuilder {
    * @return FFmpegBuilder
    */
   public FFmpegBuilder setVBR(Integer quality) {
-    Preconditions.checkArgument(quality > 0 || quality < 9, "vbr must be between 0 and 9");
+    Preconditions.checkArgument(quality > 0 && quality < 9, "vbr must be between 0 and 9");
     this.qscale = quality;
     return this;
   }
