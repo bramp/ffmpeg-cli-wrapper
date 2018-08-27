@@ -70,6 +70,7 @@ public class FFmpegBuilder {
   Long startOffset; // in millis
   boolean read_at_native_frame_rate = false;
   final List<String> inputs = new ArrayList<>();
+  final List<FFmpegInputBuilder> inputStreams = new ArrayList<>();
   final Map<String, FFmpegProbeResult> inputProbes = new TreeMap<>();
 
   final List<String> extra_args = new ArrayList<>();
@@ -241,6 +242,12 @@ public class FFmpegBuilder {
     return output;
   }
 
+  public FFmpegInputBuilder addInputStream(String device){
+    FFmpegInputBuilder input = new FFmpegInputBuilder(this, device);
+    inputStreams.add(input);
+    return input;
+  }
+
   /**
    * Adds an existing FFmpegOutputBuilder. This is similar to calling the other addOuput methods but
    * instead allows an existing FFmpegOutputBuilder to be used, and reused.
@@ -275,7 +282,9 @@ public class FFmpegBuilder {
   public List<String> build() {
     ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
 
-    Preconditions.checkArgument(!inputs.isEmpty(), "At least one input must be specified");
+    Preconditions.checkArgument(!inputs.isEmpty() || !inputStreams.isEmpty(), "At least one input must be specified");
+    Preconditions.checkArgument(!(!inputs.isEmpty() && !inputStreams.isEmpty()),
+            "Cannot specify both an input file/URI and an input device");
     Preconditions.checkArgument(!outputs.isEmpty(), "At least one output must be specified");
 
     args.add(override ? "-y" : "-n");
@@ -283,6 +292,12 @@ public class FFmpegBuilder {
 
     if (user_agent != null) {
       args.add("-user_agent", user_agent);
+    }
+
+    if(inputs.isEmpty()){                           //build the input streams, using the AbstractFFmpegStreamBuilder
+      for(FFmpegInputBuilder inputStream: inputStreams){
+        args.addAll(inputStream.build(this, pass));
+      }
     }
 
     if (startOffset != null) {
@@ -301,7 +316,7 @@ public class FFmpegBuilder {
       args.add("-progress", progress.toString());
     }
 
-    args.addAll(extra_args);
+    if(!inputs.isEmpty()) args.addAll(extra_args);
 
     for (String input : inputs) {
       args.add("-i", input);
@@ -333,4 +348,5 @@ public class FFmpegBuilder {
 
     return args.build();
   }
+
 }
