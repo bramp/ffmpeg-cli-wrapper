@@ -14,6 +14,7 @@ public class FFmpegProbeResult {
   public FFmpegError error;
   public FFmpegFormat format;
   public List<FFmpegStream> streams;
+  public List<? extends FFmpegFrame> frames;
 
   public FFmpegError getError() {
     return error;
@@ -29,5 +30,9 @@ public class FFmpegProbeResult {
 
   public List<FFmpegStream> getStreams() {
     return ImmutableList.copyOf(streams);
+  }
+
+  public List<? extends FFmpegFrame> getFrames() {
+    return frames;
   }
 }

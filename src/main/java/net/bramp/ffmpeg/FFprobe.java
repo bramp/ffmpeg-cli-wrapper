@@ -86,7 +86,6 @@ public class FFprobe extends FFcommon {
 
     // TODO Add:
     // .add("--show_packets")
-    // .add("--show_frames")
 
     args.add(path).add("-v", "quiet");
 
@@ -98,6 +97,7 @@ public class FFprobe extends FFcommon {
         .add("-show_error")
         .add("-show_format")
         .add("-show_streams")
+        .add("-show_frames")
         .add(mediaPath);
 
     Process p = runFunc.run(args.build());
