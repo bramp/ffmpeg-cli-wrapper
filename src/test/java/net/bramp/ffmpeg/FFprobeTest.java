@@ -3,8 +3,11 @@ package net.bramp.ffmpeg;
 import com.google.gson.Gson;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
+import net.bramp.ffmpeg.probe.FFmpegAudioFrame;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import net.bramp.ffmpeg.probe.FFmpegStream;
+import net.bramp.ffmpeg.probe.FFmpegVideoFrame;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.math.Fraction;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,11 +15,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.io.File;
 import java.io.IOException;
 
 import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -71,6 +76,10 @@ public class FFprobeTest {
 
     assertThat(info.getStreams().get(1).channels, is(6));
     assertThat(info.getStreams().get(1).sample_rate, is(48_000));
+
+    assertThat(info.getFrames(), hasSize(381));
+    assertThat(info.getFrames().get(0), instanceOf(FFmpegAudioFrame.class));
+    assertThat(info.getFrames().get(1), instanceOf(FFmpegVideoFrame.class));
 
     // System.out.println(FFmpegUtils.getGson().toJson(info));
   }

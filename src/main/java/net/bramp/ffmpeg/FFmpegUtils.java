@@ -4,9 +4,11 @@ import com.google.common.base.CharMatcher;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.bramp.commons.lang3.math.gson.FractionAdapter;
+import net.bramp.ffmpeg.gson.FFmpegFrameDeserializer;
 import net.bramp.ffmpeg.gson.LowercaseEnumTypeAdapterFactory;
 import net.bramp.ffmpeg.gson.NamedBitsetAdapter;
 import net.bramp.ffmpeg.probe.FFmpegDisposition;
+import net.bramp.ffmpeg.probe.FFmpegFrame;
 import org.apache.commons.lang3.math.Fraction;
 
 import java.util.concurrent.TimeUnit;
@@ -120,6 +122,7 @@ public final class FFmpegUtils {
     builder.registerTypeAdapter(Fraction.class, new FractionAdapter());
     builder.registerTypeAdapter(
         FFmpegDisposition.class, new NamedBitsetAdapter<>(FFmpegDisposition.class));
+    builder.registerTypeAdapter(FFmpegFrame.class, new FFmpegFrameDeserializer());
 
     return builder.create();
   }
