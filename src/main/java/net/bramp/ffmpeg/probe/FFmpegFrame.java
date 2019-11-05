@@ -13,18 +13,18 @@ public abstract class FFmpegFrame {
   public int stream_index;
   public int key_frame;
 
-  public int pkt_pts;
+  public long pkt_pts;
   public double pkt_pts_time;
-  public int pkt_dts;
+  public long pkt_dts;
   public double pkt_dts_time;
 
-  public int best_effort_timestamp;
+  public long best_effort_timestamp;
   public double best_effort_timestamp_time;
 
   public int pkt_duration;
   // Question Change this to java.time.Duration?
   public double pkt_duration_time;
 
-  public int pkt_pos;
+  public long pkt_pos;
   public int pkt_size;
 }
