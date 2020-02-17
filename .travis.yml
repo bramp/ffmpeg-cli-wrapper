@@ -8,7 +8,6 @@ env:
   - USER_LANGUAGE=de USER_COUNTRY=DE
 
 jdk:
-  - openjdk7
   - openjdk8
   - oraclejdk8
   - oraclejdk9
