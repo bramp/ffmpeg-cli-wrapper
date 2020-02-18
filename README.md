@@ -17,7 +17,7 @@ I'll revoke this repository if original repository is updated.
 <dependency>
   <groupId>net.bramp.ffmpeg</groupId>
   <artifactId>ffmpeg</artifactId>
-  <version>0.6.2</version>
+  <version>0.6.4-kaibadash</version>
 </dependency>
 ```
 
