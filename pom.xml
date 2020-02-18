@@ -51,6 +51,7 @@
     <java.version>1.7</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
+    <github.global.server>github</github.global.server>
   </properties>
 
   <dependencyManagement>
@@ -200,13 +201,10 @@
   </dependencies>
 
   <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
     <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+      <id>internal.repos</id>
+      <name>Temporary Staging Repository</name>
+      <url>file://${project.build.directory}/mvn-repo</url>
     </repository>
   </distributionManagement>
 
@@ -749,6 +747,31 @@
             <aggregate>true</aggregate>
             <outputDirectory>%{project.reporting.outputDirectory}/cobertura</outputDirectory>
           </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>com.github.github</groupId>
+          <artifactId>site-maven-plugin</artifactId>
+          <version>0.12</version>
+          <configuration>
+            <message>Maven artifacts for ${project.version}</message>
+            <noJekyll>true</noJekyll>
+            <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
+            <branch>refs/heads/mvn-repo</branch>
+            <includes>
+              <include>**/*</include>
+            </includes>
+            <repositoryName>ffmpeg-cli-wrapper</repositoryName>
+            <repositoryOwner>kaibadash</repositoryOwner>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>site</goal>
+              </goals>
+              <phase>deploy</phase>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </reporting>
