@@ -1,5 +1,5 @@
-FFmpeg Java
-===========
+# FFmpeg Java
+
 by Andrew Brampton ([bramp.net](https://bramp.net)) (c) 2013-2014,2016
 
 A fluent interface to running FFmpeg from Java.
@@ -12,10 +12,10 @@ A fluent interface to running FFmpeg from Java.
 
 [GitHub](https://github.com/bramp/ffmpeg-cli-wrapper) | [API docs](https://bramp.github.io/ffmpeg-cli-wrapper/)
 
-Install
--------
+## Install
 
 Maven:
+
 ```xml
 <dependency>
   <groupId>net.bramp.ffmpeg</groupId>
@@ -24,12 +24,12 @@ Maven:
 </dependency>
 ```
 
-Usage
------
+## Usage
 
 ### Video Encoding
 
 Code:
+
 ```java
 FFmpeg ffmpeg = new FFmpeg("/path/to/ffmpeg");
 FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
@@ -69,13 +69,14 @@ executor.createTwoPassJob(builder).run();
 ### Get Media Information
 
 Code:
+
 ```java
 FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
 FFmpegProbeResult probeResult = ffprobe.probe("input.mp4");
 
 FFmpegFormat format = probeResult.getFormat();
-System.out.format("%nFile: '%s' ; Format: '%s' ; Duration: %.3fs", 
-	format.filename, 
+System.out.format("%nFile: '%s' ; Format: '%s' ; Duration: %.3fs",
+	format.filename,
 	format.format_long_name,
 	format.duration
 );
@@ -89,6 +90,7 @@ System.out.format("%nCodec: '%s' ; Width: %dpx ; Height: %dpx",
 ```
 
 ### Get progress while encoding
+
 ```java
 FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 
@@ -124,9 +126,10 @@ FFmpegJob job = executor.createJob(builder, new ProgressListener() {
 job.run();
 ```
 
-Building & Releasing
---------------
+## Building & Releasing
+
 If you wish to make changes, then building and releasing is simple:
+
 ```bash
 # To build
 mvn
@@ -143,15 +146,13 @@ git checkout ffmpeg-0.x
 mvn clean javadoc:aggregate scm-publish:publish-scm
 ```
 
-Install FFmpeg on Ubuntu
------------------
+## Install FFmpeg on Ubuntu
 
 We only the support the original FFmpeg, not the libav version. Before Ubuntu 12.04, and in 15.04
 and later the original FFmpeg is shipped. If you have to run on a version with libav, you can install
 FFmpeg from a PPA, or using the static build. More information [here](http://askubuntu.com/q/373322/34845)
 
-Get invovled!
--------------
+## Get invovled!
 
 We welcome contributions. Please check the [issue tracker](https://github.com/bramp/ffmpeg-cli-wrapper/issues).
 If you see something you wish to work on, please either comment on the issue, or just send a pull
@@ -159,8 +160,8 @@ request. Want to work on something else, then just open a issue, and we can disc
 documentation improvements, code cleanup, or new features. Please be mindful that all work is done
 on a volunteer basis, thus we can be slow to reply.
 
-Licence (Simplified BSD License)
---------------------------------
+## Licence (Simplified BSD License)
+
 ```
 Copyright (c) 2016, Andrew Brampton
 All rights reserved.
