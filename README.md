@@ -1,3 +1,26 @@
+# Note
+
+This is a fork of [bramp/ffmpeg-cli-wrapper](https://github.com/bramp/ffmpeg-cli-wrapper).
+It looks unmaintained.
+I'll revoke this repository if original repository is updated.
+
+## Install
+
+```xml
+<repositories>
+  <repository>
+    <id>kaibadash/ffmpeg-cli-wrapper</id>
+    <url>https://raw.github.com/kaibadash/ffmpeg-cli-wrapper/mvn-repo/</url>
+  </repository>
+</repositories>
+
+<dependency>
+  <groupId>net.bramp.ffmpeg</groupId>
+  <artifactId>ffmpeg</artifactId>
+  <version>0.6.2</version>
+</dependency>
+```
+
 # FFmpeg Java
 
 by Andrew Brampton ([bramp.net](https://bramp.net)) (c) 2013-2014,2016

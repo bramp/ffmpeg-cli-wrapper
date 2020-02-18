@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.bramp.ffmpeg</groupId>
   <artifactId>ffmpeg</artifactId>
-  <version>0.6.3-SNAPSHOT</version>
+  <version>0.6.4-kaibadash</version>
 
   <prerequisites>
     <maven>3.0.5</maven>
