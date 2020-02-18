@@ -8,7 +8,6 @@ env:
   - USER_LANGUAGE=de USER_COUNTRY=DE
 
 jdk:
-  - openjdk7
   - openjdk8
   - oraclejdk8
   - oraclejdk9
@@ -23,8 +22,8 @@ addons:
 
 before_install:
   - ./travis-install-ffmpeg.sh
-  - export FFMPEG=$PWD/ffmpeg-release-64bit-static/ffmpeg
-  - export FFPROBE=$PWD/ffmpeg-release-64bit-static/ffprobe
+  - export FFMPEG=$PWD/ffmpeg-release-amd64-static/ffmpeg
+  - export FFPROBE=$PWD/ffmpeg-release-amd64-static/ffprobe
   - export MAVEN_OPTS="$MAVEN_OPTS -Duser.language=$USER_LANGUAGE -Duser.country=$USER_COUNTRY"
 
 before_script:
