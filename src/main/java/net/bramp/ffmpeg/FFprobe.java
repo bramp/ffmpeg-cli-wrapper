@@ -98,6 +98,7 @@ public class FFprobe extends FFcommon {
         .add("-show_error")
         .add("-show_format")
         .add("-show_streams")
+        .add("-show_chapters")
         .add(mediaPath);
 
     Process p = runFunc.run(args.build());
@@ -118,7 +119,9 @@ public class FFprobe extends FFcommon {
       return result;
 
     } finally {
-      p.destroy();
+      if (p != null) {
+        p.destroy();
+      }
     }
   }
 }
