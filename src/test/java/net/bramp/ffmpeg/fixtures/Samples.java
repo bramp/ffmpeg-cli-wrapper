@@ -16,6 +16,9 @@ public final class Samples {
   public static final String testscreen_jpg = TEST_PREFIX + base_testscreen_jpg;
   public static final String test_mp3 = TEST_PREFIX + base_test_mp3;
 
+  private static final String book_m4b = "book_with_chapters.m4b";
+  public static final String book_with_chapters = TEST_PREFIX + book_m4b;
+
   // We don't have the following files
   public static final String FAKE_PREFIX = "fake/";
 
