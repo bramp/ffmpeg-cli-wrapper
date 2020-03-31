@@ -119,9 +119,7 @@ public class FFprobe extends FFcommon {
       return result;
 
     } finally {
-      if (p != null) {
-        p.destroy();
-      }
+      p.destroy();
     }
   }
 }

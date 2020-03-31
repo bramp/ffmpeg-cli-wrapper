@@ -30,6 +30,7 @@ public class FFmpegProbeResult {
   }
 
   public List<FFmpegStream> getStreams() {
+    if (streams == null) return Collections.emptyList();
     return ImmutableList.copyOf(streams);
   }
 

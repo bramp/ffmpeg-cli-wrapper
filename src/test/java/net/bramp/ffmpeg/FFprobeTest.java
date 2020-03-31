@@ -76,14 +76,14 @@ public class FFprobeTest {
     assertThat(info.getStreams().get(1).channels, is(6));
     assertThat(info.getStreams().get(1).sample_rate, is(48_000));
 
-    assertTrue(info.getChapters().isEmpty());
+    assertThat(info.getChapters().isEmpty(), is(true));
     // System.out.println(FFmpegUtils.getGson().toJson(info));
   }
 
   @Test
   public void testProbeBookWithChapters() throws IOException {
     FFmpegProbeResult info = ffprobe.probe(Samples.book_with_chapters);
-    assertFalse(info.hasError());
+    assertThat(info.hasError(), is(false));
     assertThat(info.getChapters().size(), is(24));
 
     FFmpegChapter firstChapter = info.getChapters().get(0);
