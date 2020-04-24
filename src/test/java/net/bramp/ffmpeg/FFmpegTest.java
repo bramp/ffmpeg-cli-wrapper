@@ -1,5 +1,6 @@
 package net.bramp.ffmpeg;
 
+import com.google.common.collect.Lists;
 import net.bramp.ffmpeg.fixtures.Codecs;
 import net.bramp.ffmpeg.fixtures.Formats;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
@@ -8,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.event.Level;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,6 +33,8 @@ public class FFmpegTest {
     when(runFunc.run(argThatHasItem("-formats")))
         .thenAnswer(new NewProcessAnswer("ffmpeg-formats"));
     when(runFunc.run(argThatHasItem("-codecs"))).thenAnswer(new NewProcessAnswer("ffmpeg-codecs"));
+    when(runFunc.run(argThatHasItem("toto.mp4")))
+        .thenAnswer(new NewProcessAnswer("ffmpeg-version", "ffmpeg-no-such-file"));
 
     ffmpeg = new FFmpeg(runFunc);
   }
@@ -64,5 +68,20 @@ public class FFmpegTest {
     assertEquals(Formats.FORMATS, ffmpeg.formats());
 
     verify(runFunc, times(1)).run(argThatHasItem("-formats"));
+  }
+
+  @Test
+  public void testReadProcessStreams() throws IOException {
+    // process input stream
+    Appendable processInputStream = mock(Appendable.class);
+    ffmpeg.setProcessInputStream(processInputStream);
+    // process error stream
+    Appendable processErrStream = mock(Appendable.class);
+    ffmpeg.setProcessErrorStream(processErrStream);
+    // run ffmpeg with non existing file
+    ffmpeg.run(Lists.newArrayList("-i", "toto.mp4"));
+    // check calls to Appendables
+    verify(processInputStream, times(1)).append(any(CharSequence.class));
+    verify(processErrStream, times(1)).append(any(CharSequence.class));
   }
 }
