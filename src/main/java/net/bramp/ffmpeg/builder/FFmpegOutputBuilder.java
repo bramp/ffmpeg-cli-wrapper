@@ -310,7 +310,7 @@ public class FFmpegOutputBuilder extends AbstractFFmpegStreamBuilder<FFmpegOutpu
     if (!Strings.isNullOrEmpty(video_filter)) {
       checkState(
           parent.inputs.size() == 1,
-          "Video filter only works with one input, instead use setVideoFilterComplex(..)");
+          "Video filter only works with one input, instead use setComplexVideoFilter(..)");
       args.add("-vf", video_filter);
     }
 
