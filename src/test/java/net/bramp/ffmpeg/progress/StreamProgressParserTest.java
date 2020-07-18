@@ -1,6 +1,8 @@
 package net.bramp.ffmpeg.progress;
 
 import net.bramp.ffmpeg.fixtures.Progresses;
+
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -13,17 +15,20 @@ import static org.junit.Assert.assertThat;
 
 public class StreamProgressParserTest {
 
-  RecordingProgressListener listener = new RecordingProgressListener();
+	RecordingProgressListener listener = new RecordingProgressListener();
 
-  @Test
-  public void testNormal() throws IOException {
-    listener.reset();
+	@Before
+	public void setup() throws IOException {
+		listener.reset();
 
-    StreamProgressParser parser = new StreamProgressParser(listener);
+		StreamProgressParser parser = new StreamProgressParser(listener);
 
-    InputStream inputStream = combineResource(Progresses.allFiles);
-    parser.processStream(inputStream);
+		InputStream inputStream = combineResource(Progresses.allFiles);
+		parser.processStream(inputStream);
+	}
 
-    assertThat(listener.progesses, equalTo((List<Progress>) Progresses.allProgresses));
-  }
+	@Test
+	public void testNormal() {
+		assertThat(listener.progesses, equalTo((List<Progress>) Progresses.allProgresses));
+	}
 }
