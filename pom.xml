@@ -5,9 +5,9 @@
     <artifactId>ffmpeg</artifactId>
     <version>0.6.3-SNAPSHOT</version>
 
-    <prerequisites>
-        <maven>3.0.5</maven>
-    </prerequisites>
+<!--    <prerequisites>-->
+<!--        <maven>3.0.5</maven>-->
+<!--    </prerequisites>-->
 
     <name>FFmpeg Wrapper</name>
     <description>Simple Java wrapper around FFmpeg command-line interface</description>
@@ -53,6 +53,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <github.global.server>github</github.global.server>
+        <github.token>${TOKEN}</github.token>
     </properties>
 
     <dependencyManagement>
@@ -558,6 +559,7 @@
                     <includes><include>**/*</include></includes>
                     <repositoryName>ffmpeg-cli-wrapper</repositoryName>      <!-- github repo name -->
                     <repositoryOwner>yermak</repositoryOwner>    <!-- github username  -->
+                    <oauth2Token>${github.token}</oauth2Token>
                 </configuration>
                 <executions>
                     <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->

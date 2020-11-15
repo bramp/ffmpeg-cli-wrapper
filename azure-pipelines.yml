@@ -5,6 +5,9 @@ variables:
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)\.m2\repository
   MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
 
+env:
+  TOKEN: $(OAUTH2TOKEN)
+
 steps:
   - checkout: self
     clean: 'true'
