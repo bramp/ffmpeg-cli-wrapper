@@ -17,7 +17,7 @@ steps:
       path: $(MAVEN_CACHE_FOLDER)
     displayName: 'Cache Maven local repo'
 
-   - script: |
+  - script: |
       echo ON
       choco install ffmpeg --no-progress
       call refreshenv
