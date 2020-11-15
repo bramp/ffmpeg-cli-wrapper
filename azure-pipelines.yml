@@ -5,8 +5,7 @@ variables:
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)\.m2\repository
   MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
 
-env:
-  TOKEN: $(OAUTH2TOKEN)
+
 
 steps:
   - checkout: self
@@ -25,6 +24,8 @@ steps:
       call refreshenv
       echo ON
       call mvn -version
+      env:
+        TOKEN: $(OAUTH2TOKEN)
       call mvn clean package --no-transfer-progress $(MAVEN_OPTS)
       echo OFF
     displayName: 'Deploy to GitHub Maven'
