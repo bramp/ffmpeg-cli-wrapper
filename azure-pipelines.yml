@@ -1,3 +1,6 @@
+trigger:
+  - master
+
 pool:
   vmImage: 'windows-latest'
 
