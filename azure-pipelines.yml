@@ -18,14 +18,16 @@ steps:
       path: $(MAVEN_CACHE_FOLDER)
     displayName: 'Cache Maven local repo'
 
+  - powershell: |
+      env:
+        OAUTH2TOKEN: $(OAUTH2TOKEN)
+
   - script: |
       echo ON
       choco install ffmpeg --no-progress
       call refreshenv
       echo ON
       call mvn -version
-      env:
-        TOKEN: $(OAUTH2TOKEN)
-      call mvn clean deploy --no-transfer-progress $(MAVEN_OPTS)
+      call mvn -s settings.xml clean deploy --no-transfer-progress $(MAVEN_OPTS)
       echo OFF
     displayName: 'Deploy to GitHub Maven'

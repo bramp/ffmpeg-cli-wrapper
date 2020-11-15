@@ -53,7 +53,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <github.global.server>github</github.global.server>
-        <github.global.oauth2Token>${TOKEN}</github.global.oauth2Token>
+        <github.global.oauth2Token>${OAUTH2TOKEN}</github.global.oauth2Token>
     </properties>
 
     <dependencyManagement>
