@@ -7,9 +7,19 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 steps:
+- checkout: self
+      clean: 'true'
+      fetchDepth: '1'
+
+- script:
+      echo ON
+      choco install ffmpeg --no-progress
+      call refreshenv
+      echo ON
+
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
@@ -18,5 +28,4 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
