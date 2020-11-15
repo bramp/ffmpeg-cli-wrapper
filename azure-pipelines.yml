@@ -26,6 +26,6 @@ steps:
       call mvn -version
       env:
         TOKEN: $(OAUTH2TOKEN)
-      call mvn clean package --no-transfer-progress $(MAVEN_OPTS)
+      call mvn clean deploy --no-transfer-progress $(MAVEN_OPTS)
       echo OFF
     displayName: 'Deploy to GitHub Maven'
