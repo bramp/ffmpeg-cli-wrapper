@@ -1,31 +1,27 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
-trigger:
-- master
-
 pool:
   vmImage: 'windows-latest'
 
-steps:
-- checkout: self
-      clean: 'true'
-      fetchDepth: '1'
+variables:
+  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)\.m2\repository
+  MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
 
-- script:
+steps:
+  - checkout: self
+    clean: 'true'
+    fetchDepth: '1'
+
+  - task: Cache@2
+    inputs:
+      key: 'maven | "$(Agent.OS)"'
+      path: $(MAVEN_CACHE_FOLDER)
+    displayName: 'Cache Maven local repo'
+
+  - script: |
       echo ON
       choco install ffmpeg --no-progress
       call refreshenv
       echo ON
-
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    goals: 'package'
+      call mvn -version
+      call mvn clean package --no-transfer-progress $(MAVEN_OPTS)
+      echo OFF
+    displayName: 'Deploy to GitHub Maven'
