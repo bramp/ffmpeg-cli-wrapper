@@ -5,12 +5,11 @@ variables:
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)\.m2\repository
   MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
 
-
-
 steps:
   - checkout: self
     clean: 'true'
     fetchDepth: '1'
+    displayName: 'Checkout sources'
 
   - task: Cache@2
     inputs:
@@ -18,16 +17,12 @@ steps:
       path: $(MAVEN_CACHE_FOLDER)
     displayName: 'Cache Maven local repo'
 
-  - powershell: |
-      env:
-        OAUTH2TOKEN: $(OAUTH2TOKEN)
-
-  - script: |
+   - script: |
       echo ON
       choco install ffmpeg --no-progress
       call refreshenv
       echo ON
       call mvn -version
-      call mvn -s settings.xml clean deploy --no-transfer-progress $(MAVEN_OPTS)
+      call mvn -s settings.xml -Dgithub.global.oauth2Token=$(OAUTH2TOKEN) clean deploy --no-transfer-progress $(MAVEN_OPTS)
       echo OFF
     displayName: 'Deploy to GitHub Maven'
