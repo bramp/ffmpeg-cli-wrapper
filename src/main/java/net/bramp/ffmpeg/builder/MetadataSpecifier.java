@@ -7,6 +7,7 @@ package net.bramp.ffmpeg.builder;
 // p:program_index
 // index is meant to be zero based, by negitive is allowed as dummy values
 
+import com.google.errorprone.annotations.Immutable;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -15,6 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Metadata spec, as described in the "map_metadata" section of
  * https://www.ffmpeg.org/ffmpeg-all.html#Main-options
  */
+@Immutable
 public class MetadataSpecifier {
 
   final String spec;
@@ -70,5 +72,4 @@ public class MetadataSpecifier {
     checkNotNull(spec);
     return new MetadataSpecifier("s", spec);
   }
-
 }

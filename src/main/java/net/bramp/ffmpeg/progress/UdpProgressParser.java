@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.CountDownLatch;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -41,17 +42,18 @@ public class UdpProgressParser extends AbstractSocketProgressParser {
     super.stop();
   }
 
+  @Override
   protected String getThreadName() {
     return "UdpProgressParser";
   }
 
   @Override
-  protected Runnable getRunnable() {
-    return new UdpProgressParserRunnable(parser, socket);
+  protected Runnable getRunnable(CountDownLatch startSignal) {
+    return new UdpProgressParserRunnable(parser, socket, startSignal);
   }
 
+  @Override
   public URI getUri() {
     return address;
   }
-
 }

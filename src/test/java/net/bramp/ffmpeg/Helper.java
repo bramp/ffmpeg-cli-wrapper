@@ -11,18 +11,17 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterators.asEnumeration;
 
-/**
- * Random test helper methods.
- */
+/** Random test helper methods. */
 public class Helper {
 
-  final static Function<String, InputStream> resourceLoader = new Function<String, InputStream>() {
-    @Nullable
-    @Override
-    public InputStream apply(@Nullable String input) {
-      return loadResource(input);
-    }
-  };
+  static final Function<String, InputStream> resourceLoader =
+      new Function<String, InputStream>() {
+        @Nullable
+        @Override
+        public InputStream apply(@Nullable String input) {
+          return loadResource(input);
+        }
+      };
 
   /**
    * Simple wrapper around "new SequenceInputStream", so the user doesn't have to deal with the
@@ -43,7 +42,7 @@ public class Helper {
 
   /**
    * Loads all resources, and returns one stream containing them all.
-   * 
+   *
    * @param names
    * @return
    */
@@ -51,5 +50,4 @@ public class Helper {
     checkNotNull(names);
     return sequenceInputStream(Iterables.transform(names, resourceLoader));
   }
-
 }

@@ -2,11 +2,7 @@ package net.bramp.ffmpeg.options;
 
 import java.beans.ConstructorProperties;
 
-/**
- * 
- * @author bramp
- *
- */
+/** @author bramp */
 public class EncodingOptions {
 
   public final MainEncodingOptions main;
@@ -14,8 +10,8 @@ public class EncodingOptions {
   public final VideoEncodingOptions video;
 
   @ConstructorProperties({"main", "audio", "video"})
-  public EncodingOptions(MainEncodingOptions main, AudioEncodingOptions audio,
-      VideoEncodingOptions video) {
+  public EncodingOptions(
+      MainEncodingOptions main, AudioEncodingOptions audio, VideoEncodingOptions video) {
     this.main = main;
     this.audio = audio;
     this.video = video;

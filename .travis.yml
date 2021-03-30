@@ -1,11 +1,17 @@
+dist: trusty
 sudo: false
 
 language: java
 
+env:
+  - USER_LANGUAGE=en USER_COUNTRY=US
+  - USER_LANGUAGE=de USER_COUNTRY=DE
+
 jdk:
   - openjdk7
+  - openjdk8
   - oraclejdk8
-  - oraclejdk7
+  - oraclejdk9
 
 os:
   - linux
@@ -17,14 +23,23 @@ addons:
 
 before_install:
   - ./travis-install-ffmpeg.sh
-  - export FFMPEG=$PWD/ffmpeg-release-64bit-static/ffmpeg
-  - export FFPROBE=$PWD/ffmpeg-release-64bit-static/ffprobe
+  - export FFMPEG=$PWD/ffmpeg-release-amd64-static/ffmpeg
+  - export FFPROBE=$PWD/ffmpeg-release-amd64-static/ffprobe
+  - export MAVEN_OPTS="$MAVEN_OPTS -Duser.language=$USER_LANGUAGE -Duser.country=$USER_COUNTRY"
+
+before_script:
+  - echo $HOME
+  - echo $JAVA_OPTS
+  - echo $MAVEN_OPTS
 
 install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true -B -V
 
 script:
-  - mvn test -Dgpg.skip=true -B
+  - mvn test -Dgpg.skip=true -B -V
+
+after_success:
+  - mvn clean cobertura:cobertura coveralls:report
 
 cache:
   apt: true

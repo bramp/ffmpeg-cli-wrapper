@@ -4,9 +4,7 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-/**
- * Test class to keep a record of all progresses.
- */
+/** Test class to keep a record of all progresses. */
 public class RecordingProgressListener implements ProgressListener {
   public final List<Progress> progesses = Lists.newArrayList();
 

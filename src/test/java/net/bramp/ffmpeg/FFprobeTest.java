@@ -3,6 +3,7 @@ package net.bramp.ffmpeg;
 import com.google.gson.Gson;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
+import net.bramp.ffmpeg.probe.FFmpegChapter;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import net.bramp.ffmpeg.probe.FFmpegStream;
 import org.apache.commons.lang3.math.Fraction;
@@ -10,39 +11,56 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 
 import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FFprobeTest {
 
-  @Mock
-  ProcessFunction runFunc;
+  @Mock ProcessFunction runFunc;
 
   FFprobe ffprobe;
 
-  final static Gson gson = FFmpegUtils.getGson();
+  static final Gson gson = FFmpegUtils.getGson();
 
   @Before
   public void before() throws IOException {
-    when(runFunc.run(argThatHasItem(Samples.big_buck_bunny_720p_1mb))).thenAnswer(
-        new NewProcessAnswer("ffprobe-big_buck_bunny_720p_1mb.mp4"));
+    when(runFunc.run(argThatHasItem("-version")))
+        .thenAnswer(new NewProcessAnswer("ffprobe-version"));
 
-    when(runFunc.run(argThatHasItem(Samples.always_on_my_mind))).thenAnswer(
-        new NewProcessAnswer("ffprobe-Always On My Mind [Program Only] - Adelén.mp4"));
+    when(runFunc.run(argThatHasItem(Samples.big_buck_bunny_720p_1mb)))
+        .thenAnswer(new NewProcessAnswer("ffprobe-big_buck_bunny_720p_1mb.mp4"));
 
-    when(runFunc.run(argThatHasItem(Samples.divide_by_zero))).thenAnswer(
-        new NewProcessAnswer("ffprobe-divide-by-zero"));
+    when(runFunc.run(argThatHasItem(Samples.always_on_my_mind)))
+        .thenAnswer(new NewProcessAnswer("ffprobe-Always On My Mind [Program Only] - Adelén.mp4"));
+
+    when(runFunc.run(argThatHasItem(Samples.start_pts_test)))
+        .thenAnswer(new NewProcessAnswer("ffprobe-start_pts_test"));
+
+    when(runFunc.run(argThatHasItem(Samples.divide_by_zero)))
+        .thenAnswer(new NewProcessAnswer("ffprobe-divide-by-zero"));
+
+    when(runFunc.run(argThatHasItem(Samples.book_with_chapters)))
+        .thenAnswer(new NewProcessAnswer("book_with_chapters.m4b"));
 
     ffprobe = new FFprobe(runFunc);
+  }
+
+  @Test
+  public void testVersion() throws Exception {
+    assertEquals(
+        "ffprobe version 3.0.2 Copyright (c) 2007-2016 the FFmpeg developers", ffprobe.version());
+    assertEquals(
+        "ffprobe version 3.0.2 Copyright (c) 2007-2016 the FFmpeg developers", ffprobe.version());
+
+    verify(runFunc, times(1)).run(argThatHasItem("-version"));
   }
 
   @Test
@@ -58,7 +76,31 @@ public class FFprobeTest {
     assertThat(info.getStreams().get(1).channels, is(6));
     assertThat(info.getStreams().get(1).sample_rate, is(48_000));
 
+    assertThat(info.getChapters().isEmpty(), is(true));
     // System.out.println(FFmpegUtils.getGson().toJson(info));
+  }
+
+  @Test
+  public void testProbeBookWithChapters() throws IOException {
+    FFmpegProbeResult info = ffprobe.probe(Samples.book_with_chapters);
+    assertThat(info.hasError(), is(false));
+    assertThat(info.getChapters().size(), is(24));
+
+    FFmpegChapter firstChapter = info.getChapters().get(0);
+    assertThat(firstChapter.time_base, is("1/44100"));
+    assertThat(firstChapter.start, is(0L));
+    assertThat(firstChapter.start_time, is("0.000000"));
+    assertThat(firstChapter.end, is(11951309L));
+    assertThat(firstChapter.end_time, is("271.004739"));
+    assertThat(firstChapter.tags.title, is("01 - Sammy Jay Makes a Fuss"));
+
+    FFmpegChapter lastChapter = info.getChapters().get(info.getChapters().size() - 1);
+    assertThat(lastChapter.time_base, is("1/44100"));
+    assertThat(lastChapter.start, is(237875790L));
+    assertThat(lastChapter.start_time, is("5394.008844"));
+    assertThat(lastChapter.end, is(248628224L));
+    assertThat(lastChapter.end_time, is("5637.828209"));
+    assertThat(lastChapter.tags.title, is("24 - Chatterer Has His Turn to Laugh"));
   }
 
   @Test
@@ -75,10 +117,20 @@ public class FFprobeTest {
     assertThat(info.getStreams().get(1).sample_rate, is(48_000));
 
     // Test a UTF-8 name
-    assertThat(info.getFormat().filename,
+    assertThat(
+        info.getFormat().filename,
         is("c:\\Users\\Bob\\Always On My Mind [Program Only] - Adelén.mp4"));
 
     // System.out.println(FFmpegUtils.getGson().toJson(info));
+  }
+
+  @Test
+  public void testProbeStartPts() throws IOException {
+    FFmpegProbeResult info = ffprobe.probe(Samples.start_pts_test);
+    assertFalse(info.hasError());
+
+    // Check edge case with a time larger than an integer
+    assertThat(info.getStreams().get(0).start_pts, is(8570867078L));
   }
 
   @Test

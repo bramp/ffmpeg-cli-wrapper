@@ -1,4 +1,4 @@
-package net.bramp.ffmpeg.builder;
+package net.bramp.ffmpeg;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,12 +10,11 @@ import java.util.Arrays;
 import java.util.List;
 
 @RunWith(Parameterized.class)
-public class FFmpegOutputBuilderTestCheckValidStream {
+public class PreconditionsCheckValidStreamTest {
 
   @Parameters(name = "{0}")
   public static List<String> data() {
     return Arrays.asList(
-        // @formatter:off
         "udp://10.1.0.102:1234",
         "tcp://127.0.0.1:2000",
         "udp://236.0.0.1:2000",
@@ -26,20 +25,17 @@ public class FFmpegOutputBuilderTestCheckValidStream {
         "rtsp://localhost:8888/live.sdp?tcp",
 
         // Some others
-        "UDP://10.1.0.102:1234"
-        // @formatter:on
-        );
+        "UDP://10.1.0.102:1234");
   }
 
   private final URI uri;
 
-  public FFmpegOutputBuilderTestCheckValidStream(String url) {
+  public PreconditionsCheckValidStreamTest(String url) {
     this.uri = URI.create(url);
   }
 
   @Test
   public void testUri() {
-    FFmpegOutputBuilder.checkValidStream(uri);
+    Preconditions.checkValidStream(uri);
   }
-
 }

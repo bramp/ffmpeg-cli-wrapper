@@ -2,10 +2,12 @@ package net.bramp.ffmpeg.progress;
 
 import com.google.common.net.InetAddresses;
 
+import javax.annotation.CheckReturnValue;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.CountDownLatch;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -22,7 +24,7 @@ public abstract class AbstractSocketProgressParser implements ProgressParser {
   /**
    * Creates a URL to parse to FFmpeg based on the scheme, address and port.
    *
-   * TODO Move this method to somewhere better.
+   * <p>TODO Move this method to somewhere better.
    *
    * @param scheme
    * @param address
@@ -30,28 +32,49 @@ public abstract class AbstractSocketProgressParser implements ProgressParser {
    * @return
    * @throws URISyntaxException
    */
+  @CheckReturnValue
   static URI createUri(String scheme, InetAddress address, int port) throws URISyntaxException {
     checkNotNull(address);
-    return new URI(scheme, null /* userInfo */, InetAddresses.toUriString(address), port,
-        null /* path */, null /* query */, null /* fragment */);
+    return new URI(
+        scheme,
+        null /* userInfo */,
+        InetAddresses.toUriString(address),
+        port,
+        null /* path */,
+        null /* query */,
+        null /* fragment */);
   }
 
+  @CheckReturnValue
   protected abstract String getThreadName();
 
-  protected abstract Runnable getRunnable();
+  protected abstract Runnable getRunnable(CountDownLatch startSignal);
 
   /**
+   * Starts the ProgressParser waiting for progress.
    *
    * @exception IllegalThreadStateException if the parser was already started.
    */
+  @Override
   public synchronized void start() {
     if (thread != null) {
       throw new IllegalThreadStateException("Parser already started");
     }
 
     String name = getThreadName() + "(" + getUri().toString() + ")";
-    thread = new Thread(getRunnable(), name);
+
+    CountDownLatch startSignal = new CountDownLatch(1);
+    Runnable runnable = getRunnable(startSignal);
+
+    thread = new Thread(runnable, name);
     thread.start();
+
+    // Block until the thread has started
+    try {
+      startSignal.await();
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
   }
 
   @Override
@@ -61,9 +84,8 @@ public abstract class AbstractSocketProgressParser implements ProgressParser {
 
       try {
         thread.join();
-        thread = null;
       } catch (InterruptedException e) {
-        // Ignore and return
+        Thread.currentThread().interrupt();
       }
     }
   }

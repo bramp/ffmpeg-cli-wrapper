@@ -10,6 +10,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import static net.bramp.ffmpeg.Helper.loadResource;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -18,7 +19,8 @@ import static org.junit.Assert.assertThat;
 public class UdpProgressParserTest extends AbstractProgressParserTest {
 
   @Override
-  public ProgressParser newParser(ProgressListener listener) throws IOException, URISyntaxException {
+  public ProgressParser newParser(ProgressListener listener)
+      throws IOException, URISyntaxException {
     return new UdpProgressParser(listener);
   }
 
@@ -44,6 +46,6 @@ public class UdpProgressParserTest extends AbstractProgressParserTest {
 
     parser.stop();
 
-    assertThat(progesses, equalTo(Progresses.allProgresses));
+    assertThat(progesses, equalTo((List<Progress>) Progresses.allProgresses));
   }
 }

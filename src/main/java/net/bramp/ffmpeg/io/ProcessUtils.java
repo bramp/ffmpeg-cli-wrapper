@@ -3,11 +3,12 @@ package net.bramp.ffmpeg.io;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-/**
- * @author bramp
- */
-public abstract class ProcessUtils {
-  private ProcessUtils() {}
+/** @author bramp */
+public final class ProcessUtils {
+
+  private ProcessUtils() {
+    throw new AssertionError("No instances for you!");
+  }
 
   private static class ProcessThread extends Thread {
     final Process p;
@@ -24,7 +25,7 @@ public abstract class ProcessUtils {
         exitValue = p.waitFor();
         finished = true;
       } catch (InterruptedException e) {
-        // Ignore
+        Thread.currentThread().interrupt();
       }
     }
 
@@ -39,7 +40,7 @@ public abstract class ProcessUtils {
 
   /**
    * Waits until a process finishes or a timeout occurs
-   * 
+   *
    * @param p process
    * @param timeout timeout in given unit
    * @param unit time unit
@@ -56,6 +57,7 @@ public abstract class ProcessUtils {
 
     } catch (InterruptedException e) {
       t.interrupt();
+      Thread.currentThread().interrupt();
     }
 
     if (!t.hasFinished()) {

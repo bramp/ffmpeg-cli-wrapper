@@ -1,7 +1,7 @@
 package net.bramp.ffmpeg.progress;
 
+import com.google.common.io.ByteStreams;
 import net.bramp.ffmpeg.fixtures.Progresses;
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -9,8 +9,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import static net.bramp.ffmpeg.Helper.combineResource;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -18,7 +20,8 @@ import static org.junit.Assert.assertTrue;
 public class TcpProgressParserTest extends AbstractProgressParserTest {
 
   @Override
-  public ProgressParser newParser(ProgressListener listener) throws IOException, URISyntaxException {
+  public ProgressParser newParser(ProgressListener listener)
+      throws IOException, URISyntaxException {
     return new TcpProgressParser(listener);
   }
 
@@ -27,26 +30,31 @@ public class TcpProgressParserTest extends AbstractProgressParserTest {
     parser.start();
 
     Socket client = new Socket(uri.getHost(), uri.getPort());
+    assertTrue("Socket is connected", client.isConnected());
 
     InputStream inputStream = combineResource(Progresses.allFiles);
     OutputStream outputStream = client.getOutputStream();
 
-    IOUtils.copy(inputStream, outputStream);
-    client.close();
+    long bytes = ByteStreams.copy(inputStream, outputStream);
 
+    // HACK, but give the TcpProgressParser thread time to actually handle the connection/data
+    // before the client is closed, and the parser is stopped.
+    Thread.sleep(100);
+
+    client.close();
     parser.stop();
 
-    assertThat(progesses, equalTo(Progresses.allProgresses));
+    assertThat(bytes, greaterThan(0L));
+    assertThat(progesses, equalTo((List<Progress>) Progresses.allProgresses));
   }
 
   @Test
-  public void testPrematureDisconnect() throws IOException, InterruptedException,
-      URISyntaxException {
+  public void testPrematureDisconnect()
+      throws IOException, InterruptedException, URISyntaxException {
     parser.start();
     new Socket(uri.getHost(), uri.getPort()).close();
     parser.stop();
 
     assertTrue(progesses.isEmpty());
   }
-
 }

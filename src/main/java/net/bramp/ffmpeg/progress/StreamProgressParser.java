@@ -21,8 +21,9 @@ public class StreamProgressParser {
   private static BufferedReader wrapInBufferedReader(Reader reader) {
     checkNotNull(reader);
 
-    if (reader instanceof BufferedReader)
+    if (reader instanceof BufferedReader) {
       return (BufferedReader) reader;
+    }
 
     return new BufferedReader(reader);
   }
@@ -44,5 +45,4 @@ public class StreamProgressParser {
       }
     }
   }
-
 }

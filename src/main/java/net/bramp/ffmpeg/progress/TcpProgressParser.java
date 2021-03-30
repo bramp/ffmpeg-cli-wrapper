@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.CountDownLatch;
 
 public class TcpProgressParser extends AbstractSocketProgressParser {
 
@@ -22,7 +23,6 @@ public class TcpProgressParser extends AbstractSocketProgressParser {
     this.address = createUri("tcp", server.getInetAddress(), server.getLocalPort());
   }
 
-
   @Override
   public synchronized void stop() throws IOException {
     if (server.isClosed()) {
@@ -34,17 +34,18 @@ public class TcpProgressParser extends AbstractSocketProgressParser {
     super.stop();
   }
 
+  @Override
   protected String getThreadName() {
     return "TcpProgressParser";
   }
 
   @Override
-  protected Runnable getRunnable() {
-    return new TcpProgressParserRunnable(parser, server);
+  protected Runnable getRunnable(CountDownLatch startSignal) {
+    return new TcpProgressParserRunnable(parser, server, startSignal);
   }
 
+  @Override
   public URI getUri() {
     return address;
   }
-
 }

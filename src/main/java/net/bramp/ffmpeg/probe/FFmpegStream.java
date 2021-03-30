@@ -5,15 +5,17 @@ import org.apache.commons.lang3.math.Fraction;
 
 import java.util.Map;
 
-@SuppressFBWarnings(value = {"UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"},
-    justification = "POJO objects where the fields are populated by gson")
+@SuppressFBWarnings(
+  value = {"UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"},
+  justification = "POJO objects where the fields are populated by gson"
+)
 public class FFmpegStream {
 
   // TODO Add more CodecTypes
   public enum CodecType {
-    VIDEO, AUDIO,
+    VIDEO,
+    AUDIO,
   }
-
 
   public int index;
   public String codec_name;
@@ -42,7 +44,7 @@ public class FFmpegStream {
   public Fraction avg_frame_rate;
   public Fraction time_base;
 
-  public int start_pts;
+  public long start_pts;
   public double start_time;
 
   public long duration_ts;

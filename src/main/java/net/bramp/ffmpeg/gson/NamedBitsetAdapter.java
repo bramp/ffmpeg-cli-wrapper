@@ -8,13 +8,34 @@ import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Converts a json object which represents a set of booleans. For example public class Set { public
- * boolean a = true; public boolean b = false; public int c = 1; public int d = 0; } is turned into
- * Json Object: {"a": true, "b": false, "c": true, "d": false}
+ * Converts a json object which represents a set of booleans. For example:
+ *
+ * <pre>
+ * <code>
+ * public class Set {
+ *   public boolean a = true;
+ *   public boolean b = false;
+ *   public int c = 1;
+ *   public int d = 0;
+ * }
+ * </code>
+ * </pre>
+ *
+ * is turned into:
+ *
+ * <pre>
+ * {
+ *   "a": true,
+ *   "b": false,
+ *   "c": true,
+ *   "d": false
+ * }
+ * </pre>
  */
 public class NamedBitsetAdapter<T> extends TypeAdapter<T> {
 
@@ -31,11 +52,10 @@ public class NamedBitsetAdapter<T> extends TypeAdapter<T> {
         return Optional.of(reader.nextBoolean());
       case NUMBER:
         return Optional.of(reader.nextInt() != 0);
+      default:
+        reader.skipValue();
+        return Optional.absent();
     }
-
-    reader.skipValue();
-
-    return Optional.absent();
   }
 
   protected void setField(T target, String name, boolean value) throws IllegalAccessException {
@@ -52,6 +72,7 @@ public class NamedBitsetAdapter<T> extends TypeAdapter<T> {
     }
   }
 
+  @Override
   public T read(JsonReader reader) throws IOException {
 
     JsonToken next = reader.peek();
@@ -62,7 +83,7 @@ public class NamedBitsetAdapter<T> extends TypeAdapter<T> {
     }
 
     try {
-      T obj = clazz.newInstance();
+      T obj = clazz.getDeclaredConstructor().newInstance();
       reader.beginObject();
 
       next = reader.peek();
@@ -80,11 +101,15 @@ public class NamedBitsetAdapter<T> extends TypeAdapter<T> {
       reader.endObject();
       return obj;
 
-    } catch (InstantiationException | IllegalAccessException e) {
+    } catch (InstantiationException
+        | IllegalAccessException
+        | NoSuchMethodException
+        | InvocationTargetException e) {
       throw new IOException("Reflection error", e);
     }
   }
 
+  @Override
   public void write(JsonWriter writer, T value) throws IOException {
 
     if (value == null) {

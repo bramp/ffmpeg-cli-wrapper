@@ -7,24 +7,22 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
+import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FFmpegTest {
 
-  @Mock
-  ProcessFunction runFunc;
+  @Mock ProcessFunction runFunc;
 
   FFmpeg ffmpeg;
-
 
   @Before
   public void before() throws IOException {
@@ -46,6 +44,8 @@ public class FFmpegTest {
   public void testVersion() throws Exception {
     assertEquals("ffmpeg version 0.10.9-7:0.10.9-1~raring1", ffmpeg.version());
     assertEquals("ffmpeg version 0.10.9-7:0.10.9-1~raring1", ffmpeg.version());
+
+    verify(runFunc, times(1)).run(argThatHasItem("-version"));
   }
 
   @Test

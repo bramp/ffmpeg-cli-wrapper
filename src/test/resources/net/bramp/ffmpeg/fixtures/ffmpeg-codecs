@@ -13,7 +13,6 @@ Codecs:
  D A D  8svx_exp        8SVX exponential
  D A D  8svx_fib        8SVX fibonacci
   EV    a64multi        Multicolor charset for Commodore 64
-  EV    a64multi5       Multicolor charset for Commodore 64, extended with 5th color (colram)
  DEA D  aac             Advanced Audio Coding
  D A D  aac_latm        AAC LATM (Advanced Audio Codec LATM syntax)
  D V D  aasc            Autodesk RLE
@@ -123,7 +122,6 @@ Codecs:
  D VSD  h263i           Intel H.263
   EV    h263p           H.263+ / H.263-1998 / H.263 version 2
  D V D  h264            H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10
- D V D  h264_vdpau      H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 (VDPAU acceleration)
  DEVSD  huffyuv         Huffyuv / HuffYUV
  D V D  idcinvideo      id Quake II CIN video
  D V D  idf             iCEDraw text

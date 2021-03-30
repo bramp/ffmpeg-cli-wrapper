@@ -1,4 +1,4 @@
-package net.bramp.ffmpeg.builder;
+package net.bramp.ffmpeg;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,12 +10,11 @@ import java.util.Arrays;
 import java.util.List;
 
 @RunWith(Parameterized.class)
-public class FFmpegOutputBuilderTestCheckInvalidStream {
+public class PreconditionsCheckInvalidStreamTest {
 
   @Parameters(name = "{0}")
   public static List<String> data() {
     return Arrays.asList(
-// @formatter:off
         // Illegal schemes
         "http://www.example.com/",
         "https://live.twitch.tv/app/live_",
@@ -23,20 +22,17 @@ public class FFmpegOutputBuilderTestCheckInvalidStream {
 
         // Missing ports
         "udp://10.1.0.102/",
-        "tcp://127.0.0.1/"
-        // @formatter:on
-        );
+        "tcp://127.0.0.1/");
   }
 
   private final URI uri;
 
-  public FFmpegOutputBuilderTestCheckInvalidStream(String url) {
+  public PreconditionsCheckInvalidStreamTest(String url) {
     this.uri = URI.create(url);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testUri() {
-    FFmpegOutputBuilder.checkValidStream(uri);
+    Preconditions.checkValidStream(uri);
   }
-
 }

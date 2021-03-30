@@ -1,0 +1,376 @@
+{
+    "streams": [
+        {
+            "index": 0,
+            "codec_name": "aac",
+            "codec_long_name": "AAC (Advanced Audio Coding)",
+            "profile": "LC",
+            "codec_type": "audio",
+            "codec_time_base": "1/44100",
+            "codec_tag_string": "mp4a",
+            "codec_tag": "0x6134706d",
+            "sample_fmt": "fltp",
+            "sample_rate": "44100",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 0,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_pts": 0,
+            "start_time": "0.000000",
+            "duration_ts": 248628224,
+            "duration": "5637.828209",
+            "bit_rate": "62993",
+            "max_bit_rate": "75648",
+            "nb_frames": "242801",
+            "disposition": {
+                "default": 1,
+                "dub": 0,
+                "original": 0,
+                "comment": 0,
+                "lyrics": 0,
+                "karaoke": 0,
+                "forced": 0,
+                "hearing_impaired": 0,
+                "visual_impaired": 0,
+                "clean_effects": 0,
+                "attached_pic": 0,
+                "timed_thumbnails": 0
+            },
+            "tags": {
+                "creation_time": "2016-02-21T08:27:56.000000Z",
+                "language": "und"
+            }
+        },
+        {
+            "index": 1,
+            "codec_name": "bin_data",
+            "codec_long_name": "binary data",
+            "codec_type": "data",
+            "codec_tag_string": "text",
+            "codec_tag": "0x74786574",
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_pts": 0,
+            "start_time": "0.000000",
+            "duration_ts": 248628224,
+            "duration": "5637.828209",
+            "bit_rate": "1",
+            "nb_frames": "24",
+            "disposition": {
+                "default": 0,
+                "dub": 0,
+                "original": 0,
+                "comment": 0,
+                "lyrics": 0,
+                "karaoke": 0,
+                "forced": 0,
+                "hearing_impaired": 0,
+                "visual_impaired": 0,
+                "clean_effects": 0,
+                "attached_pic": 0,
+                "timed_thumbnails": 0
+            },
+            "tags": {
+                "creation_time": "2016-02-21T08:28:13.000000Z",
+                "language": "und"
+            }
+        }
+    ],
+    "chapters": [
+        {
+            "id": 0,
+            "time_base": "1/44100",
+            "start": 0,
+            "start_time": "0.000000",
+            "end": 11951309,
+            "end_time": "271.004739",
+            "tags": {
+                "title": "01 - Sammy Jay Makes a Fuss"
+            }
+        },
+        {
+            "id": 1,
+            "time_base": "1/44100",
+            "start": 11951309,
+            "start_time": "271.004739",
+            "end": 22138982,
+            "end_time": "502.017732",
+            "tags": {
+                "title": "02 - A Bitter Disappointment"
+            }
+        },
+        {
+            "id": 2,
+            "time_base": "1/44100",
+            "start": 22138982,
+            "start_time": "502.017732",
+            "end": 33692987,
+            "end_time": "764.013311",
+            "tags": {
+                "title": "03 - The Vanity of Sammy Jay"
+            }
+        },
+        {
+            "id": 3,
+            "time_base": "1/44100",
+            "start": 33692987,
+            "start_time": "764.013311",
+            "end": 45379542,
+            "end_time": "1029.014558",
+            "tags": {
+                "title": "04 - Sammy Jay Gets Even with Peter Rabbit"
+            }
+        },
+        {
+            "id": 4,
+            "time_base": "1/44100",
+            "start": 45379542,
+            "start_time": "1029.014558",
+            "end": 55257388,
+            "end_time": "1253.001995",
+            "tags": {
+                "title": "05 - Sammy Jay Brings News"
+            }
+        },
+        {
+            "id": 5,
+            "time_base": "1/44100",
+            "start": 55257388,
+            "start_time": "1253.001995",
+            "end": 67958232,
+            "end_time": "1541.002993",
+            "tags": {
+                "title": "06 - Black Pussy Almost Catches a Good Breakfast"
+            }
+        },
+        {
+            "id": 6,
+            "time_base": "1/44100",
+            "start": 67958232,
+            "start_time": "1541.002993",
+            "end": 79336795,
+            "end_time": "1799.020295",
+            "tags": {
+                "title": "07 - Chatterer Works Hard"
+            }
+        },
+        {
+            "id": 7,
+            "time_base": "1/44100",
+            "start": 79336795,
+            "start_time": "1799.020295",
+            "end": 90008761,
+            "end_time": "2041.014989",
+            "tags": {
+                "title": "08 - Sammy Jay Drops a Hint"
+            }
+        },
+        {
+            "id": 8,
+            "time_base": "1/44100",
+            "start": 90008761,
+            "start_time": "2041.014989",
+            "end": 100813185,
+            "end_time": "2286.013265",
+            "tags": {
+                "title": "09 - Chatterer Screws up His Courage"
+            }
+        },
+        {
+            "id": 9,
+            "time_base": "1/44100",
+            "start": 100813185,
+            "start_time": "2286.013265",
+            "end": 109147886,
+            "end_time": "2475.008753",
+            "tags": {
+                "title": "10 - Chatterer Studies a Way to Get Farmer Brown's Corn"
+            }
+        },
+        {
+            "id": 10,
+            "time_base": "1/44100",
+            "start": 109147886,
+            "start_time": "2475.008753",
+            "end": 115939537,
+            "end_time": "2629.014444",
+            "tags": {
+                "title": "11 - Chatterer Grows Reckless"
+            }
+        },
+        {
+            "id": 11,
+            "time_base": "1/44100",
+            "start": 115939537,
+            "start_time": "2629.014444",
+            "end": 126126118,
+            "end_time": "2860.002676",
+            "tags": {
+                "title": "12 - Chatterer Frightens Sammy Jay"
+            }
+        },
+        {
+            "id": 12,
+            "time_base": "1/44100",
+            "start": 126126118,
+            "start_time": "2860.002676",
+            "end": 135828824,
+            "end_time": "3080.018685",
+            "tags": {
+                "title": "13 - Sammy Jay Tells His Troubles to Reddy Fox"
+            }
+        },
+        {
+            "id": 13,
+            "time_base": "1/44100",
+            "start": 135828824,
+            "start_time": "3080.018685",
+            "end": 145354462,
+            "end_time": "3296.019546",
+            "tags": {
+                "title": "14 - Reddy Fox Plays Spy"
+            }
+        },
+        {
+            "id": 14,
+            "time_base": "1/44100",
+            "start": 145354462,
+            "start_time": "3296.019546",
+            "end": 156158840,
+            "end_time": "3541.016780",
+            "tags": {
+                "title": "15 - Sammy Jay Spoils the Plan of Reddy Fox"
+            }
+        },
+        {
+            "id": 15,
+            "time_base": "1/44100",
+            "start": 156158840,
+            "start_time": "3541.016780",
+            "end": 166345212,
+            "end_time": "3772.000272",
+            "tags": {
+                "title": "16 - Chatterer and Sammy Jay Quarrel"
+            }
+        },
+        {
+            "id": 16,
+            "time_base": "1/44100",
+            "start": 166345212,
+            "start_time": "3772.000272",
+            "end": 176135720,
+            "end_time": "3994.007256",
+            "tags": {
+                "title": "17 - Chatterer and Sammy Jay Make Up"
+            }
+        },
+        {
+            "id": 17,
+            "time_base": "1/44100",
+            "start": 176135720,
+            "start_time": "3994.007256",
+            "end": 186279085,
+            "end_time": "4224.015533",
+            "tags": {
+                "title": "18 - Chatterer Has to Keep His Promise"
+            }
+        },
+        {
+            "id": 18,
+            "time_base": "1/44100",
+            "start": 186279085,
+            "start_time": "4224.015533",
+            "end": 196774379,
+            "end_time": "4462.004059",
+            "tags": {
+                "title": "19 - Chatterer Gets Sammy Jay Some Corn"
+            }
+        },
+        {
+            "id": 19,
+            "time_base": "1/44100",
+            "start": 196774379,
+            "start_time": "4462.004059",
+            "end": 207667302,
+            "end_time": "4709.009116",
+            "tags": {
+                "title": "20 - Chatterer Remembers Something"
+            }
+        },
+        {
+            "id": 20,
+            "time_base": "1/44100",
+            "start": 207667302,
+            "start_time": "4709.009116",
+            "end": 216840570,
+            "end_time": "4917.019728",
+            "tags": {
+                "title": "21 - Sammy Jay Makes a Call"
+            }
+        },
+        {
+            "id": 21,
+            "time_base": "1/44100",
+            "start": 216840570,
+            "start_time": "4917.019728",
+            "end": 227512862,
+            "end_time": "5159.021814",
+            "tags": {
+                "title": "22 - Chatterer Has a Dreadful Day"
+            }
+        },
+        {
+            "id": 22,
+            "time_base": "1/44100",
+            "start": 227512862,
+            "start_time": "5159.021814",
+            "end": 237875790,
+            "end_time": "5394.008844",
+            "tags": {
+                "title": "23 - Chatterer Hits on a Plan at Last"
+            }
+        },
+        {
+            "id": 23,
+            "time_base": "1/44100",
+            "start": 237875790,
+            "start_time": "5394.008844",
+            "end": 248628224,
+            "end_time": "5637.828209",
+            "tags": {
+                "title": "24 - Chatterer Has His Turn to Laugh"
+            }
+        }
+    ],
+    "format": {
+        "filename": "sammyjay_1602_librivox.m4b",
+        "nb_streams": 2,
+        "nb_programs": 0,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "format_long_name": "QuickTime / MOV",
+        "start_time": "0.000000",
+        "duration": "5637.828209",
+        "size": "45417172",
+        "bit_rate": "64446",
+        "probe_score": 100,
+        "tags": {
+            "major_brand": "M4A",
+            "minor_version": "0",
+            "compatible_brands": "3gp5isom",
+            "creation_time": "2016-02-21T08:27:56.000000Z",
+            "genre": "Audiobook",
+            "media_type": "2",
+            "encoder": "Chapter and Verse V 1.5",
+            "title": "The Adventures of Sammy Jay",
+            "artist": "Thornton W. Burgess",
+            "album": "The Adventures of Sammy Jay",
+            "comment": "https://archive.org/details/sammyjay_1602_librivox",
+            "copyright": "PD1.0",
+            "track": "1",
+            "Encoding Params": "vers"
+        }
+    }
+}

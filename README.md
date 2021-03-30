@@ -6,7 +6,9 @@ A fluent interface to running FFmpeg from Java.
 
 ![Java](https://img.shields.io/badge/Java-7+-brightgreen.svg)
 [![Build Status](https://img.shields.io/travis/bramp/ffmpeg-cli-wrapper/master.svg)](https://travis-ci.org/bramp/ffmpeg-cli-wrapper)
+[![Coverage Status](https://img.shields.io/coveralls/bramp/ffmpeg-cli-wrapper.svg)](https://coveralls.io/github/bramp/ffmpeg-cli-wrapper)
 [![Maven](https://img.shields.io/maven-central/v/net.bramp.ffmpeg/ffmpeg.svg)](http://mvnrepository.com/artifact/net.bramp.ffmpeg/ffmpeg)
+[![Libraries.io](https://img.shields.io/librariesio/github/bramp/ffmpeg-cli-wrapper.svg)](https://libraries.io/github/bramp/ffmpeg-cli-wrapper)
 
 [GitHub](https://github.com/bramp/ffmpeg-cli-wrapper) | [API docs](https://bramp.github.io/ffmpeg-cli-wrapper/)
 
@@ -18,7 +20,7 @@ Maven:
 <dependency>
   <groupId>net.bramp.ffmpeg</groupId>
   <artifactId>ffmpeg</artifactId>
-  <version>0.5</version>
+  <version>0.6.2</version>
 </dependency>
 ```
 
@@ -60,7 +62,7 @@ FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 // Run a one-pass encode
 executor.createJob(builder).run();
 
-// Or run a two-pass encode (which is slower at the cost of better quality)
+// Or run a two-pass encode (which is better quality at the cost of being slower)
 executor.createTwoPassJob(builder).run();
 ```
 
@@ -84,6 +86,42 @@ System.out.format("%nCodec: '%s' ; Width: %dpx ; Height: %dpx",
 	stream.width,
 	stream.height
 );
+```
+
+### Get progress while encoding
+```java
+FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+
+FFmpegProbeResult in = ffprobe.probe("input.flv");
+
+FFmpegBuilder builder = new FFmpegBuilder()
+	.setInput(in) // Or filename
+	.addOutput("output.mp4")
+	.done();
+
+FFmpegJob job = executor.createJob(builder, new ProgressListener() {
+
+	// Using the FFmpegProbeResult determine the duration of the input
+	final double duration_ns = in.getFormat().duration * TimeUnit.SECONDS.toNanos(1);
+
+	@Override
+	public void progress(Progress progress) {
+		double percentage = progress.out_time_ns / duration_ns;
+
+		// Print out interesting information about the progress
+		System.out.println(String.format(
+			"[%.0f%%] status:%s frame:%d time:%s ms fps:%.0f speed:%.2fx",
+			percentage * 100,
+			progress.status,
+			progress.frame,
+			FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
+			progress.fps.doubleValue(),
+			progress.speed
+		));
+	}
+});
+
+job.run();
 ```
 
 Building & Releasing
@@ -111,6 +149,15 @@ Install FFmpeg on Ubuntu
 We only the support the original FFmpeg, not the libav version. Before Ubuntu 12.04, and in 15.04
 and later the original FFmpeg is shipped. If you have to run on a version with libav, you can install
 FFmpeg from a PPA, or using the static build. More information [here](http://askubuntu.com/q/373322/34845)
+
+Get invovled!
+-------------
+
+We welcome contributions. Please check the [issue tracker](https://github.com/bramp/ffmpeg-cli-wrapper/issues).
+If you see something you wish to work on, please either comment on the issue, or just send a pull
+request. Want to work on something else, then just open a issue, and we can discuss! We appreciate
+documentation improvements, code cleanup, or new features. Please be mindful that all work is done
+on a volunteer basis, thus we can be slow to reply.
 
 Licence (Simplified BSD License)
 --------------------------------

@@ -1,6 +1,5 @@
 package net.bramp.ffmpeg;
 
-import com.google.common.base.Optional;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.job.FFmpegJob;
 import net.bramp.ffmpeg.job.SinglePassFFmpegJob;
@@ -20,25 +19,28 @@ public class FFmpegExecutor {
     this(new FFmpeg(), new FFprobe());
   }
 
+  public FFmpegExecutor(FFmpeg ffmpeg) throws IOException {
+    this(ffmpeg, new FFprobe());
+  }
+
   public FFmpegExecutor(FFmpeg ffmpeg, FFprobe ffprobe) {
     this.ffmpeg = checkNotNull(ffmpeg);
     this.ffprobe = checkNotNull(ffprobe);
   }
 
   public FFmpegJob createJob(FFmpegBuilder builder) {
-    // Single Pass
     return new SinglePassFFmpegJob(ffmpeg, builder);
   }
 
   public FFmpegJob createJob(FFmpegBuilder builder, ProgressListener listener) {
-    // Single Pass
     return new SinglePassFFmpegJob(ffmpeg, builder, listener);
   }
 
   /**
-   * Info: https://trac.ffmpeg.org/wiki/x264EncodingGuide#twopass
-   * 
-   * @param builder
+   * Creates a two pass job, which will execute FFmpeg twice to produce a better quality output.
+   * More info: https://trac.ffmpeg.org/wiki/x264EncodingGuide#twopass
+   *
+   * @param builder The FFmpegBuilder
    * @return A new two-pass FFmpegJob
    */
   public FFmpegJob createTwoPassJob(FFmpegBuilder builder) {
