@@ -29,7 +29,7 @@ public class FFmpegBuilder {
     VERY, // strictly conform to a older more strict version of the specifications or reference software
     STRICT, // strictly conform to all the things in the specificiations no matter what consequences
     NORMAL, // normal
-    UNOFFICAL, // allow unofficial extensions
+    UNOFFICIAL, // allow unofficial extensions
     EXPERIMENTAL;
 
     // ffmpeg command line requires these options in lower case
