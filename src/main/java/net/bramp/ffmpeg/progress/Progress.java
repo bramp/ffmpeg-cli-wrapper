@@ -158,6 +158,9 @@ public class Progress {
         // out_time_ns = Long.parseLong(value) * 1000;
         return false;
 
+      case "out_time_us":
+        return false;
+
       case "out_time":
         out_time_ns = fromTimecode(value);
         return false;
