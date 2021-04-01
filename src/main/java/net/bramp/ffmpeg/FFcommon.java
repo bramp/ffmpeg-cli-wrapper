@@ -9,6 +9,7 @@ import net.bramp.ffmpeg.io.ProcessUtils;
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -29,6 +30,12 @@ abstract class FFcommon {
   /** Version string */
   String version = null;
 
+  /** Process input stream */
+  Appendable processInputStream = null;
+
+  /** Process error stream */
+  Appendable processErrorStream = null;
+
   public FFcommon(@Nonnull String path) {
     this(path, new RunProcessFunction());
   }
@@ -39,8 +46,24 @@ abstract class FFcommon {
     this.path = path;
   }
 
+  public void setProcessInputStream(@Nonnull Appendable processInputStream) {
+    this.processInputStream = processInputStream;
+  }
+
+  public void setProcessErrorStream(@Nonnull Appendable processErrorStream) {
+    this.processErrorStream = processErrorStream;
+  }
+
+  private BufferedReader _wrapInReader(final InputStream inputStream) {
+    return new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+  }
+
   protected BufferedReader wrapInReader(Process p) {
-    return new BufferedReader(new InputStreamReader(p.getInputStream(), StandardCharsets.UTF_8));
+    return _wrapInReader(p.getInputStream());
+  }
+
+  protected BufferedReader wrapErrorInReader(Process p) {
+    return _wrapInReader(p.getErrorStream());
   }
 
   protected void throwOnError(Process p) throws IOException {
@@ -108,8 +131,10 @@ abstract class FFcommon {
       // TODO Move the copy onto a thread, so that FFmpegProgressListener can be on this thread.
 
       // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
-      CharStreams.copy(wrapInReader(p), System.out); // TODO Should I be outputting to stdout?
-
+      CharStreams.copy(
+          wrapInReader(p), (processInputStream != null) ? processInputStream : System.out);
+      CharStreams.copy(
+          wrapErrorInReader(p), (processErrorStream != null) ? processErrorStream : System.err);
       throwOnError(p);
 
     } finally {
