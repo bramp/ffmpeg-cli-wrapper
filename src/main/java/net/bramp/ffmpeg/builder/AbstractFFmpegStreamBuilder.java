@@ -66,6 +66,9 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   /** Output filename or uri. Only one may be set */
   public String filename;
 
+  /** input filename or uri. Only one may be set */
+  public String input;
+
   public URI uri;
 
   public String format;
@@ -108,6 +111,11 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
 
   protected AbstractFFmpegStreamBuilder() {
     this.parent = null;
+  }
+
+  //used by input builders
+  protected AbstractFFmpegStreamBuilder(FFmpegBuilder parent){
+    this.parent = parent;
   }
 
   protected AbstractFFmpegStreamBuilder(FFmpegBuilder parent, String filename) {
