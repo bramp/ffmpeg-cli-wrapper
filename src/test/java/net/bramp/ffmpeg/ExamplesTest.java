@@ -32,7 +32,7 @@ public class ExamplesTest {
   @Before
   public void before() throws IOException {
     when(runFunc.run(argThatHasItem("-version")))
-        .thenAnswer(new NewProcessAnswer("ffmpeg-version"));
+        .thenAnswer(new NewProcessAnswer("ffmpeg-version_0.10.9"));
     ffmpeg = new FFmpeg("ffmpeg", runFunc);
   }
 
@@ -264,16 +264,17 @@ public class ExamplesTest {
   // A test with videos added in a loop.
   @Test
   public void testExample10() throws IOException {
-    String expected = "ffmpeg -y -v error"
-        + " -f webm_dash_manifest"
-        + " -i audio.webm"
-        + " -i video_1.webm"
-        + " -i video_2.webm"
-        + " -i video_3.webm"
-        + " -vcodec copy -acodec copy"
-        + " -map 0 -map 1 -map 2 -map 3"
-        + " -adaptation_sets \"id=0,streams=0 id=1,streams=1,2,3\""
-        + " output.mpd";
+    String expected =
+        "ffmpeg -y -v error"
+            + " -f webm_dash_manifest"
+            + " -i audio.webm"
+            + " -i video_1.webm"
+            + " -i video_2.webm"
+            + " -i video_3.webm"
+            + " -vcodec copy -acodec copy"
+            + " -map 0 -map 1 -map 2 -map 3"
+            + " -adaptation_sets \"id=0,streams=0 id=1,streams=1,2,3\""
+            + " output.mpd";
 
     ArrayList<String> streams = new ArrayList<>();
     FFmpegBuilder builder = new FFmpegBuilder();
@@ -285,16 +286,20 @@ public class ExamplesTest {
       streams.add(String.format("%d", i));
     }
 
-    FFmpegOutputBuilder out = builder.addOutput("output.mpd")
-        .setVideoCodec("copy").setAudioCodec("copy") // TODO Add a new setCodec(..) method.
-        .addExtraArgs("-map", "0");
+    FFmpegOutputBuilder out =
+        builder
+            .addOutput("output.mpd")
+            .setVideoCodec("copy")
+            .setAudioCodec("copy") // TODO Add a new setCodec(..) method.
+            .addExtraArgs("-map", "0");
 
     for (String stream : streams) {
       out.addExtraArgs("-map", stream);
     }
 
-    out.addExtraArgs("-adaptation_sets",
-        String.format("\"id=0,streams=0 id=1,streams=%s\"", Joiner.on(",").join(streams)))
+    out.addExtraArgs(
+            "-adaptation_sets",
+            String.format("\"id=0,streams=0 id=1,streams=%s\"", Joiner.on(",").join(streams)))
         .done();
 
     String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));

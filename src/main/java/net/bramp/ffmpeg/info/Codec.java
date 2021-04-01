@@ -13,9 +13,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Immutable
 public class Codec {
 
-  enum Type {
+  public enum Type {
     VIDEO,
     AUDIO,
+    INVALID,
     SUBTITLE
   }
 
@@ -66,7 +67,7 @@ public class Codec {
         this.type = Type.SUBTITLE;
         break;
       default:
-        throw new IllegalArgumentException("Invalid codec type '" + flags.charAt(3) + "'");
+        throw new IllegalArgumentException("Invalid codec type '" + flags.charAt(2) + "'");
     }
 
     // TODO There are more flags to parse

@@ -64,6 +64,8 @@ public class FFmpeg extends FFcommon {
   public static final int AUDIO_SAMPLE_96000 = 96000;
 
   static final Pattern CODECS_REGEX =
+      Pattern.compile("^ ([\\.D][\\.E][VAS][\\.I][\\.L][\\.S]) (?![\\=])(\\S+)\\s+(.*)$");
+  static final Pattern LEGACY_CODECS_REGEX =
       Pattern.compile("^ ([ D][ E][VAS][ S][ D][ T]) (\\S+)\\s+(.*)$");
   static final Pattern FORMATS_REGEX = Pattern.compile("^ ([ D][ E]) (\\S+)\\s+(.*)$");
 
@@ -123,15 +125,17 @@ public class FFmpeg extends FFcommon {
       Process p = runFunc.run(ImmutableList.of(path, "-codecs"));
       try {
         BufferedReader r = wrapInReader(p);
+        Pattern codecRegex = this.isLegacyVersion() ? LEGACY_CODECS_REGEX : CODECS_REGEX;
         String line;
         while ((line = r.readLine()) != null) {
-          Matcher m = CODECS_REGEX.matcher(line);
+          Matcher m = codecRegex.matcher(line);
           if (!m.matches()) continue;
 
           codecs.add(new Codec(m.group(2), m.group(3), m.group(1)));
         }
 
         throwOnError(p);
+
         this.codecs = ImmutableList.copyOf(codecs);
       } finally {
         p.destroy();
@@ -139,6 +143,11 @@ public class FFmpeg extends FFcommon {
     }
 
     return codecs;
+  }
+
+  private boolean isLegacyVersion() throws IOException {
+    String version = this.version();
+    return version.startsWith("ffmpeg version 0.");
   }
 
   public synchronized @Nonnull List<Format> formats() throws IOException {
