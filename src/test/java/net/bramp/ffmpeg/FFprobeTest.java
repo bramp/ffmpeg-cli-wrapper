@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
 import net.bramp.ffmpeg.probe.FFmpegChapter;
+import net.bramp.ffmpeg.probe.FFmpegError;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import net.bramp.ffmpeg.probe.FFmpegStream;
 import org.apache.commons.lang3.math.Fraction;
@@ -11,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
@@ -25,6 +27,7 @@ import static org.mockito.Mockito.*;
 public class FFprobeTest {
 
   @Mock ProcessFunction runFunc;
+  @Mock Process mockProcess;
 
   FFprobe ffprobe;
 
@@ -142,5 +145,18 @@ public class FFprobeTest {
     assertThat(info.getStreams().get(1).codec_time_base, is(Fraction.ZERO));
 
     // System.out.println(FFmpegUtils.getGson().toJson(info));
+  }
+
+  @Test
+  public void shouldThrowOnErrorWithFFmpegProbeResult() throws IOException, InterruptedException {
+    Mockito.when(mockProcess.waitFor()).thenReturn(-1);
+    final FFmpegError error = new FFmpegError();
+    final FFmpegProbeResult result = new FFmpegProbeResult();
+    result.error = error;
+    try {
+      ffprobe.throwOnError(mockProcess, result);
+    } catch (FFmpegException e) {
+      assertEquals(error, e.getError());
+    }
   }
 }

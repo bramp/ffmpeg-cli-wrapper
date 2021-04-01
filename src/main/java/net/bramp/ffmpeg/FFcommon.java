@@ -5,6 +5,8 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharStreams;
 import net.bramp.ffmpeg.io.ProcessUtils;
+import net.bramp.ffmpeg.probe.FFmpegError;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
@@ -49,6 +51,20 @@ abstract class FFcommon {
       if (ProcessUtils.waitForWithTimeout(p, 1, TimeUnit.SECONDS) != 0) {
         // TODO Parse the error
         throw new IOException(path + " returned non-zero exit status. Check stdout.");
+      }
+    } catch (TimeoutException e) {
+      throw new IOException("Timed out waiting for " + path + " to finish.");
+    }
+  }
+
+  protected void throwOnError(Process p, FFmpegProbeResult result) throws IOException {
+    try {
+      // TODO In java 8 use waitFor(long timeout, TimeUnit unit)
+      if (ProcessUtils.waitForWithTimeout(p, 1, TimeUnit.SECONDS) != 0) {
+        // TODO Parse the error
+        final FFmpegError ffmpegError = null == result ? null : result.getError();
+        throw new FFmpegException(
+                path + " returned non-zero exit status. Check stdout.", ffmpegError);
       }
     } catch (TimeoutException e) {
       throw new IOException("Timed out waiting for " + path + " to finish.");
