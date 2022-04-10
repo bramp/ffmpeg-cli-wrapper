@@ -1,12 +1,11 @@
 package net.bramp.ffmpeg.io;
 
-import org.slf4j.Logger;
-import org.slf4j.event.Level;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import org.slf4j.Logger;
+import org.slf4j.event.Level;
 
 public class LoggerOutputStream extends OutputStream {
 

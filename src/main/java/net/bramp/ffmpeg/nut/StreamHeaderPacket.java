@@ -1,10 +1,9 @@
 package net.bramp.ffmpeg.nut;
 
 import com.google.common.base.MoreObjects;
-import org.apache.commons.lang3.math.Fraction;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import org.apache.commons.lang3.math.Fraction;
 
 public class StreamHeaderPacket extends Packet {
 

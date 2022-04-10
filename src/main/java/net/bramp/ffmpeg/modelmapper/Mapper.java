@@ -1,5 +1,7 @@
 package net.bramp.ffmpeg.modelmapper;
 
+import static net.bramp.ffmpeg.modelmapper.NotDefaultCondition.notDefault;
+
 import net.bramp.ffmpeg.builder.AbstractFFmpegStreamBuilder;
 import net.bramp.ffmpeg.builder.FFmpegOutputBuilder;
 import net.bramp.ffmpeg.options.AudioEncodingOptions;
@@ -10,8 +12,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.config.Configuration;
 import org.modelmapper.convention.NameTokenizers;
-
-import static net.bramp.ffmpeg.modelmapper.NotDefaultCondition.notDefault;
 
 /**
  * Copies values from one type of object to another

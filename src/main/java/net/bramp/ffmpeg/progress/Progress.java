@@ -1,16 +1,15 @@
 package net.bramp.ffmpeg.progress;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static net.bramp.ffmpeg.FFmpegUtils.fromTimecode;
+
 import com.google.common.base.MoreObjects;
+import java.util.Objects;
+import javax.annotation.CheckReturnValue;
 import net.bramp.ffmpeg.FFmpegUtils;
 import org.apache.commons.lang3.math.Fraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.CheckReturnValue;
-import java.util.Objects;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static net.bramp.ffmpeg.FFmpegUtils.fromTimecode;
 
 // TODO Change to be immutable
 public class Progress {

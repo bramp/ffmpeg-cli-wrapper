@@ -3,13 +3,17 @@ package net.bramp.ffmpeg.builder;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static net.bramp.ffmpeg.FFmpegUtils.toTimecode;
-import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
-import static net.bramp.ffmpeg.Preconditions.checkValidStream;
 import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
+import static net.bramp.ffmpeg.Preconditions.checkValidStream;
+import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import net.bramp.ffmpeg.modelmapper.Mapper;
 import net.bramp.ffmpeg.options.AudioEncodingOptions;
 import net.bramp.ffmpeg.options.EncodingOptions;
@@ -17,11 +21,6 @@ import net.bramp.ffmpeg.options.MainEncodingOptions;
 import net.bramp.ffmpeg.options.VideoEncodingOptions;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.math.Fraction;
-
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * This abstract class holds flags that are both applicable to input and output streams in the
@@ -39,20 +38,17 @@ import java.util.concurrent.TimeUnit;
  *             -codec[:stream_specifier] codec (input/output,per-stream)</code>
  *         <li>(global): <code>-filter_threads nb_threads (global)</code>
  *       </ul>
- *
  *   <li>FFmpegInputBuilder
  *       <ul>
  *         <li>(input): <code>-muxdelay seconds (input)</code>
  *         <li>(input,per-stream): <code>-guess_layout_max channels (input,per-stream)</code>
  *       </ul>
- *
  *   <li>FFmpegOutputBuilder
  *       <ul>
  *         <li>(output): <code>-atag fourcc/tag (output)</code>
  *         <li>(output,per-stream): <code>
  *             -bsf[:stream_specifier] bitstream_filters (output,per-stream)</code>
  *       </ul>
- *
  * </ul>
  *
  * @param <T> A concrete class that extends from the AbstractFFmpegStreamBuilder

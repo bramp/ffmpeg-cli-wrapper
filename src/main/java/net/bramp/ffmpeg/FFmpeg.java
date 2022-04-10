@@ -1,17 +1,9 @@
 package net.bramp.ffmpeg;
 
-import com.google.common.collect.ImmutableList;
-import net.bramp.ffmpeg.builder.FFmpegBuilder;
-import net.bramp.ffmpeg.info.Codec;
-import net.bramp.ffmpeg.info.Format;
-import net.bramp.ffmpeg.progress.ProgressListener;
-import net.bramp.ffmpeg.progress.ProgressParser;
-import net.bramp.ffmpeg.progress.TcpProgressParser;
-import org.apache.commons.lang3.math.Fraction;
+import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.ImmutableList;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -19,9 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.google.common.base.MoreObjects.firstNonNull;
-import static com.google.common.base.Preconditions.checkNotNull;
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import net.bramp.ffmpeg.info.Codec;
+import net.bramp.ffmpeg.info.Format;
+import net.bramp.ffmpeg.progress.ProgressListener;
+import net.bramp.ffmpeg.progress.ProgressParser;
+import net.bramp.ffmpeg.progress.TcpProgressParser;
+import org.apache.commons.lang3.math.Fraction;
 
 /**
  * Wrapper around FFmpeg

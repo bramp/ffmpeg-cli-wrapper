@@ -339,7 +339,8 @@ public class ExamplesTest {
             .setAudioCodec("copy")
             .done();
 
-    String expected = "ffmpeg -y -v error -ss 00:01:00 -i input.mp4 -t 00:01:00 -c copy output.mp4";
+    String expected =
+        "ffmpeg -y -v error -ss 00:01:00 -i input.mp4 -t 00:01:00 -vcodec copy -acodec copy output.mp4";
     String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
     assertEquals(expected, actual);
   }

@@ -1,15 +1,14 @@
 package net.bramp.ffmpeg.nut;
 
-import com.google.common.base.Charsets;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static net.bramp.ffmpeg.nut.Packet.Startcode;
 
+import com.google.common.base.Charsets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static net.bramp.ffmpeg.nut.Packet.Startcode;
 
 /**
  * Demuxer for the FFmpeg Nut file format.

@@ -1,16 +1,15 @@
 package net.bramp.ffmpeg.gson;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Optional;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Converts a json object which represents a set of booleans. For example:

@@ -1,11 +1,11 @@
 package net.bramp.ffmpeg.builder;
 
-import org.junit.Test;
-
 import static net.bramp.ffmpeg.builder.StreamSpecifier.*;
 import static net.bramp.ffmpeg.builder.StreamSpecifierType.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
 
 public class StreamSpecTest {
 

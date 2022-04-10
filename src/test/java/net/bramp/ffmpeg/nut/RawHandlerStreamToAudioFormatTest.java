@@ -1,18 +1,17 @@
 package net.bramp.ffmpeg.nut;
 
+import static javax.sound.sampled.AudioFormat.Encoding.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
+import javax.sound.sampled.AudioFormat;
 import org.apache.commons.lang3.math.Fraction;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-
-import javax.sound.sampled.AudioFormat;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
-
-import static javax.sound.sampled.AudioFormat.Encoding.*;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
 
 @RunWith(Parameterized.class)
 public class RawHandlerStreamToAudioFormatTest {

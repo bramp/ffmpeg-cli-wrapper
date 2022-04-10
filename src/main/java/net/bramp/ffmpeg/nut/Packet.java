@@ -1,10 +1,9 @@
 package net.bramp.ffmpeg.nut;
 
 import com.google.common.base.MoreObjects;
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 public class Packet {
 

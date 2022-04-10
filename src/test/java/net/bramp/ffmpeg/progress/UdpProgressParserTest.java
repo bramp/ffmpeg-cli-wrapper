@@ -1,9 +1,10 @@
 package net.bramp.ffmpeg.progress;
 
-import com.google.common.io.ByteStreams;
-import net.bramp.ffmpeg.fixtures.Progresses;
-import org.junit.Test;
+import static net.bramp.ffmpeg.Helper.loadResource;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
 
+import com.google.common.io.ByteStreams;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.DatagramPacket;
@@ -11,10 +12,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.URISyntaxException;
 import java.util.List;
-
-import static net.bramp.ffmpeg.Helper.loadResource;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
+import net.bramp.ffmpeg.fixtures.Progresses;
+import org.junit.Test;
 
 public class UdpProgressParserTest extends AbstractProgressParserTest {
 

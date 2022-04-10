@@ -1,7 +1,6 @@
 package net.bramp.ffmpeg.nut;
 
 import com.google.common.base.MoreObjects;
-
 import java.io.IOException;
 
 public class PacketHeader {

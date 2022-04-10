@@ -1,18 +1,17 @@
 package net.bramp.ffmpeg;
 
+import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.util.Collections;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.io.IOException;
-import java.util.Collections;
-
-import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 
 /** Tests what happens when using avconv */
 @RunWith(MockitoJUnitRunner.class)

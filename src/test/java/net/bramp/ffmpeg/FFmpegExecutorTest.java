@@ -1,9 +1,23 @@
 package net.bramp.ffmpeg;
 
+import static net.bramp.ffmpeg.FFmpeg.FPS_30;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CountingOutputStream;
 import com.google.common.net.HostAndPort;
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.job.FFmpegJob;
@@ -21,21 +35,6 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
-import static net.bramp.ffmpeg.FFmpeg.FPS_30;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 /** Tests actually shelling out ffmpeg and ffprobe. Could be flakey if ffmpeg or ffprobe change. */
 public class FFmpegExecutorTest {
@@ -86,7 +85,7 @@ public class FFmpegExecutorTest {
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36")
             .setInput(getWebserverRoot() + Samples.base_big_buck_bunny_720p_1mb)
             .addExtraArgs("-probesize", "1000000")
-            //.setStartOffset(1500, TimeUnit.MILLISECONDS)
+            // .setStartOffset(1500, TimeUnit.MILLISECONDS)
             .overrideOutputFiles(true)
             .addOutput(Samples.output_mp4)
             .setFrames(100)
@@ -101,9 +100,9 @@ public class FFmpegExecutorTest {
             .setVideoCodec("libx264")
             .setVideoFrameRate(FPS_30)
             .setVideoResolution(320, 240)
-            //.setVideoFilter("scale=320:trunc(ow/a/2)*2")
-            //.setVideoPixelFormat("yuv420p")
-            //.setVideoBitStreamFilter("noise")
+            // .setVideoFilter("scale=320:trunc(ow/a/2)*2")
+            // .setVideoPixelFormat("yuv420p")
+            // .setVideoBitStreamFilter("noise")
             .setVideoQuality(2)
             .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
             .done();
@@ -251,7 +250,7 @@ public class FFmpegExecutorTest {
             .overrideOutputFiles(true)
             .addOutput(Samples.output_mp4)
             .setFormat("mp4")
-            //.setDuration(30, TimeUnit.SECONDS)
+            // .setDuration(30, TimeUnit.SECONDS)
             .addExtraArgs("-shortest")
             .setAudioCodec("aac")
             .setAudioSampleRate(48_000)

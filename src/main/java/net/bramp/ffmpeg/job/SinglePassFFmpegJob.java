@@ -1,15 +1,13 @@
 package net.bramp.ffmpeg.job;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Throwables;
+import java.util.List;
+import javax.annotation.Nullable;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.progress.ProgressListener;
-
-import javax.annotation.Nullable;
-
-import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class SinglePassFFmpegJob extends FFmpegJob {
 

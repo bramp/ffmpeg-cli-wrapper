@@ -3,8 +3,6 @@ package net.bramp.ffmpeg.fixtures;
 import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.progress.Progress;
 
-import java.util.List;
-
 public final class Progresses {
 
   private Progresses() {

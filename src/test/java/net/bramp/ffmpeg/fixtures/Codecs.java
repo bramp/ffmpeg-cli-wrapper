@@ -3,8 +3,6 @@ package net.bramp.ffmpeg.fixtures;
 import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.info.Codec;
 
-import java.util.List;
-
 /**
  * Class that contains all codecs as defined in the unit tests This should not be used as a concise
  * list of available codecs, as every install of ffmpeg is different. Call ffmpeg.codec() to

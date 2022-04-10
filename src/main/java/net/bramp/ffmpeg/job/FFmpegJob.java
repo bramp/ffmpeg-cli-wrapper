@@ -1,13 +1,14 @@
 package net.bramp.ffmpeg.job;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import javax.annotation.Nullable;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.progress.ProgressListener;
 
-import javax.annotation.Nullable;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-
-/** @author bramp */
+/**
+ * @author bramp
+ */
 public abstract class FFmpegJob implements Runnable {
 
   public enum State {

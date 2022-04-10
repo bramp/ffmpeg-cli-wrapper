@@ -1,22 +1,21 @@
 package net.bramp.ffmpeg.builder;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
+
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import net.bramp.ffmpeg.FFmpegUtils;
-import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-
-import javax.annotation.CheckReturnValue;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
+import javax.annotation.CheckReturnValue;
+import net.bramp.ffmpeg.FFmpegUtils;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 /**
  * Builds a ffmpeg command line
@@ -26,7 +25,8 @@ import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 public class FFmpegBuilder {
 
   public enum Strict {
-    VERY, // strictly conform to a older more strict version of the specifications or reference software
+    VERY, // strictly conform to a older more strict version of the specifications or reference
+    // software
     STRICT, // strictly conform to all the things in the specificiations no matter what consequences
     NORMAL, // normal
     UNOFFICIAL, // allow unofficial extensions

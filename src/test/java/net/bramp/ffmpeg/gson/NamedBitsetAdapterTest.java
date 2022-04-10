@@ -1,13 +1,13 @@
 package net.bramp.ffmpeg.gson;
 
+import static com.nitorcreations.Matchers.reflectEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static com.nitorcreations.Matchers.reflectEquals;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
 
 public class NamedBitsetAdapterTest {
 

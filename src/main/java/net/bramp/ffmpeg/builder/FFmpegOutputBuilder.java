@@ -1,21 +1,20 @@
 package net.bramp.ffmpeg.builder;
 
+import static com.google.common.base.Preconditions.*;
+import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
+
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import java.net.URI;
+import java.util.List;
+import java.util.regex.Pattern;
+import javax.annotation.CheckReturnValue;
 import net.bramp.ffmpeg.options.AudioEncodingOptions;
 import net.bramp.ffmpeg.options.EncodingOptions;
 import net.bramp.ffmpeg.options.MainEncodingOptions;
 import net.bramp.ffmpeg.options.VideoEncodingOptions;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-
-import javax.annotation.CheckReturnValue;
-import java.net.URI;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import static com.google.common.base.Preconditions.*;
-import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 
 /** Builds a representation of a single output/encoding setting */
 public class FFmpegOutputBuilder extends AbstractFFmpegStreamBuilder<FFmpegOutputBuilder> {
