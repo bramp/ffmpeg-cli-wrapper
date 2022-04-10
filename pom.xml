@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.bramp.ffmpeg</groupId>
     <artifactId>ffmpeg</artifactId>
-    <version>0.6.3-SNAPSHOT</version>
+    <version>0.7.0</version>
 
     <name>FFmpeg Wrapper</name>
     <description>Simple Java wrapper around FFmpeg command-line interface</description>
@@ -11,7 +11,7 @@
     <scm>
         <url>https://github.com/bramp/ffmpeg-cli-wrapper</url>
         <connection>scm:git:git@github.com:bramp/ffmpeg-cli-wrapper.git</connection>
-        <tag>HEAD</tag>
+        <tag>ffmpeg-0.7.0</tag>
     </scm>
     
     <issueManagement>
@@ -384,8 +384,9 @@
                     <destDir>apidocs</destDir>
                     <nohelp>true</nohelp>
                     <linksource>true</linksource>
+                    <source>8</source>
                     <links>
-                        <link>https://google.github.io/gson/apidocs/</link>
+                        <link>https://javadoc.io/doc/com.google.code.gson/gson/</link>
                         <link>https://commons.apache.org/proper/commons-lang/javadocs/api-release/</link>
                         <link>http://modelmapper.org/javadoc/</link>
                         <link>http://findbugs.sourceforge.net/api/</link>
