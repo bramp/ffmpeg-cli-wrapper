@@ -1,55 +1,44 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
 <head>
 <title>Source code</title>
 <link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
 </head>
 <body>
+<main role="main">
 <div class="sourceContainer">
-<pre><span class="sourceLineNo">001</span>package net.bramp.ffmpeg.builder;<a name="line.1"></a>
-<span class="sourceLineNo">002</span><a name="line.2"></a>
-<span class="sourceLineNo">003</span>public enum StreamSpecifierType {<a name="line.3"></a>
-<span class="sourceLineNo">004</span>  /**<a name="line.4"></a>
-<span class="sourceLineNo">005</span>   * Video<a name="line.5"></a>
-<span class="sourceLineNo">006</span>   */<a name="line.6"></a>
-<span class="sourceLineNo">007</span>  Video("v"),<a name="line.7"></a>
-<span class="sourceLineNo">008</span><a name="line.8"></a>
-<span class="sourceLineNo">009</span>  /**<a name="line.9"></a>
-<span class="sourceLineNo">010</span>   * Video streams which are not attached pictures, video thumbnails or cover arts.<a name="line.10"></a>
-<span class="sourceLineNo">011</span>   */<a name="line.11"></a>
-<span class="sourceLineNo">012</span>  PureVideo("V"),<a name="line.12"></a>
-<span class="sourceLineNo">013</span><a name="line.13"></a>
-<span class="sourceLineNo">014</span>  /**<a name="line.14"></a>
-<span class="sourceLineNo">015</span>   * Audio<a name="line.15"></a>
-<span class="sourceLineNo">016</span>   */<a name="line.16"></a>
-<span class="sourceLineNo">017</span>  Audio("a"),<a name="line.17"></a>
-<span class="sourceLineNo">018</span><a name="line.18"></a>
-<span class="sourceLineNo">019</span>  /**<a name="line.19"></a>
-<span class="sourceLineNo">020</span>   * Subtitles<a name="line.20"></a>
-<span class="sourceLineNo">021</span>   */<a name="line.21"></a>
-<span class="sourceLineNo">022</span>  Subtitle("s"),<a name="line.22"></a>
-<span class="sourceLineNo">023</span><a name="line.23"></a>
-<span class="sourceLineNo">024</span>  /**<a name="line.24"></a>
-<span class="sourceLineNo">025</span>   * Data<a name="line.25"></a>
-<span class="sourceLineNo">026</span>   */<a name="line.26"></a>
-<span class="sourceLineNo">027</span>  Data("d"),<a name="line.27"></a>
-<span class="sourceLineNo">028</span><a name="line.28"></a>
-<span class="sourceLineNo">029</span>  /**<a name="line.29"></a>
-<span class="sourceLineNo">030</span>   * Attachment<a name="line.30"></a>
-<span class="sourceLineNo">031</span>   */<a name="line.31"></a>
-<span class="sourceLineNo">032</span>  Attachment("t");<a name="line.32"></a>
-<span class="sourceLineNo">033</span><a name="line.33"></a>
-<span class="sourceLineNo">034</span>  final String prefix;<a name="line.34"></a>
-<span class="sourceLineNo">035</span><a name="line.35"></a>
-<span class="sourceLineNo">036</span>  StreamSpecifierType(String prefix) {<a name="line.36"></a>
-<span class="sourceLineNo">037</span>    this.prefix = prefix;<a name="line.37"></a>
-<span class="sourceLineNo">038</span>  }<a name="line.38"></a>
-<span class="sourceLineNo">039</span><a name="line.39"></a>
-<span class="sourceLineNo">040</span>  @Override<a name="line.40"></a>
-<span class="sourceLineNo">041</span>  public String toString() {<a name="line.41"></a>
-<span class="sourceLineNo">042</span>    return prefix;<a name="line.42"></a>
-<span class="sourceLineNo">043</span>  }<a name="line.43"></a>
-<span class="sourceLineNo">044</span>}<a name="line.44"></a>
+<pre><span class="sourceLineNo">001</span><a id="line.1">package net.bramp.ffmpeg.builder;</a>
+<span class="sourceLineNo">002</span><a id="line.2"></a>
+<span class="sourceLineNo">003</span><a id="line.3">public enum StreamSpecifierType {</a>
+<span class="sourceLineNo">004</span><a id="line.4">  /** Video */</a>
+<span class="sourceLineNo">005</span><a id="line.5">  Video("v"),</a>
+<span class="sourceLineNo">006</span><a id="line.6"></a>
+<span class="sourceLineNo">007</span><a id="line.7">  /** Video streams which are not attached pictures, video thumbnails or cover arts. */</a>
+<span class="sourceLineNo">008</span><a id="line.8">  PureVideo("V"),</a>
+<span class="sourceLineNo">009</span><a id="line.9"></a>
+<span class="sourceLineNo">010</span><a id="line.10">  /** Audio */</a>
+<span class="sourceLineNo">011</span><a id="line.11">  Audio("a"),</a>
+<span class="sourceLineNo">012</span><a id="line.12"></a>
+<span class="sourceLineNo">013</span><a id="line.13">  /** Subtitles */</a>
+<span class="sourceLineNo">014</span><a id="line.14">  Subtitle("s"),</a>
+<span class="sourceLineNo">015</span><a id="line.15"></a>
+<span class="sourceLineNo">016</span><a id="line.16">  /** Data */</a>
+<span class="sourceLineNo">017</span><a id="line.17">  Data("d"),</a>
+<span class="sourceLineNo">018</span><a id="line.18"></a>
+<span class="sourceLineNo">019</span><a id="line.19">  /** Attachment */</a>
+<span class="sourceLineNo">020</span><a id="line.20">  Attachment("t");</a>
+<span class="sourceLineNo">021</span><a id="line.21"></a>
+<span class="sourceLineNo">022</span><a id="line.22">  final String prefix;</a>
+<span class="sourceLineNo">023</span><a id="line.23"></a>
+<span class="sourceLineNo">024</span><a id="line.24">  StreamSpecifierType(String prefix) {</a>
+<span class="sourceLineNo">025</span><a id="line.25">    this.prefix = prefix;</a>
+<span class="sourceLineNo">026</span><a id="line.26">  }</a>
+<span class="sourceLineNo">027</span><a id="line.27"></a>
+<span class="sourceLineNo">028</span><a id="line.28">  @Override</a>
+<span class="sourceLineNo">029</span><a id="line.29">  public String toString() {</a>
+<span class="sourceLineNo">030</span><a id="line.30">    return prefix;</a>
+<span class="sourceLineNo">031</span><a id="line.31">  }</a>
+<span class="sourceLineNo">032</span><a id="line.32">}</a>
 
 
 
@@ -112,5 +101,6 @@
 
 </pre>
 </div>
+</main>
 </body>
 </html>

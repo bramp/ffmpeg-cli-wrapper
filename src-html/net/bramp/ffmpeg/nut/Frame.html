@@ -1,201 +1,200 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
 <head>
 <title>Source code</title>
 <link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
 </head>
 <body>
+<main role="main">
 <div class="sourceContainer">
-<pre><span class="sourceLineNo">001</span>package net.bramp.ffmpeg.nut;<a name="line.1"></a>
-<span class="sourceLineNo">002</span><a name="line.2"></a>
-<span class="sourceLineNo">003</span>import com.google.common.base.MoreObjects;<a name="line.3"></a>
-<span class="sourceLineNo">004</span>import org.apache.commons.lang3.math.Fraction;<a name="line.4"></a>
-<span class="sourceLineNo">005</span><a name="line.5"></a>
-<span class="sourceLineNo">006</span>import java.io.IOException;<a name="line.6"></a>
-<span class="sourceLineNo">007</span>import java.nio.charset.StandardCharsets;<a name="line.7"></a>
-<span class="sourceLineNo">008</span>import java.util.Map;<a name="line.8"></a>
-<span class="sourceLineNo">009</span>import java.util.TreeMap;<a name="line.9"></a>
-<span class="sourceLineNo">010</span><a name="line.10"></a>
-<span class="sourceLineNo">011</span>/**<a name="line.11"></a>
-<span class="sourceLineNo">012</span> * A video or audio frame<a name="line.12"></a>
-<span class="sourceLineNo">013</span> */<a name="line.13"></a>
-<span class="sourceLineNo">014</span>public class Frame {<a name="line.14"></a>
-<span class="sourceLineNo">015</span>  // TODO Change this to a enum<a name="line.15"></a>
-<span class="sourceLineNo">016</span>  static final long FLAG_KEY = 1 &lt;&lt; 0;<a name="line.16"></a>
-<span class="sourceLineNo">017</span>  static final long FLAG_EOR = 1 &lt;&lt; 1;<a name="line.17"></a>
-<span class="sourceLineNo">018</span>  static final long FLAG_CODED_PTS = 1 &lt;&lt; 3;<a name="line.18"></a>
-<span class="sourceLineNo">019</span>  static final long FLAG_STREAM_ID = 1 &lt;&lt; 4;<a name="line.19"></a>
-<span class="sourceLineNo">020</span>  static final long FLAG_SIZE_MSB = 1 &lt;&lt; 5;<a name="line.20"></a>
-<span class="sourceLineNo">021</span>  static final long FLAG_CHECKSUM = 1 &lt;&lt; 6;<a name="line.21"></a>
-<span class="sourceLineNo">022</span>  static final long FLAG_RESERVED = 1 &lt;&lt; 7;<a name="line.22"></a>
-<span class="sourceLineNo">023</span>  static final long FLAG_SM_DATA = 1 &lt;&lt; 8;<a name="line.23"></a>
-<span class="sourceLineNo">024</span>  static final long FLAG_HEADER_IDX = 1 &lt;&lt; 10;<a name="line.24"></a>
-<span class="sourceLineNo">025</span>  static final long FLAG_MATCH_TIME = 1 &lt;&lt; 11;<a name="line.25"></a>
-<span class="sourceLineNo">026</span>  static final long FLAG_CODED = 1 &lt;&lt; 12;<a name="line.26"></a>
-<span class="sourceLineNo">027</span>  static final long FLAG_INVALID = 1 &lt;&lt; 13;<a name="line.27"></a>
-<span class="sourceLineNo">028</span><a name="line.28"></a>
-<span class="sourceLineNo">029</span>  Stream stream;<a name="line.29"></a>
-<span class="sourceLineNo">030</span>  long flags;<a name="line.30"></a>
-<span class="sourceLineNo">031</span>  long pts;<a name="line.31"></a>
-<span class="sourceLineNo">032</span>  byte[] data;<a name="line.32"></a>
-<span class="sourceLineNo">033</span><a name="line.33"></a>
-<span class="sourceLineNo">034</span>  Map&lt;String, Object&gt; sideData;<a name="line.34"></a>
-<span class="sourceLineNo">035</span>  Map&lt;String, Object&gt; metaData;<a name="line.35"></a>
-<span class="sourceLineNo">036</span><a name="line.36"></a>
-<span class="sourceLineNo">037</span>  protected Map&lt;String, Object&gt; readMetaData(NutDataInputStream in) throws IOException {<a name="line.37"></a>
-<span class="sourceLineNo">038</span>    Map&lt;String, Object&gt; data = new TreeMap&lt;String, Object&gt;();<a name="line.38"></a>
-<span class="sourceLineNo">039</span>    long count = in.readVarLong();<a name="line.39"></a>
-<span class="sourceLineNo">040</span>    for (int i = 0; i &lt; count; i++) {<a name="line.40"></a>
-<span class="sourceLineNo">041</span>      byte[] name = in.readVarArray();<a name="line.41"></a>
-<span class="sourceLineNo">042</span>      long type = in.readSignedVarInt();<a name="line.42"></a>
-<span class="sourceLineNo">043</span>      Object value;<a name="line.43"></a>
-<span class="sourceLineNo">044</span><a name="line.44"></a>
-<span class="sourceLineNo">045</span>      if (type == -1) {<a name="line.45"></a>
-<span class="sourceLineNo">046</span>        value = new String(in.readVarArray(), StandardCharsets.UTF_8);<a name="line.46"></a>
-<span class="sourceLineNo">047</span><a name="line.47"></a>
-<span class="sourceLineNo">048</span>      } else if (type == -2) {<a name="line.48"></a>
-<span class="sourceLineNo">049</span>        String k = new String(in.readVarArray());<a name="line.49"></a>
-<span class="sourceLineNo">050</span>        String v = new String(in.readVarArray());<a name="line.50"></a>
-<span class="sourceLineNo">051</span>        value = k + "=" + v; // TODO Change this some how<a name="line.51"></a>
-<span class="sourceLineNo">052</span><a name="line.52"></a>
-<span class="sourceLineNo">053</span>      } else if (type == -3) {<a name="line.53"></a>
-<span class="sourceLineNo">054</span>        value = in.readSignedVarInt();<a name="line.54"></a>
-<span class="sourceLineNo">055</span><a name="line.55"></a>
-<span class="sourceLineNo">056</span>      } else if (type == -4) {<a name="line.56"></a>
-<span class="sourceLineNo">057</span>        /*<a name="line.57"></a>
-<span class="sourceLineNo">058</span>         * t (v coded universal timestamp) tmp v id= tmp % time_base_count value= (tmp /<a name="line.58"></a>
-<span class="sourceLineNo">059</span>         * time_base_count) * timeBase[id]<a name="line.59"></a>
-<span class="sourceLineNo">060</span>         */<a name="line.60"></a>
-<span class="sourceLineNo">061</span>        value = in.readVarLong(); // TODO Convert to timestamp<a name="line.61"></a>
-<span class="sourceLineNo">062</span><a name="line.62"></a>
-<span class="sourceLineNo">063</span>      } else if (type &lt; -4) {<a name="line.63"></a>
-<span class="sourceLineNo">064</span>        long denominator = -type - 4;<a name="line.64"></a>
-<span class="sourceLineNo">065</span>        long numerator = in.readSignedVarInt();<a name="line.65"></a>
-<span class="sourceLineNo">066</span>        value = Fraction.getFraction((int) numerator, (int) denominator);<a name="line.66"></a>
-<span class="sourceLineNo">067</span><a name="line.67"></a>
-<span class="sourceLineNo">068</span>      } else {<a name="line.68"></a>
-<span class="sourceLineNo">069</span>        value = type;<a name="line.69"></a>
-<span class="sourceLineNo">070</span>      }<a name="line.70"></a>
-<span class="sourceLineNo">071</span><a name="line.71"></a>
-<span class="sourceLineNo">072</span>      data.put(new String(name), value);<a name="line.72"></a>
-<span class="sourceLineNo">073</span>    }<a name="line.73"></a>
-<span class="sourceLineNo">074</span>    return data;<a name="line.74"></a>
-<span class="sourceLineNo">075</span>  }<a name="line.75"></a>
-<span class="sourceLineNo">076</span><a name="line.76"></a>
-<span class="sourceLineNo">077</span><a name="line.77"></a>
-<span class="sourceLineNo">078</span>  public void read(NutReader nut, NutDataInputStream in, int code) throws IOException {<a name="line.78"></a>
-<span class="sourceLineNo">079</span>    if (code == 'N') {<a name="line.79"></a>
-<span class="sourceLineNo">080</span>      throw new IOException("Illegal frame code: " + code);<a name="line.80"></a>
-<span class="sourceLineNo">081</span>    }<a name="line.81"></a>
-<span class="sourceLineNo">082</span><a name="line.82"></a>
-<span class="sourceLineNo">083</span>    FrameCode fc = nut.header.frameCodes.get(code);<a name="line.83"></a>
-<span class="sourceLineNo">084</span>    flags = fc.flags;<a name="line.84"></a>
-<span class="sourceLineNo">085</span>    if ((flags &amp; FLAG_INVALID) == FLAG_INVALID) {<a name="line.85"></a>
-<span class="sourceLineNo">086</span>      throw new IOException("Using invalid framecode: " + code);<a name="line.86"></a>
-<span class="sourceLineNo">087</span>    }<a name="line.87"></a>
-<span class="sourceLineNo">088</span><a name="line.88"></a>
-<span class="sourceLineNo">089</span>    if ((flags &amp; FLAG_CODED) == FLAG_CODED) {<a name="line.89"></a>
-<span class="sourceLineNo">090</span>      long coded_flags = in.readVarLong();<a name="line.90"></a>
-<span class="sourceLineNo">091</span>      flags ^= coded_flags;<a name="line.91"></a>
-<span class="sourceLineNo">092</span>    }<a name="line.92"></a>
-<span class="sourceLineNo">093</span><a name="line.93"></a>
-<span class="sourceLineNo">094</span>    int size = fc.dataSizeLsb;<a name="line.94"></a>
-<span class="sourceLineNo">095</span><a name="line.95"></a>
-<span class="sourceLineNo">096</span>    int stream_id;<a name="line.96"></a>
-<span class="sourceLineNo">097</span>    long coded_pts;<a name="line.97"></a>
-<span class="sourceLineNo">098</span>    int header_idx = fc.headerIdx;<a name="line.98"></a>
-<span class="sourceLineNo">099</span>    int frame_res = fc.reservedCount;<a name="line.99"></a>
-<span class="sourceLineNo">100</span><a name="line.100"></a>
-<span class="sourceLineNo">101</span>    if ((flags &amp; FLAG_STREAM_ID) == FLAG_STREAM_ID) {<a name="line.101"></a>
-<span class="sourceLineNo">102</span>      stream_id = in.readVarInt();<a name="line.102"></a>
-<span class="sourceLineNo">103</span>      if (stream_id &gt;= nut.streams.size()) {<a name="line.103"></a>
-<span class="sourceLineNo">104</span>        throw new IOException("Illegal stream id value " + stream_id + " must be &lt; "<a name="line.104"></a>
-<span class="sourceLineNo">105</span>            + nut.streams.size());<a name="line.105"></a>
-<span class="sourceLineNo">106</span>      }<a name="line.106"></a>
-<span class="sourceLineNo">107</span>    } else {<a name="line.107"></a>
-<span class="sourceLineNo">108</span>      stream_id = fc.streamId;<a name="line.108"></a>
-<span class="sourceLineNo">109</span>    }<a name="line.109"></a>
-<span class="sourceLineNo">110</span><a name="line.110"></a>
-<span class="sourceLineNo">111</span>    stream = nut.streams.get(stream_id);<a name="line.111"></a>
-<span class="sourceLineNo">112</span><a name="line.112"></a>
-<span class="sourceLineNo">113</span><a name="line.113"></a>
-<span class="sourceLineNo">114</span>    if ((flags &amp; FLAG_CODED_PTS) == FLAG_CODED_PTS) {<a name="line.114"></a>
-<span class="sourceLineNo">115</span>      coded_pts = in.readVarLong();<a name="line.115"></a>
-<span class="sourceLineNo">116</span>      if (coded_pts &lt; (1 &lt;&lt; stream.header.msbPtsShift)) {<a name="line.116"></a>
-<span class="sourceLineNo">117</span>        long mask = (1L &lt;&lt; stream.header.msbPtsShift) - 1;<a name="line.117"></a>
-<span class="sourceLineNo">118</span>        long delta = stream.last_pts - mask / 2;<a name="line.118"></a>
-<span class="sourceLineNo">119</span>        pts = ((coded_pts - delta) &amp; mask) + delta;<a name="line.119"></a>
-<span class="sourceLineNo">120</span>      } else<a name="line.120"></a>
-<span class="sourceLineNo">121</span>        pts = coded_pts - (1L &lt;&lt; stream.header.msbPtsShift);<a name="line.121"></a>
-<span class="sourceLineNo">122</span>    } else {<a name="line.122"></a>
-<span class="sourceLineNo">123</span>      // TODO Test this code path<a name="line.123"></a>
-<span class="sourceLineNo">124</span>      pts = stream.last_pts + fc.ptsDelta;<a name="line.124"></a>
-<span class="sourceLineNo">125</span>    }<a name="line.125"></a>
-<span class="sourceLineNo">126</span>    stream.last_pts = pts;<a name="line.126"></a>
-<span class="sourceLineNo">127</span><a name="line.127"></a>
-<span class="sourceLineNo">128</span>    if ((flags &amp; FLAG_SIZE_MSB) == FLAG_SIZE_MSB) {<a name="line.128"></a>
-<span class="sourceLineNo">129</span>      int data_size_msb = in.readVarInt();<a name="line.129"></a>
-<span class="sourceLineNo">130</span>      size += fc.dataSizeMul * data_size_msb;<a name="line.130"></a>
-<span class="sourceLineNo">131</span>    }<a name="line.131"></a>
-<span class="sourceLineNo">132</span>    if ((flags &amp; FLAG_MATCH_TIME) == FLAG_MATCH_TIME) {<a name="line.132"></a>
-<span class="sourceLineNo">133</span>      fc.matchTimeDelta = in.readSignedVarInt();<a name="line.133"></a>
-<span class="sourceLineNo">134</span>    }<a name="line.134"></a>
-<span class="sourceLineNo">135</span>    if ((flags &amp; FLAG_HEADER_IDX) == FLAG_HEADER_IDX) {<a name="line.135"></a>
-<span class="sourceLineNo">136</span>      header_idx = in.readVarInt();<a name="line.136"></a>
-<span class="sourceLineNo">137</span>      if (header_idx &gt;= nut.header.elision.size()) {<a name="line.137"></a>
-<span class="sourceLineNo">138</span>        throw new IOException("Illegal header index " + header_idx + " must be &lt; "<a name="line.138"></a>
-<span class="sourceLineNo">139</span>            + nut.header.elision.size());<a name="line.139"></a>
-<span class="sourceLineNo">140</span>      }<a name="line.140"></a>
-<span class="sourceLineNo">141</span>    }<a name="line.141"></a>
-<span class="sourceLineNo">142</span>    if ((flags &amp; FLAG_RESERVED) == FLAG_RESERVED) {<a name="line.142"></a>
-<span class="sourceLineNo">143</span>      frame_res = in.readVarInt();<a name="line.143"></a>
-<span class="sourceLineNo">144</span>    }<a name="line.144"></a>
-<span class="sourceLineNo">145</span><a name="line.145"></a>
-<span class="sourceLineNo">146</span>    for (int i = 0; i &lt; frame_res; i++) {<a name="line.146"></a>
-<span class="sourceLineNo">147</span>      in.readVarLong(); // Discard<a name="line.147"></a>
-<span class="sourceLineNo">148</span>    }<a name="line.148"></a>
-<span class="sourceLineNo">149</span><a name="line.149"></a>
-<span class="sourceLineNo">150</span>    if ((flags &amp; FLAG_CHECKSUM) == FLAG_CHECKSUM) {<a name="line.150"></a>
-<span class="sourceLineNo">151</span>      long checksum = in.readInt();<a name="line.151"></a>
-<span class="sourceLineNo">152</span>      // TODO Test checksum<a name="line.152"></a>
-<span class="sourceLineNo">153</span>    }<a name="line.153"></a>
-<span class="sourceLineNo">154</span><a name="line.154"></a>
-<span class="sourceLineNo">155</span>    if (size &gt; 4096) {<a name="line.155"></a>
-<span class="sourceLineNo">156</span>      header_idx = 0;<a name="line.156"></a>
-<span class="sourceLineNo">157</span>    }<a name="line.157"></a>
-<span class="sourceLineNo">158</span><a name="line.158"></a>
-<span class="sourceLineNo">159</span>    // Now data<a name="line.159"></a>
-<span class="sourceLineNo">160</span>    if ((flags &amp; FLAG_SM_DATA) == FLAG_SM_DATA) {<a name="line.160"></a>
-<span class="sourceLineNo">161</span>      // TODO Test this path.<a name="line.161"></a>
-<span class="sourceLineNo">162</span><a name="line.162"></a>
-<span class="sourceLineNo">163</span>      if (nut.header.version &lt; 4) {<a name="line.163"></a>
-<span class="sourceLineNo">164</span>        throw new IOException("Frame SM Data not allowed in version 4 or less");<a name="line.164"></a>
-<span class="sourceLineNo">165</span>      }<a name="line.165"></a>
-<span class="sourceLineNo">166</span>      long pos = in.offset();<a name="line.166"></a>
-<span class="sourceLineNo">167</span>      sideData = readMetaData(in);<a name="line.167"></a>
-<span class="sourceLineNo">168</span>      metaData = readMetaData(in);<a name="line.168"></a>
-<span class="sourceLineNo">169</span>      size -= (in.offset() - pos);<a name="line.169"></a>
-<span class="sourceLineNo">170</span><a name="line.170"></a>
-<span class="sourceLineNo">171</span>    } else {<a name="line.171"></a>
-<span class="sourceLineNo">172</span>      sideData = null;<a name="line.172"></a>
-<span class="sourceLineNo">173</span>      metaData = null;<a name="line.173"></a>
-<span class="sourceLineNo">174</span>    }<a name="line.174"></a>
-<span class="sourceLineNo">175</span><a name="line.175"></a>
-<span class="sourceLineNo">176</span>    // TODO Use some kind of byte pool<a name="line.176"></a>
-<span class="sourceLineNo">177</span>    data = new byte[size];<a name="line.177"></a>
-<span class="sourceLineNo">178</span><a name="line.178"></a>
-<span class="sourceLineNo">179</span>    byte[] elision = nut.header.elision.get(header_idx);<a name="line.179"></a>
-<span class="sourceLineNo">180</span>    System.arraycopy(elision, 0, data, 0, elision.length);<a name="line.180"></a>
-<span class="sourceLineNo">181</span>    in.readFully(data, elision.length, size - elision.length);<a name="line.181"></a>
-<span class="sourceLineNo">182</span>  }<a name="line.182"></a>
-<span class="sourceLineNo">183</span><a name="line.183"></a>
-<span class="sourceLineNo">184</span><a name="line.184"></a>
-<span class="sourceLineNo">185</span>  @Override<a name="line.185"></a>
-<span class="sourceLineNo">186</span>  public String toString() {<a name="line.186"></a>
-<span class="sourceLineNo">187</span>    return MoreObjects.toStringHelper(this).add("id", stream.header.id).add("pts", pts)<a name="line.187"></a>
-<span class="sourceLineNo">188</span>        .add("data", String.format("(%d bytes)", data.length)).toString();<a name="line.188"></a>
-<span class="sourceLineNo">189</span>  }<a name="line.189"></a>
-<span class="sourceLineNo">190</span>}<a name="line.190"></a>
+<pre><span class="sourceLineNo">001</span><a id="line.1">package net.bramp.ffmpeg.nut;</a>
+<span class="sourceLineNo">002</span><a id="line.2"></a>
+<span class="sourceLineNo">003</span><a id="line.3">import com.google.common.base.MoreObjects;</a>
+<span class="sourceLineNo">004</span><a id="line.4">import java.io.IOException;</a>
+<span class="sourceLineNo">005</span><a id="line.5">import java.nio.charset.StandardCharsets;</a>
+<span class="sourceLineNo">006</span><a id="line.6">import java.util.Map;</a>
+<span class="sourceLineNo">007</span><a id="line.7">import java.util.TreeMap;</a>
+<span class="sourceLineNo">008</span><a id="line.8">import org.apache.commons.lang3.math.Fraction;</a>
+<span class="sourceLineNo">009</span><a id="line.9"></a>
+<span class="sourceLineNo">010</span><a id="line.10">/** A video or audio frame */</a>
+<span class="sourceLineNo">011</span><a id="line.11">public class Frame {</a>
+<span class="sourceLineNo">012</span><a id="line.12">  // TODO Change this to a enum</a>
+<span class="sourceLineNo">013</span><a id="line.13">  static final long FLAG_KEY = 1 &lt;&lt; 0;</a>
+<span class="sourceLineNo">014</span><a id="line.14">  static final long FLAG_EOR = 1 &lt;&lt; 1;</a>
+<span class="sourceLineNo">015</span><a id="line.15">  static final long FLAG_CODED_PTS = 1 &lt;&lt; 3;</a>
+<span class="sourceLineNo">016</span><a id="line.16">  static final long FLAG_STREAM_ID = 1 &lt;&lt; 4;</a>
+<span class="sourceLineNo">017</span><a id="line.17">  static final long FLAG_SIZE_MSB = 1 &lt;&lt; 5;</a>
+<span class="sourceLineNo">018</span><a id="line.18">  static final long FLAG_CHECKSUM = 1 &lt;&lt; 6;</a>
+<span class="sourceLineNo">019</span><a id="line.19">  static final long FLAG_RESERVED = 1 &lt;&lt; 7;</a>
+<span class="sourceLineNo">020</span><a id="line.20">  static final long FLAG_SM_DATA = 1 &lt;&lt; 8;</a>
+<span class="sourceLineNo">021</span><a id="line.21">  static final long FLAG_HEADER_IDX = 1 &lt;&lt; 10;</a>
+<span class="sourceLineNo">022</span><a id="line.22">  static final long FLAG_MATCH_TIME = 1 &lt;&lt; 11;</a>
+<span class="sourceLineNo">023</span><a id="line.23">  static final long FLAG_CODED = 1 &lt;&lt; 12;</a>
+<span class="sourceLineNo">024</span><a id="line.24">  static final long FLAG_INVALID = 1 &lt;&lt; 13;</a>
+<span class="sourceLineNo">025</span><a id="line.25"></a>
+<span class="sourceLineNo">026</span><a id="line.26">  Stream stream;</a>
+<span class="sourceLineNo">027</span><a id="line.27">  long flags;</a>
+<span class="sourceLineNo">028</span><a id="line.28">  long pts;</a>
+<span class="sourceLineNo">029</span><a id="line.29">  byte[] data;</a>
+<span class="sourceLineNo">030</span><a id="line.30"></a>
+<span class="sourceLineNo">031</span><a id="line.31">  Map&lt;String, Object&gt; sideData;</a>
+<span class="sourceLineNo">032</span><a id="line.32">  Map&lt;String, Object&gt; metaData;</a>
+<span class="sourceLineNo">033</span><a id="line.33"></a>
+<span class="sourceLineNo">034</span><a id="line.34">  protected Map&lt;String, Object&gt; readMetaData(NutDataInputStream in) throws IOException {</a>
+<span class="sourceLineNo">035</span><a id="line.35">    Map&lt;String, Object&gt; data = new TreeMap&lt;String, Object&gt;();</a>
+<span class="sourceLineNo">036</span><a id="line.36">    long count = in.readVarLong();</a>
+<span class="sourceLineNo">037</span><a id="line.37">    for (int i = 0; i &lt; count; i++) {</a>
+<span class="sourceLineNo">038</span><a id="line.38">      String name = new String(in.readVarArray(), StandardCharsets.UTF_8);</a>
+<span class="sourceLineNo">039</span><a id="line.39">      long type = in.readSignedVarInt();</a>
+<span class="sourceLineNo">040</span><a id="line.40">      Object value;</a>
+<span class="sourceLineNo">041</span><a id="line.41"></a>
+<span class="sourceLineNo">042</span><a id="line.42">      if (type == -1) {</a>
+<span class="sourceLineNo">043</span><a id="line.43">        value = new String(in.readVarArray(), StandardCharsets.UTF_8);</a>
+<span class="sourceLineNo">044</span><a id="line.44"></a>
+<span class="sourceLineNo">045</span><a id="line.45">      } else if (type == -2) {</a>
+<span class="sourceLineNo">046</span><a id="line.46">        String k = new String(in.readVarArray(), StandardCharsets.UTF_8);</a>
+<span class="sourceLineNo">047</span><a id="line.47">        String v = new String(in.readVarArray(), StandardCharsets.UTF_8);</a>
+<span class="sourceLineNo">048</span><a id="line.48">        value = k + "=" + v; // TODO Change this some how</a>
+<span class="sourceLineNo">049</span><a id="line.49"></a>
+<span class="sourceLineNo">050</span><a id="line.50">      } else if (type == -3) {</a>
+<span class="sourceLineNo">051</span><a id="line.51">        value = in.readSignedVarInt();</a>
+<span class="sourceLineNo">052</span><a id="line.52"></a>
+<span class="sourceLineNo">053</span><a id="line.53">      } else if (type == -4) {</a>
+<span class="sourceLineNo">054</span><a id="line.54">        /*</a>
+<span class="sourceLineNo">055</span><a id="line.55">         * t (v coded universal timestamp) tmp v id= tmp % time_base_count value= (tmp /</a>
+<span class="sourceLineNo">056</span><a id="line.56">         * time_base_count) * timeBase[id]</a>
+<span class="sourceLineNo">057</span><a id="line.57">         */</a>
+<span class="sourceLineNo">058</span><a id="line.58">        value = in.readVarLong(); // TODO Convert to timestamp</a>
+<span class="sourceLineNo">059</span><a id="line.59"></a>
+<span class="sourceLineNo">060</span><a id="line.60">      } else if (type &lt; -4) {</a>
+<span class="sourceLineNo">061</span><a id="line.61">        long denominator = -type - 4;</a>
+<span class="sourceLineNo">062</span><a id="line.62">        long numerator = in.readSignedVarInt();</a>
+<span class="sourceLineNo">063</span><a id="line.63">        value = Fraction.getFraction((int) numerator, (int) denominator);</a>
+<span class="sourceLineNo">064</span><a id="line.64"></a>
+<span class="sourceLineNo">065</span><a id="line.65">      } else {</a>
+<span class="sourceLineNo">066</span><a id="line.66">        value = type;</a>
+<span class="sourceLineNo">067</span><a id="line.67">      }</a>
+<span class="sourceLineNo">068</span><a id="line.68"></a>
+<span class="sourceLineNo">069</span><a id="line.69">      data.put(name, value);</a>
+<span class="sourceLineNo">070</span><a id="line.70">    }</a>
+<span class="sourceLineNo">071</span><a id="line.71">    return data;</a>
+<span class="sourceLineNo">072</span><a id="line.72">  }</a>
+<span class="sourceLineNo">073</span><a id="line.73"></a>
+<span class="sourceLineNo">074</span><a id="line.74">  public void read(NutReader nut, NutDataInputStream in, int code) throws IOException {</a>
+<span class="sourceLineNo">075</span><a id="line.75">    if (code == 'N') {</a>
+<span class="sourceLineNo">076</span><a id="line.76">      throw new IOException("Illegal frame code: " + code);</a>
+<span class="sourceLineNo">077</span><a id="line.77">    }</a>
+<span class="sourceLineNo">078</span><a id="line.78"></a>
+<span class="sourceLineNo">079</span><a id="line.79">    FrameCode fc = nut.header.frameCodes.get(code);</a>
+<span class="sourceLineNo">080</span><a id="line.80">    flags = fc.flags;</a>
+<span class="sourceLineNo">081</span><a id="line.81">    if ((flags &amp; FLAG_INVALID) == FLAG_INVALID) {</a>
+<span class="sourceLineNo">082</span><a id="line.82">      throw new IOException("Using invalid framecode: " + code);</a>
+<span class="sourceLineNo">083</span><a id="line.83">    }</a>
+<span class="sourceLineNo">084</span><a id="line.84"></a>
+<span class="sourceLineNo">085</span><a id="line.85">    if ((flags &amp; FLAG_CODED) == FLAG_CODED) {</a>
+<span class="sourceLineNo">086</span><a id="line.86">      long coded_flags = in.readVarLong();</a>
+<span class="sourceLineNo">087</span><a id="line.87">      flags ^= coded_flags;</a>
+<span class="sourceLineNo">088</span><a id="line.88">    }</a>
+<span class="sourceLineNo">089</span><a id="line.89"></a>
+<span class="sourceLineNo">090</span><a id="line.90">    int size = fc.dataSizeLsb;</a>
+<span class="sourceLineNo">091</span><a id="line.91"></a>
+<span class="sourceLineNo">092</span><a id="line.92">    int stream_id;</a>
+<span class="sourceLineNo">093</span><a id="line.93">    long coded_pts;</a>
+<span class="sourceLineNo">094</span><a id="line.94">    int header_idx = fc.headerIdx;</a>
+<span class="sourceLineNo">095</span><a id="line.95">    int frame_res = fc.reservedCount;</a>
+<span class="sourceLineNo">096</span><a id="line.96"></a>
+<span class="sourceLineNo">097</span><a id="line.97">    if ((flags &amp; FLAG_STREAM_ID) == FLAG_STREAM_ID) {</a>
+<span class="sourceLineNo">098</span><a id="line.98">      stream_id = in.readVarInt();</a>
+<span class="sourceLineNo">099</span><a id="line.99">      if (stream_id &gt;= nut.streams.size()) {</a>
+<span class="sourceLineNo">100</span><a id="line.100">        throw new IOException(</a>
+<span class="sourceLineNo">101</span><a id="line.101">            "Illegal stream id value " + stream_id + " must be &lt; " + nut.streams.size());</a>
+<span class="sourceLineNo">102</span><a id="line.102">      }</a>
+<span class="sourceLineNo">103</span><a id="line.103">    } else {</a>
+<span class="sourceLineNo">104</span><a id="line.104">      stream_id = fc.streamId;</a>
+<span class="sourceLineNo">105</span><a id="line.105">    }</a>
+<span class="sourceLineNo">106</span><a id="line.106"></a>
+<span class="sourceLineNo">107</span><a id="line.107">    stream = nut.streams.get(stream_id);</a>
+<span class="sourceLineNo">108</span><a id="line.108"></a>
+<span class="sourceLineNo">109</span><a id="line.109">    if ((flags &amp; FLAG_CODED_PTS) == FLAG_CODED_PTS) {</a>
+<span class="sourceLineNo">110</span><a id="line.110">      coded_pts = in.readVarLong();</a>
+<span class="sourceLineNo">111</span><a id="line.111">      if (coded_pts &lt; (1 &lt;&lt; stream.header.msbPtsShift)) {</a>
+<span class="sourceLineNo">112</span><a id="line.112">        long mask = (1L &lt;&lt; stream.header.msbPtsShift) - 1;</a>
+<span class="sourceLineNo">113</span><a id="line.113">        long delta = stream.last_pts - mask / 2;</a>
+<span class="sourceLineNo">114</span><a id="line.114">        pts = ((coded_pts - delta) &amp; mask) + delta;</a>
+<span class="sourceLineNo">115</span><a id="line.115">      } else {</a>
+<span class="sourceLineNo">116</span><a id="line.116">        pts = coded_pts - (1L &lt;&lt; stream.header.msbPtsShift);</a>
+<span class="sourceLineNo">117</span><a id="line.117">      }</a>
+<span class="sourceLineNo">118</span><a id="line.118">    } else {</a>
+<span class="sourceLineNo">119</span><a id="line.119">      // TODO Test this code path</a>
+<span class="sourceLineNo">120</span><a id="line.120">      pts = stream.last_pts + fc.ptsDelta;</a>
+<span class="sourceLineNo">121</span><a id="line.121">    }</a>
+<span class="sourceLineNo">122</span><a id="line.122">    stream.last_pts = pts;</a>
+<span class="sourceLineNo">123</span><a id="line.123"></a>
+<span class="sourceLineNo">124</span><a id="line.124">    if ((flags &amp; FLAG_SIZE_MSB) == FLAG_SIZE_MSB) {</a>
+<span class="sourceLineNo">125</span><a id="line.125">      int data_size_msb = in.readVarInt();</a>
+<span class="sourceLineNo">126</span><a id="line.126">      size += fc.dataSizeMul * data_size_msb;</a>
+<span class="sourceLineNo">127</span><a id="line.127">    }</a>
+<span class="sourceLineNo">128</span><a id="line.128">    if ((flags &amp; FLAG_MATCH_TIME) == FLAG_MATCH_TIME) {</a>
+<span class="sourceLineNo">129</span><a id="line.129">      fc.matchTimeDelta = in.readSignedVarInt();</a>
+<span class="sourceLineNo">130</span><a id="line.130">    }</a>
+<span class="sourceLineNo">131</span><a id="line.131">    if ((flags &amp; FLAG_HEADER_IDX) == FLAG_HEADER_IDX) {</a>
+<span class="sourceLineNo">132</span><a id="line.132">      header_idx = in.readVarInt();</a>
+<span class="sourceLineNo">133</span><a id="line.133">      if (header_idx &gt;= nut.header.elision.size()) {</a>
+<span class="sourceLineNo">134</span><a id="line.134">        throw new IOException(</a>
+<span class="sourceLineNo">135</span><a id="line.135">            "Illegal header index " + header_idx + " must be &lt; " + nut.header.elision.size());</a>
+<span class="sourceLineNo">136</span><a id="line.136">      }</a>
+<span class="sourceLineNo">137</span><a id="line.137">    }</a>
+<span class="sourceLineNo">138</span><a id="line.138">    if ((flags &amp; FLAG_RESERVED) == FLAG_RESERVED) {</a>
+<span class="sourceLineNo">139</span><a id="line.139">      frame_res = in.readVarInt();</a>
+<span class="sourceLineNo">140</span><a id="line.140">    }</a>
+<span class="sourceLineNo">141</span><a id="line.141"></a>
+<span class="sourceLineNo">142</span><a id="line.142">    for (int i = 0; i &lt; frame_res; i++) {</a>
+<span class="sourceLineNo">143</span><a id="line.143">      in.readVarLong(); // Discard</a>
+<span class="sourceLineNo">144</span><a id="line.144">    }</a>
+<span class="sourceLineNo">145</span><a id="line.145"></a>
+<span class="sourceLineNo">146</span><a id="line.146">    if ((flags &amp; FLAG_CHECKSUM) == FLAG_CHECKSUM) {</a>
+<span class="sourceLineNo">147</span><a id="line.147">      long checksum = in.readInt();</a>
+<span class="sourceLineNo">148</span><a id="line.148">      // TODO Test checksum</a>
+<span class="sourceLineNo">149</span><a id="line.149">    }</a>
+<span class="sourceLineNo">150</span><a id="line.150"></a>
+<span class="sourceLineNo">151</span><a id="line.151">    if (size &gt; 4096) {</a>
+<span class="sourceLineNo">152</span><a id="line.152">      header_idx = 0;</a>
+<span class="sourceLineNo">153</span><a id="line.153">    }</a>
+<span class="sourceLineNo">154</span><a id="line.154"></a>
+<span class="sourceLineNo">155</span><a id="line.155">    // Now data</a>
+<span class="sourceLineNo">156</span><a id="line.156">    if ((flags &amp; FLAG_SM_DATA) == FLAG_SM_DATA) {</a>
+<span class="sourceLineNo">157</span><a id="line.157">      // TODO Test this path.</a>
+<span class="sourceLineNo">158</span><a id="line.158"></a>
+<span class="sourceLineNo">159</span><a id="line.159">      if (nut.header.version &lt; 4) {</a>
+<span class="sourceLineNo">160</span><a id="line.160">        throw new IOException("Frame SM Data not allowed in version 4 or less");</a>
+<span class="sourceLineNo">161</span><a id="line.161">      }</a>
+<span class="sourceLineNo">162</span><a id="line.162">      long pos = in.offset();</a>
+<span class="sourceLineNo">163</span><a id="line.163">      sideData = readMetaData(in);</a>
+<span class="sourceLineNo">164</span><a id="line.164">      metaData = readMetaData(in);</a>
+<span class="sourceLineNo">165</span><a id="line.165">      size -= (in.offset() - pos);</a>
+<span class="sourceLineNo">166</span><a id="line.166"></a>
+<span class="sourceLineNo">167</span><a id="line.167">    } else {</a>
+<span class="sourceLineNo">168</span><a id="line.168">      sideData = null;</a>
+<span class="sourceLineNo">169</span><a id="line.169">      metaData = null;</a>
+<span class="sourceLineNo">170</span><a id="line.170">    }</a>
+<span class="sourceLineNo">171</span><a id="line.171"></a>
+<span class="sourceLineNo">172</span><a id="line.172">    // TODO Use some kind of byte pool</a>
+<span class="sourceLineNo">173</span><a id="line.173">    data = new byte[size];</a>
+<span class="sourceLineNo">174</span><a id="line.174"></a>
+<span class="sourceLineNo">175</span><a id="line.175">    byte[] elision = nut.header.elision.get(header_idx);</a>
+<span class="sourceLineNo">176</span><a id="line.176">    System.arraycopy(elision, 0, data, 0, elision.length);</a>
+<span class="sourceLineNo">177</span><a id="line.177">    in.readFully(data, elision.length, size - elision.length);</a>
+<span class="sourceLineNo">178</span><a id="line.178">  }</a>
+<span class="sourceLineNo">179</span><a id="line.179"></a>
+<span class="sourceLineNo">180</span><a id="line.180">  @Override</a>
+<span class="sourceLineNo">181</span><a id="line.181">  public String toString() {</a>
+<span class="sourceLineNo">182</span><a id="line.182">    return MoreObjects.toStringHelper(this)</a>
+<span class="sourceLineNo">183</span><a id="line.183">        .add("id", stream.header.id)</a>
+<span class="sourceLineNo">184</span><a id="line.184">        .add("pts", pts)</a>
+<span class="sourceLineNo">185</span><a id="line.185">        .add("data", String.format("(%d bytes)", data.length))</a>
+<span class="sourceLineNo">186</span><a id="line.186">        .toString();</a>
+<span class="sourceLineNo">187</span><a id="line.187">  }</a>
+<span class="sourceLineNo">188</span><a id="line.188">}</a>
 
 
 
@@ -258,5 +257,6 @@
 
 </pre>
 </div>
+</main>
 </body>
 </html>

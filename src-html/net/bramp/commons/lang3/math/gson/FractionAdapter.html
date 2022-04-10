@@ -1,83 +1,86 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
 <head>
 <title>Source code</title>
 <link rel="stylesheet" type="text/css" href="../../../../../../../stylesheet.css" title="Style">
 </head>
 <body>
+<main role="main">
 <div class="sourceContainer">
-<pre><span class="sourceLineNo">001</span>package net.bramp.commons.lang3.math.gson;<a name="line.1"></a>
-<span class="sourceLineNo">002</span><a name="line.2"></a>
-<span class="sourceLineNo">003</span>import com.google.gson.TypeAdapter;<a name="line.3"></a>
-<span class="sourceLineNo">004</span>import com.google.gson.stream.JsonReader;<a name="line.4"></a>
-<span class="sourceLineNo">005</span>import com.google.gson.stream.JsonToken;<a name="line.5"></a>
-<span class="sourceLineNo">006</span>import com.google.gson.stream.JsonWriter;<a name="line.6"></a>
-<span class="sourceLineNo">007</span>import org.apache.commons.lang3.math.Fraction;<a name="line.7"></a>
-<span class="sourceLineNo">008</span><a name="line.8"></a>
-<span class="sourceLineNo">009</span>import java.io.IOException;<a name="line.9"></a>
-<span class="sourceLineNo">010</span><a name="line.10"></a>
-<span class="sourceLineNo">011</span>/**<a name="line.11"></a>
-<span class="sourceLineNo">012</span> * GSON TypeAdapter for Apache Commons Math Fraction Object<a name="line.12"></a>
-<span class="sourceLineNo">013</span> *<a name="line.13"></a>
-<span class="sourceLineNo">014</span> * @author bramp<a name="line.14"></a>
-<span class="sourceLineNo">015</span> *<a name="line.15"></a>
-<span class="sourceLineNo">016</span> */<a name="line.16"></a>
-<span class="sourceLineNo">017</span>public class FractionAdapter extends TypeAdapter&lt;Fraction&gt; {<a name="line.17"></a>
-<span class="sourceLineNo">018</span><a name="line.18"></a>
-<span class="sourceLineNo">019</span>  /**<a name="line.19"></a>
-<span class="sourceLineNo">020</span>   * If set, 0/0 returns this value, instead of throwing a ArithmeticException<a name="line.20"></a>
-<span class="sourceLineNo">021</span>   */<a name="line.21"></a>
-<span class="sourceLineNo">022</span>  private final Fraction zeroByZero;<a name="line.22"></a>
-<span class="sourceLineNo">023</span><a name="line.23"></a>
-<span class="sourceLineNo">024</span>  /**<a name="line.24"></a>
-<span class="sourceLineNo">025</span>   * If set, N/0 returns this value, instead of throwing a ArithmeticException<a name="line.25"></a>
-<span class="sourceLineNo">026</span>   */<a name="line.26"></a>
-<span class="sourceLineNo">027</span>  private final Fraction divideByZero;<a name="line.27"></a>
-<span class="sourceLineNo">028</span><a name="line.28"></a>
-<span class="sourceLineNo">029</span>  public FractionAdapter() {<a name="line.29"></a>
-<span class="sourceLineNo">030</span>    this(Fraction.ZERO, Fraction.ZERO);<a name="line.30"></a>
-<span class="sourceLineNo">031</span>  }<a name="line.31"></a>
-<span class="sourceLineNo">032</span><a name="line.32"></a>
-<span class="sourceLineNo">033</span>  private FractionAdapter(Fraction zeroByZero, Fraction divideByZero) {<a name="line.33"></a>
-<span class="sourceLineNo">034</span>    this.zeroByZero = zeroByZero;<a name="line.34"></a>
-<span class="sourceLineNo">035</span>    this.divideByZero = divideByZero;<a name="line.35"></a>
-<span class="sourceLineNo">036</span>  }<a name="line.36"></a>
-<span class="sourceLineNo">037</span><a name="line.37"></a>
-<span class="sourceLineNo">038</span>  public Fraction read(JsonReader reader) throws IOException {<a name="line.38"></a>
-<span class="sourceLineNo">039</span>    JsonToken next = reader.peek();<a name="line.39"></a>
-<span class="sourceLineNo">040</span><a name="line.40"></a>
-<span class="sourceLineNo">041</span>    if (next == JsonToken.NULL) {<a name="line.41"></a>
-<span class="sourceLineNo">042</span>      reader.nextNull();<a name="line.42"></a>
-<span class="sourceLineNo">043</span>      return null;<a name="line.43"></a>
-<span class="sourceLineNo">044</span>    }<a name="line.44"></a>
-<span class="sourceLineNo">045</span><a name="line.45"></a>
-<span class="sourceLineNo">046</span>    if (next == JsonToken.NUMBER) {<a name="line.46"></a>
-<span class="sourceLineNo">047</span>      return Fraction.getFraction(reader.nextDouble());<a name="line.47"></a>
-<span class="sourceLineNo">048</span>    }<a name="line.48"></a>
-<span class="sourceLineNo">049</span><a name="line.49"></a>
-<span class="sourceLineNo">050</span>    String fraction = reader.nextString().trim();<a name="line.50"></a>
-<span class="sourceLineNo">051</span><a name="line.51"></a>
-<span class="sourceLineNo">052</span>    // Ambiguous as to what 0/0 is, but FFmpeg seems to think it's zero<a name="line.52"></a>
-<span class="sourceLineNo">053</span>    if (zeroByZero != null &amp;&amp; "0/0".equals(fraction)) {<a name="line.53"></a>
-<span class="sourceLineNo">054</span>      return zeroByZero;<a name="line.54"></a>
-<span class="sourceLineNo">055</span>    }<a name="line.55"></a>
-<span class="sourceLineNo">056</span><a name="line.56"></a>
-<span class="sourceLineNo">057</span>    // Another edge cases is invalid files sometimes output 1/0.<a name="line.57"></a>
-<span class="sourceLineNo">058</span>    if (divideByZero != null &amp;&amp; fraction.endsWith("/0")) {<a name="line.58"></a>
-<span class="sourceLineNo">059</span>      return divideByZero;<a name="line.59"></a>
-<span class="sourceLineNo">060</span>    }<a name="line.60"></a>
-<span class="sourceLineNo">061</span><a name="line.61"></a>
-<span class="sourceLineNo">062</span>    return Fraction.getFraction(fraction);<a name="line.62"></a>
-<span class="sourceLineNo">063</span>  }<a name="line.63"></a>
-<span class="sourceLineNo">064</span><a name="line.64"></a>
-<span class="sourceLineNo">065</span>  public void write(JsonWriter writer, Fraction value) throws IOException {<a name="line.65"></a>
-<span class="sourceLineNo">066</span>    if (value == null) {<a name="line.66"></a>
-<span class="sourceLineNo">067</span>      writer.nullValue();<a name="line.67"></a>
-<span class="sourceLineNo">068</span>      return;<a name="line.68"></a>
-<span class="sourceLineNo">069</span>    }<a name="line.69"></a>
-<span class="sourceLineNo">070</span>    writer.value(value.toProperString());<a name="line.70"></a>
-<span class="sourceLineNo">071</span>  }<a name="line.71"></a>
-<span class="sourceLineNo">072</span>}<a name="line.72"></a>
+<pre><span class="sourceLineNo">001</span><a id="line.1">package net.bramp.commons.lang3.math.gson;</a>
+<span class="sourceLineNo">002</span><a id="line.2"></a>
+<span class="sourceLineNo">003</span><a id="line.3">import com.google.errorprone.annotations.Immutable;</a>
+<span class="sourceLineNo">004</span><a id="line.4">import com.google.gson.TypeAdapter;</a>
+<span class="sourceLineNo">005</span><a id="line.5">import com.google.gson.stream.JsonReader;</a>
+<span class="sourceLineNo">006</span><a id="line.6">import com.google.gson.stream.JsonToken;</a>
+<span class="sourceLineNo">007</span><a id="line.7">import com.google.gson.stream.JsonWriter;</a>
+<span class="sourceLineNo">008</span><a id="line.8">import java.io.IOException;</a>
+<span class="sourceLineNo">009</span><a id="line.9">import org.apache.commons.lang3.math.Fraction;</a>
+<span class="sourceLineNo">010</span><a id="line.10"></a>
+<span class="sourceLineNo">011</span><a id="line.11">/**</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * GSON TypeAdapter for Apache Commons Math Fraction Object</a>
+<span class="sourceLineNo">013</span><a id="line.13"> *</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * @author bramp</a>
+<span class="sourceLineNo">015</span><a id="line.15"> */</a>
+<span class="sourceLineNo">016</span><a id="line.16">@Immutable</a>
+<span class="sourceLineNo">017</span><a id="line.17">public class FractionAdapter extends TypeAdapter&lt;Fraction&gt; {</a>
+<span class="sourceLineNo">018</span><a id="line.18"></a>
+<span class="sourceLineNo">019</span><a id="line.19">  /** If set, 0/0 returns this value, instead of throwing a ArithmeticException */</a>
+<span class="sourceLineNo">020</span><a id="line.20">  @SuppressWarnings(</a>
+<span class="sourceLineNo">021</span><a id="line.21">      "Immutable") // TODO Remove when https://github.com/google/error-prone/issues/512 is fixed</a>
+<span class="sourceLineNo">022</span><a id="line.22">  private final Fraction zeroByZero;</a>
+<span class="sourceLineNo">023</span><a id="line.23"></a>
+<span class="sourceLineNo">024</span><a id="line.24">  /** If set, N/0 returns this value, instead of throwing a ArithmeticException */</a>
+<span class="sourceLineNo">025</span><a id="line.25">  @SuppressWarnings(</a>
+<span class="sourceLineNo">026</span><a id="line.26">      "Immutable") // TODO Remove when https://github.com/google/error-prone/issues/512 is fixed</a>
+<span class="sourceLineNo">027</span><a id="line.27">  private final Fraction divideByZero;</a>
+<span class="sourceLineNo">028</span><a id="line.28"></a>
+<span class="sourceLineNo">029</span><a id="line.29">  public FractionAdapter() {</a>
+<span class="sourceLineNo">030</span><a id="line.30">    this(Fraction.ZERO, Fraction.ZERO);</a>
+<span class="sourceLineNo">031</span><a id="line.31">  }</a>
+<span class="sourceLineNo">032</span><a id="line.32"></a>
+<span class="sourceLineNo">033</span><a id="line.33">  private FractionAdapter(Fraction zeroByZero, Fraction divideByZero) {</a>
+<span class="sourceLineNo">034</span><a id="line.34">    this.zeroByZero = zeroByZero;</a>
+<span class="sourceLineNo">035</span><a id="line.35">    this.divideByZero = divideByZero;</a>
+<span class="sourceLineNo">036</span><a id="line.36">  }</a>
+<span class="sourceLineNo">037</span><a id="line.37"></a>
+<span class="sourceLineNo">038</span><a id="line.38">  @Override</a>
+<span class="sourceLineNo">039</span><a id="line.39">  public Fraction read(JsonReader reader) throws IOException {</a>
+<span class="sourceLineNo">040</span><a id="line.40">    JsonToken next = reader.peek();</a>
+<span class="sourceLineNo">041</span><a id="line.41"></a>
+<span class="sourceLineNo">042</span><a id="line.42">    if (next == JsonToken.NULL) {</a>
+<span class="sourceLineNo">043</span><a id="line.43">      reader.nextNull();</a>
+<span class="sourceLineNo">044</span><a id="line.44">      return null;</a>
+<span class="sourceLineNo">045</span><a id="line.45">    }</a>
+<span class="sourceLineNo">046</span><a id="line.46"></a>
+<span class="sourceLineNo">047</span><a id="line.47">    if (next == JsonToken.NUMBER) {</a>
+<span class="sourceLineNo">048</span><a id="line.48">      return Fraction.getFraction(reader.nextDouble());</a>
+<span class="sourceLineNo">049</span><a id="line.49">    }</a>
+<span class="sourceLineNo">050</span><a id="line.50"></a>
+<span class="sourceLineNo">051</span><a id="line.51">    String fraction = reader.nextString().trim();</a>
+<span class="sourceLineNo">052</span><a id="line.52"></a>
+<span class="sourceLineNo">053</span><a id="line.53">    // Ambiguous as to what 0/0 is, but FFmpeg seems to think it's zero</a>
+<span class="sourceLineNo">054</span><a id="line.54">    if (zeroByZero != null &amp;&amp; "0/0".equals(fraction)) {</a>
+<span class="sourceLineNo">055</span><a id="line.55">      return zeroByZero;</a>
+<span class="sourceLineNo">056</span><a id="line.56">    }</a>
+<span class="sourceLineNo">057</span><a id="line.57"></a>
+<span class="sourceLineNo">058</span><a id="line.58">    // Another edge cases is invalid files sometimes output 1/0.</a>
+<span class="sourceLineNo">059</span><a id="line.59">    if (divideByZero != null &amp;&amp; fraction.endsWith("/0")) {</a>
+<span class="sourceLineNo">060</span><a id="line.60">      return divideByZero;</a>
+<span class="sourceLineNo">061</span><a id="line.61">    }</a>
+<span class="sourceLineNo">062</span><a id="line.62"></a>
+<span class="sourceLineNo">063</span><a id="line.63">    return Fraction.getFraction(fraction);</a>
+<span class="sourceLineNo">064</span><a id="line.64">  }</a>
+<span class="sourceLineNo">065</span><a id="line.65"></a>
+<span class="sourceLineNo">066</span><a id="line.66">  @Override</a>
+<span class="sourceLineNo">067</span><a id="line.67">  public void write(JsonWriter writer, Fraction value) throws IOException {</a>
+<span class="sourceLineNo">068</span><a id="line.68">    if (value == null) {</a>
+<span class="sourceLineNo">069</span><a id="line.69">      writer.nullValue();</a>
+<span class="sourceLineNo">070</span><a id="line.70">      return;</a>
+<span class="sourceLineNo">071</span><a id="line.71">    }</a>
+<span class="sourceLineNo">072</span><a id="line.72">    writer.value(value.toProperString());</a>
+<span class="sourceLineNo">073</span><a id="line.73">  }</a>
+<span class="sourceLineNo">074</span><a id="line.74">}</a>
 
 
 
@@ -140,5 +143,6 @@
 
 </pre>
 </div>
+</main>
 </body>
 </html>

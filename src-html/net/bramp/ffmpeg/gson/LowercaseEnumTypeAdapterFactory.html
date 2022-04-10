@@ -1,67 +1,102 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
 <head>
 <title>Source code</title>
 <link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
 </head>
 <body>
+<main role="main">
 <div class="sourceContainer">
-<pre><span class="sourceLineNo">001</span>package net.bramp.ffmpeg.gson;<a name="line.1"></a>
-<span class="sourceLineNo">002</span><a name="line.2"></a>
-<span class="sourceLineNo">003</span>import com.google.gson.Gson;<a name="line.3"></a>
-<span class="sourceLineNo">004</span>import com.google.gson.TypeAdapter;<a name="line.4"></a>
-<span class="sourceLineNo">005</span>import com.google.gson.TypeAdapterFactory;<a name="line.5"></a>
-<span class="sourceLineNo">006</span>import com.google.gson.reflect.TypeToken;<a name="line.6"></a>
-<span class="sourceLineNo">007</span>import com.google.gson.stream.JsonReader;<a name="line.7"></a>
-<span class="sourceLineNo">008</span>import com.google.gson.stream.JsonToken;<a name="line.8"></a>
-<span class="sourceLineNo">009</span>import com.google.gson.stream.JsonWriter;<a name="line.9"></a>
-<span class="sourceLineNo">010</span><a name="line.10"></a>
-<span class="sourceLineNo">011</span>import java.io.IOException;<a name="line.11"></a>
-<span class="sourceLineNo">012</span>import java.util.HashMap;<a name="line.12"></a>
-<span class="sourceLineNo">013</span>import java.util.Locale;<a name="line.13"></a>
-<span class="sourceLineNo">014</span>import java.util.Map;<a name="line.14"></a>
-<span class="sourceLineNo">015</span><a name="line.15"></a>
-<span class="sourceLineNo">016</span>/**<a name="line.16"></a>
-<span class="sourceLineNo">017</span> * Taken from: &lt;a href=<a name="line.17"></a>
-<span class="sourceLineNo">018</span> * "https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/TypeAdapterFactory.html"<a name="line.18"></a>
-<span class="sourceLineNo">019</span> * &gt;TypeAdapterFactory&lt;/a&gt;<a name="line.19"></a>
-<span class="sourceLineNo">020</span> */<a name="line.20"></a>
-<span class="sourceLineNo">021</span>public class LowercaseEnumTypeAdapterFactory implements TypeAdapterFactory {<a name="line.21"></a>
-<span class="sourceLineNo">022</span>  public &lt;T&gt; TypeAdapter&lt;T&gt; create(Gson gson, TypeToken&lt;T&gt; type) {<a name="line.22"></a>
-<span class="sourceLineNo">023</span>    Class&lt;T&gt; rawType = (Class&lt;T&gt;) type.getRawType();<a name="line.23"></a>
-<span class="sourceLineNo">024</span>    if (!rawType.isEnum()) {<a name="line.24"></a>
-<span class="sourceLineNo">025</span>      return null;<a name="line.25"></a>
-<span class="sourceLineNo">026</span>    }<a name="line.26"></a>
-<span class="sourceLineNo">027</span><a name="line.27"></a>
-<span class="sourceLineNo">028</span>    // Setup mapping of consts<a name="line.28"></a>
-<span class="sourceLineNo">029</span>    final Map&lt;String, T&gt; lowercaseToConstant = new HashMap&lt;&gt;();<a name="line.29"></a>
-<span class="sourceLineNo">030</span>    for (T constant : rawType.getEnumConstants()) {<a name="line.30"></a>
-<span class="sourceLineNo">031</span>      lowercaseToConstant.put(toLowercase(constant), constant);<a name="line.31"></a>
-<span class="sourceLineNo">032</span>    }<a name="line.32"></a>
-<span class="sourceLineNo">033</span><a name="line.33"></a>
-<span class="sourceLineNo">034</span>    return new TypeAdapter&lt;T&gt;() {<a name="line.34"></a>
-<span class="sourceLineNo">035</span>      public void write(JsonWriter out, T value) throws IOException {<a name="line.35"></a>
-<span class="sourceLineNo">036</span>        if (value == null) {<a name="line.36"></a>
-<span class="sourceLineNo">037</span>          out.nullValue();<a name="line.37"></a>
-<span class="sourceLineNo">038</span>        } else {<a name="line.38"></a>
-<span class="sourceLineNo">039</span>          out.value(toLowercase(value));<a name="line.39"></a>
-<span class="sourceLineNo">040</span>        }<a name="line.40"></a>
-<span class="sourceLineNo">041</span>      }<a name="line.41"></a>
-<span class="sourceLineNo">042</span><a name="line.42"></a>
-<span class="sourceLineNo">043</span>      public T read(JsonReader reader) throws IOException {<a name="line.43"></a>
-<span class="sourceLineNo">044</span>        if (reader.peek() == JsonToken.NULL) {<a name="line.44"></a>
-<span class="sourceLineNo">045</span>          reader.nextNull();<a name="line.45"></a>
-<span class="sourceLineNo">046</span>          return null;<a name="line.46"></a>
-<span class="sourceLineNo">047</span>        }<a name="line.47"></a>
-<span class="sourceLineNo">048</span>        return lowercaseToConstant.get(reader.nextString());<a name="line.48"></a>
-<span class="sourceLineNo">049</span>      }<a name="line.49"></a>
-<span class="sourceLineNo">050</span>    };<a name="line.50"></a>
-<span class="sourceLineNo">051</span>  }<a name="line.51"></a>
-<span class="sourceLineNo">052</span><a name="line.52"></a>
-<span class="sourceLineNo">053</span>  private String toLowercase(Object o) {<a name="line.53"></a>
-<span class="sourceLineNo">054</span>    return o.toString().toLowerCase(Locale.UK);<a name="line.54"></a>
-<span class="sourceLineNo">055</span>  }<a name="line.55"></a>
-<span class="sourceLineNo">056</span>}<a name="line.56"></a>
+<pre><span class="sourceLineNo">001</span><a id="line.1">package net.bramp.ffmpeg.gson;</a>
+<span class="sourceLineNo">002</span><a id="line.2"></a>
+<span class="sourceLineNo">003</span><a id="line.3">import static com.google.common.base.Preconditions.checkNotNull;</a>
+<span class="sourceLineNo">004</span><a id="line.4"></a>
+<span class="sourceLineNo">005</span><a id="line.5">import com.google.common.collect.ImmutableMap;</a>
+<span class="sourceLineNo">006</span><a id="line.6">import com.google.errorprone.annotations.Immutable;</a>
+<span class="sourceLineNo">007</span><a id="line.7">import com.google.gson.Gson;</a>
+<span class="sourceLineNo">008</span><a id="line.8">import com.google.gson.TypeAdapter;</a>
+<span class="sourceLineNo">009</span><a id="line.9">import com.google.gson.TypeAdapterFactory;</a>
+<span class="sourceLineNo">010</span><a id="line.10">import com.google.gson.reflect.TypeToken;</a>
+<span class="sourceLineNo">011</span><a id="line.11">import com.google.gson.stream.JsonReader;</a>
+<span class="sourceLineNo">012</span><a id="line.12">import com.google.gson.stream.JsonToken;</a>
+<span class="sourceLineNo">013</span><a id="line.13">import com.google.gson.stream.JsonWriter;</a>
+<span class="sourceLineNo">014</span><a id="line.14">import java.io.IOException;</a>
+<span class="sourceLineNo">015</span><a id="line.15">import java.util.HashMap;</a>
+<span class="sourceLineNo">016</span><a id="line.16">import java.util.Locale;</a>
+<span class="sourceLineNo">017</span><a id="line.17">import java.util.Map;</a>
+<span class="sourceLineNo">018</span><a id="line.18">import javax.annotation.CheckReturnValue;</a>
+<span class="sourceLineNo">019</span><a id="line.19">import javax.annotation.Nonnull;</a>
+<span class="sourceLineNo">020</span><a id="line.20"></a>
+<span class="sourceLineNo">021</span><a id="line.21">/**</a>
+<span class="sourceLineNo">022</span><a id="line.22"> * Maps Enums to lowercase strings.</a>
+<span class="sourceLineNo">023</span><a id="line.23"> *</a>
+<span class="sourceLineNo">024</span><a id="line.24"> * &lt;p&gt;Adapted from: &lt;a href=</a>
+<span class="sourceLineNo">025</span><a id="line.25"> * "https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/TypeAdapterFactory.html"</a>
+<span class="sourceLineNo">026</span><a id="line.26"> * &gt;TypeAdapterFactory&lt;/a&gt;</a>
+<span class="sourceLineNo">027</span><a id="line.27"> */</a>
+<span class="sourceLineNo">028</span><a id="line.28">@Immutable</a>
+<span class="sourceLineNo">029</span><a id="line.29">public class LowercaseEnumTypeAdapterFactory implements TypeAdapterFactory {</a>
+<span class="sourceLineNo">030</span><a id="line.30"></a>
+<span class="sourceLineNo">031</span><a id="line.31">  @Immutable</a>
+<span class="sourceLineNo">032</span><a id="line.32">  private static class MyTypeAdapter&lt;T&gt; extends TypeAdapter&lt;T&gt; {</a>
+<span class="sourceLineNo">033</span><a id="line.33"></a>
+<span class="sourceLineNo">034</span><a id="line.34">    // T is a Enum, thus immutable, however, we can't enforce that type due to the</a>
+<span class="sourceLineNo">035</span><a id="line.35">    // TypeAdapterFactory interface</a>
+<span class="sourceLineNo">036</span><a id="line.36">    @SuppressWarnings("Immutable")</a>
+<span class="sourceLineNo">037</span><a id="line.37">    private final ImmutableMap&lt;String, T&gt; lowercaseToEnum;</a>
+<span class="sourceLineNo">038</span><a id="line.38"></a>
+<span class="sourceLineNo">039</span><a id="line.39">    public MyTypeAdapter(Map&lt;String, T&gt; lowercaseToEnum) {</a>
+<span class="sourceLineNo">040</span><a id="line.40">      this.lowercaseToEnum = ImmutableMap.copyOf(lowercaseToEnum);</a>
+<span class="sourceLineNo">041</span><a id="line.41">    }</a>
+<span class="sourceLineNo">042</span><a id="line.42"></a>
+<span class="sourceLineNo">043</span><a id="line.43">    @Override</a>
+<span class="sourceLineNo">044</span><a id="line.44">    public void write(JsonWriter out, T value) throws IOException {</a>
+<span class="sourceLineNo">045</span><a id="line.45">      checkNotNull(out);</a>
+<span class="sourceLineNo">046</span><a id="line.46"></a>
+<span class="sourceLineNo">047</span><a id="line.47">      if (value == null) {</a>
+<span class="sourceLineNo">048</span><a id="line.48">        out.nullValue();</a>
+<span class="sourceLineNo">049</span><a id="line.49">      } else {</a>
+<span class="sourceLineNo">050</span><a id="line.50">        out.value(toLowercase(value));</a>
+<span class="sourceLineNo">051</span><a id="line.51">      }</a>
+<span class="sourceLineNo">052</span><a id="line.52">    }</a>
+<span class="sourceLineNo">053</span><a id="line.53"></a>
+<span class="sourceLineNo">054</span><a id="line.54">    @Override</a>
+<span class="sourceLineNo">055</span><a id="line.55">    public T read(JsonReader reader) throws IOException {</a>
+<span class="sourceLineNo">056</span><a id="line.56">      checkNotNull(reader);</a>
+<span class="sourceLineNo">057</span><a id="line.57"></a>
+<span class="sourceLineNo">058</span><a id="line.58">      if (reader.peek() == JsonToken.NULL) {</a>
+<span class="sourceLineNo">059</span><a id="line.59">        reader.nextNull();</a>
+<span class="sourceLineNo">060</span><a id="line.60">        return null;</a>
+<span class="sourceLineNo">061</span><a id="line.61">      }</a>
+<span class="sourceLineNo">062</span><a id="line.62">      return lowercaseToEnum.get(reader.nextString());</a>
+<span class="sourceLineNo">063</span><a id="line.63">    }</a>
+<span class="sourceLineNo">064</span><a id="line.64">  }</a>
+<span class="sourceLineNo">065</span><a id="line.65"></a>
+<span class="sourceLineNo">066</span><a id="line.66">  @CheckReturnValue</a>
+<span class="sourceLineNo">067</span><a id="line.67">  @Override</a>
+<span class="sourceLineNo">068</span><a id="line.68">  @SuppressWarnings("unchecked")</a>
+<span class="sourceLineNo">069</span><a id="line.69">  public &lt;T&gt; TypeAdapter&lt;T&gt; create(Gson gson, TypeToken&lt;T&gt; type) {</a>
+<span class="sourceLineNo">070</span><a id="line.70">    checkNotNull(type);</a>
+<span class="sourceLineNo">071</span><a id="line.71"></a>
+<span class="sourceLineNo">072</span><a id="line.72">    Class&lt;T&gt; rawType = (Class&lt;T&gt;) type.getRawType();</a>
+<span class="sourceLineNo">073</span><a id="line.73">    if (!rawType.isEnum()) {</a>
+<span class="sourceLineNo">074</span><a id="line.74">      return null;</a>
+<span class="sourceLineNo">075</span><a id="line.75">    }</a>
+<span class="sourceLineNo">076</span><a id="line.76"></a>
+<span class="sourceLineNo">077</span><a id="line.77">    // Setup mapping of consts</a>
+<span class="sourceLineNo">078</span><a id="line.78">    final Map&lt;String, T&gt; lowercaseToEnum = new HashMap&lt;&gt;();</a>
+<span class="sourceLineNo">079</span><a id="line.79">    for (T constant : rawType.getEnumConstants()) {</a>
+<span class="sourceLineNo">080</span><a id="line.80">      lowercaseToEnum.put(toLowercase(constant), constant);</a>
+<span class="sourceLineNo">081</span><a id="line.81">    }</a>
+<span class="sourceLineNo">082</span><a id="line.82"></a>
+<span class="sourceLineNo">083</span><a id="line.83">    return new MyTypeAdapter&lt;T&gt;(lowercaseToEnum);</a>
+<span class="sourceLineNo">084</span><a id="line.84">  }</a>
+<span class="sourceLineNo">085</span><a id="line.85"></a>
+<span class="sourceLineNo">086</span><a id="line.86">  @CheckReturnValue</a>
+<span class="sourceLineNo">087</span><a id="line.87">  private static String toLowercase(@Nonnull Object o) {</a>
+<span class="sourceLineNo">088</span><a id="line.88">    return checkNotNull(o).toString().toLowerCase(Locale.UK);</a>
+<span class="sourceLineNo">089</span><a id="line.89">  }</a>
+<span class="sourceLineNo">090</span><a id="line.90">}</a>
 
 
 
@@ -124,5 +159,6 @@
 
 </pre>
 </div>
+</main>
 </body>
 </html>

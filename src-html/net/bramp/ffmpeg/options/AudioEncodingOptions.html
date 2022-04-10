@@ -1,46 +1,57 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
 <head>
 <title>Source code</title>
 <link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
 </head>
 <body>
+<main role="main">
 <div class="sourceContainer">
-<pre><span class="sourceLineNo">001</span>package net.bramp.ffmpeg.options;<a name="line.1"></a>
-<span class="sourceLineNo">002</span><a name="line.2"></a>
-<span class="sourceLineNo">003</span>import java.beans.ConstructorProperties;<a name="line.3"></a>
-<span class="sourceLineNo">004</span><a name="line.4"></a>
-<span class="sourceLineNo">005</span>/**<a name="line.5"></a>
-<span class="sourceLineNo">006</span> * Encoding options for audio<a name="line.6"></a>
-<span class="sourceLineNo">007</span> * <a name="line.7"></a>
-<span class="sourceLineNo">008</span> * @author bramp<a name="line.8"></a>
-<span class="sourceLineNo">009</span> *<a name="line.9"></a>
-<span class="sourceLineNo">010</span> */<a name="line.10"></a>
-<span class="sourceLineNo">011</span>public class AudioEncodingOptions {<a name="line.11"></a>
-<span class="sourceLineNo">012</span><a name="line.12"></a>
-<span class="sourceLineNo">013</span>  public final boolean enabled;<a name="line.13"></a>
-<span class="sourceLineNo">014</span>  public final String codec;<a name="line.14"></a>
-<span class="sourceLineNo">015</span>  public final int channels;<a name="line.15"></a>
-<span class="sourceLineNo">016</span>  public final int sample_rate;<a name="line.16"></a>
-<span class="sourceLineNo">017</span>  public final String sample_format;<a name="line.17"></a>
-<span class="sourceLineNo">018</span>  public final long bit_rate;<a name="line.18"></a>
-<span class="sourceLineNo">019</span>  public final Integer quality;<a name="line.19"></a>
-<span class="sourceLineNo">020</span><a name="line.20"></a>
-<span class="sourceLineNo">021</span>  @ConstructorProperties({"enabled", "codec", "channels", "sample_rate", "sample_format",<a name="line.21"></a>
-<span class="sourceLineNo">022</span>      "bit_rate",<a name="line.22"></a>
-<span class="sourceLineNo">023</span>      "quality"})<a name="line.23"></a>
-<span class="sourceLineNo">024</span>  public AudioEncodingOptions(boolean enabled, String codec, int channels, int sample_rate,<a name="line.24"></a>
-<span class="sourceLineNo">025</span>      String sample_format, long bit_rate, Integer quality) {<a name="line.25"></a>
-<span class="sourceLineNo">026</span>    this.enabled = enabled;<a name="line.26"></a>
-<span class="sourceLineNo">027</span>    this.codec = codec;<a name="line.27"></a>
-<span class="sourceLineNo">028</span>    this.channels = channels;<a name="line.28"></a>
-<span class="sourceLineNo">029</span>    this.sample_rate = sample_rate;<a name="line.29"></a>
-<span class="sourceLineNo">030</span>    this.sample_format = sample_format;<a name="line.30"></a>
-<span class="sourceLineNo">031</span>    this.bit_rate = bit_rate;<a name="line.31"></a>
-<span class="sourceLineNo">032</span>    this.quality = quality;<a name="line.32"></a>
-<span class="sourceLineNo">033</span>  }<a name="line.33"></a>
-<span class="sourceLineNo">034</span><a name="line.34"></a>
-<span class="sourceLineNo">035</span>}<a name="line.35"></a>
+<pre><span class="sourceLineNo">001</span><a id="line.1">package net.bramp.ffmpeg.options;</a>
+<span class="sourceLineNo">002</span><a id="line.2"></a>
+<span class="sourceLineNo">003</span><a id="line.3">import java.beans.ConstructorProperties;</a>
+<span class="sourceLineNo">004</span><a id="line.4"></a>
+<span class="sourceLineNo">005</span><a id="line.5">/**</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * Encoding options for audio</a>
+<span class="sourceLineNo">007</span><a id="line.7"> *</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * @author bramp</a>
+<span class="sourceLineNo">009</span><a id="line.9"> */</a>
+<span class="sourceLineNo">010</span><a id="line.10">public class AudioEncodingOptions {</a>
+<span class="sourceLineNo">011</span><a id="line.11"></a>
+<span class="sourceLineNo">012</span><a id="line.12">  public final boolean enabled;</a>
+<span class="sourceLineNo">013</span><a id="line.13">  public final String codec;</a>
+<span class="sourceLineNo">014</span><a id="line.14">  public final int channels;</a>
+<span class="sourceLineNo">015</span><a id="line.15">  public final int sample_rate;</a>
+<span class="sourceLineNo">016</span><a id="line.16">  public final String sample_format;</a>
+<span class="sourceLineNo">017</span><a id="line.17">  public final long bit_rate;</a>
+<span class="sourceLineNo">018</span><a id="line.18">  public final Double quality;</a>
+<span class="sourceLineNo">019</span><a id="line.19"></a>
+<span class="sourceLineNo">020</span><a id="line.20">  @ConstructorProperties({</a>
+<span class="sourceLineNo">021</span><a id="line.21">    "enabled",</a>
+<span class="sourceLineNo">022</span><a id="line.22">    "codec",</a>
+<span class="sourceLineNo">023</span><a id="line.23">    "channels",</a>
+<span class="sourceLineNo">024</span><a id="line.24">    "sample_rate",</a>
+<span class="sourceLineNo">025</span><a id="line.25">    "sample_format",</a>
+<span class="sourceLineNo">026</span><a id="line.26">    "bit_rate",</a>
+<span class="sourceLineNo">027</span><a id="line.27">    "quality"</a>
+<span class="sourceLineNo">028</span><a id="line.28">  })</a>
+<span class="sourceLineNo">029</span><a id="line.29">  public AudioEncodingOptions(</a>
+<span class="sourceLineNo">030</span><a id="line.30">      boolean enabled,</a>
+<span class="sourceLineNo">031</span><a id="line.31">      String codec,</a>
+<span class="sourceLineNo">032</span><a id="line.32">      int channels,</a>
+<span class="sourceLineNo">033</span><a id="line.33">      int sample_rate,</a>
+<span class="sourceLineNo">034</span><a id="line.34">      String sample_format,</a>
+<span class="sourceLineNo">035</span><a id="line.35">      long bit_rate,</a>
+<span class="sourceLineNo">036</span><a id="line.36">      Double quality) {</a>
+<span class="sourceLineNo">037</span><a id="line.37">    this.enabled = enabled;</a>
+<span class="sourceLineNo">038</span><a id="line.38">    this.codec = codec;</a>
+<span class="sourceLineNo">039</span><a id="line.39">    this.channels = channels;</a>
+<span class="sourceLineNo">040</span><a id="line.40">    this.sample_rate = sample_rate;</a>
+<span class="sourceLineNo">041</span><a id="line.41">    this.sample_format = sample_format;</a>
+<span class="sourceLineNo">042</span><a id="line.42">    this.bit_rate = bit_rate;</a>
+<span class="sourceLineNo">043</span><a id="line.43">    this.quality = quality;</a>
+<span class="sourceLineNo">044</span><a id="line.44">  }</a>
+<span class="sourceLineNo">045</span><a id="line.45">}</a>
 
 
 
@@ -103,5 +114,6 @@
 
 </pre>
 </div>
+</main>
 </body>
 </html>

@@ -1,36 +1,36 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
 <head>
 <title>Source code</title>
 <link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
 </head>
 <body>
+<main role="main">
 <div class="sourceContainer">
-<pre><span class="sourceLineNo">001</span>package net.bramp.ffmpeg.probe;<a name="line.1"></a>
-<span class="sourceLineNo">002</span><a name="line.2"></a>
-<span class="sourceLineNo">003</span>import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;<a name="line.3"></a>
-<span class="sourceLineNo">004</span><a name="line.4"></a>
-<span class="sourceLineNo">005</span>/**<a name="line.5"></a>
-<span class="sourceLineNo">006</span> * Represents the AV_DISPOSITION_* fields<a name="line.6"></a>
-<span class="sourceLineNo">007</span> */<a name="line.7"></a>
-<span class="sourceLineNo">008</span>@SuppressFBWarnings(value = {"UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"},<a name="line.8"></a>
-<span class="sourceLineNo">009</span>    justification = "POJO objects where the fields are populated by gson")<a name="line.9"></a>
-<span class="sourceLineNo">010</span>public class FFmpegDisposition {<a name="line.10"></a>
-<span class="sourceLineNo">011</span>  public boolean _default;<a name="line.11"></a>
-<span class="sourceLineNo">012</span>  public boolean dub;<a name="line.12"></a>
-<span class="sourceLineNo">013</span>  public boolean original;<a name="line.13"></a>
-<span class="sourceLineNo">014</span>  public boolean comment;<a name="line.14"></a>
-<span class="sourceLineNo">015</span>  public boolean lyrics;<a name="line.15"></a>
-<span class="sourceLineNo">016</span>  public boolean karaoke;<a name="line.16"></a>
-<span class="sourceLineNo">017</span>  public boolean forced;<a name="line.17"></a>
-<span class="sourceLineNo">018</span>  public boolean hearing_impaired;<a name="line.18"></a>
-<span class="sourceLineNo">019</span>  public boolean visual_impaired;<a name="line.19"></a>
-<span class="sourceLineNo">020</span>  public boolean clean_effects;<a name="line.20"></a>
-<span class="sourceLineNo">021</span>  public boolean attached_pic;<a name="line.21"></a>
-<span class="sourceLineNo">022</span>  public boolean captions;<a name="line.22"></a>
-<span class="sourceLineNo">023</span>  public boolean descriptions;<a name="line.23"></a>
-<span class="sourceLineNo">024</span>  public boolean metadata;<a name="line.24"></a>
-<span class="sourceLineNo">025</span>}<a name="line.25"></a>
+<pre><span class="sourceLineNo">001</span><a id="line.1">package net.bramp.ffmpeg.probe;</a>
+<span class="sourceLineNo">002</span><a id="line.2"></a>
+<span class="sourceLineNo">003</span><a id="line.3">import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;</a>
+<span class="sourceLineNo">004</span><a id="line.4"></a>
+<span class="sourceLineNo">005</span><a id="line.5">/** Represents the AV_DISPOSITION_* fields */</a>
+<span class="sourceLineNo">006</span><a id="line.6">@SuppressFBWarnings(</a>
+<span class="sourceLineNo">007</span><a id="line.7">    value = {"UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"},</a>
+<span class="sourceLineNo">008</span><a id="line.8">    justification = "POJO objects where the fields are populated by gson")</a>
+<span class="sourceLineNo">009</span><a id="line.9">public class FFmpegDisposition {</a>
+<span class="sourceLineNo">010</span><a id="line.10">  public boolean _default;</a>
+<span class="sourceLineNo">011</span><a id="line.11">  public boolean dub;</a>
+<span class="sourceLineNo">012</span><a id="line.12">  public boolean original;</a>
+<span class="sourceLineNo">013</span><a id="line.13">  public boolean comment;</a>
+<span class="sourceLineNo">014</span><a id="line.14">  public boolean lyrics;</a>
+<span class="sourceLineNo">015</span><a id="line.15">  public boolean karaoke;</a>
+<span class="sourceLineNo">016</span><a id="line.16">  public boolean forced;</a>
+<span class="sourceLineNo">017</span><a id="line.17">  public boolean hearing_impaired;</a>
+<span class="sourceLineNo">018</span><a id="line.18">  public boolean visual_impaired;</a>
+<span class="sourceLineNo">019</span><a id="line.19">  public boolean clean_effects;</a>
+<span class="sourceLineNo">020</span><a id="line.20">  public boolean attached_pic;</a>
+<span class="sourceLineNo">021</span><a id="line.21">  public boolean captions;</a>
+<span class="sourceLineNo">022</span><a id="line.22">  public boolean descriptions;</a>
+<span class="sourceLineNo">023</span><a id="line.23">  public boolean metadata;</a>
+<span class="sourceLineNo">024</span><a id="line.24">}</a>
 
 
 
@@ -93,5 +93,6 @@
 
 </pre>
 </div>
+</main>
 </body>
 </html>

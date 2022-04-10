@@ -1,17 +1,21 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
 <head>
 <title>Source code</title>
 <link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
 </head>
 <body>
+<main role="main">
 <div class="sourceContainer">
-<pre><span class="sourceLineNo">001</span>package net.bramp.ffmpeg.progress;<a name="line.1"></a>
-<span class="sourceLineNo">002</span><a name="line.2"></a>
-<span class="sourceLineNo">003</span>public interface ProgressListener {<a name="line.3"></a>
-<span class="sourceLineNo">004</span>  // TODO Consider adding other stats. Start, end, stream, error<a name="line.4"></a>
-<span class="sourceLineNo">005</span>  void progress(Progress progress);<a name="line.5"></a>
-<span class="sourceLineNo">006</span>}<a name="line.6"></a>
+<pre><span class="sourceLineNo">001</span><a id="line.1">package net.bramp.ffmpeg.progress;</a>
+<span class="sourceLineNo">002</span><a id="line.2"></a>
+<span class="sourceLineNo">003</span><a id="line.3">/** Captures output from the ffmpeg command line as status occurs. */</a>
+<span class="sourceLineNo">004</span><a id="line.4">// TODO Consider adding other stats. Start, end, stream, error</a>
+<span class="sourceLineNo">005</span><a id="line.5">public interface ProgressListener {</a>
+<span class="sourceLineNo">006</span><a id="line.6">  // Called every time there is status, typically once a second, and at the end.</a>
+<span class="sourceLineNo">007</span><a id="line.7">  // The Progress.status will normally be CONTINUE, until after the last frame, when it will be END.</a>
+<span class="sourceLineNo">008</span><a id="line.8">  void progress(Progress progress);</a>
+<span class="sourceLineNo">009</span><a id="line.9">}</a>
 
 
 
@@ -74,5 +78,6 @@
 
 </pre>
 </div>
+</main>
 </body>
 </html>

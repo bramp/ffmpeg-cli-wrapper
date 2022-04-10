@@ -1,193 +1,202 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
 <head>
 <title>Source code</title>
 <link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
 </head>
 <body>
+<main role="main">
 <div class="sourceContainer">
-<pre><span class="sourceLineNo">001</span>package net.bramp.ffmpeg.nut;<a name="line.1"></a>
-<span class="sourceLineNo">002</span><a name="line.2"></a>
-<span class="sourceLineNo">003</span>import com.google.common.base.MoreObjects;<a name="line.3"></a>
-<span class="sourceLineNo">004</span>import org.apache.commons.lang3.math.Fraction;<a name="line.4"></a>
-<span class="sourceLineNo">005</span><a name="line.5"></a>
-<span class="sourceLineNo">006</span>import java.io.IOException;<a name="line.6"></a>
-<span class="sourceLineNo">007</span>import java.util.ArrayList;<a name="line.7"></a>
-<span class="sourceLineNo">008</span>import java.util.List;<a name="line.8"></a>
-<span class="sourceLineNo">009</span><a name="line.9"></a>
-<span class="sourceLineNo">010</span>public class MainHeaderPacket extends Packet {<a name="line.10"></a>
-<span class="sourceLineNo">011</span><a name="line.11"></a>
-<span class="sourceLineNo">012</span>  public final static int BROADCAST_MODE = 0;<a name="line.12"></a>
-<span class="sourceLineNo">013</span><a name="line.13"></a>
-<span class="sourceLineNo">014</span>  long version;<a name="line.14"></a>
-<span class="sourceLineNo">015</span>  long minorVersion;<a name="line.15"></a>
-<span class="sourceLineNo">016</span>  int streamCount;<a name="line.16"></a>
-<span class="sourceLineNo">017</span>  long maxDistance;<a name="line.17"></a>
-<span class="sourceLineNo">018</span>  Fraction[] timeBase;<a name="line.18"></a>
-<span class="sourceLineNo">019</span>  long flags;<a name="line.19"></a>
-<span class="sourceLineNo">020</span><a name="line.20"></a>
-<span class="sourceLineNo">021</span>  final List&lt;FrameCode&gt; frameCodes = new ArrayList&lt;&gt;();<a name="line.21"></a>
-<span class="sourceLineNo">022</span>  final List&lt;byte[]&gt; elision = new ArrayList&lt;&gt;();<a name="line.22"></a>
-<span class="sourceLineNo">023</span><a name="line.23"></a>
-<span class="sourceLineNo">024</span>  public MainHeaderPacket() {}<a name="line.24"></a>
-<span class="sourceLineNo">025</span><a name="line.25"></a>
-<span class="sourceLineNo">026</span>  protected void readBody(NutDataInputStream in) throws IOException {<a name="line.26"></a>
-<span class="sourceLineNo">027</span>    frameCodes.clear();<a name="line.27"></a>
-<span class="sourceLineNo">028</span><a name="line.28"></a>
-<span class="sourceLineNo">029</span>    version = in.readVarLong();<a name="line.29"></a>
-<span class="sourceLineNo">030</span>    if (version &gt; 3) {<a name="line.30"></a>
-<span class="sourceLineNo">031</span>      minorVersion = in.readVarLong();<a name="line.31"></a>
-<span class="sourceLineNo">032</span>    }<a name="line.32"></a>
-<span class="sourceLineNo">033</span><a name="line.33"></a>
-<span class="sourceLineNo">034</span>    streamCount = in.readVarInt();<a name="line.34"></a>
-<span class="sourceLineNo">035</span>    if (streamCount &gt;= 250) {<a name="line.35"></a>
-<span class="sourceLineNo">036</span>      throw new IOException("Illegal stream count " + streamCount + " must be &lt; 250");<a name="line.36"></a>
-<span class="sourceLineNo">037</span>    }<a name="line.37"></a>
-<span class="sourceLineNo">038</span><a name="line.38"></a>
-<span class="sourceLineNo">039</span>    maxDistance = in.readVarLong();<a name="line.39"></a>
-<span class="sourceLineNo">040</span>    if (maxDistance &gt; 65536) {<a name="line.40"></a>
-<span class="sourceLineNo">041</span>      maxDistance = 65536;<a name="line.41"></a>
-<span class="sourceLineNo">042</span>    }<a name="line.42"></a>
-<span class="sourceLineNo">043</span><a name="line.43"></a>
-<span class="sourceLineNo">044</span>    int time_base_count = in.readVarInt();<a name="line.44"></a>
-<span class="sourceLineNo">045</span>    timeBase = new Fraction[time_base_count];<a name="line.45"></a>
-<span class="sourceLineNo">046</span>    for (int i = 0; i &lt; time_base_count; i++) {<a name="line.46"></a>
-<span class="sourceLineNo">047</span>      int time_base_num = (int) in.readVarLong();<a name="line.47"></a>
-<span class="sourceLineNo">048</span>      int time_base_denom = (int) in.readVarLong();<a name="line.48"></a>
-<span class="sourceLineNo">049</span>      timeBase[i] = Fraction.getFraction(time_base_num, time_base_denom);<a name="line.49"></a>
-<span class="sourceLineNo">050</span>    }<a name="line.50"></a>
-<span class="sourceLineNo">051</span><a name="line.51"></a>
-<span class="sourceLineNo">052</span>    long pts = 0;<a name="line.52"></a>
-<span class="sourceLineNo">053</span>    int mul = 1;<a name="line.53"></a>
-<span class="sourceLineNo">054</span>    int stream_id = 0;<a name="line.54"></a>
-<span class="sourceLineNo">055</span>    int header_idx = 0;<a name="line.55"></a>
-<span class="sourceLineNo">056</span><a name="line.56"></a>
-<span class="sourceLineNo">057</span>    long match = 1 - (1 &lt;&lt; 62);<a name="line.57"></a>
-<span class="sourceLineNo">058</span>    int size;<a name="line.58"></a>
-<span class="sourceLineNo">059</span>    int reserved;<a name="line.59"></a>
-<span class="sourceLineNo">060</span>    long count;<a name="line.60"></a>
-<span class="sourceLineNo">061</span><a name="line.61"></a>
-<span class="sourceLineNo">062</span>    for (int i = 0; i &lt; 256;) {<a name="line.62"></a>
-<span class="sourceLineNo">063</span>      long flags = in.readVarLong();<a name="line.63"></a>
-<span class="sourceLineNo">064</span>      long fields = in.readVarLong();<a name="line.64"></a>
-<span class="sourceLineNo">065</span>      if (fields &gt; 0) {<a name="line.65"></a>
-<span class="sourceLineNo">066</span>        pts = in.readSignedVarInt();<a name="line.66"></a>
-<span class="sourceLineNo">067</span>      }<a name="line.67"></a>
-<span class="sourceLineNo">068</span>      if (fields &gt; 1) {<a name="line.68"></a>
-<span class="sourceLineNo">069</span>        mul = in.readVarInt();<a name="line.69"></a>
-<span class="sourceLineNo">070</span>        if (mul &gt;= 16384) {<a name="line.70"></a>
-<span class="sourceLineNo">071</span>          throw new IOException("Illegal mul value " + mul + " must be &lt; 16384");<a name="line.71"></a>
-<span class="sourceLineNo">072</span>        }<a name="line.72"></a>
-<span class="sourceLineNo">073</span>      }<a name="line.73"></a>
-<span class="sourceLineNo">074</span>      if (fields &gt; 2) {<a name="line.74"></a>
-<span class="sourceLineNo">075</span>        stream_id = in.readVarInt();<a name="line.75"></a>
-<span class="sourceLineNo">076</span>        if (stream_id &gt;= streamCount) {<a name="line.76"></a>
-<span class="sourceLineNo">077</span>          throw new IOException("Illegal stream id value " + stream_id + " must be &lt; "<a name="line.77"></a>
-<span class="sourceLineNo">078</span>              + streamCount);<a name="line.78"></a>
-<span class="sourceLineNo">079</span>        }<a name="line.79"></a>
-<span class="sourceLineNo">080</span>      }<a name="line.80"></a>
-<span class="sourceLineNo">081</span>      if (fields &gt; 3) {<a name="line.81"></a>
-<span class="sourceLineNo">082</span>        size = in.readVarInt();<a name="line.82"></a>
-<span class="sourceLineNo">083</span>      } else {<a name="line.83"></a>
-<span class="sourceLineNo">084</span>        size = 0;<a name="line.84"></a>
-<span class="sourceLineNo">085</span>      }<a name="line.85"></a>
-<span class="sourceLineNo">086</span>      if (fields &gt; 4) {<a name="line.86"></a>
-<span class="sourceLineNo">087</span>        reserved = in.readVarInt();<a name="line.87"></a>
-<span class="sourceLineNo">088</span>        if (reserved &gt;= 256) {<a name="line.88"></a>
-<span class="sourceLineNo">089</span>          throw new IOException("Illegal reserved frame count " + reserved + " must be &lt; 256");<a name="line.89"></a>
-<span class="sourceLineNo">090</span>        }<a name="line.90"></a>
-<span class="sourceLineNo">091</span>      } else {<a name="line.91"></a>
-<span class="sourceLineNo">092</span>        reserved = 0;<a name="line.92"></a>
-<span class="sourceLineNo">093</span>      }<a name="line.93"></a>
-<span class="sourceLineNo">094</span>      if (fields &gt; 5) {<a name="line.94"></a>
-<span class="sourceLineNo">095</span>        count = in.readVarLong();<a name="line.95"></a>
-<span class="sourceLineNo">096</span>      } else {<a name="line.96"></a>
-<span class="sourceLineNo">097</span>        count = mul - size;<a name="line.97"></a>
-<span class="sourceLineNo">098</span>      }<a name="line.98"></a>
-<span class="sourceLineNo">099</span>      if (fields &gt; 6) {<a name="line.99"></a>
-<span class="sourceLineNo">100</span>        match = in.readSignedVarInt();<a name="line.100"></a>
-<span class="sourceLineNo">101</span>      }<a name="line.101"></a>
-<span class="sourceLineNo">102</span>      if (fields &gt; 7) {<a name="line.102"></a>
-<span class="sourceLineNo">103</span>        header_idx = in.readVarInt();<a name="line.103"></a>
-<span class="sourceLineNo">104</span>      }<a name="line.104"></a>
-<span class="sourceLineNo">105</span>      for (int j = 8; j &lt; fields; j++) {<a name="line.105"></a>
-<span class="sourceLineNo">106</span>        in.readVarLong(); // Throw away<a name="line.106"></a>
-<span class="sourceLineNo">107</span>      }<a name="line.107"></a>
-<span class="sourceLineNo">108</span><a name="line.108"></a>
-<span class="sourceLineNo">109</span>      if (stream_id &gt;= streamCount) {<a name="line.109"></a>
-<span class="sourceLineNo">110</span>        throw new IOException(String.format("Invalid stream value %d, must be &lt; %d", stream_id,<a name="line.110"></a>
-<span class="sourceLineNo">111</span>            streamCount));<a name="line.111"></a>
-<span class="sourceLineNo">112</span>      }<a name="line.112"></a>
-<span class="sourceLineNo">113</span><a name="line.113"></a>
-<span class="sourceLineNo">114</span>      if (count &lt;= 0 || (count &gt; 256 - i - (i &lt;= 'N' ? 1 : 0))) {<a name="line.114"></a>
-<span class="sourceLineNo">115</span>        throw new IOException(String.format("Invalid count value %d, must be &gt; 0 &amp;&amp; &lt; %d", count,<a name="line.115"></a>
-<span class="sourceLineNo">116</span>            256 - i - (i &lt;= 'N' ? 1 : 0)));<a name="line.116"></a>
-<span class="sourceLineNo">117</span>      }<a name="line.117"></a>
-<span class="sourceLineNo">118</span><a name="line.118"></a>
-<span class="sourceLineNo">119</span>      for (int j = 0; j &lt; count &amp;&amp; i &lt; 256; j++, i++) {<a name="line.119"></a>
-<span class="sourceLineNo">120</span>        FrameCode fc = new FrameCode();<a name="line.120"></a>
-<span class="sourceLineNo">121</span>        frameCodes.add(fc);<a name="line.121"></a>
-<span class="sourceLineNo">122</span><a name="line.122"></a>
-<span class="sourceLineNo">123</span>        // Skip 'N' because that is an illegal frame code<a name="line.123"></a>
-<span class="sourceLineNo">124</span>        if (i == 'N') {<a name="line.124"></a>
-<span class="sourceLineNo">125</span>          fc.flags = Frame.FLAG_INVALID;<a name="line.125"></a>
-<span class="sourceLineNo">126</span>          j--;<a name="line.126"></a>
-<span class="sourceLineNo">127</span>          continue;<a name="line.127"></a>
-<span class="sourceLineNo">128</span>        }<a name="line.128"></a>
-<span class="sourceLineNo">129</span><a name="line.129"></a>
-<span class="sourceLineNo">130</span>        fc.flags = flags;<a name="line.130"></a>
-<span class="sourceLineNo">131</span>        fc.streamId = stream_id;<a name="line.131"></a>
-<span class="sourceLineNo">132</span>        fc.dataSizeMul = mul;<a name="line.132"></a>
-<span class="sourceLineNo">133</span>        fc.dataSizeLsb = size + j;<a name="line.133"></a>
-<span class="sourceLineNo">134</span>        fc.ptsDelta = pts;<a name="line.134"></a>
-<span class="sourceLineNo">135</span>        fc.reservedCount = reserved;<a name="line.135"></a>
-<span class="sourceLineNo">136</span>        fc.matchTimeDelta = match;<a name="line.136"></a>
-<span class="sourceLineNo">137</span>        fc.headerIdx = header_idx;<a name="line.137"></a>
-<span class="sourceLineNo">138</span><a name="line.138"></a>
-<span class="sourceLineNo">139</span>        if (fc.dataSizeLsb &gt;= 16384) {<a name="line.139"></a>
-<span class="sourceLineNo">140</span>          throw new IOException("Illegal dataSizeLsb value " + fc.dataSizeLsb + " must be &lt; 16384");<a name="line.140"></a>
-<span class="sourceLineNo">141</span>        }<a name="line.141"></a>
-<span class="sourceLineNo">142</span>      }<a name="line.142"></a>
-<span class="sourceLineNo">143</span>    }<a name="line.143"></a>
-<span class="sourceLineNo">144</span><a name="line.144"></a>
-<span class="sourceLineNo">145</span>    int remain = 1024;<a name="line.145"></a>
-<span class="sourceLineNo">146</span>    if (in.offset() &lt; (header.end - 4)) {<a name="line.146"></a>
-<span class="sourceLineNo">147</span>      int header_count = in.readVarInt();<a name="line.147"></a>
-<span class="sourceLineNo">148</span>      if (header_count &gt;= 128) {<a name="line.148"></a>
-<span class="sourceLineNo">149</span>        throw new IOException("Invalid header_count value " + header_count + " must be &lt; 128");<a name="line.149"></a>
-<span class="sourceLineNo">150</span>      }<a name="line.150"></a>
-<span class="sourceLineNo">151</span><a name="line.151"></a>
-<span class="sourceLineNo">152</span>      elision.clear();<a name="line.152"></a>
-<span class="sourceLineNo">153</span>      elision.add(new byte[0]); // First elision is always empty<a name="line.153"></a>
-<span class="sourceLineNo">154</span>      for (int i = 1; i &lt; header_count; i++) {<a name="line.154"></a>
-<span class="sourceLineNo">155</span>        byte[] e = in.readVarArray();<a name="line.155"></a>
-<span class="sourceLineNo">156</span>        if (e.length == 0 || e.length &gt;= 256) {<a name="line.156"></a>
-<span class="sourceLineNo">157</span>          throw new IOException("Invalid elision length " + e.length + " must be &gt; 0 and &lt; 256");<a name="line.157"></a>
-<span class="sourceLineNo">158</span>        }<a name="line.158"></a>
-<span class="sourceLineNo">159</span>        if (e.length &gt; remain) {<a name="line.159"></a>
-<span class="sourceLineNo">160</span>          throw new IOException("Invalid elision length value " + e.length + " must be &lt;= "<a name="line.160"></a>
-<span class="sourceLineNo">161</span>              + remain);<a name="line.161"></a>
-<span class="sourceLineNo">162</span>        }<a name="line.162"></a>
-<span class="sourceLineNo">163</span>        remain -= e.length;<a name="line.163"></a>
-<span class="sourceLineNo">164</span>        elision.add(e);<a name="line.164"></a>
-<span class="sourceLineNo">165</span>      }<a name="line.165"></a>
-<span class="sourceLineNo">166</span>    }<a name="line.166"></a>
-<span class="sourceLineNo">167</span><a name="line.167"></a>
-<span class="sourceLineNo">168</span>    if (version &gt; 3 &amp;&amp; (in.offset() &lt; (header.end - 4))) {<a name="line.168"></a>
-<span class="sourceLineNo">169</span>      flags = in.readVarLong();<a name="line.169"></a>
-<span class="sourceLineNo">170</span>    }<a name="line.170"></a>
-<span class="sourceLineNo">171</span>  }<a name="line.171"></a>
-<span class="sourceLineNo">172</span><a name="line.172"></a>
-<span class="sourceLineNo">173</span>  @Override<a name="line.173"></a>
-<span class="sourceLineNo">174</span>  public String toString() {<a name="line.174"></a>
-<span class="sourceLineNo">175</span>    return MoreObjects.toStringHelper(this).add("header", header).add("version", version)<a name="line.175"></a>
-<span class="sourceLineNo">176</span>        .add("minorVersion", minorVersion).add("streamCount", streamCount)<a name="line.176"></a>
-<span class="sourceLineNo">177</span>        .add("maxDistance", maxDistance).add("timeBase", timeBase).add("flags", flags)<a name="line.177"></a>
-<span class="sourceLineNo">178</span>        .add("frameCodes", frameCodes.size()).add("elision", elision).add("footer", footer)<a name="line.178"></a>
-<span class="sourceLineNo">179</span>        .toString();<a name="line.179"></a>
-<span class="sourceLineNo">180</span><a name="line.180"></a>
-<span class="sourceLineNo">181</span>  }<a name="line.181"></a>
-<span class="sourceLineNo">182</span>}<a name="line.182"></a>
+<pre><span class="sourceLineNo">001</span><a id="line.1">package net.bramp.ffmpeg.nut;</a>
+<span class="sourceLineNo">002</span><a id="line.2"></a>
+<span class="sourceLineNo">003</span><a id="line.3">import com.google.common.base.MoreObjects;</a>
+<span class="sourceLineNo">004</span><a id="line.4">import java.io.IOException;</a>
+<span class="sourceLineNo">005</span><a id="line.5">import java.util.ArrayList;</a>
+<span class="sourceLineNo">006</span><a id="line.6">import java.util.List;</a>
+<span class="sourceLineNo">007</span><a id="line.7">import org.apache.commons.lang3.math.Fraction;</a>
+<span class="sourceLineNo">008</span><a id="line.8"></a>
+<span class="sourceLineNo">009</span><a id="line.9">public class MainHeaderPacket extends Packet {</a>
+<span class="sourceLineNo">010</span><a id="line.10"></a>
+<span class="sourceLineNo">011</span><a id="line.11">  public static final int BROADCAST_MODE = 0;</a>
+<span class="sourceLineNo">012</span><a id="line.12"></a>
+<span class="sourceLineNo">013</span><a id="line.13">  long version;</a>
+<span class="sourceLineNo">014</span><a id="line.14">  long minorVersion;</a>
+<span class="sourceLineNo">015</span><a id="line.15">  int streamCount;</a>
+<span class="sourceLineNo">016</span><a id="line.16">  long maxDistance;</a>
+<span class="sourceLineNo">017</span><a id="line.17">  Fraction[] timeBase;</a>
+<span class="sourceLineNo">018</span><a id="line.18">  long flags;</a>
+<span class="sourceLineNo">019</span><a id="line.19"></a>
+<span class="sourceLineNo">020</span><a id="line.20">  final List&lt;FrameCode&gt; frameCodes = new ArrayList&lt;&gt;();</a>
+<span class="sourceLineNo">021</span><a id="line.21">  final List&lt;byte[]&gt; elision = new ArrayList&lt;&gt;();</a>
+<span class="sourceLineNo">022</span><a id="line.22"></a>
+<span class="sourceLineNo">023</span><a id="line.23">  public MainHeaderPacket() {}</a>
+<span class="sourceLineNo">024</span><a id="line.24"></a>
+<span class="sourceLineNo">025</span><a id="line.25">  @Override</a>
+<span class="sourceLineNo">026</span><a id="line.26">  protected void readBody(NutDataInputStream in) throws IOException {</a>
+<span class="sourceLineNo">027</span><a id="line.27">    frameCodes.clear();</a>
+<span class="sourceLineNo">028</span><a id="line.28"></a>
+<span class="sourceLineNo">029</span><a id="line.29">    version = in.readVarLong();</a>
+<span class="sourceLineNo">030</span><a id="line.30">    if (version &gt; 3) {</a>
+<span class="sourceLineNo">031</span><a id="line.31">      minorVersion = in.readVarLong();</a>
+<span class="sourceLineNo">032</span><a id="line.32">    }</a>
+<span class="sourceLineNo">033</span><a id="line.33"></a>
+<span class="sourceLineNo">034</span><a id="line.34">    streamCount = in.readVarInt();</a>
+<span class="sourceLineNo">035</span><a id="line.35">    if (streamCount &gt;= 250) {</a>
+<span class="sourceLineNo">036</span><a id="line.36">      throw new IOException("Illegal stream count " + streamCount + " must be &lt; 250");</a>
+<span class="sourceLineNo">037</span><a id="line.37">    }</a>
+<span class="sourceLineNo">038</span><a id="line.38"></a>
+<span class="sourceLineNo">039</span><a id="line.39">    maxDistance = in.readVarLong();</a>
+<span class="sourceLineNo">040</span><a id="line.40">    if (maxDistance &gt; 65536) {</a>
+<span class="sourceLineNo">041</span><a id="line.41">      maxDistance = 65536;</a>
+<span class="sourceLineNo">042</span><a id="line.42">    }</a>
+<span class="sourceLineNo">043</span><a id="line.43"></a>
+<span class="sourceLineNo">044</span><a id="line.44">    int time_base_count = in.readVarInt();</a>
+<span class="sourceLineNo">045</span><a id="line.45">    timeBase = new Fraction[time_base_count];</a>
+<span class="sourceLineNo">046</span><a id="line.46">    for (int i = 0; i &lt; time_base_count; i++) {</a>
+<span class="sourceLineNo">047</span><a id="line.47">      int time_base_num = (int) in.readVarLong();</a>
+<span class="sourceLineNo">048</span><a id="line.48">      int time_base_denom = (int) in.readVarLong();</a>
+<span class="sourceLineNo">049</span><a id="line.49">      timeBase[i] = Fraction.getFraction(time_base_num, time_base_denom);</a>
+<span class="sourceLineNo">050</span><a id="line.50">    }</a>
+<span class="sourceLineNo">051</span><a id="line.51"></a>
+<span class="sourceLineNo">052</span><a id="line.52">    long pts = 0;</a>
+<span class="sourceLineNo">053</span><a id="line.53">    int mul = 1;</a>
+<span class="sourceLineNo">054</span><a id="line.54">    int stream_id = 0;</a>
+<span class="sourceLineNo">055</span><a id="line.55">    int header_idx = 0;</a>
+<span class="sourceLineNo">056</span><a id="line.56"></a>
+<span class="sourceLineNo">057</span><a id="line.57">    long match = 1L - (1L &lt;&lt; 62);</a>
+<span class="sourceLineNo">058</span><a id="line.58">    int size;</a>
+<span class="sourceLineNo">059</span><a id="line.59">    int reserved;</a>
+<span class="sourceLineNo">060</span><a id="line.60">    long count;</a>
+<span class="sourceLineNo">061</span><a id="line.61"></a>
+<span class="sourceLineNo">062</span><a id="line.62">    for (int i = 0; i &lt; 256; ) {</a>
+<span class="sourceLineNo">063</span><a id="line.63">      long flags = in.readVarLong();</a>
+<span class="sourceLineNo">064</span><a id="line.64">      long fields = in.readVarLong();</a>
+<span class="sourceLineNo">065</span><a id="line.65">      if (fields &gt; 0) {</a>
+<span class="sourceLineNo">066</span><a id="line.66">        pts = in.readSignedVarInt();</a>
+<span class="sourceLineNo">067</span><a id="line.67">      }</a>
+<span class="sourceLineNo">068</span><a id="line.68">      if (fields &gt; 1) {</a>
+<span class="sourceLineNo">069</span><a id="line.69">        mul = in.readVarInt();</a>
+<span class="sourceLineNo">070</span><a id="line.70">        if (mul &gt;= 16384) {</a>
+<span class="sourceLineNo">071</span><a id="line.71">          throw new IOException("Illegal mul value " + mul + " must be &lt; 16384");</a>
+<span class="sourceLineNo">072</span><a id="line.72">        }</a>
+<span class="sourceLineNo">073</span><a id="line.73">      }</a>
+<span class="sourceLineNo">074</span><a id="line.74">      if (fields &gt; 2) {</a>
+<span class="sourceLineNo">075</span><a id="line.75">        stream_id = in.readVarInt();</a>
+<span class="sourceLineNo">076</span><a id="line.76">        if (stream_id &gt;= streamCount) {</a>
+<span class="sourceLineNo">077</span><a id="line.77">          throw new IOException(</a>
+<span class="sourceLineNo">078</span><a id="line.78">              "Illegal stream id value " + stream_id + " must be &lt; " + streamCount);</a>
+<span class="sourceLineNo">079</span><a id="line.79">        }</a>
+<span class="sourceLineNo">080</span><a id="line.80">      }</a>
+<span class="sourceLineNo">081</span><a id="line.81">      if (fields &gt; 3) {</a>
+<span class="sourceLineNo">082</span><a id="line.82">        size = in.readVarInt();</a>
+<span class="sourceLineNo">083</span><a id="line.83">      } else {</a>
+<span class="sourceLineNo">084</span><a id="line.84">        size = 0;</a>
+<span class="sourceLineNo">085</span><a id="line.85">      }</a>
+<span class="sourceLineNo">086</span><a id="line.86">      if (fields &gt; 4) {</a>
+<span class="sourceLineNo">087</span><a id="line.87">        reserved = in.readVarInt();</a>
+<span class="sourceLineNo">088</span><a id="line.88">        if (reserved &gt;= 256) {</a>
+<span class="sourceLineNo">089</span><a id="line.89">          throw new IOException("Illegal reserved frame count " + reserved + " must be &lt; 256");</a>
+<span class="sourceLineNo">090</span><a id="line.90">        }</a>
+<span class="sourceLineNo">091</span><a id="line.91">      } else {</a>
+<span class="sourceLineNo">092</span><a id="line.92">        reserved = 0;</a>
+<span class="sourceLineNo">093</span><a id="line.93">      }</a>
+<span class="sourceLineNo">094</span><a id="line.94">      if (fields &gt; 5) {</a>
+<span class="sourceLineNo">095</span><a id="line.95">        count = in.readVarLong();</a>
+<span class="sourceLineNo">096</span><a id="line.96">      } else {</a>
+<span class="sourceLineNo">097</span><a id="line.97">        count = mul - size;</a>
+<span class="sourceLineNo">098</span><a id="line.98">      }</a>
+<span class="sourceLineNo">099</span><a id="line.99">      if (fields &gt; 6) {</a>
+<span class="sourceLineNo">100</span><a id="line.100">        match = in.readSignedVarInt();</a>
+<span class="sourceLineNo">101</span><a id="line.101">      }</a>
+<span class="sourceLineNo">102</span><a id="line.102">      if (fields &gt; 7) {</a>
+<span class="sourceLineNo">103</span><a id="line.103">        header_idx = in.readVarInt();</a>
+<span class="sourceLineNo">104</span><a id="line.104">      }</a>
+<span class="sourceLineNo">105</span><a id="line.105">      for (int j = 8; j &lt; fields; j++) {</a>
+<span class="sourceLineNo">106</span><a id="line.106">        in.readVarLong(); // Throw away</a>
+<span class="sourceLineNo">107</span><a id="line.107">      }</a>
+<span class="sourceLineNo">108</span><a id="line.108"></a>
+<span class="sourceLineNo">109</span><a id="line.109">      if (stream_id &gt;= streamCount) {</a>
+<span class="sourceLineNo">110</span><a id="line.110">        throw new IOException(</a>
+<span class="sourceLineNo">111</span><a id="line.111">            String.format("Invalid stream value %d, must be &lt; %d", stream_id, streamCount));</a>
+<span class="sourceLineNo">112</span><a id="line.112">      }</a>
+<span class="sourceLineNo">113</span><a id="line.113"></a>
+<span class="sourceLineNo">114</span><a id="line.114">      if (count &lt;= 0 || (count &gt; 256 - i - (i &lt;= 'N' ? 1 : 0))) {</a>
+<span class="sourceLineNo">115</span><a id="line.115">        throw new IOException(</a>
+<span class="sourceLineNo">116</span><a id="line.116">            String.format(</a>
+<span class="sourceLineNo">117</span><a id="line.117">                "Invalid count value %d, must be &gt; 0 &amp;&amp; &lt; %d",</a>
+<span class="sourceLineNo">118</span><a id="line.118">                count, 256 - i - (i &lt;= 'N' ? 1 : 0)));</a>
+<span class="sourceLineNo">119</span><a id="line.119">      }</a>
+<span class="sourceLineNo">120</span><a id="line.120"></a>
+<span class="sourceLineNo">121</span><a id="line.121">      for (int j = 0; j &lt; count &amp;&amp; i &lt; 256; j++, i++) {</a>
+<span class="sourceLineNo">122</span><a id="line.122">        FrameCode fc = new FrameCode();</a>
+<span class="sourceLineNo">123</span><a id="line.123">        frameCodes.add(fc);</a>
+<span class="sourceLineNo">124</span><a id="line.124"></a>
+<span class="sourceLineNo">125</span><a id="line.125">        // Skip 'N' because that is an illegal frame code</a>
+<span class="sourceLineNo">126</span><a id="line.126">        if (i == 'N') {</a>
+<span class="sourceLineNo">127</span><a id="line.127">          fc.flags = Frame.FLAG_INVALID;</a>
+<span class="sourceLineNo">128</span><a id="line.128">          j--;</a>
+<span class="sourceLineNo">129</span><a id="line.129">          continue;</a>
+<span class="sourceLineNo">130</span><a id="line.130">        }</a>
+<span class="sourceLineNo">131</span><a id="line.131"></a>
+<span class="sourceLineNo">132</span><a id="line.132">        fc.flags = flags;</a>
+<span class="sourceLineNo">133</span><a id="line.133">        fc.streamId = stream_id;</a>
+<span class="sourceLineNo">134</span><a id="line.134">        fc.dataSizeMul = mul;</a>
+<span class="sourceLineNo">135</span><a id="line.135">        fc.dataSizeLsb = size + j;</a>
+<span class="sourceLineNo">136</span><a id="line.136">        fc.ptsDelta = pts;</a>
+<span class="sourceLineNo">137</span><a id="line.137">        fc.reservedCount = reserved;</a>
+<span class="sourceLineNo">138</span><a id="line.138">        fc.matchTimeDelta = match;</a>
+<span class="sourceLineNo">139</span><a id="line.139">        fc.headerIdx = header_idx;</a>
+<span class="sourceLineNo">140</span><a id="line.140"></a>
+<span class="sourceLineNo">141</span><a id="line.141">        if (fc.dataSizeLsb &gt;= 16384) {</a>
+<span class="sourceLineNo">142</span><a id="line.142">          throw new IOException("Illegal dataSizeLsb value " + fc.dataSizeLsb + " must be &lt; 16384");</a>
+<span class="sourceLineNo">143</span><a id="line.143">        }</a>
+<span class="sourceLineNo">144</span><a id="line.144">      }</a>
+<span class="sourceLineNo">145</span><a id="line.145">    }</a>
+<span class="sourceLineNo">146</span><a id="line.146"></a>
+<span class="sourceLineNo">147</span><a id="line.147">    int remain = 1024;</a>
+<span class="sourceLineNo">148</span><a id="line.148">    if (in.offset() &lt; (header.end - 4)) {</a>
+<span class="sourceLineNo">149</span><a id="line.149">      int header_count = in.readVarInt();</a>
+<span class="sourceLineNo">150</span><a id="line.150">      if (header_count &gt;= 128) {</a>
+<span class="sourceLineNo">151</span><a id="line.151">        throw new IOException("Invalid header_count value " + header_count + " must be &lt; 128");</a>
+<span class="sourceLineNo">152</span><a id="line.152">      }</a>
+<span class="sourceLineNo">153</span><a id="line.153"></a>
+<span class="sourceLineNo">154</span><a id="line.154">      elision.clear();</a>
+<span class="sourceLineNo">155</span><a id="line.155">      elision.add(new byte[0]); // First elision is always empty</a>
+<span class="sourceLineNo">156</span><a id="line.156">      for (int i = 1; i &lt; header_count; i++) {</a>
+<span class="sourceLineNo">157</span><a id="line.157">        byte[] e = in.readVarArray();</a>
+<span class="sourceLineNo">158</span><a id="line.158">        if (e.length == 0 || e.length &gt;= 256) {</a>
+<span class="sourceLineNo">159</span><a id="line.159">          throw new IOException("Invalid elision length " + e.length + " must be &gt; 0 and &lt; 256");</a>
+<span class="sourceLineNo">160</span><a id="line.160">        }</a>
+<span class="sourceLineNo">161</span><a id="line.161">        if (e.length &gt; remain) {</a>
+<span class="sourceLineNo">162</span><a id="line.162">          throw new IOException(</a>
+<span class="sourceLineNo">163</span><a id="line.163">              "Invalid elision length value " + e.length + " must be &lt;= " + remain);</a>
+<span class="sourceLineNo">164</span><a id="line.164">        }</a>
+<span class="sourceLineNo">165</span><a id="line.165">        remain -= e.length;</a>
+<span class="sourceLineNo">166</span><a id="line.166">        elision.add(e);</a>
+<span class="sourceLineNo">167</span><a id="line.167">      }</a>
+<span class="sourceLineNo">168</span><a id="line.168">    }</a>
+<span class="sourceLineNo">169</span><a id="line.169"></a>
+<span class="sourceLineNo">170</span><a id="line.170">    if (version &gt; 3 &amp;&amp; (in.offset() &lt; (header.end - 4))) {</a>
+<span class="sourceLineNo">171</span><a id="line.171">      flags = in.readVarLong();</a>
+<span class="sourceLineNo">172</span><a id="line.172">    }</a>
+<span class="sourceLineNo">173</span><a id="line.173">  }</a>
+<span class="sourceLineNo">174</span><a id="line.174"></a>
+<span class="sourceLineNo">175</span><a id="line.175">  @Override</a>
+<span class="sourceLineNo">176</span><a id="line.176">  public String toString() {</a>
+<span class="sourceLineNo">177</span><a id="line.177">    return MoreObjects.toStringHelper(this)</a>
+<span class="sourceLineNo">178</span><a id="line.178">        .add("header", header)</a>
+<span class="sourceLineNo">179</span><a id="line.179">        .add("version", version)</a>
+<span class="sourceLineNo">180</span><a id="line.180">        .add("minorVersion", minorVersion)</a>
+<span class="sourceLineNo">181</span><a id="line.181">        .add("streamCount", streamCount)</a>
+<span class="sourceLineNo">182</span><a id="line.182">        .add("maxDistance", maxDistance)</a>
+<span class="sourceLineNo">183</span><a id="line.183">        .add("timeBase", timeBase)</a>
+<span class="sourceLineNo">184</span><a id="line.184">        .add("flags", flags)</a>
+<span class="sourceLineNo">185</span><a id="line.185">        .add("frameCodes", frameCodes.size())</a>
+<span class="sourceLineNo">186</span><a id="line.186">        .add("elision", elision)</a>
+<span class="sourceLineNo">187</span><a id="line.187">        .add("footer", footer)</a>
+<span class="sourceLineNo">188</span><a id="line.188">        .toString();</a>
+<span class="sourceLineNo">189</span><a id="line.189">  }</a>
+<span class="sourceLineNo">190</span><a id="line.190">}</a>
 
 
 
@@ -250,5 +259,6 @@
 
 </pre>
 </div>
+</main>
 </body>
 </html>

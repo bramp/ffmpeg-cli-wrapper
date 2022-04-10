@@ -1,29 +1,30 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
 <head>
 <title>Source code</title>
 <link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
 </head>
 <body>
+<main role="main">
 <div class="sourceContainer">
-<pre><span class="sourceLineNo">001</span>package net.bramp.ffmpeg.nut;<a name="line.1"></a>
-<span class="sourceLineNo">002</span><a name="line.2"></a>
-<span class="sourceLineNo">003</span>public interface NutReaderListener {<a name="line.3"></a>
-<span class="sourceLineNo">004</span><a name="line.4"></a>
-<span class="sourceLineNo">005</span>  /**<a name="line.5"></a>
-<span class="sourceLineNo">006</span>   * Executes when a new stream is found.<a name="line.6"></a>
-<span class="sourceLineNo">007</span>   * <a name="line.7"></a>
-<span class="sourceLineNo">008</span>   * @param stream The stream<a name="line.8"></a>
-<span class="sourceLineNo">009</span>   */<a name="line.9"></a>
-<span class="sourceLineNo">010</span>  void stream(Stream stream);<a name="line.10"></a>
-<span class="sourceLineNo">011</span><a name="line.11"></a>
-<span class="sourceLineNo">012</span>  /**<a name="line.12"></a>
-<span class="sourceLineNo">013</span>   * Executes when a new frame is found.<a name="line.13"></a>
-<span class="sourceLineNo">014</span>   * <a name="line.14"></a>
-<span class="sourceLineNo">015</span>   * @param frame A single Frame<a name="line.15"></a>
-<span class="sourceLineNo">016</span>   */<a name="line.16"></a>
-<span class="sourceLineNo">017</span>  void frame(Frame frame);<a name="line.17"></a>
-<span class="sourceLineNo">018</span>}<a name="line.18"></a>
+<pre><span class="sourceLineNo">001</span><a id="line.1">package net.bramp.ffmpeg.nut;</a>
+<span class="sourceLineNo">002</span><a id="line.2"></a>
+<span class="sourceLineNo">003</span><a id="line.3">public interface NutReaderListener {</a>
+<span class="sourceLineNo">004</span><a id="line.4"></a>
+<span class="sourceLineNo">005</span><a id="line.5">  /**</a>
+<span class="sourceLineNo">006</span><a id="line.6">   * Executes when a new stream is found.</a>
+<span class="sourceLineNo">007</span><a id="line.7">   *</a>
+<span class="sourceLineNo">008</span><a id="line.8">   * @param stream The stream</a>
+<span class="sourceLineNo">009</span><a id="line.9">   */</a>
+<span class="sourceLineNo">010</span><a id="line.10">  void stream(Stream stream);</a>
+<span class="sourceLineNo">011</span><a id="line.11"></a>
+<span class="sourceLineNo">012</span><a id="line.12">  /**</a>
+<span class="sourceLineNo">013</span><a id="line.13">   * Executes when a new frame is found.</a>
+<span class="sourceLineNo">014</span><a id="line.14">   *</a>
+<span class="sourceLineNo">015</span><a id="line.15">   * @param frame A single Frame</a>
+<span class="sourceLineNo">016</span><a id="line.16">   */</a>
+<span class="sourceLineNo">017</span><a id="line.17">  void frame(Frame frame);</a>
+<span class="sourceLineNo">018</span><a id="line.18">}</a>
 
 
 
@@ -86,5 +87,6 @@
 
 </pre>
 </div>
+</main>
 </body>
 </html>
