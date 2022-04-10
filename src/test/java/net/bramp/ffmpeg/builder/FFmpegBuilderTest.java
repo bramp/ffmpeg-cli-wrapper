@@ -1,17 +1,5 @@
 package net.bramp.ffmpeg.builder;
 
-import com.google.common.collect.ImmutableList;
-import net.bramp.ffmpeg.options.AudioEncodingOptions;
-import net.bramp.ffmpeg.options.EncodingOptions;
-import net.bramp.ffmpeg.options.MainEncodingOptions;
-import net.bramp.ffmpeg.options.VideoEncodingOptions;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import static com.nitorcreations.Matchers.reflectEquals;
 import static net.bramp.ffmpeg.FFmpeg.AUDIO_FORMAT_S16;
 import static net.bramp.ffmpeg.FFmpeg.AUDIO_SAMPLE_48000;
@@ -24,7 +12,20 @@ import static net.bramp.ffmpeg.builder.StreamSpecifierType.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-/** @author bramp */
+import com.google.common.collect.ImmutableList;
+import java.io.IOException;
+import java.net.URI;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import net.bramp.ffmpeg.options.AudioEncodingOptions;
+import net.bramp.ffmpeg.options.EncodingOptions;
+import net.bramp.ffmpeg.options.MainEncodingOptions;
+import net.bramp.ffmpeg.options.VideoEncodingOptions;
+import org.junit.Test;
+
+/**
+ * @author bramp
+ */
 public class FFmpegBuilderTest {
 
   public FFmpegBuilderTest() throws IOException {}
