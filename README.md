@@ -4,7 +4,7 @@ by Andrew Brampton ([bramp.net](https://bramp.net)) (c) 2013-2014,2016
 
 A fluent interface to running FFmpeg from Java.
 
-![Java](https://img.shields.io/badge/Java-7+-brightgreen.svg)
+![Java](https://img.shields.io/badge/Java-8+-brightgreen.svg)
 [![Build Status](https://img.shields.io/travis/bramp/ffmpeg-cli-wrapper/master.svg)](https://travis-ci.org/bramp/ffmpeg-cli-wrapper)
 [![Coverage Status](https://img.shields.io/coveralls/bramp/ffmpeg-cli-wrapper.svg)](https://coveralls.io/github/bramp/ffmpeg-cli-wrapper)
 [![Maven](https://img.shields.io/maven-central/v/net.bramp.ffmpeg/ffmpeg.svg)](http://mvnrepository.com/artifact/net.bramp.ffmpeg/ffmpeg)
@@ -143,6 +143,18 @@ git checkout ffmpeg-0.x
 mvn clean javadoc:aggregate scm-publish:publish-scm
 ```
 
+Bumpings Deps
+-----
+
+```bash
+# Update Maven Plugins
+mvn versions:display-plugin-updates
+
+# Library Dependencies
+mvn versions:display-dependency-updates 
+
+```
+
 Install FFmpeg on Ubuntu
 -----------------
 
@@ -150,7 +162,7 @@ We only the support the original FFmpeg, not the libav version. Before Ubuntu 12
 and later the original FFmpeg is shipped. If you have to run on a version with libav, you can install
 FFmpeg from a PPA, or using the static build. More information [here](http://askubuntu.com/q/373322/34845)
 
-Get invovled!
+Get involved!
 -------------
 
 We welcome contributions. Please check the [issue tracker](https://github.com/bramp/ffmpeg-cli-wrapper/issues).
@@ -162,7 +174,7 @@ on a volunteer basis, thus we can be slow to reply.
 Licence (Simplified BSD License)
 --------------------------------
 ```
-Copyright (c) 2016, Andrew Brampton
+Copyright (c) 2016-2022, Andrew Brampton
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
