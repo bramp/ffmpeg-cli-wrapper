@@ -33,7 +33,7 @@ public class ExamplesTest {
   @Before
   public void before() throws IOException {
     when(runFunc.run(argThatHasItem("-version")))
-        .thenAnswer(new NewProcessAnswer("ffmpeg-version"));
+        .thenAnswer(new NewProcessAnswer("ffmpeg-version_0.10.9"));
     ffmpeg = new FFmpeg("ffmpeg", runFunc);
   }
 
