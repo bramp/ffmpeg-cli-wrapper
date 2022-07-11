@@ -1,5 +1,6 @@
 package net.bramp.ffmpeg;
 
+import com.google.common.base.Joiner;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
@@ -33,7 +34,61 @@ public class ReadmeTest {
 
     // Construct them, and do nothing with them
   }
+  @Test
+  public void testHLSVideoEncoding() throws  IOException{
+//    ffmpeg -i big_buck_bunny_720p_1mb.mp4  -hls_time 10  -hls_playlist_type vod -hls_segment_filename "video_segments_%0d.ts" hls_master_for_test.m3u8
+    FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+    String inFileName = Samples.big_buck_bunny_720p_1mb;
+    FFmpegProbeResult in = ffprobe.probe(inFileName);
+    FFmpegBuilder builder = new FFmpegBuilder()
+            .setInput(inFileName)
+            .setInput(in)
+            .overrideOutputFiles(true)
+            .addHlsArgs("-hls_time 10","-hls_playlist_type vod","-hls_segment_filename","\"video_segments_%0d.ts\"")
+            .addOutput("hls_master_for_test.m3u8")
+            .done();
+    String expected =
+            "ffmpeg -y -v error -i src/test/resources/net/bramp/ffmpeg/samples/big_buck_bunny_720p_1mb.mp4 -hls_time 10 -hls_playlist_type vod -hls_segment_filename \"video_segments_%0d.ts\" hls_master_for_test.m3u8";
 
+    String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
+    System.out.println("actual "+actual);
+    //FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+
+    // Run a one-pass encode
+    executor.createJob(builder).run();
+
+    // Or run a two-pass encode (which is slower at the cost of better quality
+    //executor.createTwoPassJob(builder).run();
+//    FFmpegJob job =
+//            executor.createJob(
+//                    builder,
+//                    new ProgressListener() {
+//
+//                      // Using the FFmpegProbeResult determine the duration of the input
+//                      final double duration_ns = in.getFormat().duration * TimeUnit.SECONDS.toNanos(1);
+//
+//                      @Override
+//                      public void progress(Progress progress) {
+//                        double percentage = progress.out_time_ns / duration_ns;
+//
+//                        // Print out interesting information about the progress
+//                        System.out.println(
+//                                String.format(
+//                                        locale,
+//                                        "[%.0f%%] status:%s frame:%d time:%s fps:%.0f speed:%.2fx",
+//                                        percentage * 100,
+//                                        progress.status,
+//                                        progress.frame,
+//                                        FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
+//                                        progress.fps.doubleValue(),
+//                                        progress.speed));
+//                      }
+//                    });
+//
+//    job.run();
+//
+//    assertEquals(FFmpegJob.State.FINISHED, job.getState());
+  }
   @Test
   public void testVideoEncoding() throws IOException {
 

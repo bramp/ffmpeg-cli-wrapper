@@ -73,6 +73,7 @@ public class FFmpegBuilder {
   final Map<String, FFmpegProbeResult> inputProbes = new TreeMap<>();
 
   final List<String> extra_args = new ArrayList<>();
+  final List<String> hls_args = new ArrayList<>();
 
   // Output
   final List<FFmpegOutputBuilder> outputs = new ArrayList<>();
@@ -216,6 +217,15 @@ public class FFmpegBuilder {
     }
     return this;
   }
+  public FFmpegBuilder addHlsArgs(String... values) {
+    checkArgument(values.length > 0, "one or more values must be supplied");
+    checkNotEmpty(values[0], "first extra arg may not be empty");
+
+    for (String value : values) {
+      hls_args.add(checkNotNull(value));
+    }
+    return this;
+  }
 
   /**
    * Adds new output file.
@@ -306,6 +316,7 @@ public class FFmpegBuilder {
     for (String input : inputs) {
       args.add("-i", input);
     }
+    args.addAll(hls_args);
 
     if (pass > 0) {
       args.add("-pass", Integer.toString(pass));
