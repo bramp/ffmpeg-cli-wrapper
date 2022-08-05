@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Immutable
 public class Codec {
 
-  enum Type {
+  public enum Type {
     VIDEO,
     AUDIO,
     SUBTITLE,
