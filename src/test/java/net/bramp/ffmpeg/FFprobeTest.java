@@ -1,6 +1,5 @@
 package net.bramp.ffmpeg;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
@@ -14,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.util.List;
 
 import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -116,15 +114,12 @@ public class FFprobeTest {
 
   @Test
   public void testProbeWithPackets() throws IOException {
-    final List<String> command = ImmutableList
-        .<String>builder()
-        .add("-v", "quiet")
-        .add("-print_format", "json")
-        .add("-show_packets")
-        .add(Samples.big_buck_bunny_720p_1mb_with_packets)
-        .build();
-
-    FFmpegProbeResult info = ffprobe.probe(command);
+    FFmpegProbeResult info = ffprobe.probe(
+        ffprobe
+            .builder()
+            .setInput(Samples.big_buck_bunny_720p_1mb_with_packets)
+            .setShowPackets(true)
+            .build());
     assertThat(info.hasError(), is(false));
     assertThat(info.getPackets().size(), is(381));
 
@@ -170,15 +165,12 @@ public class FFprobeTest {
 
   @Test
   public void testProbeWithFrames() throws IOException {
-    final List<String> command = ImmutableList
-        .<String>builder()
-        .add("-v", "quiet")
-        .add("-print_format", "json")
-        .add("-show_frames")
-        .add(Samples.big_buck_bunny_720p_1mb_with_frames)
-        .build();
-
-    FFmpegProbeResult info = ffprobe.probe(command);
+    FFmpegProbeResult info = ffprobe.probe(
+        ffprobe
+            .builder()
+            .setInput(Samples.big_buck_bunny_720p_1mb_with_frames)
+            .setShowFrames(true)
+            .build());
     assertThat(info.hasError(), is(false));
     assertThat(info.getFrames().size(), is(381));
 
@@ -241,16 +233,13 @@ public class FFprobeTest {
 
   @Test
   public void testProbeWithPacketsAndFrames() throws IOException {
-    final List<String> command = ImmutableList
-        .<String>builder()
-        .add("-v", "quiet")
-        .add("-print_format", "json")
-        .add("-show_packets")
-        .add("-show_frames")
-        .add(Samples.big_buck_bunny_720p_1mb_with_packets_and_frames)
-        .build();
-
-    FFmpegProbeResult info = ffprobe.probe(command);
+    FFmpegProbeResult info = ffprobe.probe(
+        ffprobe
+            .builder()
+            .setInput(Samples.big_buck_bunny_720p_1mb_with_packets_and_frames)
+            .setShowPackets(true)
+            .setShowFrames(true)
+            .build());
     assertThat(info.hasError(), is(false));
     assertThat(info.getPackets().size(), is(381));
     assertThat(info.getFrames().size(), is(381));
