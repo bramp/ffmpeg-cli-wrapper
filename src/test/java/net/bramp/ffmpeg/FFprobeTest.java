@@ -118,7 +118,6 @@ public class FFprobeTest {
   public void testProbeWithPackets() throws IOException {
     final List<String> command = ImmutableList
         .<String>builder()
-        .add("ffprobe")
         .add("-v", "quiet")
         .add("-print_format", "json")
         .add("-show_packets")
@@ -173,7 +172,6 @@ public class FFprobeTest {
   public void testProbeWithFrames() throws IOException {
     final List<String> command = ImmutableList
         .<String>builder()
-        .add("ffprobe")
         .add("-v", "quiet")
         .add("-print_format", "json")
         .add("-show_frames")
@@ -245,7 +243,6 @@ public class FFprobeTest {
   public void testProbeWithPacketsAndFrames() throws IOException {
     final List<String> command = ImmutableList
         .<String>builder()
-        .add("ffprobe")
         .add("-v", "quiet")
         .add("-print_format", "json")
         .add("-show_packets")

@@ -81,7 +81,7 @@ public class FFprobe extends FFcommon {
   public FFmpegProbeResult probe(List<String> args) throws IOException {
     checkIfFFprobe();
 
-    Process p = runFunc.run(args);
+    Process p = runFunc.run(path(args));
     try {
       Reader reader = wrapInReader(p);
       if (LOG.isDebugEnabled()) {
@@ -110,7 +110,7 @@ public class FFprobe extends FFcommon {
     // .add("--show_packets")
     // .add("--show_frames")
 
-    args.add(path).add("-v", "quiet");
+    args.add("-v", "quiet");
 
     if (userAgent != null) {
       args.add("-user_agent", userAgent);
