@@ -187,13 +187,15 @@ public class FFmpeg extends FFcommon {
             continue;
           String flags = m.group(1);
 
-          pixelFormats.add(new PixelFormat(m.group(2),
-                                           Integer.parseInt(m.group(3)),
-                                           Integer.parseInt(m.group(4)),
-                                           flags));
+          pixelFormats.add(new PixelFormat(
+              m.group(2),
+              Integer.parseInt(m.group(3)),
+              Integer.parseInt(m.group(4)),
+              flags));
         }
 
         throwOnError(p);
+        this.pixelFormats = ImmutableList.copyOf(pixelFormats);
       } finally {
         p.destroy();
       }
