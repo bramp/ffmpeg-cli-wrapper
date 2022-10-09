@@ -1,17 +1,21 @@
 package net.bramp.ffmpeg;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import net.bramp.ffmpeg.builder.FFprobeBuilder;
 import net.bramp.ffmpeg.io.LoggingFilterReader;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Wrapper around FFprobe
@@ -77,6 +81,15 @@ public class FFprobe extends FFcommon {
     super.run(args);
   }
 
+  public FFmpegProbeResult probe(String mediaPath, @Nullable String userAgent) throws IOException {
+    return probe(this.builder().setInput(mediaPath).setUserAgent(userAgent));
+  }
+
+  public FFmpegProbeResult probe(FFprobeBuilder builder) throws IOException {
+    checkNotNull(builder);
+    return probe(builder.build());
+  }
+
   // TODO Add Probe Inputstream
   public FFmpegProbeResult probe(List<String> args) throws IOException {
     checkIfFFprobe();
@@ -103,26 +116,8 @@ public class FFprobe extends FFcommon {
     }
   }
 
-  public FFmpegProbeResult probe(String mediaPath, @Nullable String userAgent) throws IOException {
-    ImmutableList.Builder<String> args = new ImmutableList.Builder<>();
-
-    // TODO Add:
-    // .add("--show_packets")
-    // .add("--show_frames")
-
-    args.add("-v", "quiet");
-
-    if (userAgent != null) {
-      args.add("-user_agent", userAgent);
-    }
-
-    args.add("-print_format", "json")
-        .add("-show_error")
-        .add("-show_format")
-        .add("-show_streams")
-        .add("-show_chapters")
-        .add(mediaPath);
-
-    return probe(args.build());
+  @CheckReturnValue
+  public FFprobeBuilder builder() {
+    return new FFprobeBuilder();
   }
 }
