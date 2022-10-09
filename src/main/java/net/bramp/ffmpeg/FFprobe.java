@@ -90,7 +90,7 @@ public class FFprobe extends FFcommon {
     args.add(path).add("-v", "quiet");
 
     if (userAgent != null) {
-      args.add("-user-agent", userAgent);
+      args.add("-user_agent", userAgent);
     }
 
     args.add("-print_format", "json")
