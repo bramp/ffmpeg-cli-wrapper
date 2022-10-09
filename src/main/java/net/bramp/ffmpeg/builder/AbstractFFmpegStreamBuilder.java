@@ -90,6 +90,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
 
   public boolean subtitle_enabled = true;
   public String subtitle_preset;
+  private String subtitle_codec;
 
   public String preset;
   public String presetFilename;
@@ -369,6 +370,12 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     return getThis();
   }
 
+  public T setSubtitleCodec(String codec) {
+    this.subtitle_enabled = true;
+    this.subtitle_codec = checkNotEmpty(codec, "codec must not be empty");
+    return getThis();
+  }
+
   /**
    * Sets the number of audio channels
    *
@@ -566,6 +573,10 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     }
 
     if (subtitle_enabled) {
+      if (!(subtitle_codec == null || subtitle_codec.isEmpty())) {
+        args.add("-scodec");
+        args.add(subtitle_codec);
+      }
       if (!Strings.isNullOrEmpty(subtitle_preset)) {
         args.add("-spre", subtitle_preset);
       }
