@@ -9,7 +9,6 @@ import org.apache.commons.lang3.math.Fraction;
     justification = "POJO objects where the fields are populated by gson")
 public class FFmpegStream {
 
-  // TODO Add more CodecTypes
   public enum CodecType {
     VIDEO,
     AUDIO,
