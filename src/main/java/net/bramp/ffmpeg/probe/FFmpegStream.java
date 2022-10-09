@@ -13,6 +13,9 @@ public class FFmpegStream {
   public enum CodecType {
     VIDEO,
     AUDIO,
+    SUBTITLE,
+    DATA,
+    ATTACHMENT
   }
 
   public int index;
