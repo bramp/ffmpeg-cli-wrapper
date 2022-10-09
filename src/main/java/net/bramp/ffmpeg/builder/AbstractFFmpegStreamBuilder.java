@@ -573,9 +573,8 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     }
 
     if (subtitle_enabled) {
-      if (!(subtitle_codec == null || subtitle_codec.isEmpty())) {
-        args.add("-scodec");
-        args.add(subtitle_codec);
+      if (!Strings.isNullOrEmpty(subtitle_codec)) {
+        args.add("-scodec", subtitle_codec);
       }
       if (!Strings.isNullOrEmpty(subtitle_preset)) {
         args.add("-spre", subtitle_preset);
