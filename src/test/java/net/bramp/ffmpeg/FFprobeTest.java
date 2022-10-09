@@ -1,34 +1,36 @@
 package net.bramp.ffmpeg;
 
-import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
+import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
-import java.io.IOException;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
-import net.bramp.ffmpeg.probe.FFmpegChapter;
-import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-import net.bramp.ffmpeg.probe.FFmpegStream;
+import net.bramp.ffmpeg.probe.*;
 import org.apache.commons.lang3.math.Fraction;
+import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.io.IOException;
+import java.util.List;
+
+import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.*;
+
 @RunWith(MockitoJUnitRunner.class)
 public class FFprobeTest {
 
-  @Mock ProcessFunction runFunc;
-
-  FFprobe ffprobe;
-
   static final Gson gson = FFmpegUtils.getGson();
+  @Mock
+  ProcessFunction runFunc;
+  FFprobe ffprobe;
 
   @Before
   public void before() throws IOException {
@@ -49,6 +51,15 @@ public class FFprobeTest {
 
     when(runFunc.run(argThatHasItem(Samples.book_with_chapters)))
         .thenAnswer(new NewProcessAnswer("book_with_chapters.m4b"));
+
+    when(runFunc.run(argThatHasItem(Samples.big_buck_bunny_720p_1mb_with_packets)))
+        .thenAnswer(new NewProcessAnswer("ffprobe-big_buck_bunny_720p_1mb_packets.mp4"));
+
+    when(runFunc.run(argThatHasItem(Samples.big_buck_bunny_720p_1mb_with_frames)))
+        .thenAnswer(new NewProcessAnswer("ffprobe-big_buck_bunny_720p_1mb_frames.mp4"));
+
+    when(runFunc.run(argThatHasItem(Samples.big_buck_bunny_720p_1mb_with_packets_and_frames)))
+        .thenAnswer(new NewProcessAnswer("ffprobe-big_buck_bunny_720p_1mb_packets_and_frames.mp4"));
 
     ffprobe = new FFprobe(runFunc);
   }
@@ -101,6 +112,246 @@ public class FFprobeTest {
     assertThat(lastChapter.end, is(248628224L));
     assertThat(lastChapter.end_time, is("5637.828209"));
     assertThat(lastChapter.tags.title, is("24 - Chatterer Has His Turn to Laugh"));
+  }
+
+  @Test
+  public void testProbeWithPackets() throws IOException {
+    final List<String> command = ImmutableList
+        .<String>builder()
+        .add("ffprobe")
+        .add("-v", "quiet")
+        .add("-print_format", "json")
+        .add("-show_packets")
+        .add(Samples.big_buck_bunny_720p_1mb_with_packets)
+        .build();
+
+    FFmpegProbeResult info = ffprobe.probe(command);
+    assertThat(info.hasError(), is(false));
+    assertThat(info.getPackets().size(), is(381));
+
+    FFmpegPacket firstPacket = info.getPackets().get(0);
+    assertThat(firstPacket.codec_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(firstPacket.stream_index, is(1));
+    assertThat(firstPacket.pts, is(0L));
+    assertThat(firstPacket.pts_time, is(0.0));
+    assertThat(firstPacket.dts, is(0L));
+    assertThat(firstPacket.dts_time, is(0.0));
+    assertThat(firstPacket.duration, is(1024L));
+    assertThat(firstPacket.duration_time, is(0.021333F));
+    assertThat(firstPacket.size, is("967"));
+    assertThat(firstPacket.pos, is("4261"));
+    assertThat(firstPacket.flags, is("K_"));
+
+    FFmpegPacket secondPacket = info.getPackets().get(1);
+    assertThat(secondPacket.codec_type, is(FFmpegStream.CodecType.VIDEO));
+    assertThat(secondPacket.stream_index, is(0));
+    assertThat(secondPacket.pts, is(0L));
+    assertThat(secondPacket.pts_time, is(0.0));
+    assertThat(secondPacket.dts, is(0L));
+    assertThat(secondPacket.dts_time, is(0.0));
+    assertThat(secondPacket.duration, is(512L));
+    assertThat(secondPacket.duration_time, is(0.04F));
+    assertThat(secondPacket.size, is("105222"));
+    assertThat(secondPacket.pos, is("5228"));
+    assertThat(secondPacket.flags, is("K_"));
+
+    FFmpegPacket lastPacket = info.getPackets().get(info.getPackets().size() - 1);
+    assertThat(lastPacket.codec_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(lastPacket.stream_index, is(1));
+    assertThat(lastPacket.pts, is(253952L));
+    assertThat(lastPacket.pts_time, is(5.290667));
+    assertThat(lastPacket.dts, is(253952L));
+    assertThat(lastPacket.dts_time, is(5.290667));
+    assertThat(lastPacket.duration, is(1024L));
+    assertThat(lastPacket.duration_time, is(0.021333F));
+    assertThat(lastPacket.size, is("1111"));
+    assertThat(lastPacket.pos, is("1054609"));
+    assertThat(lastPacket.flags, is("K_"));
+  }
+
+  @Test
+  public void testProbeWithFrames() throws IOException {
+    final List<String> command = ImmutableList
+        .<String>builder()
+        .add("ffprobe")
+        .add("-v", "quiet")
+        .add("-print_format", "json")
+        .add("-show_frames")
+        .add(Samples.big_buck_bunny_720p_1mb_with_frames)
+        .build();
+
+    FFmpegProbeResult info = ffprobe.probe(command);
+    assertThat(info.hasError(), is(false));
+    assertThat(info.getFrames().size(), is(381));
+
+    FFmpegFrame firstFrame = info.getFrames().get(0);
+    assertThat(firstFrame.stream_index, is(1));
+    assertThat(firstFrame.key_frame, is(1));
+    assertThat(firstFrame.pkt_pts, is(0L));
+    assertThat(firstFrame.pkt_pts_time, is(0.0));
+    assertThat(firstFrame.pkt_dts, is(0L));
+    assertThat(firstFrame.pkt_dts_time, is(0.0));
+    assertThat(firstFrame.best_effort_timestamp, is(0L));
+    assertThat(firstFrame.best_effort_timestamp_time, is(0.0F));
+    assertThat(firstFrame.pkt_duration, is(1024L));
+    assertThat(firstFrame.pkt_duration_time, is(0.021333F));
+    assertThat(firstFrame.pkt_pos, is(4261L));
+    assertThat(firstFrame.pkt_size, is(967L));
+    assertThat(firstFrame.sample_fmt, is("fltp"));
+    assertThat(firstFrame.nb_samples, is(1024));
+    assertThat(firstFrame.channels, is(6));
+    assertThat(firstFrame.channel_layout, is("5.1"));
+
+    FFmpegFrame secondFrame = info.getFrames().get(1);
+    assertThat(secondFrame.media_type, is(FFmpegStream.CodecType.VIDEO));
+    assertThat(secondFrame.stream_index, is(0));
+    assertThat(secondFrame.key_frame, is(1));
+    assertThat(secondFrame.pkt_pts, is(0L));
+    assertThat(secondFrame.pkt_pts_time, is(0.0));
+    assertThat(secondFrame.pkt_dts, is(0L));
+    assertThat(secondFrame.pkt_dts_time, is(0.0));
+    assertThat(secondFrame.best_effort_timestamp, is(0L));
+    assertThat(secondFrame.best_effort_timestamp_time, is(0.0F));
+    assertThat(secondFrame.pkt_duration, is(512L));
+    assertThat(secondFrame.pkt_duration_time, is(0.04F));
+    assertThat(secondFrame.pkt_pos, is(5228L));
+    assertThat(secondFrame.pkt_size, is(105222L));
+    assertThat(secondFrame.sample_fmt, new IsNull<>());
+    assertThat(secondFrame.nb_samples, is(0));
+    assertThat(secondFrame.channels, is(0));
+    assertThat(secondFrame.channel_layout, new IsNull<>());
+
+    FFmpegFrame lastFrame = info.getFrames().get(info.getFrames().size() - 1);
+    assertThat(lastFrame.media_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(lastFrame.stream_index, is(1));
+    assertThat(lastFrame.key_frame, is(1));
+    assertThat(lastFrame.pkt_pts, is(253952L));
+    assertThat(lastFrame.pkt_pts_time, is(5.290667));
+    assertThat(lastFrame.pkt_dts, is(253952L));
+    assertThat(lastFrame.pkt_dts_time, is(5.290667));
+    assertThat(lastFrame.best_effort_timestamp, is(253952L));
+    assertThat(lastFrame.best_effort_timestamp_time, is(5.290667F));
+    assertThat(lastFrame.pkt_duration, is(1024L));
+    assertThat(lastFrame.pkt_duration_time, is(0.021333F));
+    assertThat(lastFrame.pkt_pos, is(1054609L));
+    assertThat(lastFrame.pkt_size, is(1111L));
+    assertThat(lastFrame.sample_fmt, is("fltp"));
+    assertThat(lastFrame.nb_samples, is(1024));
+    assertThat(lastFrame.channels, is(6));
+    assertThat(lastFrame.channel_layout, is("5.1"));
+  }
+
+  @Test
+  public void testProbeWithPacketsAndFrames() throws IOException {
+    final List<String> command = ImmutableList
+        .<String>builder()
+        .add("ffprobe")
+        .add("-v", "quiet")
+        .add("-print_format", "json")
+        .add("-show_packets")
+        .add("-show_frames")
+        .add(Samples.big_buck_bunny_720p_1mb_with_packets_and_frames)
+        .build();
+
+    FFmpegProbeResult info = ffprobe.probe(command);
+    assertThat(info.hasError(), is(false));
+    assertThat(info.getPackets().size(), is(381));
+    assertThat(info.getFrames().size(), is(381));
+
+    FFmpegPacket firstPacket = info.getPackets().get(0);
+    assertThat(firstPacket.codec_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(firstPacket.stream_index, is(1));
+    assertThat(firstPacket.pts, is(0L));
+    assertThat(firstPacket.pts_time, is(0.0));
+    assertThat(firstPacket.dts, is(0L));
+    assertThat(firstPacket.dts_time, is(0.0));
+    assertThat(firstPacket.duration, is(1024L));
+    assertThat(firstPacket.duration_time, is(0.021333F));
+    assertThat(firstPacket.size, is("967"));
+    assertThat(firstPacket.pos, is("4261"));
+    assertThat(firstPacket.flags, is("K_"));
+
+    FFmpegPacket secondPacket = info.getPackets().get(1);
+    assertThat(secondPacket.codec_type, is(FFmpegStream.CodecType.VIDEO));
+    assertThat(secondPacket.stream_index, is(0));
+    assertThat(secondPacket.pts, is(0L));
+    assertThat(secondPacket.pts_time, is(0.0));
+    assertThat(secondPacket.dts, is(0L));
+    assertThat(secondPacket.dts_time, is(0.0));
+    assertThat(secondPacket.duration, is(512L));
+    assertThat(secondPacket.duration_time, is(0.04F));
+    assertThat(secondPacket.size, is("105222"));
+    assertThat(secondPacket.pos, is("5228"));
+    assertThat(secondPacket.flags, is("K_"));
+
+    FFmpegPacket lastPacket = info.getPackets().get(info.getPackets().size() - 1);
+    assertThat(lastPacket.codec_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(lastPacket.stream_index, is(1));
+    assertThat(lastPacket.pts, is(253952L));
+    assertThat(lastPacket.pts_time, is(5.290667));
+    assertThat(lastPacket.dts, is(253952L));
+    assertThat(lastPacket.dts_time, is(5.290667));
+    assertThat(lastPacket.duration, is(1024L));
+    assertThat(lastPacket.duration_time, is(0.021333F));
+    assertThat(lastPacket.size, is("1111"));
+    assertThat(lastPacket.pos, is("1054609"));
+    assertThat(lastPacket.flags, is("K_"));
+
+    FFmpegFrame firstFrame = info.getFrames().get(0);
+    assertThat(firstFrame.stream_index, is(1));
+    assertThat(firstFrame.key_frame, is(1));
+    assertThat(firstFrame.pkt_pts, is(0L));
+    assertThat(firstFrame.pkt_pts_time, is(0.0));
+    assertThat(firstFrame.pkt_dts, is(0L));
+    assertThat(firstFrame.pkt_dts_time, is(0.0));
+    assertThat(firstFrame.best_effort_timestamp, is(0L));
+    assertThat(firstFrame.best_effort_timestamp_time, is(0.0F));
+    assertThat(firstFrame.pkt_duration, is(1024L));
+    assertThat(firstFrame.pkt_duration_time, is(0.021333F));
+    assertThat(firstFrame.pkt_pos, is(4261L));
+    assertThat(firstFrame.pkt_size, is(967L));
+    assertThat(firstFrame.sample_fmt, is("fltp"));
+    assertThat(firstFrame.nb_samples, is(1024));
+    assertThat(firstFrame.channels, is(6));
+    assertThat(firstFrame.channel_layout, is("5.1"));
+
+    FFmpegFrame secondFrame = info.getFrames().get(1);
+    assertThat(secondFrame.media_type, is(FFmpegStream.CodecType.VIDEO));
+    assertThat(secondFrame.stream_index, is(0));
+    assertThat(secondFrame.key_frame, is(1));
+    assertThat(secondFrame.pkt_pts, is(0L));
+    assertThat(secondFrame.pkt_pts_time, is(0.0));
+    assertThat(secondFrame.pkt_dts, is(0L));
+    assertThat(secondFrame.pkt_dts_time, is(0.0));
+    assertThat(secondFrame.best_effort_timestamp, is(0L));
+    assertThat(secondFrame.best_effort_timestamp_time, is(0.0F));
+    assertThat(secondFrame.pkt_duration, is(512L));
+    assertThat(secondFrame.pkt_duration_time, is(0.04F));
+    assertThat(secondFrame.pkt_pos, is(5228L));
+    assertThat(secondFrame.pkt_size, is(105222L));
+    assertThat(secondFrame.sample_fmt, new IsNull<>());
+    assertThat(secondFrame.nb_samples, is(0));
+    assertThat(secondFrame.channels, is(0));
+    assertThat(secondFrame.channel_layout, new IsNull<>());
+
+    FFmpegFrame lastFrame = info.getFrames().get(info.getFrames().size() - 1);
+    assertThat(lastFrame.media_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(lastFrame.stream_index, is(1));
+    assertThat(lastFrame.key_frame, is(1));
+    assertThat(lastFrame.pkt_pts, is(253952L));
+    assertThat(lastFrame.pkt_pts_time, is(5.290667));
+    assertThat(lastFrame.pkt_dts, is(253952L));
+    assertThat(lastFrame.pkt_dts_time, is(5.290667));
+    assertThat(lastFrame.best_effort_timestamp, is(253952L));
+    assertThat(lastFrame.best_effort_timestamp_time, is(5.290667F));
+    assertThat(lastFrame.pkt_duration, is(1024L));
+    assertThat(lastFrame.pkt_duration_time, is(0.021333F));
+    assertThat(lastFrame.pkt_pos, is(1054609L));
+    assertThat(lastFrame.pkt_size, is(1111L));
+    assertThat(lastFrame.sample_fmt, is("fltp"));
+    assertThat(lastFrame.nb_samples, is(1024));
+    assertThat(lastFrame.channels, is(6));
+    assertThat(lastFrame.channel_layout, is("5.1"));
   }
 
   @Test

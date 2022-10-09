@@ -28,6 +28,9 @@ public final class Samples {
   public static final String start_pts_test = FAKE_PREFIX + "start_pts_test_1mb.ts";
 
   public static final String divide_by_zero = FAKE_PREFIX + "Divide By Zero.mp4";
+  public static final String big_buck_bunny_720p_1mb_with_packets = FAKE_PREFIX + "big_buck_bunny_720p_1mb_packets.mp4";
+  public static final String big_buck_bunny_720p_1mb_with_frames = FAKE_PREFIX + "big_buck_bunny_720p_1mb_frames.mp4";
+  public static final String big_buck_bunny_720p_1mb_with_packets_and_frames = FAKE_PREFIX + "big_buck_bunny_720p_1mb_packets_and_frames.mp4";
 
   // TODO Change to a temp directory
   // TODO Generate random names, so we can run tests concurrently

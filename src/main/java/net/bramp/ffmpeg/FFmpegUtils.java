@@ -11,9 +11,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.bramp.commons.lang3.math.gson.FractionAdapter;
+import net.bramp.ffmpeg.adapter.FFmpegPacketsAndFramesAdapter;
 import net.bramp.ffmpeg.gson.LowercaseEnumTypeAdapterFactory;
 import net.bramp.ffmpeg.gson.NamedBitsetAdapter;
 import net.bramp.ffmpeg.probe.FFmpegDisposition;
+import net.bramp.ffmpeg.probe.FFmpegFrameOrPacket;
 import org.apache.commons.lang3.math.Fraction;
 
 /** Helper class with commonly used methods */
@@ -117,6 +119,7 @@ public final class FFmpegUtils {
 
     builder.registerTypeAdapterFactory(new LowercaseEnumTypeAdapterFactory());
     builder.registerTypeAdapter(Fraction.class, new FractionAdapter());
+    builder.registerTypeAdapter(FFmpegFrameOrPacket.class, new FFmpegPacketsAndFramesAdapter());
     builder.registerTypeAdapter(
         FFmpegDisposition.class, new NamedBitsetAdapter<>(FFmpegDisposition.class));
 
