@@ -16,7 +16,8 @@ public class Codec {
   enum Type {
     VIDEO,
     AUDIO,
-    SUBTITLE
+    SUBTITLE,
+    DATA
   }
 
   final String name;
@@ -41,9 +42,9 @@ public class Codec {
    * ..V... = Video codec
    * ..A... = Audio codec
    * ..S... = Subtitle codec
-   * ...S.. = Supports draw_horiz_band
-   * ....D. = Supports direct rendering method 1
-   * .....T = Supports weird frame truncation
+   * ...I.. = Intra frame-only codec
+   * ....L. = Lossy compression
+   * .....S = Lossless compression
    * </pre>
    */
   public Codec(String name, String longName, String flags) {
@@ -65,8 +66,11 @@ public class Codec {
       case 'S':
         this.type = Type.SUBTITLE;
         break;
+      case 'D':
+        this.type = Type.DATA;
+        break;
       default:
-        throw new IllegalArgumentException("Invalid codec type '" + flags.charAt(3) + "'");
+        throw new IllegalArgumentException("Invalid codec type '" + flags.charAt(2) + "'");
     }
 
     // TODO There are more flags to parse
