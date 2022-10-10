@@ -35,57 +35,88 @@ public class ReadmeTest {
     // Construct them, and do nothing with them
   }
   @Test
-  public void testHLSVideoEncoding() throws  IOException{
-//    ffmpeg -i big_buck_bunny_720p_1mb.mp4  -hls_time 10  -hls_playlist_type vod -hls_segment_filename "video_segments_%0d.ts" hls_master_for_test.m3u8
+  public void testHLSVideoEncoding() throws IOException{
+    //String str = "ffmpeg -i big_buck_bunny_720p_1mb.mp4  -hls_time 10  -hls_playlist_type vod -hls_segment_filename video_segments_%0d.ts hls_master_for_test.m3u8";
     FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
-    String inFileName = Samples.big_buck_bunny_720p_1mb;
+    String inFileName = "/Users/admin/.bitnami/stackman/machines/xampp/volumes/root/htdocs/videoProcessing/file_example_MP4_1920_18MG.mp4";
     FFmpegProbeResult in = ffprobe.probe(inFileName);
     FFmpegBuilder builder = new FFmpegBuilder()
             .setInput(inFileName)
             .setInput(in)
             .overrideOutputFiles(true)
-            .addHlsArgs("-hls_time 10","-hls_playlist_type vod","-hls_segment_filename","\"video_segments_%0d.ts\"")
-            .addOutput("hls_master_for_test.m3u8")
+            .addOutput("/Users/admin/.bitnami/stackman/machines/xampp/volumes/root/htdocs/hls/hariom/file_example_MP4_1280_10MG/%v/index.m3u8")
+            .setPreset("slow")
+            .addExtraArgs("-g", "48")
+            .addExtraArgs("-sc_threshold","0")
+            .addExtraArgs("-map","0:0")
+            .addExtraArgs("-map","0:1")
+            .addExtraArgs("-map","0:0")
+            .addExtraArgs("-map","0:1")
+            .addExtraArgs("-map","0:0")
+            .addExtraArgs("-map","0:1")
+            .addExtraArgs("-map","0:0")
+            .addExtraArgs("-map","0:1")
+            .addExtraArgs("-map","0:0")
+            .addExtraArgs("-map","0:1")
+            .addExtraArgs("-map","0:0")
+            .addExtraArgs("-map","0:1")
+            .addExtraArgs("-s:v:0","1920*1080")
+            .addExtraArgs("-b:v:0","1800k")
+            .addExtraArgs("-s:v:1","1280*720")
+            .addExtraArgs("-b:v:1","1200k")
+            .addExtraArgs("-s:v:2","858*480")
+            .addExtraArgs("-b:v:2","750k")
+            .addExtraArgs("-s:v:3","630*360")
+            .addExtraArgs("-b:v:3","550k")
+            .addExtraArgs("-s:v:4","426*240")
+            .addExtraArgs("-b:v:4","400k")
+            .addExtraArgs("-s:v:5","256*144")
+            .addExtraArgs("-b:v:5","200k")
+            .addExtraArgs("-c:a","copy")
+            .addExtraArgs("-var_stream_map","v:0,a:0,name:1080p v:1,a:1,name:720p v:2,a:2,name:480p v:3,a:3,name:360p v:4,a:4,name:240p v:5,a:5,name:144p")
+            .addExtraArgs("-master_pl_name","master.m3u8")
+            .addExtraArgs("-f","hls")
+            .addExtraArgs("-hls_time","10")
+            .addExtraArgs("-hls_playlist_type","vod")
+            .addExtraArgs("-hls_list_size","0")
+            .addExtraArgs("-hls_segment_filename","/Users/admin/.bitnami/stackman/machines/xampp/volumes/root/htdocs/hls/hariom/file_example_MP4_1280_10MG/%v/segment%d.ts")
             .done();
     String expected =
-            "ffmpeg -y -v error -i src/test/resources/net/bramp/ffmpeg/samples/big_buck_bunny_720p_1mb.mp4 -hls_time 10 -hls_playlist_type vod -hls_segment_filename \"video_segments_%0d.ts\" hls_master_for_test.m3u8";
-
+            "ffmpeg -y -v error -i src/test/resources/net/bramp/ffmpeg/samples/big_buck_bunny_720p_1mb.mp4 -hls_time 10 -hls_playlist_type vod -hls_segment_filename video_segments_%0d.ts hls_master_for_test.m3u8";
     String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
     System.out.println("actual "+actual);
-    //FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
-
+   // assertEquals(expected, actual);
     // Run a one-pass encode
-    executor.createJob(builder).run();
-
+    //executor.createJob(builder).run();
     // Or run a two-pass encode (which is slower at the cost of better quality
     //executor.createTwoPassJob(builder).run();
-//    FFmpegJob job =
-//            executor.createJob(
-//                    builder,
-//                    new ProgressListener() {
-//
-//                      // Using the FFmpegProbeResult determine the duration of the input
-//                      final double duration_ns = in.getFormat().duration * TimeUnit.SECONDS.toNanos(1);
-//
-//                      @Override
-//                      public void progress(Progress progress) {
-//                        double percentage = progress.out_time_ns / duration_ns;
-//
-//                        // Print out interesting information about the progress
-//                        System.out.println(
-//                                String.format(
-//                                        locale,
-//                                        "[%.0f%%] status:%s frame:%d time:%s fps:%.0f speed:%.2fx",
-//                                        percentage * 100,
-//                                        progress.status,
-//                                        progress.frame,
-//                                        FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
-//                                        progress.fps.doubleValue(),
-//                                        progress.speed));
-//                      }
-//                    });
-//
-//    job.run();
+    FFmpegJob job =
+            executor.createJob(
+                    builder,
+                    new ProgressListener() {
+
+                      // Using the FFmpegProbeResult determine the duration of the input
+                      final double duration_ns = in.getFormat().duration * TimeUnit.SECONDS.toNanos(1);
+
+                      @Override
+                      public void progress(Progress progress) {
+                        double percentage = progress.out_time_ns / duration_ns;
+
+                        // Print out interesting information about the progress
+                        System.out.println(
+                                String.format(
+                                        locale,
+                                        "[%.0f%%] status:%s frame:%d time:%s fps:%.0f speed:%.2fx",
+                                        percentage * 100,
+                                        progress.status,
+                                        progress.frame,
+                                        FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
+                                        progress.fps.doubleValue(),
+                                        progress.speed));
+                      }
+                    });
+
+    job.run();
 //
 //    assertEquals(FFmpegJob.State.FINISHED, job.getState());
   }
@@ -99,14 +130,18 @@ public class ReadmeTest {
         new FFmpegBuilder()
             .setInput(inFilename) // Filename, or a FFmpegProbeResult
             .setInput(in)
-            .overrideOutputFiles(true) // Override the output if it exists
-            .addOutput("output.mp4") // Filename for the destination
+            .overrideOutputFiles(true)
+                .addExtraArgs("-hls_time 10","-hls_playlist_type vod","-hls_segment_filename","video_segments_%0d.ts")
+                // Override the output if it exists
+            .addOutput("output.mp4")
+               // Filename for the destination
             .setFormat("mp4") // Format is inferred from filename, or can be set
             .setTargetSize(250_000) // Aim for a 250KB file
             .disableSubtitle() // No subtiles
             .setAudioChannels(1) // Mono audio
             .setAudioCodec("aac") // using the aac codec
             .setAudioSampleRate(48_000) // at 48KHz
+                .addExtraArgs("-qscale:v", "7")
             .setAudioBitRate(32768) // at 32 kbit/s
             .setVideoCodec("libx264") // Video using x264
             .setVideoFrameRate(24, 1) // at 24 frames per second
