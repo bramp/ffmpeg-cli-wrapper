@@ -26,7 +26,7 @@ public class FFmpegStream {
 
   public String codec_tag_string;
   public String codec_tag;
-
+  public String id;
   public int width, height;
 
   public int has_b_frames;
