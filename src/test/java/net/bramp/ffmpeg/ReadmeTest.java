@@ -37,14 +37,16 @@ public class ReadmeTest {
   @Test
   public void testHLSVideoEncoding() throws IOException{
     //String str = "ffmpeg -i big_buck_bunny_720p_1mb.mp4  -hls_time 10  -hls_playlist_type vod -hls_segment_filename video_segments_%0d.ts hls_master_for_test.m3u8";
+    // get the start time
+    long start = System.currentTimeMillis();
     FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
-    String inFileName = "/Users/admin/.bitnami/stackman/machines/xampp/volumes/root/htdocs/videoProcessing/file_example_MP4_1920_18MG.mp4";
+    String inFileName = "/Users/admin/.bitnami/stackman/machines/xampp/volumes/root/htdocs/videoProcessing/multilanguage.mp4";
     FFmpegProbeResult in = ffprobe.probe(inFileName);
     FFmpegBuilder builder = new FFmpegBuilder()
             .setInput(inFileName)
             .setInput(in)
             .overrideOutputFiles(true)
-            .addOutput("/Users/admin/.bitnami/stackman/machines/xampp/volumes/root/htdocs/hls/hariom/file_example_MP4_1280_10MG/%v/index.m3u8")
+            .addOutput("/Users/admin/.bitnami/stackman/machines/xampp/volumes/root/htdocs/hls/hariom/multilanguage/%v/index.m3u8")
             .setPreset("slow")
             .addExtraArgs("-g", "48")
             .addExtraArgs("-sc_threshold","0")
@@ -79,10 +81,8 @@ public class ReadmeTest {
             .addExtraArgs("-hls_time","10")
             .addExtraArgs("-hls_playlist_type","vod")
             .addExtraArgs("-hls_list_size","0")
-            .addExtraArgs("-hls_segment_filename","/Users/admin/.bitnami/stackman/machines/xampp/volumes/root/htdocs/hls/hariom/file_example_MP4_1280_10MG/%v/segment%d.ts")
+            .addExtraArgs("-hls_segment_filename","/Users/admin/.bitnami/stackman/machines/xampp/volumes/root/htdocs/hls/hariom/multilanguage/%v/segment%d.ts")
             .done();
-    String expected =
-            "ffmpeg -y -v error -i src/test/resources/net/bramp/ffmpeg/samples/big_buck_bunny_720p_1mb.mp4 -hls_time 10 -hls_playlist_type vod -hls_segment_filename video_segments_%0d.ts hls_master_for_test.m3u8";
     String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
     System.out.println("actual "+actual);
    // assertEquals(expected, actual);
@@ -117,6 +117,11 @@ public class ReadmeTest {
                     });
 
     job.run();
+    long end = System.currentTimeMillis();
+
+    // execution time
+    long execution = (end - start)/1000;
+    System.out.println("Execution time: " + execution + " seconds");
 //
 //    assertEquals(FFmpegJob.State.FINISHED, job.getState());
   }
