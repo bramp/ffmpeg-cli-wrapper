@@ -18,6 +18,7 @@ public class FFmpegStream {
   }
 
   public int index;
+  public String id;
   public String codec_name;
   public String codec_long_name;
   public String profile;
