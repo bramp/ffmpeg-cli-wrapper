@@ -54,8 +54,7 @@ FFmpegBuilder builder = new FFmpegBuilder()
     .setVideoFrameRate(24, 1)     // at 24 frames per second
     .setVideoResolution(640, 480) // at 640x480 resolution
 
-    .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL) // Allow FFmpeg to use experimental specs
-    .done();
+    .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL); // Allow FFmpeg to use experimental specs
 
 FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 
