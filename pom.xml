@@ -39,7 +39,7 @@
     </developers>
 
     <properties>
-        <base.java.version>11</base.java.version>
+        <base.java.version>1.8</base.java.version>
 
         <powermock.version>1.5.2</powermock.version>
 
