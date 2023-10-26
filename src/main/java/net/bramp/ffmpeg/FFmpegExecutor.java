@@ -45,4 +45,8 @@ public class FFmpegExecutor {
   public FFmpegJob createTwoPassJob(FFmpegBuilder builder) {
     return new TwoPassFFmpegJob(ffmpeg, builder);
   }
+
+  public FFmpegJob createTwoPassJob(FFmpegBuilder builder, ProgressListener listener) {
+    return new TwoPassFFmpegJob(ffmpeg, builder, listener);
+  }
 }
