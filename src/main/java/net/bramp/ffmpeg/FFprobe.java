@@ -78,7 +78,7 @@ public class FFprobe extends FFcommon {
   }
 
   // TODO Add Probe Inputstream
-  public FFmpegProbeResult probe(String mediaPath, @Nullable String userAgent) throws IOException {
+  public FFmpegProbeResult probe(String mediaPath, @Nullable String userAgent, @Nullable String... extraArgs) throws IOException {
     checkIfFFprobe();
 
     ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
@@ -91,6 +91,10 @@ public class FFprobe extends FFcommon {
 
     if (userAgent != null) {
       args.add("-user_agent", userAgent);
+    }
+    
+    if (extraArgs != null) {
+      args.add(extraArgs);
     }
 
     args.add("-print_format", "json")
