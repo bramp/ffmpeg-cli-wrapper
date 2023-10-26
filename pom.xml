@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.bramp.ffmpeg</groupId>
     <artifactId>ffmpeg</artifactId>
-    <version>0.7.1-SNAPSHOT</version>
+    <version>0.8.0</version>
 
     <name>FFmpeg Wrapper</name>
     <description>Simple Java wrapper around FFmpeg command-line interface</description>
@@ -11,7 +11,7 @@
     <scm>
         <url>https://github.com/bramp/ffmpeg-cli-wrapper</url>
         <connection>scm:git:git@github.com:bramp/ffmpeg-cli-wrapper.git</connection>
-        <tag>ffmpeg-0.7.0</tag>
+        <tag>ffmpeg-0.8.0</tag>
     </scm>
     
     <issueManagement>
