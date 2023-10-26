@@ -15,12 +15,13 @@ A fluent interface to running FFmpeg from Java.
 Install
 -------
 
-Maven:
+We currently support Java 8 and above. Use Maven to install the dependency.
+
 ```xml
 <dependency>
   <groupId>net.bramp.ffmpeg</groupId>
   <artifactId>ffmpeg</artifactId>
-  <version>0.7.0</version>
+  <version>0.8.0</version>
 </dependency>
 ```
 
@@ -134,6 +135,7 @@ mvn
 mvn test
 
 # To release (pushing jar to maven central)
+# (don't forget to set up your ~/.m2/settings.xml)
 mvn release:prepare
 mvn release:perform
 
@@ -151,7 +153,6 @@ mvn versions:display-plugin-updates
 
 # Library Dependencies
 mvn versions:display-dependency-updates 
-
 ```
 
 Install FFmpeg on Ubuntu
