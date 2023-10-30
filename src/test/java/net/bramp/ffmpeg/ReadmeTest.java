@@ -148,10 +148,8 @@ public class ReadmeTest {
   public void testHLSVideoEncoding() throws IOException {
     long start = System.currentTimeMillis();
     FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
-    String inFileName = "src/test/resources/net/bramp/ffmpeg/samples/big_buck_bunny_720p_1mb.mp4";
-    FFmpegProbeResult in = ffprobe.probe(inFileName);
+    FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
     FFmpegBuilder builder = new FFmpegBuilder()
-            .setInput(inFileName)
             .setInput(in)
             .overrideOutputFiles(true)
             .addOutput("src/test/resources/net/bramp/ffmpeg/samples/%v/index.m3u8")
