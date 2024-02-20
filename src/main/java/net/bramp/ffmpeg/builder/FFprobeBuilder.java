@@ -4,9 +4,12 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
 import javax.annotation.CheckReturnValue;
+import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 
 /**
  * Builds a ffprobe command line
@@ -19,6 +22,8 @@ public class FFprobeBuilder {
   private boolean showPackets = false;
   private String userAgent;
   private String input;
+
+  private final List<String> extraArgs = new ArrayList<>();
 
   public FFprobeBuilder setShowFormat(boolean showFormat) {
     this.showFormat = showFormat;
@@ -56,6 +61,17 @@ public class FFprobeBuilder {
     return this;
   }
 
+  public FFprobeBuilder addExtraArgs(String... values) {
+    checkArgument(values != null, "extraArgs can not be null");
+    checkArgument(values.length > 0, "one or more values must be supplied");
+    checkNotEmpty(values[0], "first extra arg may not be empty");
+
+    for (String value : values) {
+      extraArgs.add(checkNotNull(value));
+    }
+    return this;
+  }
+
   @CheckReturnValue
   public List<String> build() {
     ImmutableList.Builder<String> args = new ImmutableList.Builder<>();
@@ -70,6 +86,8 @@ public class FFprobeBuilder {
     if (userAgent != null) {
       args.add("-user_agent", userAgent);
     }
+
+    args.addAll(extraArgs);
 
     if (showFormat) args.add("-show_format");
     if (showStreams) args.add("-show_streams");

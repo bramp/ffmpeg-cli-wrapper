@@ -90,6 +90,10 @@ public class FFprobe extends FFcommon {
     return probe(builder.build());
   }
 
+  public FFmpegProbeResult probe(String mediaPath, @Nullable String userAgent, @Nullable String... extraArgs) throws IOException {
+    return probe(this.builder().setInput(mediaPath).setUserAgent(userAgent).addExtraArgs(extraArgs).build());
+  }
+
   // TODO Add Probe Inputstream
   public FFmpegProbeResult probe(List<String> args) throws IOException {
     checkIfFFprobe();
