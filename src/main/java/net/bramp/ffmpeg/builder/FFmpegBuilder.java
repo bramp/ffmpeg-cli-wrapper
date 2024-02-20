@@ -64,6 +64,7 @@ public class FFmpegBuilder {
   Verbosity verbosity = Verbosity.ERROR;
   URI progress;
   String user_agent;
+  Integer qscale;
 
   // Input settings
   String format;
@@ -202,6 +203,17 @@ public class FFmpegBuilder {
   }
 
   /**
+   * Sets vbr quality when decoding mp3 output.
+   * @param quality the quality between 0 and 9. Where 0 is best.
+   * @return FFmpegBuilder
+   */
+  public FFmpegBuilder setVBR(Integer quality) {
+    Preconditions.checkArgument(quality > 0 && quality < 9, "vbr must be between 0 and 9");
+    this.qscale = quality;
+    return this;
+  }
+
+  /**
    * Add additional ouput arguments (for flags which aren't currently supported).
    *
    * @param values The extra arguments.
@@ -325,6 +337,10 @@ public class FFmpegBuilder {
 
     if (!Strings.isNullOrEmpty(complexFilter)) {
       args.add("-filter_complex", complexFilter);
+    }
+
+    if (qscale != null) {
+      args.add("-qscale:a", qscale.toString());
     }
 
     for (FFmpegOutputBuilder output : this.outputs) {

@@ -1,6 +1,13 @@
 package net.bramp.ffmpeg.info;
 
+import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.ProcessFunction;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
@@ -10,27 +17,16 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.when;
-
 @RunWith(MockitoJUnitRunner.class)
 public class FFmpegGetInfoTest {
-  @Mock
-  ProcessFunction runFunc;
+  @Mock ProcessFunction runFunc;
 
   @Before
   public void before() throws IOException {
     when(runFunc.run(argThatHasItem("-version")))
         .thenAnswer(new NewProcessAnswer("ffmpeg-version"));
 
-    when(runFunc.run(argThatHasItem("-codecs")))
-        .thenAnswer(new NewProcessAnswer("ffmpeg-codecs"));
+    when(runFunc.run(argThatHasItem("-codecs"))).thenAnswer(new NewProcessAnswer("ffmpeg-codecs"));
   }
 
   @Test
@@ -60,7 +56,6 @@ public class FFmpegGetInfoTest {
           break;
         default:
           otherCodecs.add(codec);
-
       }
     }
 

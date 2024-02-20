@@ -31,7 +31,8 @@ public class FFmpegTest {
     when(runFunc.run(argThatHasItem("-formats")))
         .thenAnswer(new NewProcessAnswer("ffmpeg-formats"));
     when(runFunc.run(argThatHasItem("-codecs"))).thenAnswer(new NewProcessAnswer("ffmpeg-codecs"));
-    when(runFunc.run(argThatHasItem("-pix_fmts"))).thenAnswer(new NewProcessAnswer("ffmpeg-pix_fmts"));
+    when(runFunc.run(argThatHasItem("-pix_fmts")))
+        .thenAnswer(new NewProcessAnswer("ffmpeg-pix_fmts"));
 
     ffmpeg = new FFmpeg(runFunc);
   }
