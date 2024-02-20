@@ -152,7 +152,7 @@ public class FFmpegBuilder {
   }
 
     public FFmpegBuilder setThreads(int threads) {
-        checkArgument(threads != 0, "threads must be greater than zero");
+        checkArgument(threads > 0, "threads must be greater than zero");
         this.threads = threads;
         return this;
     }

@@ -413,39 +413,48 @@ public class FFmpegBuilderTest {
   }
 
   @Test
-    public void testPresets() {
-        List<String> args =
-                new FFmpegBuilder()
-                        .addInput("input")
-                        .addOutput("output")
-                        .setPreset("a")
-                        .setPresetFilename("b")
-                        .setVideoPreset("c")
-                        .setAudioPreset("d")
-                        .setSubtitlePreset("e")
-                        .done()
-                        .build();
+  public void testPresets() {
+    List<String> args =
+        new FFmpegBuilder()
+            .addInput("input")
+            .addOutput("output")
+            .setPreset("a")
+            .setPresetFilename("b")
+            .setVideoPreset("c")
+            .setAudioPreset("d")
+            .setSubtitlePreset("e")
+            .done()
+            .build();
 
-        assertEquals(
-                args,
-                ImmutableList.of(
-                        "-y", "-v", "error", "-i", "input", "-preset", "a", "-fpre", "b", "-vpre", "c", "-apre",
-                        "d", "-spre", "e", "output"));
+    assertEquals(
+        args,
+        ImmutableList.of(
+            "-y", "-v", "error", "-i", "input", "-preset", "a", "-fpre", "b", "-vpre", "c", "-apre",
+            "d", "-spre", "e", "output"));
     }
 
-    @Test
-    public void testThreads() {
-        List<String> args =
-                new FFmpegBuilder()
-                        .setThreads(2)
-                        .addInput("input")
-                        .addOutput("output")
-                        .done()
-                        .build();
+  @Test
+  public void testThreads() {
+      List<String> args =
+          new FFmpegBuilder()
+              .setThreads(2)
+              .addInput("input")
+              .addOutput("output")
+              .done()
+              .build();
 
-        assertEquals(
-                args,
-                ImmutableList.of(
-                        "-y", "-v", "error", "-threads", "2", "-i", "input", "output"));
+      assertEquals(
+          args,
+          ImmutableList.of("-y", "-v", "error", "-threads", "2", "-i", "input", "output"));
     }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testZeroThreads() {
+    new FFmpegBuilder().setThreads(0);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testNegativeNumberOfThreads() {
+    new FFmpegBuilder().setThreads(-1);
+  }
 }
