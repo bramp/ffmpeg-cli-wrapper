@@ -65,4 +65,12 @@ public class FFmpegStream {
   public FFmpegDisposition disposition;
 
   public Map<String, String> tags;
+  public SideData[] side_data_list;
+
+  public static class SideData {
+
+    public String side_data_type;
+    public String displaymatrix;
+    public int rotation;
+  }
 }

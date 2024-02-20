@@ -59,6 +59,9 @@ public class FFprobeTest {
     when(runFunc.run(argThatHasItem(Samples.big_buck_bunny_720p_1mb_with_packets_and_frames)))
         .thenAnswer(new NewProcessAnswer("ffprobe-big_buck_bunny_720p_1mb_packets_and_frames.mp4"));
 
+    when(runFunc.run(argThatHasItem(Samples.side_data_list)))
+        .thenAnswer(new NewProcessAnswer("ffprobe-side_data_list"));
+
     ffprobe = new FFprobe(runFunc);
   }
 
@@ -379,5 +382,19 @@ public class FFprobeTest {
     assertThat(info.getStreams().get(1).codec_time_base, is(Fraction.ZERO));
 
     // System.out.println(FFmpegUtils.getGson().toJson(info));
+  }
+
+  @Test
+  public void testProbeSideDataList() throws IOException {
+    FFmpegProbeResult info = ffprobe.probe(Samples.side_data_list);
+
+    // Check edge case with a time larger than an integer
+    assertThat(info.getStreams().get(0).side_data_list.length, is(1));
+    assertThat(info.getStreams().get(0).side_data_list[0].side_data_type, is("Display Matrix"));
+    assertThat(
+        info.getStreams().get(0).side_data_list[0].displaymatrix,
+        is(
+            "\n00000000:            0      -65536           0\n00000001:        65536           0           0\n00000002:            0           0  1073741824\n"));
+    assertThat(info.getStreams().get(0).side_data_list[0].rotation, is(90));
   }
 }
