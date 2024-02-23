@@ -122,7 +122,7 @@ public class FFprobeTest {
     // Test a UTF-8 name
     assertThat(
         info.getFormat().filename,
-        is("c:\\Users\\Bob\\Always On My Mind [Program Only] - Adelen.mp4"));
+        is("c:\\Users\\Bob\\Always On My Mind [Program Only] - Adelén.mp4"));
 
     // System.out.println(FFmpegUtils.getGson().toJson(info));
   }
