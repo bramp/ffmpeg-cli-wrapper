@@ -1,6 +1,14 @@
 package net.bramp.ffmpeg;
 
+import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
 import com.google.common.base.Joiner;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.builder.FFmpegOutputBuilder;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
@@ -10,13 +18,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
-import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 
 /**
  * Ensures the examples in the Examples on github continue to work.
@@ -264,16 +265,17 @@ public class ExamplesTest {
   // A test with videos added in a loop.
   @Test
   public void testExample10() throws IOException {
-    String expected = "ffmpeg -y -v error"
-        + " -f webm_dash_manifest"
-        + " -i audio.webm"
-        + " -i video_1.webm"
-        + " -i video_2.webm"
-        + " -i video_3.webm"
-        + " -vcodec copy -acodec copy"
-        + " -map 0 -map 1 -map 2 -map 3"
-        + " -adaptation_sets \"id=0,streams=0 id=1,streams=1,2,3\""
-        + " output.mpd";
+    String expected =
+        "ffmpeg -y -v error"
+            + " -f webm_dash_manifest"
+            + " -i audio.webm"
+            + " -i video_1.webm"
+            + " -i video_2.webm"
+            + " -i video_3.webm"
+            + " -vcodec copy -acodec copy"
+            + " -map 0 -map 1 -map 2 -map 3"
+            + " -adaptation_sets \"id=0,streams=0 id=1,streams=1,2,3\""
+            + " output.mpd";
 
     ArrayList<String> streams = new ArrayList<>();
     FFmpegBuilder builder = new FFmpegBuilder();
@@ -285,18 +287,60 @@ public class ExamplesTest {
       streams.add(String.format("%d", i));
     }
 
-    FFmpegOutputBuilder out = builder.addOutput("output.mpd")
-        .setVideoCodec("copy").setAudioCodec("copy") // TODO Add a new setCodec(..) method.
-        .addExtraArgs("-map", "0");
+    FFmpegOutputBuilder out =
+        builder
+            .addOutput("output.mpd")
+            .setVideoCodec("copy")
+            .setAudioCodec("copy") // TODO Add a new setCodec(..) method.
+            .addExtraArgs("-map", "0");
 
     for (String stream : streams) {
       out.addExtraArgs("-map", stream);
     }
 
-    out.addExtraArgs("-adaptation_sets",
-        String.format("\"id=0,streams=0 id=1,streams=%s\"", Joiner.on(",").join(streams)))
+    out.addExtraArgs(
+            "-adaptation_sets",
+            String.format("\"id=0,streams=0 id=1,streams=%s\"", Joiner.on(",").join(streams)))
         .done();
 
+    String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
+    assertEquals(expected, actual);
+  }
+
+  // Directly use a Process instead of a FFmpegJob
+  @Test
+  @Ignore("because this test will invoke /path/to/ffmpeg.")
+  public void testExample11() throws IOException, InterruptedException {
+    FFmpegBuilder builder = new FFmpegBuilder().setInput("input").addOutput("output.mp4").done();
+
+    List<String> args = new ArrayList<>();
+    args.add("/path/to/ffmpeg");
+    args.addAll(builder.build());
+
+    ProcessBuilder processBuilder = new ProcessBuilder(args);
+    processBuilder.redirectErrorStream(true);
+
+    Process p = processBuilder.start();
+
+    Thread.sleep(1000);
+
+    p.destroy();
+  }
+
+  @Test
+  public void testExampleExample() throws IOException {
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .setInput("input.mp4")
+            .setStartOffset(1, TimeUnit.MINUTES)
+            .addOutput("output.mp4")
+            .setDuration(1, TimeUnit.MINUTES)
+            .setVideoCodec("copy")
+            .setAudioCodec("copy")
+            .done();
+
+    String expected =
+        "ffmpeg -y -v error -ss 00:01:00 -i input.mp4 -t 00:01:00 -vcodec copy -acodec copy output.mp4";
     String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
     assertEquals(expected, actual);
   }

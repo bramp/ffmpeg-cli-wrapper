@@ -1,15 +1,14 @@
 package net.bramp.ffmpeg;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Iterators.asEnumeration;
+
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
-
-import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterators.asEnumeration;
+import javax.annotation.Nullable;
 
 /** Random test helper methods. */
 public class Helper {

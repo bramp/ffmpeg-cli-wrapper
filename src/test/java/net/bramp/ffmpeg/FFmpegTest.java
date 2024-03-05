@@ -1,22 +1,23 @@
 package net.bramp.ffmpeg;
 
+import static org.hamcrest.Matchers.hasItem;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
+import static org.mockito.hamcrest.MockitoHamcrest.argThat;
+
+import java.io.IOException;
+import java.util.List;
+
 import com.google.common.collect.Lists;
 import net.bramp.ffmpeg.fixtures.Codecs;
 import net.bramp.ffmpeg.fixtures.Formats;
+import net.bramp.ffmpeg.fixtures.PixelFormats;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.io.IOException;
-import java.util.List;
-
-import static org.hamcrest.Matchers.hasItem;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
-import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FFmpegTest {
@@ -32,6 +33,8 @@ public class FFmpegTest {
     when(runFunc.run(argThatHasItem("-formats")))
         .thenAnswer(new NewProcessAnswer("ffmpeg-formats"));
     when(runFunc.run(argThatHasItem("-codecs"))).thenAnswer(new NewProcessAnswer("ffmpeg-codecs"));
+    when(runFunc.run(argThatHasItem("-pix_fmts")))
+        .thenAnswer(new NewProcessAnswer("ffmpeg-pix_fmts"));
     when(runFunc.run(argThatHasItem("toto.mp4")))
         .thenAnswer(new NewProcessAnswer("ffmpeg-version", "ffmpeg-no-such-file"));
 
@@ -82,5 +85,14 @@ public class FFmpegTest {
     // check calls to Appendables
     verify(processInputStream, times(1)).append(any(CharSequence.class));
     verify(processErrStream, times(1)).append(any(CharSequence.class));
+  }
+
+  @Test
+  public void testPixelFormat() throws IOException {
+    // Run twice, the second should be cached
+    assertEquals(PixelFormats.PIXEL_FORMATS, ffmpeg.pixelFormats());
+    assertEquals(PixelFormats.PIXEL_FORMATS, ffmpeg.pixelFormats());
+
+    verify(runFunc, times(1)).run(argThatHasItem("-pix_fmts"));
   }
 }

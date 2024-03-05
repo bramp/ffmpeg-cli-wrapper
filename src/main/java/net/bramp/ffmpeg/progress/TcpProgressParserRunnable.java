@@ -1,13 +1,13 @@
 package net.bramp.ffmpeg.progress;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.CountDownLatch;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 class TcpProgressParserRunnable implements Runnable {
 

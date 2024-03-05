@@ -1,11 +1,8 @@
 package net.bramp.ffmpeg.job;
 
-import com.google.common.base.Throwables;
-import net.bramp.ffmpeg.FFmpeg;
-import net.bramp.ffmpeg.builder.FFmpegBuilder;
-import net.bramp.ffmpeg.progress.ProgressListener;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import javax.annotation.Nullable;
+import com.google.common.base.Throwables;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -13,8 +10,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import javax.annotation.Nullable;
+import net.bramp.ffmpeg.FFmpeg;
+import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import net.bramp.ffmpeg.progress.ProgressListener;
 
 public class TwoPassFFmpegJob extends FFmpegJob {
 

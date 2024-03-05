@@ -1,14 +1,13 @@
 package net.bramp.ffmpeg;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.io.IOException;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.job.FFmpegJob;
 import net.bramp.ffmpeg.job.SinglePassFFmpegJob;
 import net.bramp.ffmpeg.job.TwoPassFFmpegJob;
 import net.bramp.ffmpeg.progress.ProgressListener;
-
-import java.io.IOException;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class FFmpegExecutor {
 
@@ -45,5 +44,9 @@ public class FFmpegExecutor {
    */
   public FFmpegJob createTwoPassJob(FFmpegBuilder builder) {
     return new TwoPassFFmpegJob(ffmpeg, builder);
+  }
+
+  public FFmpegJob createTwoPassJob(FFmpegBuilder builder, ProgressListener listener) {
+    return new TwoPassFFmpegJob(ffmpeg, builder, listener);
   }
 }

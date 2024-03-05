@@ -2,13 +2,11 @@ package net.bramp.ffmpeg;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.CheckReturnValue;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Simple function that creates a Process with the arguments, and returns a BufferedReader reading

@@ -1,16 +1,15 @@
 package net.bramp.ffmpeg.progress;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static net.bramp.ffmpeg.FFmpegUtils.fromTimecode;
+
 import com.google.common.base.MoreObjects;
+import java.util.Objects;
+import javax.annotation.CheckReturnValue;
 import net.bramp.ffmpeg.FFmpegUtils;
 import org.apache.commons.lang3.math.Fraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.CheckReturnValue;
-import java.util.Objects;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static net.bramp.ffmpeg.FFmpegUtils.fromTimecode;
 
 // TODO Change to be immutable
 public class Progress {
@@ -156,6 +155,9 @@ public class Progress {
         // Note this value is in microseconds, not milliseconds, and is based on AV_TIME_BASE which
         // could change.
         // out_time_ns = Long.parseLong(value) * 1000;
+        return false;
+
+      case "out_time_us":
         return false;
 
       case "out_time":

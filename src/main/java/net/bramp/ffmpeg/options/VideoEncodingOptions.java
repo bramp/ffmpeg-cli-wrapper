@@ -1,8 +1,7 @@
 package net.bramp.ffmpeg.options;
 
-import org.apache.commons.lang3.math.Fraction;
-
 import java.beans.ConstructorProperties;
+import org.apache.commons.lang3.math.Fraction;
 
 /**
  * Encoding options for video

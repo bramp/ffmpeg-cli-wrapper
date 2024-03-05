@@ -1,14 +1,13 @@
 package net.bramp.ffmpeg.nut;
 
-import com.google.common.io.CountingInputStream;
-import net.bramp.ffmpeg.io.CRC32InputStream;
+import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.io.CountingInputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import net.bramp.ffmpeg.io.CRC32InputStream;
 
 /** A DataInputStream that implements a couple of custom FFmpeg Nut datatypes. */
 public class NutDataInputStream implements DataInput {

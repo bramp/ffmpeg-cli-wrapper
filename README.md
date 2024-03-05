@@ -4,7 +4,7 @@ by Andrew Brampton ([bramp.net](https://bramp.net)) (c) 2013-2014,2016
 
 A fluent interface to running FFmpeg from Java.
 
-![Java](https://img.shields.io/badge/Java-7+-brightgreen.svg)
+![Java](https://img.shields.io/badge/Java-8+-brightgreen.svg)
 [![Build Status](https://img.shields.io/travis/bramp/ffmpeg-cli-wrapper/master.svg)](https://travis-ci.org/bramp/ffmpeg-cli-wrapper)
 [![Coverage Status](https://img.shields.io/coveralls/bramp/ffmpeg-cli-wrapper.svg)](https://coveralls.io/github/bramp/ffmpeg-cli-wrapper)
 [![Maven](https://img.shields.io/maven-central/v/net.bramp.ffmpeg/ffmpeg.svg)](http://mvnrepository.com/artifact/net.bramp.ffmpeg/ffmpeg)
@@ -15,12 +15,13 @@ A fluent interface to running FFmpeg from Java.
 Install
 -------
 
-Maven:
+We currently support Java 8 and above. Use Maven to install the dependency.
+
 ```xml
 <dependency>
   <groupId>net.bramp.ffmpeg</groupId>
   <artifactId>ffmpeg</artifactId>
-  <version>0.6.2</version>
+  <version>0.8.0</version>
 </dependency>
 ```
 
@@ -55,7 +56,7 @@ FFmpegBuilder builder = new FFmpegBuilder()
     .setVideoResolution(640, 480) // at 640x480 resolution
 
     .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL) // Allow FFmpeg to use experimental specs
-    .done();
+  .done();
 
 FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 
@@ -135,12 +136,24 @@ mvn
 mvn test
 
 # To release (pushing jar to maven central)
+# (don't forget to set up your ~/.m2/settings.xml)
 mvn release:prepare
 mvn release:perform
 
 # To publish javadoc
 git checkout ffmpeg-0.x
 mvn clean javadoc:aggregate scm-publish:publish-scm
+```
+
+Bumpings Deps
+-----
+
+```bash
+# Update Maven Plugins
+mvn versions:display-plugin-updates
+
+# Library Dependencies
+mvn versions:display-dependency-updates 
 ```
 
 Install FFmpeg on Ubuntu
@@ -150,7 +163,7 @@ We only the support the original FFmpeg, not the libav version. Before Ubuntu 12
 and later the original FFmpeg is shipped. If you have to run on a version with libav, you can install
 FFmpeg from a PPA, or using the static build. More information [here](http://askubuntu.com/q/373322/34845)
 
-Get invovled!
+Get involved!
 -------------
 
 We welcome contributions. Please check the [issue tracker](https://github.com/bramp/ffmpeg-cli-wrapper/issues).
@@ -162,7 +175,7 @@ on a volunteer basis, thus we can be slow to reply.
 Licence (Simplified BSD License)
 --------------------------------
 ```
-Copyright (c) 2016, Andrew Brampton
+Copyright (c) 2016-2022, Andrew Brampton
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

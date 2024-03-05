@@ -1,9 +1,6 @@
 package net.bramp.ffmpeg.progress;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.Timeout;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URI;
@@ -12,8 +9,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.Timeout;
 
 public abstract class AbstractProgressParserTest {
 

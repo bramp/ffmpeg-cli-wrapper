@@ -1,7 +1,6 @@
 package net.bramp.ffmpeg.io;
 
 import com.google.common.base.Charsets;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;

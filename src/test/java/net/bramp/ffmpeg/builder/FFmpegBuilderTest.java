@@ -1,17 +1,5 @@
 package net.bramp.ffmpeg.builder;
 
-import com.google.common.collect.ImmutableList;
-import net.bramp.ffmpeg.options.AudioEncodingOptions;
-import net.bramp.ffmpeg.options.EncodingOptions;
-import net.bramp.ffmpeg.options.MainEncodingOptions;
-import net.bramp.ffmpeg.options.VideoEncodingOptions;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import static com.nitorcreations.Matchers.reflectEquals;
 import static net.bramp.ffmpeg.FFmpeg.AUDIO_FORMAT_S16;
 import static net.bramp.ffmpeg.FFmpeg.AUDIO_SAMPLE_48000;
@@ -21,10 +9,23 @@ import static net.bramp.ffmpeg.builder.MetadataSpecifier.*;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.tag;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.usable;
 import static net.bramp.ffmpeg.builder.StreamSpecifierType.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
-/** @author bramp */
+import com.google.common.collect.ImmutableList;
+import java.io.IOException;
+import java.net.URI;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import net.bramp.ffmpeg.options.AudioEncodingOptions;
+import net.bramp.ffmpeg.options.EncodingOptions;
+import net.bramp.ffmpeg.options.MainEncodingOptions;
+import net.bramp.ffmpeg.options.VideoEncodingOptions;
+import org.junit.Test;
+
+/**
+ * @author bramp
+ */
 public class FFmpegBuilderTest {
 
   public FFmpegBuilderTest() throws IOException {}
@@ -368,6 +369,44 @@ public class FFmpegBuilderTest {
             "-y", "-v", "error", "-a", "b", "-i", "input", "-an", "-sn", "-c", "d", "output"));
   }
 
+  @Test
+  public void testVbr() {
+    List<String> args =
+        new FFmpegBuilder()
+            .setInput("input")
+            .setVBR(2)
+            .addOutput("output")
+            .done()
+            .build();
+
+    assertEquals(
+            args,
+            ImmutableList.of(
+                    "-y", "-v", "error", "-i", "input", "-qscale:a", "2", "output"));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testVbrNegativeParam() {
+    List<String> args =
+        new FFmpegBuilder()
+            .setInput("input")
+            .setVBR(-3)
+            .addOutput("output")
+            .done()
+            .build();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testVbrQualityExceedsRange() {
+    List<String> args =
+        new FFmpegBuilder()
+            .setInput("input")
+            .setVBR(10)
+            .addOutput("output")
+            .done()
+            .build();
+  }
+
   @Test(expected = IllegalArgumentException.class)
   public void testNothing() {
     List<String> unused = new FFmpegBuilder().build();
@@ -431,5 +470,30 @@ public class FFmpegBuilderTest {
         ImmutableList.of(
             "-y", "-v", "error", "-i", "input", "-preset", "a", "-fpre", "b", "-vpre", "c", "-apre",
             "d", "-spre", "e", "output"));
+    }
+
+  @Test
+  public void testThreads() {
+      List<String> args =
+          new FFmpegBuilder()
+              .setThreads(2)
+              .addInput("input")
+              .addOutput("output")
+              .done()
+              .build();
+
+      assertEquals(
+          args,
+          ImmutableList.of("-y", "-v", "error", "-threads", "2", "-i", "input", "output"));
+    }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testZeroThreads() {
+    new FFmpegBuilder().setThreads(0);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testNegativeNumberOfThreads() {
+    new FFmpegBuilder().setThreads(-1);
   }
 }

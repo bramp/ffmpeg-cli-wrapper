@@ -1,6 +1,19 @@
 package net.bramp.ffmpeg.nut;
 
+import static org.junit.Assert.assertEquals;
+
 import com.google.common.collect.ImmutableList;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.fixtures.Samples;
@@ -9,20 +22,6 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
-import static org.junit.Assert.assertEquals;
 
 // TODO fix "invalid packet checksum" when running test
 public class NutReaderTest {
@@ -44,7 +43,7 @@ public class NutReaderTest {
             .addStdoutOutput()
             .setFormat("nut")
             .setVideoCodec("rawvideo")
-            //.setVideoPixelFormat("rgb24") // TODO make 24bit / channel work
+            // .setVideoPixelFormat("rgb24") // TODO make 24bit / channel work
             .setVideoPixelFormat("argb") // 8 bits per channel
             .setAudioCodec("pcm_s32le")
             .done()

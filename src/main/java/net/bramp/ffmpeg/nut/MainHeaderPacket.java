@@ -1,11 +1,10 @@
 package net.bramp.ffmpeg.nut;
 
 import com.google.common.base.MoreObjects;
-import org.apache.commons.lang3.math.Fraction;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.math.Fraction;
 
 public class MainHeaderPacket extends Packet {
 

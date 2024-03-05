@@ -2,7 +2,9 @@ package net.bramp.ffmpeg.options;
 
 import java.beans.ConstructorProperties;
 
-/** @author bramp */
+/**
+ * @author bramp
+ */
 public class EncodingOptions {
 
   public final MainEncodingOptions main;

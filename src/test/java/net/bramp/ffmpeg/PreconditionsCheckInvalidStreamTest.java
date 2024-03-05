@@ -1,13 +1,12 @@
 package net.bramp.ffmpeg;
 
+import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-
-import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
 
 @RunWith(Parameterized.class)
 public class PreconditionsCheckInvalidStreamTest {

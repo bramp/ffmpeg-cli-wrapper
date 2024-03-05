@@ -2,11 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.bramp.ffmpeg</groupId>
     <artifactId>ffmpeg</artifactId>
-    <version>0.6.3-SNAPSHOT</version>
-
-    <prerequisites>
-        <maven>3.0.5</maven>
-    </prerequisites>
+    <version>0.8.1-SNAPSHOT</version>
 
     <name>FFmpeg Wrapper</name>
     <description>Simple Java wrapper around FFmpeg command-line interface</description>
@@ -15,7 +11,7 @@
     <scm>
         <url>https://github.com/bramp/ffmpeg-cli-wrapper</url>
         <connection>scm:git:git@github.com:bramp/ffmpeg-cli-wrapper.git</connection>
-        <tag>HEAD</tag>
+        <tag>ffmpeg-0.7.0</tag>
     </scm>
     
     <issueManagement>
@@ -43,14 +39,12 @@
     </developers>
 
     <properties>
+        <base.java.version>1.8</base.java.version>
+
         <powermock.version>1.5.2</powermock.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <java.version>1.7</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
 
     <dependencyManagement>
@@ -58,65 +52,70 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.25</version>
+                <version>2.0.9</version>
             </dependency>
             <dependency>
-                <groupId>com.google.code.findbugs</groupId>
-                <artifactId>annotations</artifactId>
-                <version>3.0.1u2</version>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-annotations</artifactId>
+                <version>4.8.0</version>
             </dependency>
             <dependency>
                 <groupId>com.google.errorprone</groupId>
                 <artifactId>error_prone_annotations</artifactId>
-                <version>2.0.19</version>
+                <version>2.23.0</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>20.0</version>
+                <version>32.1.3-jre</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.5</version>
+                <version>2.15.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.5</version>
+                <version>3.13.0</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
-                <version>2.8.0</version>
+                <version>2.10.1</version>
             </dependency>
             <dependency>
                 <groupId>org.modelmapper</groupId>
                 <artifactId>modelmapper</artifactId>
-                <version>0.7.7</version>
+                <version>3.2.0</version>
             </dependency>
 
             <!-- Test Scope -->
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.2.2</version>
+                <version>1.4.12</version>
             </dependency>
 
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>4.13.2</version>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>2.7.19</version>
+                <version>5.6.0</version>
             </dependency>
             <dependency>
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest-integration</artifactId>
                 <version>1.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest</artifactId>
+                <version>2.2</version>
             </dependency>
             <dependency>
                 <groupId>com.nitorcreations</groupId>
@@ -126,7 +125,7 @@
             <dependency>
                 <groupId>org.glassfish.grizzly</groupId>
                 <artifactId>grizzly-http-server</artifactId>
-                <version>2.3.30</version>
+                <version>4.0.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -137,8 +136,8 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>annotations</artifactId>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -185,6 +184,11 @@
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-integration</artifactId>
             <scope>test</scope>
         </dependency>
@@ -217,32 +221,32 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>2.5.2</version>
+                    <version>3.1.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.12.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.19.1</version>
+                    <version>3.2.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>animal-sniffer-maven-plugin</artifactId>
-                    <version>1.15</version>
+                    <version>1.23</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -252,12 +256,12 @@
                 <plugin>
                     <groupId>org.eluder.coveralls</groupId>
                     <artifactId>coveralls-maven-plugin</artifactId>
-                    <version>4.2.0</version>
+                    <version>4.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.11.0</version>
                 </plugin>
                 <plugin>
                     <groupId>net.revelc.code</groupId>
@@ -267,52 +271,52 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.0.2</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.0.0-M1</version>
+                    <version>3.6.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-scm-publish-plugin</artifactId>
-                    <version>1.1</version>
+                    <version>3.2.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.8.2</version>
+                    <version>3.1.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
-                    <version>1.6</version>
+                    <version>3.1.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>2.5.3</version>
+                    <version>3.0.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>1.6.7</version>
+                    <version>1.6.13</version>
                 </plugin>
                 <plugin>
-                    <groupId>com.coveo</groupId>
+                    <groupId>com.spotify.fmt</groupId>
                     <artifactId>fmt-maven-plugin</artifactId>
-                    <version>1.5.0</version>
+                    <version>2.21.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>1.4.1</version>
+                    <version>3.4.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -321,14 +325,30 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
+                    <source>${base.java.version}</source>
+                    <target>${base.java.version}</target>
+                    <compilerId>javac-with-errorprone</compilerId>
+                    <forceJavacCompilerUse>true</forceJavacCompilerUse>
                     <showWarnings>true</showWarnings>
                     <compilerArgs>
                         <arg>-Xlint:all</arg>
-                        <!--arg>-Werror</arg-->
                     </compilerArgs>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.plexus</groupId>
+                        <artifactId>plexus-compiler-javac-errorprone</artifactId>
+                        <version>2.11.1</version>
+                    </dependency>
+                    <!-- override plexus-compiler-javac-errorprone's dependency on
+                         Error Prone with the latest version -->
+                    <dependency>
+                        <groupId>com.google.errorprone</groupId>
+                        <artifactId>error_prone_core</artifactId>
+                        <version>2.12.1</version>
+                    </dependency>
+                </dependencies>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -364,8 +384,9 @@
                     <destDir>apidocs</destDir>
                     <nohelp>true</nohelp>
                     <linksource>true</linksource>
+                    <source>8</source>
                     <links>
-                        <link>https://google.github.io/gson/apidocs/</link>
+                        <link>https://javadoc.io/doc/com.google.code.gson/gson/</link>
                         <link>https://commons.apache.org/proper/commons-lang/javadocs/api-release/</link>
                         <link>http://modelmapper.org/javadoc/</link>
                         <link>http://findbugs.sourceforge.net/api/</link>
@@ -457,12 +478,12 @@
                     <dependency>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>extra-enforcer-rules</artifactId>
-                        <version>1.0-beta-4</version>
+                        <version>1.5.1</version>
                     </dependency>
                     <dependency>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>animal-sniffer-enforcer-rule</artifactId>
-                        <version>1.15</version>
+                        <version>1.21</version>
                     </dependency>
                 </dependencies>
                 <executions>
@@ -470,6 +491,9 @@
                         <id>enforce</id>
                         <configuration>
                             <rules>
+                                <requireMavenVersion>
+                                    <version>3.2.5</version>
+                                </requireMavenVersion>
                                 <DependencyConvergence />
                                 <!--
                                 <banDuplicateClasses>
@@ -531,82 +555,40 @@
                     <sourceEncoding>UTF-8</sourceEncoding>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.spotify.fmt</groupId>
+                <artifactId>fmt-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
 
         <defaultGoal>install</defaultGoal>
     </build>
-
-    <profiles>
-        <profile>
-            <!-- googlejavaformat and errorprone requires Java 8 -->
-            <id>java18</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <!-- mvn com.coveo:fmt-maven-plugin:format -->
-                        <groupId>com.coveo</groupId>
-                        <artifactId>fmt-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>format</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <compilerId>javac-with-errorprone</compilerId>
-                            <forceJavacCompilerUse>true</forceJavacCompilerUse>
-                            <showWarnings>true</showWarnings>
-                            <compilerArgs>
-                                <arg>-Xlint:all</arg>
-                            </compilerArgs>
-                        </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.codehaus.plexus</groupId>
-                                <artifactId>plexus-compiler-javac-errorprone</artifactId>
-                                <version>2.8.1</version>
-                            </dependency>
-                            <!-- override plexus-compiler-javac-errorprone's dependency on
-                                 Error Prone with the latest version -->
-                            <dependency>
-                                <groupId>com.google.errorprone</groupId>
-                                <artifactId>error_prone_core</artifactId>
-                                <version>2.0.19</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
     <reporting>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.9</version>
+				<version>3.4.5</version>
 			</plugin>
 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
-				<version>2.2</version>
+				<version>2.16.1</version>
 			</plugin>
 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>taglist-maven-plugin</artifactId>
-				<version>2.4</version>
+				<version>3.0.0</version>
 				<configuration>
 					<aggregate>true</aggregate>
 					<tagListOptions>
@@ -645,7 +627,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
-				<version>3.6</version>
+				<version>3.21.0</version>
 				<configuration>
 					<aggregate>true</aggregate>
 					<!-- The minimum tokens before a violation -->
@@ -686,13 +668,13 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.3</version>
+				<version>3.0.5</version>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changes-plugin</artifactId>
-				<version>2.12</version>
+				<version>2.12.1</version>
 				<configuration>
 					<includeOpenIssues>true</includeOpenIssues>
 				</configuration>
@@ -718,7 +700,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
-				<version>2.5</version>
+				<version>3.3.1</version>
 				<configuration>
 					<aggregate>true</aggregate>
 				</configuration>
@@ -727,7 +709,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.17</version>
+				<version>3.3.1</version>
 				<configuration>
 					<configLocation>google_checks.xml</configLocation>
 				</configuration>
@@ -736,7 +718,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.19.1</version>
+				<version>3.2.1</version>
 				<configuration>
 					<outputDirectory>${project.reporting.outputDirectory}/testresults</outputDirectory>
 				</configuration>

@@ -1,15 +1,14 @@
 package net.bramp.ffmpeg.progress;
 
-import com.google.common.net.InetAddresses;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import javax.annotation.CheckReturnValue;
+import com.google.common.net.InetAddresses;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import javax.annotation.CheckReturnValue;
 
 public abstract class AbstractSocketProgressParser implements ProgressParser {
 

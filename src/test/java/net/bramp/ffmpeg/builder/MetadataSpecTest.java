@@ -1,11 +1,11 @@
 package net.bramp.ffmpeg.builder;
 
-import org.junit.Test;
-
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.*;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.id;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
 
 public class MetadataSpecTest {
 

@@ -7,10 +7,10 @@ package net.bramp.ffmpeg.builder;
 // p:program_index
 // index is meant to be zero based, by negitive is allowed as dummy values
 
-import com.google.errorprone.annotations.Immutable;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.errorprone.annotations.Immutable;
 
 /**
  * Metadata spec, as described in the "map_metadata" section of

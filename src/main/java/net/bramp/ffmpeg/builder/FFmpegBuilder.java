@@ -1,22 +1,21 @@
 package net.bramp.ffmpeg.builder;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
+
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import net.bramp.ffmpeg.FFmpegUtils;
-import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-
-import javax.annotation.CheckReturnValue;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
+import javax.annotation.CheckReturnValue;
+import net.bramp.ffmpeg.FFmpegUtils;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 /**
  * Builds a ffmpeg command line
@@ -26,10 +25,11 @@ import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 public class FFmpegBuilder {
 
   public enum Strict {
-    VERY, // strictly conform to a older more strict version of the specifications or reference software
+    VERY, // strictly conform to a older more strict version of the specifications or reference
+    // software
     STRICT, // strictly conform to all the things in the specificiations no matter what consequences
     NORMAL, // normal
-    UNOFFICAL, // allow unofficial extensions
+    UNOFFICIAL, // allow unofficial extensions
     EXPERIMENTAL;
 
     // ffmpeg command line requires these options in lower case
@@ -64,7 +64,9 @@ public class FFmpegBuilder {
   Verbosity verbosity = Verbosity.ERROR;
   URI progress;
   String user_agent;
+  Integer qscale;
 
+  int threads;
   // Input settings
   String format;
   Long startOffset; // in millis
@@ -150,7 +152,13 @@ public class FFmpegBuilder {
     return addInput(filename);
   }
 
-  public FFmpegBuilder setFormat(String format) {
+    public FFmpegBuilder setThreads(int threads) {
+        checkArgument(threads > 0, "threads must be greater than zero");
+        this.threads = threads;
+        return this;
+    }
+
+    public FFmpegBuilder setFormat(String format) {
     this.format = checkNotNull(format);
     return this;
   }
@@ -198,6 +206,17 @@ public class FFmpegBuilder {
    */
   public FFmpegBuilder setVideoFilter(String filter) {
     this.videoFilter = checkNotEmpty(filter, "filter must not be empty");
+    return this;
+  }
+
+  /**
+   * Sets vbr quality when decoding mp3 output.
+   * @param quality the quality between 0 and 9. Where 0 is best.
+   * @return FFmpegBuilder
+   */
+  public FFmpegBuilder setVBR(Integer quality) {
+    Preconditions.checkArgument(quality > 0 && quality < 9, "vbr must be between 0 and 9");
+    this.qscale = quality;
     return this;
   }
 
@@ -289,6 +308,10 @@ public class FFmpegBuilder {
       args.add("-ss", FFmpegUtils.toTimecode(startOffset, TimeUnit.MILLISECONDS));
     }
 
+    if (threads > 0) {
+      args.add("-threads", String.valueOf(threads));
+    }
+
     if (format != null) {
       args.add("-f", format);
     }
@@ -325,6 +348,10 @@ public class FFmpegBuilder {
 
     if (!Strings.isNullOrEmpty(complexFilter)) {
       args.add("-filter_complex", complexFilter);
+    }
+
+    if (qscale != null) {
+      args.add("-qscale:a", qscale.toString());
     }
 
     for (FFmpegOutputBuilder output : this.outputs) {

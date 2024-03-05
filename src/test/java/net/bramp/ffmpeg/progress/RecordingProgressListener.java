@@ -1,7 +1,6 @@
 package net.bramp.ffmpeg.progress;
 
 import com.google.common.collect.Lists;
-
 import java.util.List;
 
 /** Test class to keep a record of all progresses. */

@@ -1,10 +1,9 @@
 package net.bramp.ffmpeg.io;
 
-import org.slf4j.Logger;
-
 import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
+import org.slf4j.Logger;
 
 /**
  * Wraps a Reader, and logs full lines of input as it is read.
