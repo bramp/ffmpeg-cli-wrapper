@@ -7,10 +7,10 @@ import org.mockito.stubbing.Answer;
 public class NewProcessAnswer implements Answer<Process> {
   final String resource;
 
-  String errResource = null;
+  final String errResource;
 
   public NewProcessAnswer(String resource) {
-    this.resource = resource;
+    this(resource, null);
   }
 
   public NewProcessAnswer(String resource, String errResource) {
