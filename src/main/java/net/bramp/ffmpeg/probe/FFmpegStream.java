@@ -2,6 +2,8 @@ package net.bramp.ffmpeg.probe;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Map;
+
+import net.bramp.ffmpeg.shared.CodecType;
 import org.apache.commons.lang3.math.Fraction;
 
 @SuppressFBWarnings(
@@ -9,13 +11,6 @@ import org.apache.commons.lang3.math.Fraction;
     justification = "POJO objects where the fields are populated by gson")
 public class FFmpegStream {
 
-  public enum CodecType {
-    VIDEO,
-    AUDIO,
-    SUBTITLE,
-    DATA,
-    ATTACHMENT
-  }
 
   public int index;
   public String codec_name;
