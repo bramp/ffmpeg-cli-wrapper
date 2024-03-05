@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.slf4j.event.Level;
 
 import java.io.IOException;
 import java.util.List;
@@ -74,7 +73,7 @@ public class FFmpegTest {
   public void testReadProcessStreams() throws IOException {
     // process input stream
     Appendable processInputStream = mock(Appendable.class);
-    ffmpeg.setProcessInputStream(processInputStream);
+    ffmpeg.setProcessOutputStream(processInputStream);
     // process error stream
     Appendable processErrStream = mock(Appendable.class);
     ffmpeg.setProcessErrorStream(processErrStream);

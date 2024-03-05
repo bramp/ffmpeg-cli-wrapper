@@ -31,10 +31,10 @@ abstract class FFcommon {
   String version = null;
 
   /** Process input stream */
-  Appendable processInputStream = null;
+  Appendable processOutputStream = System.out;
 
   /** Process error stream */
-  Appendable processErrorStream = null;
+  Appendable processErrorStream = System.err;
 
   public FFcommon(@Nonnull String path) {
     this(path, new RunProcessFunction());
@@ -46,11 +46,13 @@ abstract class FFcommon {
     this.path = path;
   }
 
-  public void setProcessInputStream(@Nonnull Appendable processInputStream) {
-    this.processInputStream = processInputStream;
+  public void setProcessOutputStream(@Nonnull Appendable processOutputStream) {
+    Preconditions.checkNotNull(processOutputStream);
+    this.processOutputStream = processOutputStream;
   }
 
   public void setProcessErrorStream(@Nonnull Appendable processErrorStream) {
+    Preconditions.checkNotNull(processErrorStream);
     this.processErrorStream = processErrorStream;
   }
 
@@ -131,10 +133,8 @@ abstract class FFcommon {
       // TODO Move the copy onto a thread, so that FFmpegProgressListener can be on this thread.
 
       // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
-      CharStreams.copy(
-          wrapInReader(p), (processInputStream != null) ? processInputStream : System.out);
-      CharStreams.copy(
-          wrapErrorInReader(p), (processErrorStream != null) ? processErrorStream : System.err);
+      CharStreams.copy(wrapInReader(p), processOutputStream);
+      CharStreams.copy(wrapErrorInReader(p), processErrorStream);
       throwOnError(p);
 
     } finally {
