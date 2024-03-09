@@ -53,6 +53,9 @@ public class FFprobeTest {
     when(runFunc.run(argThatHasItem(Samples.side_data_list)))
         .thenAnswer(new NewProcessAnswer("ffprobe-side_data_list"));
 
+    when(runFunc.run(argThatHasItem(Samples.chapters_with_long_id)))
+        .thenAnswer(new NewProcessAnswer("chapters_with_long_id.m4b"));
+
     ffprobe = new FFprobe(runFunc);
   }
 
@@ -159,5 +162,13 @@ public class FFprobeTest {
         is(
             "\n00000000:            0      -65536           0\n00000001:        65536           0           0\n00000002:            0           0  1073741824\n"));
     assertThat(info.getStreams().get(0).side_data_list[0].rotation, is(90));
+  }
+
+  @Test
+  public void testChaptersWithLongIds() throws IOException {
+    FFmpegProbeResult info = ffprobe.probe(Samples.chapters_with_long_id);
+
+    assertThat(info.getChapters().get(0).id, is(6613449456311024506L));
+    assertThat(info.getChapters().get(1).id, is(-4433436293284298339L));
   }
 }
