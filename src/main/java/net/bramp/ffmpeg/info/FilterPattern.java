@@ -7,10 +7,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.util.*;
 
 public class FilterPattern {
-    /** Indicates weather this pattern represents a source or a sink and therefore has no other options */
+    /** Indicates whether this pattern represents a source or a sink and therefore has no other options */
     private final boolean sinkOrSource;
 
-    /** Indicates weather this pattern accepts a variable number of streams */
+    /** Indicates whether this pattern accepts a variable number of streams */
     private final boolean variableStreams;
 
     /** Contains a pattern matching the stream types supported */
