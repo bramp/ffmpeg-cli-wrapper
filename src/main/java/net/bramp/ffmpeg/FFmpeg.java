@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,9 +16,7 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
-import net.bramp.ffmpeg.info.Codec;
-import net.bramp.ffmpeg.info.Format;
-import net.bramp.ffmpeg.info.PixelFormat;
+import net.bramp.ffmpeg.info.*;
 import net.bramp.ffmpeg.progress.ProgressListener;
 import net.bramp.ffmpeg.progress.ProgressParser;
 import net.bramp.ffmpeg.progress.TcpProgressParser;
@@ -77,6 +76,9 @@ public class FFmpeg extends FFcommon {
 
   /** Supported pixel formats */
   private List<PixelFormat> pixelFormats = null;
+
+  /** Supported channel layouts */
+  private List<Layout> layouts = null;
 
   public FFmpeg() throws IOException {
     this(DEFAULT_PATH, new RunProcessFunction());
@@ -200,6 +202,24 @@ public class FFmpeg extends FFcommon {
     }
 
     return pixelFormats;
+  }
+
+  public synchronized List<Layout> layouts() throws IOException {
+    checkIfFFmpeg();
+
+    if (this.layouts == null) {
+      Process p = runFunc.run(ImmutableList.of(path, "-layouts"));
+
+      try {
+        BufferedReader r = wrapInReader(p);
+        this.layouts = Collections.unmodifiableList(InfoParser.parseLayouts(r));
+      } finally {
+        p.destroy();
+      }
+
+    }
+
+    return this.layouts;
   }
 
   protected ProgressParser createProgressParser(ProgressListener listener) throws IOException {

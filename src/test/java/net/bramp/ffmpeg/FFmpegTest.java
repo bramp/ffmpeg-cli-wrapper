@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.util.List;
 import net.bramp.ffmpeg.fixtures.Codecs;
 import net.bramp.ffmpeg.fixtures.Formats;
+import net.bramp.ffmpeg.fixtures.Layouts;
 import net.bramp.ffmpeg.fixtures.PixelFormats;
+import net.bramp.ffmpeg.info.Layout;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +34,9 @@ public class FFmpegTest {
         .thenAnswer(new NewProcessAnswer("ffmpeg-formats"));
     when(runFunc.run(argThatHasItem("-codecs"))).thenAnswer(new NewProcessAnswer("ffmpeg-codecs"));
     when(runFunc.run(argThatHasItem("-pix_fmts")))
-        .thenAnswer(new NewProcessAnswer("ffmpeg-pix_fmts"));
+            .thenAnswer(new NewProcessAnswer("ffmpeg-pix_fmts"));
+    when(runFunc.run(argThatHasItem("-layouts")))
+            .thenAnswer(new NewProcessAnswer("ffmpeg-layouts"));
 
     ffmpeg = new FFmpeg(runFunc);
   }
@@ -75,5 +79,13 @@ public class FFmpegTest {
     assertEquals(PixelFormats.PIXEL_FORMATS, ffmpeg.pixelFormats());
 
     verify(runFunc, times(1)).run(argThatHasItem("-pix_fmts"));
+  }
+
+  @Test
+  public void testLayouts() throws IOException {
+    assertEquals(Layouts.LAYOUTS, ffmpeg.layouts());
+    assertEquals(Layouts.LAYOUTS, ffmpeg.layouts());
+
+    verify(runFunc, times(1)).run(argThatHasItem("-layouts"));
   }
 }
