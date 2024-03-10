@@ -2,6 +2,8 @@ FFmpeg Java
 ===========
 by Andrew Brampton ([bramp.net](https://bramp.net)) (c) 2013-2014,2016
 
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/bramp)
+
 A fluent interface to running FFmpeg from Java.
 
 ![Java](https://img.shields.io/badge/Java-8+-brightgreen.svg)
