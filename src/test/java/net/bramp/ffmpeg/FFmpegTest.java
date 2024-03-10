@@ -8,8 +8,10 @@ import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 import java.io.IOException;
 import java.util.List;
 import net.bramp.ffmpeg.fixtures.Codecs;
+import net.bramp.ffmpeg.fixtures.Filters;
 import net.bramp.ffmpeg.fixtures.Formats;
 import net.bramp.ffmpeg.fixtures.PixelFormats;
+import net.bramp.ffmpeg.info.Filter;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +35,8 @@ public class FFmpegTest {
     when(runFunc.run(argThatHasItem("-codecs"))).thenAnswer(new NewProcessAnswer("ffmpeg-codecs"));
     when(runFunc.run(argThatHasItem("-pix_fmts")))
         .thenAnswer(new NewProcessAnswer("ffmpeg-pix_fmts"));
+    when(runFunc.run(argThatHasItem("-filters")))
+        .thenAnswer(new NewProcessAnswer("ffmpeg-filters"));
 
     ffmpeg = new FFmpeg(runFunc);
   }
@@ -75,5 +79,21 @@ public class FFmpegTest {
     assertEquals(PixelFormats.PIXEL_FORMATS, ffmpeg.pixelFormats());
 
     verify(runFunc, times(1)).run(argThatHasItem("-pix_fmts"));
+  }
+
+  @Test
+  public void testFilters() throws IOException {
+    // Run twice, the second should be cached
+
+    List<Filter> filters = ffmpeg.filters();
+
+    for (int i = 0; i < filters.size(); i++) {
+      assertEquals(Filters.FILTERS.get(i), filters.get(i));
+    }
+
+    assertEquals(Filters.FILTERS, ffmpeg.filters());
+    assertEquals(Filters.FILTERS, ffmpeg.filters());
+
+    verify(runFunc, times(1)).run(argThatHasItem("-filters"));
   }
 }
