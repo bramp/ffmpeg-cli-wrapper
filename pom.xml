@@ -330,7 +330,12 @@
                     <compilerId>javac-with-errorprone</compilerId>
                     <forceJavacCompilerUse>true</forceJavacCompilerUse>
                     <showWarnings>true</showWarnings>
+                    <failOnError>true</failOnError>
+                    <failOnWarning>true</failOnWarning>
                     <compilerArgs>
+                        <!-- Surpress maven option warnings because we are
+                        focusing on code issues -->
+                        <arg>-Xlint:-options</arg>
                         <arg>-Xlint:all</arg>
                     </compilerArgs>
                 </configuration>

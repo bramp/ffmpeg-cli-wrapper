@@ -64,6 +64,7 @@ public class Codec {
         break;
       case 'T':
         this.type = CodecType.ATTACHMENT;
+        break;
       default:
         throw new IllegalArgumentException("Invalid codec type '" + flags.charAt(2) + "'");
     }
