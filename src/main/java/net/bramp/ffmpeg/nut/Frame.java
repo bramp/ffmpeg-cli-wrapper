@@ -1,6 +1,7 @@
 package net.bramp.ffmpeg.nut;
 
 import com.google.common.base.MoreObjects;
+import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -162,7 +163,12 @@ public class Frame {
       long pos = in.offset();
       sideData = readMetaData(in);
       metaData = readMetaData(in);
-      size -= (in.offset() - pos);
+      long metadataLen = (in.offset() - pos);
+      if (metadataLen > size) {
+        throw new EOFException();
+      }
+
+      size -= (int) metadataLen;
 
     } else {
       sideData = null;

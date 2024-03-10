@@ -92,6 +92,7 @@ public class FFmpeg extends FFcommon {
     this(path, new RunProcessFunction());
   }
 
+  @SuppressWarnings("this-escape")
   public FFmpeg(@Nonnull String path, @Nonnull ProcessFunction runFunction) throws IOException {
     super(path, runFunction);
     version();
