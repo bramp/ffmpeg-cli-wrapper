@@ -7,13 +7,12 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import com.google.gson.Gson;
 import java.io.IOException;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
 import net.bramp.ffmpeg.probe.FFmpegChapter;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-import net.bramp.ffmpeg.probe.FFmpegStream;
+import net.bramp.ffmpeg.shared.CodecType;
 import org.apache.commons.lang3.math.Fraction;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,8 +26,6 @@ public class FFprobeTest {
   @Mock ProcessFunction runFunc;
 
   FFprobe ffprobe;
-
-  static final Gson gson = FFmpegUtils.getGson();
 
   @Before
   public void before() throws IOException {
@@ -73,8 +70,8 @@ public class FFprobeTest {
 
     // Only a quick sanity check until we do something better
     assertThat(info.getStreams(), hasSize(2));
-    assertThat(info.getStreams().get(0).codec_type, is(FFmpegStream.CodecType.VIDEO));
-    assertThat(info.getStreams().get(1).codec_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(info.getStreams().get(0).codec_type, is(CodecType.VIDEO));
+    assertThat(info.getStreams().get(1).codec_type, is(CodecType.AUDIO));
 
     assertThat(info.getStreams().get(1).channels, is(6));
     assertThat(info.getStreams().get(1).sample_rate, is(48_000));
@@ -113,8 +110,8 @@ public class FFprobeTest {
 
     // Only a quick sanity check until we do something better
     assertThat(info.getStreams(), hasSize(2));
-    assertThat(info.getStreams().get(0).codec_type, is(FFmpegStream.CodecType.VIDEO));
-    assertThat(info.getStreams().get(1).codec_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(info.getStreams().get(0).codec_type, is(CodecType.VIDEO));
+    assertThat(info.getStreams().get(1).codec_type, is(CodecType.AUDIO));
 
     assertThat(info.getStreams().get(1).channels, is(2));
     assertThat(info.getStreams().get(1).sample_rate, is(48_000));
