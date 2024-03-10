@@ -1,11 +1,12 @@
 FFmpeg Java
 ===========
+
 by Andrew Brampton ([bramp.net](https://bramp.net)) (c) 2013-2014,2016
 
 A fluent interface to running FFmpeg from Java.
 
 ![Java](https://img.shields.io/badge/Java-8+-brightgreen.svg)
-[![Build Status](https://img.shields.io/travis/bramp/ffmpeg-cli-wrapper/master.svg)](https://travis-ci.org/bramp/ffmpeg-cli-wrapper)
+[![Build Status](https://github.com/bramp/ffmpeg-cli-wrapper/actions/workflows/maven.yml/badge.svg)](https://github.com/bramp/ffmpeg-cli-wrapper/actions/workflows/maven.yml)
 [![Coverage Status](https://img.shields.io/coveralls/bramp/ffmpeg-cli-wrapper.svg)](https://coveralls.io/github/bramp/ffmpeg-cli-wrapper)
 [![Maven](https://img.shields.io/maven-central/v/net.bramp.ffmpeg/ffmpeg.svg)](http://mvnrepository.com/artifact/net.bramp.ffmpeg/ffmpeg)
 [![Libraries.io](https://img.shields.io/librariesio/github/bramp/ffmpeg-cli-wrapper.svg)](https://libraries.io/github/bramp/ffmpeg-cli-wrapper)
