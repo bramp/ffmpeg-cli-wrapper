@@ -18,6 +18,7 @@ A clear and concise description of what you expected to happen.
 **Version (if applicable):**
  - OS: [e.g. Linux]
  - Java Version [e.g. 8]
+ - FFmpeg version [e.g. 6.1.1]
 
 **Additional context**
 Add any other context about the problem here.
