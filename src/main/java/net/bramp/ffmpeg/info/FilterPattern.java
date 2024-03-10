@@ -1,6 +1,6 @@
 package net.bramp.ffmpeg.info;
 
-import net.bramp.ffmpeg.probe.FFmpegStream;
+import net.bramp.ffmpeg.shared.CodecType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -14,12 +14,12 @@ public class FilterPattern {
     private final boolean variableStreams;
 
     /** Contains a pattern matching the stream types supported */
-    private final List<FFmpegStream.CodecType> streams;
+    private final List<CodecType> streams;
 
     public FilterPattern(String pattern) {
         this.sinkOrSource = pattern.contains("|");
         this.variableStreams = pattern.contains("N");
-        List<FFmpegStream.CodecType> streams = new ArrayList<>();
+        List<CodecType> streams = new ArrayList<>();
 
         for (char c : pattern.toCharArray()) {
             if (c == '|' || c == 'N') {
@@ -27,9 +27,9 @@ public class FilterPattern {
                 continue;
             }
             if (c == 'A') {
-                streams.add(FFmpegStream.CodecType.AUDIO);
+                streams.add(CodecType.AUDIO);
             } else if (c == 'V') {
-                streams.add(FFmpegStream.CodecType.VIDEO);
+                streams.add(CodecType.VIDEO);
             } else {
                 throw new IllegalStateException("Unsupported character in filter pattern " + c);
             }
@@ -46,7 +46,7 @@ public class FilterPattern {
         return variableStreams;
     }
 
-    public List<FFmpegStream.CodecType> getStreams() {
+    public List<CodecType> getStreams() {
         return streams;
     }
 
