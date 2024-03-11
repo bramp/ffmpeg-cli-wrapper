@@ -7,13 +7,12 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import com.google.gson.Gson;
 import java.io.IOException;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
 import net.bramp.ffmpeg.probe.FFmpegChapter;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-import net.bramp.ffmpeg.probe.FFmpegStream;
+import net.bramp.ffmpeg.shared.CodecType;
 import org.apache.commons.lang3.math.Fraction;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,8 +27,6 @@ public class FFprobeTest {
 
   FFprobe ffprobe;
 
-  static final Gson gson = FFmpegUtils.getGson();
-
   @Before
   public void before() throws IOException {
     when(runFunc.run(argThatHasItem("-version")))
@@ -39,7 +36,7 @@ public class FFprobeTest {
         .thenAnswer(new NewProcessAnswer("ffprobe-big_buck_bunny_720p_1mb.mp4"));
 
     when(runFunc.run(argThatHasItem(Samples.always_on_my_mind)))
-        .thenAnswer(new NewProcessAnswer("ffprobe-Always On My Mind [Program Only] - Adelén.mp4"));
+        .thenAnswer(new NewProcessAnswer("ffprobe-Always On My Mind [Program Only] - Adelen.mp4"));
 
     when(runFunc.run(argThatHasItem(Samples.start_pts_test)))
         .thenAnswer(new NewProcessAnswer("ffprobe-start_pts_test"));
@@ -52,6 +49,9 @@ public class FFprobeTest {
 
     when(runFunc.run(argThatHasItem(Samples.side_data_list)))
         .thenAnswer(new NewProcessAnswer("ffprobe-side_data_list"));
+
+    when(runFunc.run(argThatHasItem(Samples.chapters_with_long_id)))
+        .thenAnswer(new NewProcessAnswer("chapters_with_long_id.m4b"));
 
     ffprobe = new FFprobe(runFunc);
   }
@@ -73,8 +73,8 @@ public class FFprobeTest {
 
     // Only a quick sanity check until we do something better
     assertThat(info.getStreams(), hasSize(2));
-    assertThat(info.getStreams().get(0).codec_type, is(FFmpegStream.CodecType.VIDEO));
-    assertThat(info.getStreams().get(1).codec_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(info.getStreams().get(0).codec_type, is(CodecType.VIDEO));
+    assertThat(info.getStreams().get(1).codec_type, is(CodecType.AUDIO));
 
     assertThat(info.getStreams().get(1).channels, is(6));
     assertThat(info.getStreams().get(1).sample_rate, is(48_000));
@@ -113,8 +113,8 @@ public class FFprobeTest {
 
     // Only a quick sanity check until we do something better
     assertThat(info.getStreams(), hasSize(2));
-    assertThat(info.getStreams().get(0).codec_type, is(FFmpegStream.CodecType.VIDEO));
-    assertThat(info.getStreams().get(1).codec_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(info.getStreams().get(0).codec_type, is(CodecType.VIDEO));
+    assertThat(info.getStreams().get(1).codec_type, is(CodecType.AUDIO));
 
     assertThat(info.getStreams().get(1).channels, is(2));
     assertThat(info.getStreams().get(1).sample_rate, is(48_000));
@@ -159,5 +159,13 @@ public class FFprobeTest {
         is(
             "\n00000000:            0      -65536           0\n00000001:        65536           0           0\n00000002:            0           0  1073741824\n"));
     assertThat(info.getStreams().get(0).side_data_list[0].rotation, is(90));
+  }
+
+  @Test
+  public void testChaptersWithLongIds() throws IOException {
+    FFmpegProbeResult info = ffprobe.probe(Samples.chapters_with_long_id);
+
+    assertThat(info.getChapters().get(0).id, is(6613449456311024506L));
+    assertThat(info.getChapters().get(1).id, is(-4433436293284298339L));
   }
 }

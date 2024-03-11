@@ -25,11 +25,13 @@ public final class Samples {
   public static final String FAKE_PREFIX = "fake/";
 
   public static final String always_on_my_mind =
-      FAKE_PREFIX + "Always On My Mind [Program Only] - Adelén.mp4";
+      FAKE_PREFIX + "Always On My Mind [Program Only] - Adelen.mp4";
 
   public static final String start_pts_test = FAKE_PREFIX + "start_pts_test_1mb.ts";
 
   public static final String divide_by_zero = FAKE_PREFIX + "Divide By Zero.mp4";
+
+  public static final String chapters_with_long_id = FAKE_PREFIX + "chapters_with_long_id.m4b";
 
   // TODO Change to a temp directory
   // TODO Generate random names, so we can run tests concurrently
