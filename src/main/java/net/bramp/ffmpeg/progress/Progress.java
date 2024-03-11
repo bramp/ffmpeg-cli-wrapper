@@ -208,7 +208,8 @@ public class Progress {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (!(o instanceof Progress)) return false;
+
     Progress progress1 = (Progress) o;
     return frame == progress1.frame
         && bitrate == progress1.bitrate

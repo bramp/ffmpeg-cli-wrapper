@@ -32,7 +32,7 @@ public class Format {
     this.longName = Preconditions.checkNotNull(longName).trim();
 
     Preconditions.checkNotNull(flags);
-    Preconditions.checkArgument(flags.length() == 2, "Format flags is invalid '{}'", flags);
+    Preconditions.checkArgument(flags.length() == 2, "Format flags is invalid '%s'", flags);
     canDemux = flags.charAt(0) == 'D';
     canMux = flags.charAt(1) == 'E';
   }

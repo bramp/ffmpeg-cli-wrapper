@@ -17,15 +17,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import net.bramp.ffmpeg.builder.FFmpegBuilder.Verbosity;
 import net.bramp.ffmpeg.options.AudioEncodingOptions;
 import net.bramp.ffmpeg.options.EncodingOptions;
 import net.bramp.ffmpeg.options.MainEncodingOptions;
 import net.bramp.ffmpeg.options.VideoEncodingOptions;
 import org.junit.Test;
 
-/**
- * @author bramp
- */
+@SuppressWarnings("unused")
 public class FFmpegBuilderTest {
 
   public FFmpegBuilderTest() throws IOException {}
@@ -229,7 +229,6 @@ public class FFmpegBuilderTest {
 
   @Test
   public void testURIOutput() {
-
     List<String> args =
         new FFmpegBuilder()
             .setInput("input")

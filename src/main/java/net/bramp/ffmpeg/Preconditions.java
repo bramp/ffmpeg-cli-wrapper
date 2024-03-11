@@ -3,6 +3,7 @@ package net.bramp.ffmpeg;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.Ascii;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -41,7 +42,7 @@ public final class Preconditions {
    */
   public static URI checkValidStream(URI uri) throws IllegalArgumentException {
     String scheme = checkNotNull(uri).getScheme();
-    scheme = checkNotNull(scheme, "URI is missing a scheme").toLowerCase();
+    scheme = Ascii.toLowerCase(checkNotNull(scheme, "URI is missing a scheme"));
 
     if (rtps.contains(scheme)) {
       return uri;

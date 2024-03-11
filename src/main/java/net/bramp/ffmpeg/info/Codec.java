@@ -45,7 +45,7 @@ public class Codec {
     this.longName = Preconditions.checkNotNull(longName).trim();
 
     Preconditions.checkNotNull(flags);
-    Preconditions.checkArgument(flags.length() == 6, "Format flags is invalid '{}'", flags);
+    Preconditions.checkArgument(flags.length() == 6, "Format flags is invalid '%s'", flags);
     this.canDecode = flags.charAt(0) == 'D';
     this.canEncode = flags.charAt(1) == 'E';
 

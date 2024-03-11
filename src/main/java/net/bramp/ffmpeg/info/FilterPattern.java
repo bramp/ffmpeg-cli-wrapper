@@ -21,7 +21,9 @@ public class FilterPattern {
         this.variableStreams = pattern.contains("N");
         List<CodecType> streams = new ArrayList<>();
 
-        for (char c : pattern.toCharArray()) {
+        for (int i = 0; i < pattern.length(); i++) {
+            final char c = pattern.charAt(i);
+
             if (c == '|' || c == 'N') {
                 // These symbols are handled separately
                 continue;

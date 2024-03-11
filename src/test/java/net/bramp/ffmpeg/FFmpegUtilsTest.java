@@ -14,7 +14,7 @@ public class FFmpegUtilsTest {
   }
 
   @Test
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings({"deprecation", "InlineMeInliner"})
   public void testMillisecondsToString() {
     assertEquals("00:01:03.123", millisecondsToString(63123));
     assertEquals("00:01:03", millisecondsToString(63000));
@@ -24,13 +24,13 @@ public class FFmpegUtilsTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings({"deprecation", "InlineMeInliner"})
   public void testMillisecondsToStringNegative() {
     millisecondsToString(-1);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings({"deprecation", "InlineMeInliner"})
   public void testMillisecondsToStringNegativeMinValue() {
     millisecondsToString(Long.MIN_VALUE);
   }

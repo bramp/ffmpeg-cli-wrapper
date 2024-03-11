@@ -597,7 +597,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     } else if (uri != null) {
       args.add(uri.toString());
     } else {
-      assert (false);
+      assert false;
     }
 
     return args.build();

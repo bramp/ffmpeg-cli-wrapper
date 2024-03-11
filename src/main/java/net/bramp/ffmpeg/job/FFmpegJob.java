@@ -7,6 +7,8 @@ import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.progress.ProgressListener;
 
 /**
+ * A FFmpegJob is a single job that can be run by FFmpeg. It can be a single pass, or a two pass job.
+ * 
  * @author bramp
  */
 public abstract class FFmpegJob implements Runnable {

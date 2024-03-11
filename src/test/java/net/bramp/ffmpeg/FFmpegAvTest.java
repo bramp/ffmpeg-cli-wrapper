@@ -39,8 +39,6 @@ public class FFmpegAvTest {
 
   /**
    * We don't support avconv, so all methods should throw an exception.
-   *
-   * @throws IOException
    */
   @Test(expected = IllegalArgumentException.class)
   public void testProbeVideo() throws IOException {

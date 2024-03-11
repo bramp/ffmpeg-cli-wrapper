@@ -94,7 +94,7 @@ public class MainHeaderPacket extends Packet {
       if (fields > 5) {
         count = in.readVarLong();
       } else {
-        count = mul - size;
+        count = (long) mul - size;
       }
       if (fields > 6) {
         match = in.readSignedVarInt();
