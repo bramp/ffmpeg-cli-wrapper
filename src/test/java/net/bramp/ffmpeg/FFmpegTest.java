@@ -12,6 +12,7 @@ import com.google.common.collect.Lists;
 import net.bramp.ffmpeg.fixtures.Codecs;
 import net.bramp.ffmpeg.fixtures.Filters;
 import net.bramp.ffmpeg.fixtures.Formats;
+import net.bramp.ffmpeg.fixtures.ChannelLayouts;
 import net.bramp.ffmpeg.fixtures.PixelFormats;
 import net.bramp.ffmpeg.info.Filter;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
@@ -41,6 +42,8 @@ public class FFmpegTest {
         .thenAnswer(new NewProcessAnswer("ffmpeg-version", "ffmpeg-no-such-file"));
     when(runFunc.run(argThatHasItem("-filters")))
         .thenAnswer(new NewProcessAnswer("ffmpeg-filters"));
+    when(runFunc.run(argThatHasItem("-layouts")))
+            .thenAnswer(new NewProcessAnswer("ffmpeg-layouts"));
 
     ffmpeg = new FFmpeg(runFunc);
   }
@@ -114,5 +117,13 @@ public class FFmpegTest {
     assertEquals(Filters.FILTERS, ffmpeg.filters());
 
     verify(runFunc, times(1)).run(argThatHasItem("-filters"));
+  }
+
+  @Test
+  public void testLayouts() throws IOException {
+    assertEquals(ChannelLayouts.CHANNEL_LAYOUTS, ffmpeg.channelLayouts());
+    assertEquals(ChannelLayouts.CHANNEL_LAYOUTS, ffmpeg.channelLayouts());
+
+    verify(runFunc, times(1)).run(argThatHasItem("-layouts"));
   }
 }

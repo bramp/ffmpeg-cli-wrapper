@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -79,6 +80,9 @@ public class FFmpeg extends FFcommon {
 
   /** Supported filters */
   private List<Filter> filters = null;
+
+  /** Supported channel layouts */
+  private List<ChannelLayout> channelLayouts = null;
 
   public FFmpeg() throws IOException {
     this(DEFAULT_PATH, new RunProcessFunction());
@@ -240,6 +244,24 @@ public class FFmpeg extends FFcommon {
     }
 
     return pixelFormats;
+  }
+
+  public synchronized List<ChannelLayout> channelLayouts() throws IOException {
+    checkIfFFmpeg();
+
+    if (this.channelLayouts == null) {
+      Process p = runFunc.run(ImmutableList.of(path, "-layouts"));
+
+      try {
+        BufferedReader r = wrapInReader(p);
+        this.channelLayouts = Collections.unmodifiableList(InfoParser.parseLayouts(r));
+      } finally {
+        p.destroy();
+      }
+
+    }
+
+    return this.channelLayouts;
   }
 
   protected ProgressParser createProgressParser(ProgressListener listener) throws IOException {
