@@ -82,7 +82,7 @@ public class FFmpeg extends FFcommon {
   private List<Filter> filters = null;
 
   /** Supported channel layouts */
-  private List<Layout> layouts = null;
+  private List<ChannelLayout> channelLayouts = null;
 
   public FFmpeg() throws IOException {
     this(DEFAULT_PATH, new RunProcessFunction());
@@ -246,22 +246,22 @@ public class FFmpeg extends FFcommon {
     return pixelFormats;
   }
 
-  public synchronized List<Layout> layouts() throws IOException {
+  public synchronized List<ChannelLayout> channelLayouts() throws IOException {
     checkIfFFmpeg();
 
-    if (this.layouts == null) {
+    if (this.channelLayouts == null) {
       Process p = runFunc.run(ImmutableList.of(path, "-layouts"));
 
       try {
         BufferedReader r = wrapInReader(p);
-        this.layouts = Collections.unmodifiableList(InfoParser.parseLayouts(r));
+        this.channelLayouts = Collections.unmodifiableList(InfoParser.parseLayouts(r));
       } finally {
         p.destroy();
       }
 
     }
 
-    return this.layouts;
+    return this.channelLayouts;
   }
 
   protected ProgressParser createProgressParser(ProgressListener listener) throws IOException {

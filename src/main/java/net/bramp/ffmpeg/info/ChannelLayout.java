@@ -1,5 +1,5 @@
 package net.bramp.ffmpeg.info;
 
-public interface Layout {
+public interface ChannelLayout {
     String getName();
 }

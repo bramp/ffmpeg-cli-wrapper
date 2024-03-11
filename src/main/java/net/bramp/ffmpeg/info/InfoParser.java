@@ -9,9 +9,9 @@ public final class InfoParser {
         throw new AssertionError("No instances for you!");
     }
 
-    public static List<Layout> parseLayouts(BufferedReader r) throws IOException {
+    public static List<ChannelLayout> parseLayouts(BufferedReader r) throws IOException {
         Map<String, IndividualChannel> individualChannelLookup = new HashMap<>();
-        List<Layout> layouts = new ArrayList<>();
+        List<ChannelLayout> channelLayouts = new ArrayList<>();
 
         String line;
         boolean parsingIndividualChannels = false;
@@ -30,7 +30,7 @@ public final class InfoParser {
             } else if (parsingIndividualChannels) {
                 String[] s = line.split(" ", 2);
                 IndividualChannel individualChannel = new IndividualChannel(s[0], s[1].trim());
-                layouts.add(individualChannel);
+                channelLayouts.add(individualChannel);
                 individualChannelLookup.put(individualChannel.getName(), individualChannel);
             } else if (parsingChannelLayouts) {
                 String[] s = line.split(" ", 2);
@@ -39,10 +39,10 @@ public final class InfoParser {
                     decomposition.add(individualChannelLookup.get(channelName));
                 }
 
-                layouts.add(new StandardChannelLayout(s[0], Collections.unmodifiableList(decomposition)));
+                channelLayouts.add(new StandardChannelLayout(s[0], Collections.unmodifiableList(decomposition)));
             }
         }
 
-        return layouts;
+        return channelLayouts;
     }
 }

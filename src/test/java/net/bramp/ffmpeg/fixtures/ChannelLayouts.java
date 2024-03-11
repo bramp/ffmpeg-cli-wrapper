@@ -1,8 +1,8 @@
 package net.bramp.ffmpeg.fixtures;
 
 import com.google.common.collect.ImmutableList;
+import net.bramp.ffmpeg.info.ChannelLayout;
 import net.bramp.ffmpeg.info.IndividualChannel;
-import net.bramp.ffmpeg.info.Layout;
 import net.bramp.ffmpeg.info.StandardChannelLayout;
 
 import java.util.*;
@@ -14,9 +14,9 @@ import java.util.*;
  *
  * @author euklios
  */
-public final class Layouts {
+public final class ChannelLayouts {
 
-  private Layouts() {
+  private ChannelLayouts() {
     throw new AssertionError("No instances for you!");
   }
 
@@ -51,8 +51,8 @@ public final class Layouts {
   private static final IndividualChannel BFL = new IndividualChannel("BFL", "bottom front left");
   private static final IndividualChannel BFR = new IndividualChannel("BFR", "bottom front right");
 
-  public static final ImmutableList<Layout> LAYOUTS =
-      new ImmutableList.Builder<Layout>()
+  public static final ImmutableList<ChannelLayout> CHANNEL_LAYOUTS =
+      new ImmutableList.Builder<ChannelLayout>()
           .add(
                   FL,
                   FR,

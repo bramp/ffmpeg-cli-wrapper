@@ -3,7 +3,7 @@ package net.bramp.ffmpeg.info;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class IndividualChannel implements Layout {
+public class IndividualChannel implements ChannelLayout {
     private final String name;
     private final String description;
 

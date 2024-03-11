@@ -4,9 +4,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
-import java.util.Set;
 
-public class StandardChannelLayout implements Layout {
+public class StandardChannelLayout implements ChannelLayout {
     private final String name;
     private final List<IndividualChannel> decomposition;
 
