@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.util.List;
 import net.bramp.ffmpeg.fixtures.Progresses;
 import org.junit.Test;
 
@@ -44,12 +43,37 @@ public class TcpProgressParserTest extends AbstractProgressParserTest {
     parser.stop();
 
     assertThat(bytes, greaterThan(0L));
-    assertThat(progesses, equalTo((List<Progress>) Progresses.allProgresses));
+    assertThat(progesses, equalTo(Progresses.allProgresses));
+  }
+
+
+
+  @Test
+  public void testNaProgressPackets() throws IOException, InterruptedException, URISyntaxException {
+    parser.start();
+
+    Socket client = new Socket(uri.getHost(), uri.getPort());
+    assertTrue("Socket is connected", client.isConnected());
+
+    InputStream inputStream = combineResource(Progresses.naProgressFile);
+    OutputStream outputStream = client.getOutputStream();
+
+    long bytes = ByteStreams.copy(inputStream, outputStream);
+
+    // HACK, but give the TcpProgressParser thread time to actually handle the connection/data
+    // before the client is closed, and the parser is stopped.
+    Thread.sleep(100);
+
+    client.close();
+    parser.stop();
+
+    assertThat(bytes, greaterThan(0L));
+    assertThat(progesses, equalTo(Progresses.naProgresses));
   }
 
   @Test
   public void testPrematureDisconnect()
-      throws IOException, InterruptedException, URISyntaxException {
+      throws IOException {
     parser.start();
     new Socket(uri.getHost(), uri.getPort()).close();
     parser.stop();

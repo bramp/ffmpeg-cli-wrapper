@@ -76,10 +76,15 @@ public final class FFmpegUtils {
    * format "hour:minute:second", where second can be a decimal number.
    *
    * @param time the timecode to parse.
-   * @return the number of nanoseconds.
+   * @return the number of nanoseconds or -1 if time is 'N/A'
    */
   public static long fromTimecode(String time) {
     checkNotEmpty(time, "time must not be empty string");
+
+    if (time.equals("N/A")) {
+      return -1;
+    }
+
     Matcher m = TIME_REGEX.matcher(time);
     if (!m.find()) {
       throw new IllegalArgumentException("invalid time '" + time + "'");
@@ -99,6 +104,8 @@ public final class FFmpegUtils {
    * @return the bitrate in bits per second or -1 if bitrate is 'N/A'
    */
   public static long parseBitrate(String bitrate) {
+    checkNotEmpty(bitrate, "bitrate must not be empty string");
+
     if ("N/A".equals(bitrate)) {
       return -1;
     }
