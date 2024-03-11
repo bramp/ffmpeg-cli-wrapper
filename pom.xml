@@ -327,29 +327,12 @@
                     <showWarnings>true</showWarnings>
                     <failOnError>true</failOnError>
                     <failOnWarning>true</failOnWarning>
-                    <fork>true</fork>
                     <compilerArgs>
                         <!-- Surpress maven option warnings because we are
                         focusing on code issues -->
                         <arg>-Xlint:-options</arg>
                         <arg>-Xlint:all</arg>
-
-                        <!-- Various flags needed for com.google.errorprone-->
-                        <arg>-XDcompilePolicy=simple</arg>
-                        <arg>-Xplugin:ErrorProne</arg>
                     </compilerArgs>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>com.google.errorprone</groupId>
-                            <artifactId>error_prone_core</artifactId>
-                            <version>2.25.0</version>
-                        </path>
-                        <!-- Other annotation processors go here.
-
-                        If 'annotationProcessorPaths' is set, processors will no longer be
-                        discovered on the regular -classpath; see also 'Using Error Prone
-                        together with other annotation processors' below. -->
-                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>
@@ -735,8 +718,8 @@
                     </dependency>
                 </dependencies>
             </dependencyManagement>
-
         </profile>
+
         <profile>
             <id>Java 9+</id>
             <activation>
@@ -746,9 +729,43 @@
                 <!-- This flag was added from 9+ -->
                 <maven.compiler.release>${base.java.version}</maven.compiler.release>
             </properties>
+        </profile>
+
+        <profile>
+            <id>Java 11+</id>
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
             <build>
                 <pluginManagement>
                     <plugins>
+                        <!-- Enable errorprone's compiler integration on Java 11
+                        as that's the min supported version now -->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <configuration>
+                                <fork>true</fork>
+                                <compilerArgs combine.children="append">
+                                    <!-- Various flags needed for com.google.errorprone-->
+                                    <arg>-XDcompilePolicy=simple</arg>
+                                    <arg>-Xplugin:ErrorProne</arg>
+                                </compilerArgs>
+                                <annotationProcessorPaths>
+                                    <path>
+                                        <groupId>com.google.errorprone</groupId>
+                                        <artifactId>error_prone_core</artifactId>
+                                        <version>2.25.0</version>
+                                    </path>
+                                    <!-- Other annotation processors go here.
+
+                                    If 'annotationProcessorPaths' is set, processors will no longer be
+                                    discovered on the regular -classpath; see also 'Using Error Prone
+                                    together with other annotation processors' below. -->
+                                </annotationProcessorPaths>
+                            </configuration>
+                        </plugin>
+                        <!-- Add formatting to Java 11+ -->
                         <plugin>
                             <groupId>com.spotify.fmt</groupId>
                             <artifactId>fmt-maven-plugin</artifactId>
@@ -763,6 +780,7 @@
                 </pluginManagement>
             </build>
         </profile>
+
         <profile>
             <id>Java 16+</id>
             <activation>
