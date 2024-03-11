@@ -7,6 +7,8 @@ import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
 import java.io.IOException;
 import java.util.List;
+
+import com.google.common.collect.Lists;
 import net.bramp.ffmpeg.fixtures.Codecs;
 import net.bramp.ffmpeg.fixtures.Filters;
 import net.bramp.ffmpeg.fixtures.Formats;
@@ -37,6 +39,8 @@ public class FFmpegTest {
     when(runFunc.run(argThatHasItem("-codecs"))).thenAnswer(new NewProcessAnswer("ffmpeg-codecs"));
     when(runFunc.run(argThatHasItem("-pix_fmts")))
         .thenAnswer(new NewProcessAnswer("ffmpeg-pix_fmts"));
+    when(runFunc.run(argThatHasItem("toto.mp4")))
+        .thenAnswer(new NewProcessAnswer("ffmpeg-version", "ffmpeg-no-such-file"));
     when(runFunc.run(argThatHasItem("-filters")))
         .thenAnswer(new NewProcessAnswer("ffmpeg-filters"));
     when(runFunc.run(argThatHasItem("-layouts")))
@@ -74,6 +78,21 @@ public class FFmpegTest {
     assertEquals(Formats.FORMATS, ffmpeg.formats());
 
     verify(runFunc, times(1)).run(argThatHasItem("-formats"));
+  }
+
+  @Test
+  public void testReadProcessStreams() throws IOException {
+    // process input stream
+    Appendable processInputStream = mock(Appendable.class);
+    ffmpeg.setProcessOutputStream(processInputStream);
+    // process error stream
+    Appendable processErrStream = mock(Appendable.class);
+    ffmpeg.setProcessErrorStream(processErrStream);
+    // run ffmpeg with non existing file
+    ffmpeg.run(Lists.newArrayList("-i", "toto.mp4"));
+    // check calls to Appendables
+    verify(processInputStream, times(1)).append(any(CharSequence.class));
+    verify(processErrStream, times(1)).append(any(CharSequence.class));
   }
 
   @Test

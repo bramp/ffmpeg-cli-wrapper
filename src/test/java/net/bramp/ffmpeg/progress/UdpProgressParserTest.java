@@ -24,7 +24,7 @@ public class UdpProgressParserTest extends AbstractProgressParserTest {
   }
 
   @Test
-  public void testNormal() throws IOException, InterruptedException, URISyntaxException {
+  public void testNormal() throws IOException, InterruptedException {
     parser.start();
 
     final InetAddress addr = InetAddress.getByName(uri.getHost());
@@ -41,10 +41,35 @@ public class UdpProgressParserTest extends AbstractProgressParserTest {
       }
     }
 
+    Thread.sleep(1000); // HACK: Wait a short while to avoid closing the receiving socket
+
+    parser.stop();
+
+    assertThat(progesses, equalTo(Progresses.allProgresses));
+  }
+
+  @Test
+  public void testNaProgressPackets() throws IOException, InterruptedException, URISyntaxException {
+    parser.start();
+
+    final InetAddress addr = InetAddress.getByName(uri.getHost());
+    final int port = uri.getPort();
+
+    try (DatagramSocket socket = new DatagramSocket()) {
+      // Load each Progress Fixture, and send in a single datagram packet
+      for (String progressFixture : Progresses.naProgressFile) {
+        InputStream inputStream = loadResource(progressFixture);
+        byte[] bytes = ByteStreams.toByteArray(inputStream);
+
+        DatagramPacket packet = new DatagramPacket(bytes, bytes.length, addr, port);
+        socket.send(packet);
+      }
+    }
+
     Thread.sleep(100); // HACK: Wait a short while to avoid closing the receiving socket
 
     parser.stop();
 
-    assertThat(progesses, equalTo((List<Progress>) Progresses.allProgresses));
+    assertThat(progesses, equalTo(Progresses.naProgresses));
   }
 }
