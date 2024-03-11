@@ -15,10 +15,7 @@ jobs:
     strategy:
       matrix:
         # Long term supported versions
-        java-version: [11, 17, 21]
-
-        # TODO Add support for 8, but it fails with
-        # java.lang.UnsupportedClassVersionError: com/spotify/fmt/FMT has been compiled by a more recent version of the Java Runtime (class file version 55.0), this version of the Java Runtime only recognizes class file versions up to 52.0
+        java-version: [8, 11, 17, 21]
 
         # TODO Should we test locales? The old travis setup did, see:
         # https://github.com/bramp/ffmpeg-cli-wrapper/pull/55
