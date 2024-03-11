@@ -2,6 +2,7 @@ package net.bramp.ffmpeg.info;
 
 import com.google.common.base.Preconditions;
 import com.google.errorprone.annotations.Immutable;
+import net.bramp.ffmpeg.shared.CodecType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -12,14 +13,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @Immutable
 public class Codec {
-
-  public enum Type {
-    VIDEO,
-    AUDIO,
-    SUBTITLE,
-    DATA
-  }
-
   final String name;
   final String longName;
 
@@ -30,7 +23,7 @@ public class Codec {
   final boolean canEncode;
 
   /** What type of codec is this */
-  final Type type;
+  final CodecType type;
 
   /**
    * @param name short codec name
@@ -58,16 +51,19 @@ public class Codec {
 
     switch (flags.charAt(2)) {
       case 'V':
-        this.type = Type.VIDEO;
+        this.type = CodecType.VIDEO;
         break;
       case 'A':
-        this.type = Type.AUDIO;
+        this.type = CodecType.AUDIO;
         break;
       case 'S':
-        this.type = Type.SUBTITLE;
+        this.type = CodecType.SUBTITLE;
         break;
       case 'D':
-        this.type = Type.DATA;
+        this.type = CodecType.DATA;
+        break;
+      case 'T':
+        this.type = CodecType.ATTACHMENT;
         break;
       default:
         throw new IllegalArgumentException("Invalid codec type '" + flags.charAt(2) + "'");
@@ -107,7 +103,7 @@ public class Codec {
     return canEncode;
   }
 
-  public Type getType() {
+  public CodecType getType() {
     return type;
   }
 }

@@ -1,12 +1,13 @@
 package net.bramp.ffmpeg.probe;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import net.bramp.ffmpeg.shared.CodecType;
 
 @SuppressFBWarnings(
     value = {"UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"},
     justification = "POJO objects where the fields are populated by gson")
 public class FFmpegFrame implements FFmpegFrameOrPacket {
-  public FFmpegStream.CodecType media_type;
+  public CodecType media_type;
   public int stream_index;
   public int key_frame;
   public long pkt_pts;

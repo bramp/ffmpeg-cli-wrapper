@@ -7,7 +7,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     justification = "POJO objects where the fields are populated by gson")
 public class FFmpegChapter {
 
-  public int id;
+  public long id;
   public String time_base;
   public long start;
   public String start_time;

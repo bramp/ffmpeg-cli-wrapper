@@ -1,9 +1,9 @@
 package net.bramp.ffmpeg;
 
-import com.google.gson.Gson;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
 import net.bramp.ffmpeg.probe.*;
+import net.bramp.ffmpeg.shared.CodecType;
 import org.apache.commons.lang3.math.Fraction;
 import org.hamcrest.core.IsNull;
 import org.junit.Before;
@@ -25,9 +25,8 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class FFprobeTest {
 
-  static final Gson gson = FFmpegUtils.getGson();
-  @Mock
-  ProcessFunction runFunc;
+  @Mock ProcessFunction runFunc;
+
   FFprobe ffprobe;
 
   @Before
@@ -39,7 +38,7 @@ public class FFprobeTest {
         .thenAnswer(new NewProcessAnswer("ffprobe-big_buck_bunny_720p_1mb.mp4"));
 
     when(runFunc.run(argThatHasItem(Samples.always_on_my_mind)))
-        .thenAnswer(new NewProcessAnswer("ffprobe-Always On My Mind [Program Only] - Adelén.mp4"));
+        .thenAnswer(new NewProcessAnswer("ffprobe-Always On My Mind [Program Only] - Adelen.mp4"));
 
     when(runFunc.run(argThatHasItem(Samples.start_pts_test)))
         .thenAnswer(new NewProcessAnswer("ffprobe-start_pts_test"));
@@ -62,6 +61,9 @@ public class FFprobeTest {
     when(runFunc.run(argThatHasItem(Samples.side_data_list)))
         .thenAnswer(new NewProcessAnswer("ffprobe-side_data_list"));
 
+    when(runFunc.run(argThatHasItem(Samples.chapters_with_long_id)))
+        .thenAnswer(new NewProcessAnswer("chapters_with_long_id.m4b"));
+
     ffprobe = new FFprobe(runFunc);
   }
 
@@ -82,8 +84,8 @@ public class FFprobeTest {
 
     // Only a quick sanity check until we do something better
     assertThat(info.getStreams(), hasSize(2));
-    assertThat(info.getStreams().get(0).codec_type, is(FFmpegStream.CodecType.VIDEO));
-    assertThat(info.getStreams().get(1).codec_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(info.getStreams().get(0).codec_type, is(CodecType.VIDEO));
+    assertThat(info.getStreams().get(1).codec_type, is(CodecType.AUDIO));
 
     assertThat(info.getStreams().get(1).channels, is(6));
     assertThat(info.getStreams().get(1).sample_rate, is(48_000));
@@ -127,7 +129,7 @@ public class FFprobeTest {
     assertThat(info.getPackets().size(), is(381));
 
     FFmpegPacket firstPacket = info.getPackets().get(0);
-    assertThat(firstPacket.codec_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(firstPacket.codec_type, is(CodecType.AUDIO));
     assertThat(firstPacket.stream_index, is(1));
     assertThat(firstPacket.pts, is(0L));
     assertThat(firstPacket.pts_time, is(0.0));
@@ -140,7 +142,7 @@ public class FFprobeTest {
     assertThat(firstPacket.flags, is("K_"));
 
     FFmpegPacket secondPacket = info.getPackets().get(1);
-    assertThat(secondPacket.codec_type, is(FFmpegStream.CodecType.VIDEO));
+    assertThat(secondPacket.codec_type, is(CodecType.VIDEO));
     assertThat(secondPacket.stream_index, is(0));
     assertThat(secondPacket.pts, is(0L));
     assertThat(secondPacket.pts_time, is(0.0));
@@ -153,7 +155,7 @@ public class FFprobeTest {
     assertThat(secondPacket.flags, is("K_"));
 
     FFmpegPacket lastPacket = info.getPackets().get(info.getPackets().size() - 1);
-    assertThat(lastPacket.codec_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(lastPacket.codec_type, is(CodecType.AUDIO));
     assertThat(lastPacket.stream_index, is(1));
     assertThat(lastPacket.pts, is(253952L));
     assertThat(lastPacket.pts_time, is(5.290667));
@@ -196,7 +198,7 @@ public class FFprobeTest {
     assertThat(firstFrame.channel_layout, is("5.1"));
 
     FFmpegFrame secondFrame = info.getFrames().get(1);
-    assertThat(secondFrame.media_type, is(FFmpegStream.CodecType.VIDEO));
+    assertThat(secondFrame.media_type, is(CodecType.VIDEO));
     assertThat(secondFrame.stream_index, is(0));
     assertThat(secondFrame.key_frame, is(1));
     assertThat(secondFrame.pkt_pts, is(0L));
@@ -215,7 +217,7 @@ public class FFprobeTest {
     assertThat(secondFrame.channel_layout, new IsNull<>());
 
     FFmpegFrame lastFrame = info.getFrames().get(info.getFrames().size() - 1);
-    assertThat(lastFrame.media_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(lastFrame.media_type, is(CodecType.AUDIO));
     assertThat(lastFrame.stream_index, is(1));
     assertThat(lastFrame.key_frame, is(1));
     assertThat(lastFrame.pkt_pts, is(253952L));
@@ -248,7 +250,7 @@ public class FFprobeTest {
     assertThat(info.getFrames().size(), is(381));
 
     FFmpegPacket firstPacket = info.getPackets().get(0);
-    assertThat(firstPacket.codec_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(firstPacket.codec_type, is(CodecType.AUDIO));
     assertThat(firstPacket.stream_index, is(1));
     assertThat(firstPacket.pts, is(0L));
     assertThat(firstPacket.pts_time, is(0.0));
@@ -261,7 +263,7 @@ public class FFprobeTest {
     assertThat(firstPacket.flags, is("K_"));
 
     FFmpegPacket secondPacket = info.getPackets().get(1);
-    assertThat(secondPacket.codec_type, is(FFmpegStream.CodecType.VIDEO));
+    assertThat(secondPacket.codec_type, is(CodecType.VIDEO));
     assertThat(secondPacket.stream_index, is(0));
     assertThat(secondPacket.pts, is(0L));
     assertThat(secondPacket.pts_time, is(0.0));
@@ -274,7 +276,7 @@ public class FFprobeTest {
     assertThat(secondPacket.flags, is("K_"));
 
     FFmpegPacket lastPacket = info.getPackets().get(info.getPackets().size() - 1);
-    assertThat(lastPacket.codec_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(lastPacket.codec_type, is(CodecType.AUDIO));
     assertThat(lastPacket.stream_index, is(1));
     assertThat(lastPacket.pts, is(253952L));
     assertThat(lastPacket.pts_time, is(5.290667));
@@ -305,7 +307,7 @@ public class FFprobeTest {
     assertThat(firstFrame.channel_layout, is("5.1"));
 
     FFmpegFrame secondFrame = info.getFrames().get(1);
-    assertThat(secondFrame.media_type, is(FFmpegStream.CodecType.VIDEO));
+    assertThat(secondFrame.media_type, is(CodecType.VIDEO));
     assertThat(secondFrame.stream_index, is(0));
     assertThat(secondFrame.key_frame, is(1));
     assertThat(secondFrame.pkt_pts, is(0L));
@@ -324,7 +326,7 @@ public class FFprobeTest {
     assertThat(secondFrame.channel_layout, new IsNull<>());
 
     FFmpegFrame lastFrame = info.getFrames().get(info.getFrames().size() - 1);
-    assertThat(lastFrame.media_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(lastFrame.media_type, is(CodecType.AUDIO));
     assertThat(lastFrame.stream_index, is(1));
     assertThat(lastFrame.key_frame, is(1));
     assertThat(lastFrame.pkt_pts, is(253952L));
@@ -350,8 +352,8 @@ public class FFprobeTest {
 
     // Only a quick sanity check until we do something better
     assertThat(info.getStreams(), hasSize(2));
-    assertThat(info.getStreams().get(0).codec_type, is(FFmpegStream.CodecType.VIDEO));
-    assertThat(info.getStreams().get(1).codec_type, is(FFmpegStream.CodecType.AUDIO));
+    assertThat(info.getStreams().get(0).codec_type, is(CodecType.VIDEO));
+    assertThat(info.getStreams().get(1).codec_type, is(CodecType.AUDIO));
 
     assertThat(info.getStreams().get(1).channels, is(2));
     assertThat(info.getStreams().get(1).sample_rate, is(48_000));
@@ -396,5 +398,13 @@ public class FFprobeTest {
         is(
             "\n00000000:            0      -65536           0\n00000001:        65536           0           0\n00000002:            0           0  1073741824\n"));
     assertThat(info.getStreams().get(0).side_data_list[0].rotation, is(90));
+  }
+
+  @Test
+  public void testChaptersWithLongIds() throws IOException {
+    FFmpegProbeResult info = ffprobe.probe(Samples.chapters_with_long_id);
+
+    assertThat(info.getChapters().get(0).id, is(6613449456311024506L));
+    assertThat(info.getChapters().get(1).id, is(-4433436293284298339L));
   }
 }
