@@ -31,6 +31,8 @@ public final class Samples {
 
   public static final String divide_by_zero = FAKE_PREFIX + "Divide By Zero.mp4";
 
+  public static final String chapters_with_long_id = FAKE_PREFIX + "chapters_with_long_id.m4b";
+
   // TODO Change to a temp directory
   // TODO Generate random names, so we can run tests concurrently
   public static final String output_mp4 = "output.mp4";

@@ -67,6 +67,7 @@ public class FFmpeg extends FFcommon {
   static final Pattern FORMATS_REGEX = Pattern.compile("^ ([ D][ E]) (\\S+)\\s+(.*)$");
   static final Pattern PIXEL_FORMATS_REGEX =
       Pattern.compile("^([.I][.O][.H][.P][.B]) (\\S{2,})\\s+(\\d+)\\s+(\\d+)$");
+  static final Pattern FILTERS_REGEX = Pattern.compile("^\\s*(?<timelinesupport>[T.])(?<slicethreading>[S.])(?<commandsupport>[C.])\\s(?<name>[A-Za-z0-9_]+)\\s+(?<inputpattern>[AVN|]+)->(?<outputpattern>[AVN|]+)\\s+(?<description>.*)$");
 
   /** Supported codecs */
   List<Codec> codecs = null;
@@ -76,6 +77,9 @@ public class FFmpeg extends FFcommon {
 
   /** Supported pixel formats */
   private List<PixelFormat> pixelFormats = null;
+
+  /** Supported filters */
+  private List<Filter> filters = null;
 
   /** Supported channel layouts */
   private List<Layout> layouts = null;
@@ -92,6 +96,7 @@ public class FFmpeg extends FFcommon {
     this(path, new RunProcessFunction());
   }
 
+  @SuppressWarnings("this-escape")
   public FFmpeg(@Nonnull String path, @Nonnull ProcessFunction runFunction) throws IOException {
     super(path, runFunction);
     version();
@@ -146,6 +151,43 @@ public class FFmpeg extends FFcommon {
     }
 
     return codecs;
+  }
+
+  public synchronized @Nonnull List<Filter> filters() throws IOException {
+    checkIfFFmpeg();
+
+    if (this.filters == null) {
+      filters = new ArrayList<>();
+
+      Process p = runFunc.run(ImmutableList.of(path, "-filters"));
+      try {
+        BufferedReader r = wrapInReader(p);
+        String line;
+        while ((line = r.readLine()) != null) {
+          Matcher m = FILTERS_REGEX.matcher(line);
+          if (!m.matches()) continue;
+
+          // (?<inputpattern>[AVN|]+)->(?<outputpattern>[AVN|]+)\s+(?<description>.*)$
+
+          filters.add(new Filter(
+                  m.group("timelinesupport").equals("T"),
+                  m.group("slicethreading").equals("S"),
+                  m.group("commandsupport").equals("C"),
+                  m.group("name"),
+                  new FilterPattern(m.group("inputpattern")),
+                  new FilterPattern(m.group("outputpattern")),
+                  m.group("description")
+          ));
+        }
+
+        throwOnError(p);
+        this.filters = ImmutableList.copyOf(filters);
+      } finally {
+        p.destroy();
+      }
+    }
+
+    return this.filters;
   }
 
   public synchronized @Nonnull List<Format> formats() throws IOException {
