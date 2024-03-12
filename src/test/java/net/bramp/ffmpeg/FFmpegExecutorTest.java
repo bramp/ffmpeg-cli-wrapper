@@ -180,10 +180,6 @@ public class FFmpegExecutorTest {
 
   /**
    * Test if addStdoutOutput() actually works, and the output can be correctly captured.
-   *
-   * @throws InterruptedException
-   * @throws ExecutionException
-   * @throws IOException
    */
   @Test
   public void testStdout() throws InterruptedException, ExecutionException, IOException {

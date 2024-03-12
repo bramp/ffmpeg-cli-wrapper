@@ -3,6 +3,8 @@ package net.bramp.ffmpeg.options;
 import java.beans.ConstructorProperties;
 
 /**
+ * Audio, Video and Main encoding options for ffmpeg.
+ * 
  * @author bramp
  */
 public class EncodingOptions {

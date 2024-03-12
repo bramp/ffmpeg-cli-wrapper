@@ -25,11 +25,11 @@ public abstract class AbstractSocketProgressParser implements ProgressParser {
    *
    * <p>TODO Move this method to somewhere better.
    *
-   * @param scheme
-   * @param address
-   * @param port
-   * @return
-   * @throws URISyntaxException
+   * @param scheme The scheme to use (e.g. "tcp", "udp", "rtp", "http")
+   * @param address The address of the server
+   * @param port The port to connect to
+   * @return A URI representing the address and port
+   * @throws URISyntaxException if the URI is invalid
    */
   @CheckReturnValue
   static URI createUri(String scheme, InetAddress address, int port) throws URISyntaxException {

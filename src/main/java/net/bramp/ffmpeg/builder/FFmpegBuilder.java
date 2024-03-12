@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 
+import com.google.common.base.Ascii;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -32,10 +33,10 @@ public class FFmpegBuilder {
     UNOFFICIAL, // allow unofficial extensions
     EXPERIMENTAL;
 
-    // ffmpeg command line requires these options in lower case
     @Override
     public String toString() {
-      return name().toLowerCase();
+      // ffmpeg command line requires these options in lower case
+      return Ascii.toLowerCase(name());
     }
   }
 
@@ -52,7 +53,8 @@ public class FFmpegBuilder {
 
     @Override
     public String toString() {
-      return name().toLowerCase();
+      // ffmpeg command line requires these options in lower case
+      return Ascii.toLowerCase(name());
     }
   }
 
@@ -179,8 +181,8 @@ public class FFmpegBuilder {
   /**
    * Sets the complex filter flag.
    *
-   * @param filter
-   * @return
+   * @param filter the complex filter string
+   * @return this
    */
   public FFmpegBuilder setComplexFilter(String filter) {
     this.complexFilter = checkNotEmpty(filter, "filter must not be empty");
@@ -190,8 +192,8 @@ public class FFmpegBuilder {
   /**
    * Sets the audio filter flag.
    *
-   * @param filter
-   * @return
+   * @param filter the audio filter string
+   * @return this
    */
   public FFmpegBuilder setAudioFilter(String filter) {
     this.audioFilter = checkNotEmpty(filter, "filter must not be empty");
@@ -201,8 +203,8 @@ public class FFmpegBuilder {
   /**
    * Sets the video filter flag.
    *
-   * @param filter
-   * @return
+   * @param filter the video filter string
+   * @return this
    */
   public FFmpegBuilder setVideoFilter(String filter) {
     this.videoFilter = checkNotEmpty(filter, "filter must not be empty");
@@ -211,6 +213,7 @@ public class FFmpegBuilder {
 
   /**
    * Sets vbr quality when decoding mp3 output.
+   * 
    * @param quality the quality between 0 and 9. Where 0 is best.
    * @return FFmpegBuilder
    */

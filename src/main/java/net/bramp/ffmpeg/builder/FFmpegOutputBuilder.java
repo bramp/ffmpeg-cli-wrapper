@@ -6,6 +6,8 @@ import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.annotations.InlineMe;
+
 import java.net.URI;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -113,7 +115,8 @@ public class FFmpegOutputBuilder extends AbstractFFmpegStreamBuilder<FFmpegOutpu
    * @deprecated use {@link #setAudioSampleFormat} instead.
    */
   @Deprecated
-  public FFmpegOutputBuilder setAudioBitDepth(String bit_depth) {
+  @InlineMe(replacement = "this.setAudioSampleFormat(bit_depth)")
+  final public FFmpegOutputBuilder setAudioBitDepth(String bit_depth) {
     return setAudioSampleFormat(bit_depth);
   }
 

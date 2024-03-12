@@ -5,6 +5,7 @@ import static java.util.concurrent.TimeUnit.*;
 import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 
 import com.google.common.base.CharMatcher;
+import com.google.errorprone.annotations.InlineMe;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.concurrent.TimeUnit;
@@ -36,6 +37,10 @@ public final class FFmpegUtils {
    * @deprecated please use #toTimecode() instead.
    */
   @Deprecated
+  @InlineMe(
+    replacement = "FFmpegUtils.toTimecode(milliseconds, MILLISECONDS)",
+    imports = "net.bramp.ffmpeg.FFmpegUtils",
+    staticImports = "java.util.concurrent.TimeUnit.MILLISECONDS")
   public static String millisecondsToString(long milliseconds) {
     return toTimecode(milliseconds, MILLISECONDS);
   }

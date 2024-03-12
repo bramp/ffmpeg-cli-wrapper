@@ -60,7 +60,7 @@ public class NamedBitsetAdapter<T> extends TypeAdapter<T> {
   protected void setField(T target, String name, boolean value) throws IllegalAccessException {
     try {
       Field f = clazz.getField(name);
-      if ((boolean.class.equals(f.getType()))) {
+      if (boolean.class.equals(f.getType())) {
         f.setBoolean(target, value);
       } else if (int.class.equals(f.getType())) {
         f.setInt(target, value ? 1 : 0);

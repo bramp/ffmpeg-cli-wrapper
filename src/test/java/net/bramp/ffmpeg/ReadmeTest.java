@@ -27,6 +27,7 @@ public class ReadmeTest {
   public ReadmeTest() throws IOException {}
 
   @Test
+  @SuppressWarnings("unused")
   public void testCreateFF() throws IOException {
     FFmpeg ffmpeg = new FFmpeg(FFmpeg.DEFAULT_PATH);
     FFprobe ffprobe = new FFprobe(FFmpeg.DEFAULT_PATH);

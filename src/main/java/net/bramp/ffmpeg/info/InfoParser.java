@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.*;
 
+import com.google.common.base.Splitter;
+
 public final class InfoParser {
     private InfoParser() {
         throw new AssertionError("No instances for you!");
@@ -35,7 +37,7 @@ public final class InfoParser {
             } else if (parsingChannelLayouts) {
                 String[] s = line.split(" ", 2);
                 List<IndividualChannel> decomposition = new ArrayList<>();
-                for (String channelName : s[1].trim().split("\\+")) {
+                for (String channelName :  Splitter.on('+').split(s[1].trim())) {
                     decomposition.add(individualChannelLookup.get(channelName));
                 }
 

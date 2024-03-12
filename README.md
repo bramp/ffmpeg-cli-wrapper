@@ -1,11 +1,10 @@
-FFmpeg Java
-===========
+# FFmpeg CLI Wrapper for Java
 
-by Andrew Brampton ([bramp.net](https://bramp.net)) (c) 2013-2014,2016
+by Andrew Brampton ([bramp.net](https://bramp.net)) (c) 2013-2024
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/bramp)
 
-A fluent interface to running FFmpeg from Java.
+A fluent interface for running FFmpeg from Java.
 
 ![Java](https://img.shields.io/badge/Java-8+-brightgreen.svg)
 [![Build Status](https://github.com/bramp/ffmpeg-cli-wrapper/actions/workflows/maven.yml/badge.svg)](https://github.com/bramp/ffmpeg-cli-wrapper/actions/workflows/maven.yml)
@@ -15,8 +14,7 @@ A fluent interface to running FFmpeg from Java.
 
 [GitHub](https://github.com/bramp/ffmpeg-cli-wrapper) | [API docs](https://bramp.github.io/ffmpeg-cli-wrapper/)
 
-Install
--------
+## Install
 
 We currently support Java 8 and above. Use Maven to install the dependency.
 
@@ -28,12 +26,12 @@ We currently support Java 8 and above. Use Maven to install the dependency.
 </dependency>
 ```
 
-Usage
------
+## Usage
 
 ### Video Encoding
 
 Code:
+
 ```java
 FFmpeg ffmpeg = new FFmpeg("/path/to/ffmpeg");
 FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
@@ -73,64 +71,67 @@ executor.createTwoPassJob(builder).run();
 ### Get Media Information
 
 Code:
+
 ```java
 FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
 FFmpegProbeResult probeResult = ffprobe.probe("input.mp4");
 
 FFmpegFormat format = probeResult.getFormat();
 System.out.format("%nFile: '%s' ; Format: '%s' ; Duration: %.3fs", 
-	format.filename, 
-	format.format_long_name,
-	format.duration
+ format.filename,
+ format.format_long_name,
+ format.duration
 );
 
 FFmpegStream stream = probeResult.getStreams().get(0);
 System.out.format("%nCodec: '%s' ; Width: %dpx ; Height: %dpx",
-	stream.codec_long_name,
-	stream.width,
-	stream.height
+ stream.codec_long_name,
+ stream.width,
+ stream.height
 );
 ```
 
 ### Get progress while encoding
+
 ```java
 FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 
 FFmpegProbeResult in = ffprobe.probe("input.flv");
 
 FFmpegBuilder builder = new FFmpegBuilder()
-	.setInput(in) // Or filename
-	.addOutput("output.mp4")
-	.done();
+ .setInput(in) // Or filename
+ .addOutput("output.mp4")
+ .done();
 
 FFmpegJob job = executor.createJob(builder, new ProgressListener() {
 
-	// Using the FFmpegProbeResult determine the duration of the input
-	final double duration_ns = in.getFormat().duration * TimeUnit.SECONDS.toNanos(1);
+ // Using the FFmpegProbeResult determine the duration of the input
+ final double duration_ns = in.getFormat().duration * TimeUnit.SECONDS.toNanos(1);
 
-	@Override
-	public void progress(Progress progress) {
-		double percentage = progress.out_time_ns / duration_ns;
+ @Override
+ public void progress(Progress progress) {
+  double percentage = progress.out_time_ns / duration_ns;
 
-		// Print out interesting information about the progress
-		System.out.println(String.format(
-			"[%.0f%%] status:%s frame:%d time:%s ms fps:%.0f speed:%.2fx",
-			percentage * 100,
-			progress.status,
-			progress.frame,
-			FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
-			progress.fps.doubleValue(),
-			progress.speed
-		));
-	}
+  // Print out interesting information about the progress
+  System.out.println(String.format(
+   "[%.0f%%] status:%s frame:%d time:%s ms fps:%.0f speed:%.2fx",
+   percentage * 100,
+   progress.status,
+   progress.frame,
+   FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
+   progress.fps.doubleValue(),
+   progress.speed
+  ));
+ }
 });
 
 job.run();
 ```
 
-Building & Releasing
---------------
+## Building & Releasing
+
 If you wish to make changes, then building and releasing is simple:
+
 ```bash
 # To build
 mvn
@@ -148,8 +149,7 @@ git checkout ffmpeg-0.x
 mvn clean javadoc:aggregate scm-publish:publish-scm
 ```
 
-Bumpings Deps
------
+## Bumpings Deps
 
 ```bash
 # Update Maven Plugins
@@ -159,15 +159,13 @@ mvn versions:display-plugin-updates
 mvn versions:display-dependency-updates 
 ```
 
-Install FFmpeg on Ubuntu
------------------
+## Install FFmpeg on Ubuntu
 
 We only the support the original FFmpeg, not the libav version. Before Ubuntu 12.04, and in 15.04
 and later the original FFmpeg is shipped. If you have to run on a version with libav, you can install
 FFmpeg from a PPA, or using the static build. More information [here](http://askubuntu.com/q/373322/34845)
 
-Get involved!
--------------
+## Get involved
 
 We welcome contributions. Please check the [issue tracker](https://github.com/bramp/ffmpeg-cli-wrapper/issues).
 If you see something you wish to work on, please either comment on the issue, or just send a pull
@@ -175,10 +173,10 @@ request. Want to work on something else, then just open a issue, and we can disc
 documentation improvements, code cleanup, or new features. Please be mindful that all work is done
 on a volunteer basis, thus we can be slow to reply.
 
-Licence (Simplified BSD License)
---------------------------------
-```
-Copyright (c) 2016-2022, Andrew Brampton
+## Licence (Simplified BSD License)
+
+```plaintext
+Copyright (c) 2013-2024, Andrew Brampton
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

@@ -35,6 +35,7 @@ public class TwoPassFFmpegJob extends FFmpegJob {
     // Build the args now (but throw away the results). This allows the illegal arguments to be
     // caught early, but also allows the ffmpeg command to actually alter the arguments when
     // running.
+    @SuppressWarnings("unused")
     List<String> unused = this.builder.setPass(1).build();
   }
 

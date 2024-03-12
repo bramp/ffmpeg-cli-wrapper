@@ -1,6 +1,7 @@
 package net.bramp.ffmpeg.nut;
 
 import com.google.common.base.MoreObjects;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -145,6 +146,7 @@ public class Frame {
     }
 
     if ((flags & FLAG_CHECKSUM) == FLAG_CHECKSUM) {
+      @SuppressWarnings("unused")
       long checksum = in.readInt();
       // TODO Test checksum
     }

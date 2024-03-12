@@ -25,9 +25,6 @@ public class Helper {
   /**
    * Simple wrapper around "new SequenceInputStream", so the user doesn't have to deal with the
    * horribly dated Enumeration type.
-   *
-   * @param input
-   * @return
    */
   public static InputStream sequenceInputStream(Iterable<InputStream> input) {
     checkNotNull(input);
@@ -41,9 +38,6 @@ public class Helper {
 
   /**
    * Loads all resources, and returns one stream containing them all.
-   *
-   * @param names
-   * @return
    */
   public static InputStream combineResource(List<String> names) {
     checkNotNull(names);
