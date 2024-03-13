@@ -55,7 +55,7 @@ import org.apache.commons.lang3.math.Fraction;
  */
 public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStreamBuilder<T>> {
 
-  private static final String DEVNULL = SystemUtils.IS_OS_WINDOWS ? "NUL" : "/dev/null";
+  public static final String DEVNULL = SystemUtils.IS_OS_WINDOWS ? "NUL" : "/dev/null";
 
   final FFmpegBuilder parent;
 
