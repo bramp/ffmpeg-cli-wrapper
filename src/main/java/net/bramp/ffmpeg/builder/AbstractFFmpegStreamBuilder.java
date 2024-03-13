@@ -53,54 +53,117 @@ import org.apache.commons.lang3.math.Fraction;
  *
  * @param <T> A concrete class that extends from the AbstractFFmpegStreamBuilder
  */
+@SuppressWarnings({"DeprecatedIsStillUsed"})
 public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStreamBuilder<T>> {
 
   private static final String DEVNULL = SystemUtils.IS_OS_WINDOWS ? "NUL" : "/dev/null";
 
-  final FFmpegBuilder parent;
+  protected final FFmpegBuilder parent;
 
-  /** Output filename or uri. Only one may be set */
+  /* Output filename or uri. Only one may be set */
+  /** @deprecated Use {@link #getFilename()} instead */
+  @Deprecated
   public String filename;
 
+  /** @deprecated Use {@link #getUri()} instead */
+  @Deprecated
   public URI uri;
 
+  /** @deprecated Use {@link #getFormat()} instead */
+  @Deprecated
   public String format;
 
+  /** @deprecated Use {@link #getStartOffset()} instead */
+  @Deprecated
   public Long startOffset; // in milliseconds
+  /** @deprecated Use {@link #getDuration()} instead */
+  @Deprecated
   public Long duration; // in milliseconds
 
+  /** @deprecated Use {@link #getMetaTags()} instead */
+  @Deprecated
   public final List<String> meta_tags = new ArrayList<>();
 
+  /** @deprecated Use {@link #isAudioEnabled()} instead */
+  @Deprecated
   public boolean audio_enabled = true;
+  /** @deprecated Use {@link #getAudioCodec()} instead */
+  @Deprecated
   public String audio_codec;
+  /** @deprecated Use {@link #getAudioChannels()} instead */
+  @Deprecated
   public int audio_channels;
+  /** @deprecated Use {@link #getAudioSampleRate()} instead */
+  @Deprecated
   public int audio_sample_rate;
+  /** @deprecated Use {@link #getAudioPreset()} instead */
+  @Deprecated
   public String audio_preset;
 
+  /** @deprecated Use {@link #isVideoEnabled()} instead */
+  @Deprecated
   public boolean video_enabled = true;
+  /** @deprecated Use {@link #getVideoCodec()} instead */
+  @Deprecated
   public String video_codec;
+  /** @deprecated Use {@link #isVideoCopyinkf()} instead */
+  @Deprecated
   public boolean video_copyinkf;
+  /** @deprecated Use {@link #getVideoFrameRate()} instead */
+  @Deprecated
   public Fraction video_frame_rate;
+  /** @deprecated Use {@link #getVideoWidth()} instead */
+  @Deprecated
   public int video_width;
+  /** @deprecated Use {@link #getVideoHeight()} instead */
+  @Deprecated
   public int video_height;
+  /** @deprecated Use {@link #getVideoSize()} instead */
+  @Deprecated
   public String video_size;
+  /** @deprecated Use {@link #getVideoMovflags()} instead */
+  @Deprecated
   public String video_movflags;
+  /** @deprecated Use {@link #getVideoFrames()} instead */
+  @Deprecated
   public Integer video_frames;
+  /** @deprecated Use {@link #getVideoPixelFormat()} instead */
+  @Deprecated
   public String video_pixel_format;
 
+  /** @deprecated Use {@link #isSubtitleEnabled()} instead */
+  @Deprecated
   public boolean subtitle_enabled = true;
+  /** @deprecated Use {@link #getSubtitlePreset()} instead */
+  @Deprecated
   public String subtitle_preset;
+  /** @deprecated Use {@link #getSubtitleCodec()} instead */
+  @Deprecated
   private String subtitle_codec;
 
+  /** @deprecated Use {@link #getPreset()} instead */
+  @Deprecated
   public String preset;
+  /** @deprecated Use {@link #getPresetFilename()} instead */
+  @Deprecated
   public String presetFilename;
+  /** @deprecated Use {@link #getExtraArgs()} instead */
+  @Deprecated
   public final List<String> extra_args = new ArrayList<>();
 
+  /** @deprecated Use {@link #getStrict()} instead */
+  @Deprecated
   public FFmpegBuilder.Strict strict = FFmpegBuilder.Strict.NORMAL;
 
+  /** @deprecated Use {@link #getTargetSize()} instead */
+  @Deprecated
   public long targetSize = 0; // in bytes
+  /** @deprecated Use {@link #getPassPaddingBitrate()} instead */
+  @Deprecated
   public long pass_padding_bitrate = 1024; // in bits per second
 
+  /** @deprecated Use {@link #isThrowWarnings()} instead */
+  @Deprecated
   public boolean throwWarnings = true; // TODO Either delete this, or apply it consistently
 
   protected AbstractFFmpegStreamBuilder() {
@@ -685,5 +748,121 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     if (video_frame_rate != null) {
       args.add("-r", video_frame_rate.toString());
     }
+  }
+
+  public String getFormat() {
+    return format;
+  }
+
+  public Long getStartOffset() {
+    return startOffset;
+  }
+
+  public Long getDuration() {
+    return duration;
+  }
+
+  public List<String> getMetaTags() {
+    return meta_tags;
+  }
+
+  public boolean isAudioEnabled() {
+    return audio_enabled;
+  }
+
+  public String getAudioCodec() {
+    return audio_codec;
+  }
+
+  public int getAudioChannels() {
+    return audio_channels;
+  }
+
+  public int getAudioSampleRate() {
+    return audio_sample_rate;
+  }
+
+  public String getAudioPreset() {
+    return audio_preset;
+  }
+
+  public boolean isVideoEnabled() {
+    return video_enabled;
+  }
+
+  public String getVideoCodec() {
+    return video_codec;
+  }
+
+  public boolean isVideoCopyinkf() {
+    return video_copyinkf;
+  }
+
+  public Fraction getVideoFrameRate() {
+    return video_frame_rate;
+  }
+
+  public int getVideoWidth() {
+    return video_width;
+  }
+
+  public int getVideoHeight() {
+    return video_height;
+  }
+
+  public String getVideoSize() {
+    return video_size;
+  }
+
+  public String getVideoMovflags() {
+    return video_movflags;
+  }
+
+  public Integer getVideoFrames() {
+    return video_frames;
+  }
+
+  public String getVideoPixelFormat() {
+    return video_pixel_format;
+  }
+
+  public boolean isSubtitleEnabled() {
+    return subtitle_enabled;
+  }
+
+  public String getSubtitlePreset() {
+    return subtitle_preset;
+  }
+
+  public String getSubtitleCodec() {
+    return subtitle_codec;
+  }
+
+  public String getPreset() {
+    return preset;
+  }
+
+  public String getPresetFilename() {
+    return presetFilename;
+  }
+
+  public List<String> getExtraArgs() {
+    return extra_args;
+  }
+
+  public FFmpegBuilder.Strict getStrict() {
+    return strict;
+  }
+
+  public long getTargetSize() {
+    return targetSize;
+  }
+
+  public long getPassPaddingBitrate() {
+    return pass_padding_bitrate;
+  }
+
+  public boolean isThrowWarnings() {
+    return throwWarnings;
   }
 }
