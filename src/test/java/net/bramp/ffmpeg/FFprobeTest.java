@@ -1,5 +1,7 @@
 package net.bramp.ffmpeg;
 
+import com.google.common.collect.ImmutableList;
+import net.bramp.ffmpeg.builder.FFprobeBuilder;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
 import net.bramp.ffmpeg.probe.*;
@@ -9,10 +11,13 @@ import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.util.List;
 
 import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,7 +30,11 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class FFprobeTest {
 
-  @Mock ProcessFunction runFunc;
+  @Mock
+  ProcessFunction runFunc;
+
+  @Captor
+  ArgumentCaptor<List<String>> argsCaptor;
 
   FFprobe ffprobe;
 
@@ -406,5 +415,75 @@ public class FFprobeTest {
 
     assertThat(info.getChapters().get(0).id, is(6613449456311024506L));
     assertThat(info.getChapters().get(1).id, is(-4433436293284298339L));
+  }
+
+  @Test
+  public void testProbeDefaultArguments() throws IOException {
+    ffprobe.probe(Samples.always_on_my_mind);
+
+    verify(runFunc, times(2)).run(argsCaptor.capture());
+
+    List<String> value = argsCaptor.getValue();
+
+    assertThat(
+      value,
+      is(ImmutableList.of("ffprobe", "-v", "quiet", "-print_format", "json", "-show_error", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
+    );
+  }
+
+  @Test
+  public void testProbeProbeBuilder() throws IOException {
+    ffprobe.probe(new FFprobeBuilder().setInput(Samples.always_on_my_mind));
+
+    verify(runFunc, times(2)).run(argsCaptor.capture());
+
+    List<String> value = argsCaptor.getValue();
+
+    assertThat(
+            value,
+            is(ImmutableList.of("ffprobe", "-v", "quiet", "-print_format", "json", "-show_error", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
+    );
+  }
+
+  @Test
+  public void testProbeProbeBuilderBuilt() throws IOException {
+    ffprobe.probe(new FFprobeBuilder().setInput(Samples.always_on_my_mind).build());
+
+    verify(runFunc, times(2)).run(argsCaptor.capture());
+
+    List<String> value = argsCaptor.getValue();
+
+    assertThat(
+            value,
+            is(ImmutableList.of("ffprobe", "-v", "quiet", "-print_format", "json", "-show_error", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
+    );
+  }
+
+  @Test
+  public void testProbeProbeExtraArgs() throws IOException {
+    ffprobe.probe(Samples.always_on_my_mind, null, "-rw_timeout", "0");
+
+    verify(runFunc, times(2)).run(argsCaptor.capture());
+
+    List<String> value = argsCaptor.getValue();
+
+    assertThat(
+            value,
+            is(ImmutableList.of("ffprobe", "-v", "quiet", "-print_format", "json", "-show_error", "-rw_timeout", "0", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
+    );
+  }
+
+  @Test
+  public void testProbeProbeUserAgent() throws IOException {
+    ffprobe.probe(Samples.always_on_my_mind, "ffmpeg-cli-wrapper");
+
+    verify(runFunc, times(2)).run(argsCaptor.capture());
+
+    List<String> value = argsCaptor.getValue();
+
+    assertThat(
+            value,
+            is(ImmutableList.of("ffprobe", "-v", "quiet", "-print_format", "json", "-show_error", "-user_agent", "ffmpeg-cli-wrapper", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
+    );
   }
 }
