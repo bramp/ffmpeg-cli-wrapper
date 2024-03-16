@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 // TODO Change to be immutable
 public class Progress {
-
   static final Logger LOG = LoggerFactory.getLogger(Progress.class);
 
   public enum Status {
@@ -49,31 +48,65 @@ public class Progress {
     }
   }
 
-  /** The frame number being processed */
+  /**
+   * The frame number being processed
+   * @deprecated Use {@link #getFrame()} instead
+   */
+  @Deprecated
   public long frame = 0;
 
-  /** The current frames per second */
+  /**
+   * The current frames per second
+   * @deprecated Use {@link #getFps()} instead
+   */
+  @Deprecated
   public Fraction fps = Fraction.ZERO;
 
-  /** Current bitrate */
+  /** 
+   * Current bitrate
+   * @deprecated Use {@link #getBitrate()} instead
+   */
+  @Deprecated
   public long bitrate = 0;
 
-  /** Output file size (in bytes) */
+  /**
+   * Output file size (in bytes)
+   * @deprecated Use {@link #getTotalSize()} instead
+   */
+  @Deprecated
   public long total_size = 0;
 
-  /** Output time (in nanoseconds) */
   // TODO Change this to a java.time.Duration
+  /**
+   * Output time (in nanoseconds)
+   * @deprecated Use {@link #getOutTimeNs()} instead
+   */
+  @Deprecated
   public long out_time_ns = 0;
 
+  /** @deprecated Use {@link #getDupFrames()} instead */
+  @Deprecated
   public long dup_frames = 0;
 
-  /** Number of frames dropped */
+  /**
+   * Number of frames dropped
+   * @deprecated Use {@link #getDropFrames()} instead
+   */
+  @Deprecated
   public long drop_frames = 0;
 
-  /** Speed of transcoding. 1 means realtime, 2 means twice realtime. */
+  /**
+   * Speed of transcoding. 1 means realtime, 2 means twice realtime.
+   * @deprecated Use {@link #getSpeed()} instead
+   */
+  @Deprecated
   public float speed = 0;
 
-  /** Current status, can be one of "continue", or "end" */
+  /**
+   * Current status, can be one of "continue", or "end"
+   * @deprecated Use {@link #getStatus()} instead
+   */
+  @Deprecated
   public Status status = null;
 
   public Progress() {
@@ -241,5 +274,41 @@ public class Progress {
         .add("speed", speed)
         .add("status", status)
         .toString();
+  }
+
+  public long getFrame() {
+    return frame;
+  }
+
+  public Fraction getFps() {
+    return fps;
+  }
+
+  public long getBitrate() {
+    return bitrate;
+  }
+
+  public long getTotalSize() {
+    return total_size;
+  }
+
+  public long getOutTimeNs() {
+    return out_time_ns;
+  }
+
+  public long getDupFrames() {
+    return dup_frames;
+  }
+
+  public long getDropFrames() {
+    return drop_frames;
+  }
+
+  public float getSpeed() {
+    return speed;
+  }
+
+  public Status getStatus() {
+    return status;
   }
 }

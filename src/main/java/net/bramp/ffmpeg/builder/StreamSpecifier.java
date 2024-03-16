@@ -6,7 +6,7 @@ import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
 /** https://ffmpeg.org/ffmpeg.html#Stream-specifiers */
 public class StreamSpecifier {
 
-  final String spec;
+  private final String spec;
 
   private StreamSpecifier(String spec) {
     this.spec = spec;

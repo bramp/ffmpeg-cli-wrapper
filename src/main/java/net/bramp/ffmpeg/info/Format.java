@@ -12,11 +12,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @Immutable
 public class Format {
-  final String name;
-  final String longName;
+  private final String name;
+  private final String longName;
 
-  final boolean canDemux;
-  final boolean canMux;
+  private final boolean canDemux;
+  private final boolean canMux;
 
   /**
    * @param name short format name

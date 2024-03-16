@@ -13,17 +13,17 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @Immutable
 public class Codec {
-  final String name;
-  final String longName;
+  private final String name;
+  private final String longName;
 
   /** Can I decode with this codec */
-  final boolean canDecode;
+  private final boolean canDecode;
 
   /** Can I encode with this codec */
-  final boolean canEncode;
+  private final boolean canEncode;
 
   /** What type of codec is this */
-  final CodecType type;
+  private final CodecType type;
 
   /**
    * @param name short codec name

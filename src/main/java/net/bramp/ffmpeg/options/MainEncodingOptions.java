@@ -8,8 +8,14 @@ import java.beans.ConstructorProperties;
  * @author bramp
  */
 public class MainEncodingOptions {
+  /** @deprecated Use {@link #getFormat()} instead */
+  @Deprecated
   public final String format;
+  /** @deprecated Use {@link #getStartOffset()} instead */
+  @Deprecated
   public final Long startOffset;
+  /** @deprecated Use {@link #getDuration()} instead */
+  @Deprecated
   public final Long duration;
 
   @ConstructorProperties({"format", "startOffset", "duration"})
@@ -17,5 +23,17 @@ public class MainEncodingOptions {
     this.format = format;
     this.startOffset = startOffset;
     this.duration = duration;
+  }
+
+  public String getFormat() {
+    return format;
+  }
+
+  public Long getStartOffset() {
+    return startOffset;
+  }
+
+  public Long getDuration() {
+    return duration;
   }
 }
