@@ -1,8 +1,6 @@
 package net.bramp.ffmpeg.builder;
 
-import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.FFmpeg;
-import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.fixtures.Samples;
 import org.junit.Test;
 
@@ -13,9 +11,6 @@ import static net.bramp.ffmpeg.builder.AbstractFFmpegStreamBuilder.DEVNULL;
 import static org.junit.Assert.assertEquals;
 
 public class FFmpegOutputBuilderTest extends AbstractFFmpegStreamBuilderTest<FFmpegOutputBuilderTest> {
-    public FFmpegOutputBuilderTest() throws IOException {
-    }
-
     @Test
     public void testSetConstantRateFactorPass0() throws IOException {
         List<String> build = new FFmpegBuilder()
@@ -330,7 +325,7 @@ public class FFmpegOutputBuilderTest extends AbstractFFmpegStreamBuilderTest<FFm
     @SuppressWarnings("CheckReturnValue")
     @Test(expected = java.lang.IllegalArgumentException.class)
     public void testPass1FailsIfFormatNotSet() throws IOException {
-        FFmpegBuilder ffmpegBuilder = new FFmpegBuilder().addInput(new FFprobe().probe(Samples.big_buck_bunny_720p_1mb));
+        FFmpegBuilder ffmpegBuilder = new FFmpegBuilder().addInput(ffprobe.probe(Samples.big_buck_bunny_720p_1mb));
         List<String> build = new FFmpegOutputBuilder().setFilename("output.mp4").setTargetSize(1).build(ffmpegBuilder, 1);
 
         assertEquals(args("output.mp4"), build);
@@ -339,7 +334,7 @@ public class FFmpegOutputBuilderTest extends AbstractFFmpegStreamBuilderTest<FFm
     @SuppressWarnings("CheckReturnValue")
     @Test(expected = java.lang.IllegalArgumentException.class)
     public void testPass2FailsIfNoTargetSize() throws IOException {
-        FFmpegBuilder ffmpegBuilder = new FFmpegBuilder().addInput(new FFprobe().probe(Samples.big_buck_bunny_720p_1mb));
+        FFmpegBuilder ffmpegBuilder = new FFmpegBuilder().addInput(ffprobe.probe(Samples.big_buck_bunny_720p_1mb));
         List<String> build = new FFmpegOutputBuilder().setFilename("output.mp4").setFormat("mp4").build(ffmpegBuilder, 2);
 
         assertEquals(args("output.mp4"), build);
@@ -359,7 +354,7 @@ public class FFmpegOutputBuilderTest extends AbstractFFmpegStreamBuilderTest<FFm
 
     @SuppressWarnings("CheckReturnValue")
     @Test(expected = java.lang.IllegalStateException.class)
-    public void testPass2FailsIfInputIsNotProbed() throws IOException {
+    public void testPass2FailsIfInputIsNotProbed() {
         FFmpegBuilder ffmpegBuilder = new FFmpegBuilder().addInput(Samples.big_buck_bunny_720p_1mb);
         List<String> build = new FFmpegOutputBuilder().setFilename("output.mp4").setTargetSize(1).setFormat("mp4").build(ffmpegBuilder, 2);
 
@@ -369,21 +364,9 @@ public class FFmpegOutputBuilderTest extends AbstractFFmpegStreamBuilderTest<FFm
     @SuppressWarnings("CheckReturnValue")
     @Test(expected = java.lang.IllegalArgumentException.class)
     public void testPass2FailsIfFormatNotSet() throws IOException {
-        FFmpegBuilder ffmpegBuilder = new FFmpegBuilder().addInput(new FFprobe().probe(Samples.big_buck_bunny_720p_1mb));
+        FFmpegBuilder ffmpegBuilder = new FFmpegBuilder().addInput(ffprobe.probe(Samples.big_buck_bunny_720p_1mb));
         List<String> build = new FFmpegOutputBuilder().setFilename("output.mp4").setTargetSize(1).build(ffmpegBuilder, 2);
 
         assertEquals(args("output.mp4"), build);
-    }
-
-    private List<String> args(String... args) {
-        return ImmutableList.copyOf(args);
-    }
-
-    private FFmpegOutputBuilder passBuilder() throws IOException {
-        return new FFmpegBuilder()
-                .addInput(ffprobe.probe(Samples.big_buck_bunny_720p_1mb))
-                .addOutput("output.mp4")
-                .setTargetSize(1)
-                .setFormat("mp4");
     }
 }
