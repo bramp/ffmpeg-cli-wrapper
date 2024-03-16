@@ -763,7 +763,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   }
 
   public List<String> getMetaTags() {
-    return meta_tags;
+    return ImmutableList.copyOf(meta_tags);
   }
 
   public boolean isAudioEnabled() {
