@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 import static com.nitorcreations.Matchers.reflectEquals;
 import static net.bramp.ffmpeg.FFmpeg.*;
 import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
+import static net.bramp.ffmpeg.builder.AbstractFFmpegStreamBuilder.DEVNULL;
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.*;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.tag;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.usable;
@@ -542,11 +543,6 @@ public class FFmpegBuilderTest {
   }
 
   @Test
-  public void testPass1() throws IOException {
-    assertEquals(args("-y", "-v", "error", "-i", Samples.big_buck_bunny_720p_1mb, "-pass", "1", "-passlogfile", "./tmp/pre", "-f", "mp4", "-an", AbstractFFmpegStreamBuilder.DEVNULL), passBuilder().setPass(1).setPassPrefix("pre").setPassDirectory("./tmp/").build());
-  }
-
-  @Test
   public void testVerbosityDefault() {
     assertEquals(args("-y", "-v", "error", "-i", "input.mp4", "output.mp4"), simpleBuilder().build());
   }
@@ -611,6 +607,136 @@ public class FFmpegBuilderTest {
   @Test
   public void testReadAtNativeFrameRate() {
     assertEquals(args("-y", "-v", "error", "-re", "-i", "input.mp4", "output.mp4"), simpleBuilder().readAtNativeFrameRate().build());
+  }
+
+  @Test
+  public void testPass1() throws IOException {
+    List<String> build = new FFmpegBuilder()
+            .setPass(1)
+            .addInput(ffprobe.probe(Samples.big_buck_bunny_720p_1mb))
+            .addOutput("output.mp4")
+            .setTargetSize(1)
+            .setFormat("mp4")
+            .done()
+            .build();
+
+    assertEquals(args("-y", "-v", "error", "-i", Samples.big_buck_bunny_720p_1mb, "-pass", "1", "-f", "mp4", "-an", DEVNULL), build);
+  }
+
+  @Test
+  public void testPass2() throws IOException {
+    List<String> build = new FFmpegBuilder()
+            .setPass(2)
+            .addInput(ffprobe.probe(Samples.big_buck_bunny_720p_1mb))
+            .addOutput("output.mp4")
+            .setTargetSize(1)
+            .setFormat("mp4")
+            .done()
+            .build();
+
+    assertEquals(args("-y", "-v", "error", "-i", Samples.big_buck_bunny_720p_1mb, "-pass", "2", "-f", "mp4", "output.mp4"), build);
+  }
+
+  @SuppressWarnings("CheckReturnValue")
+  @Test(expected = java.lang.IllegalArgumentException.class)
+  public void testPass1FailsIfNoTargetSize() throws IOException {
+    new FFmpegBuilder()
+            .setPass(1)
+            .addInput(ffprobe.probe(Samples.big_buck_bunny_720p_1mb))
+            .addOutput("output.mp4")
+            .setFormat("mp4")
+            .done()
+            .build();
+  }
+
+  @SuppressWarnings("CheckReturnValue")
+  @Test(expected = java.lang.IllegalStateException.class)
+  public void testPass1FailsIfMultipleInputs() throws IOException {
+    new FFmpegBuilder()
+            .setPass(1)
+            .addInput(ffprobe.probe(Samples.big_buck_bunny_720p_1mb))
+            .addInput(ffprobe.probe(Samples.big_buck_bunny_720p_1mb))
+            .addOutput("output.mp4")
+            .setTargetSize(1)
+            .setFormat("mp4")
+            .done()
+            .build();
+  }
+
+  @SuppressWarnings("CheckReturnValue")
+  @Test(expected = java.lang.IllegalStateException.class)
+  public void testPass1FailsIfInputIsNotProbed() {
+    new FFmpegBuilder()
+            .setPass(1)
+            .addInput(Samples.big_buck_bunny_720p_1mb)
+            .addOutput("output.mp4")
+            .setTargetSize(1)
+            .setFormat("mp4")
+            .done()
+            .build();
+  }
+
+  @SuppressWarnings("CheckReturnValue")
+  @Test(expected = java.lang.IllegalArgumentException.class)
+  public void testPass1FailsIfFormatNotSet() throws IOException {
+    new FFmpegBuilder()
+            .setPass(1)
+            .addInput(ffprobe.probe(Samples.big_buck_bunny_720p_1mb))
+            .addOutput("output.mp4")
+            .setTargetSize(1)
+            .done()
+            .build();
+  }
+
+  @SuppressWarnings("CheckReturnValue")
+  @Test(expected = java.lang.IllegalArgumentException.class)
+  public void testPass2FailsIfNoTargetSize() throws IOException {
+    new FFmpegBuilder()
+            .setPass(2)
+            .addInput(ffprobe.probe(Samples.big_buck_bunny_720p_1mb))
+            .addOutput("output.mp4")
+            .setFormat("mp4")
+            .done()
+            .build();
+  }
+
+  @SuppressWarnings("CheckReturnValue")
+  @Test(expected = java.lang.IllegalStateException.class)
+  public void testPass2FailsIfMultipleInputs() throws IOException {
+    new FFmpegBuilder()
+            .setPass(2)
+            .addInput(ffprobe.probe(Samples.big_buck_bunny_720p_1mb))
+            .addInput(ffprobe.probe(Samples.big_buck_bunny_720p_1mb))
+            .addOutput("output.mp4")
+            .setTargetSize(1)
+            .setFormat("mp4")
+            .done()
+            .build();
+  }
+
+  @SuppressWarnings("CheckReturnValue")
+  @Test(expected = java.lang.IllegalStateException.class)
+  public void testPass2FailsIfInputIsNotProbed() throws IOException {
+    new FFmpegBuilder()
+            .setPass(2)
+            .addInput(Samples.big_buck_bunny_720p_1mb)
+            .addOutput("output.mp4")
+            .setTargetSize(1)
+            .setFormat("mp4")
+            .done()
+            .build();
+  }
+
+  @SuppressWarnings("CheckReturnValue")
+  @Test(expected = java.lang.IllegalArgumentException.class)
+  public void testPass2FailsIfFormatNotSet() throws IOException {
+    new FFmpegBuilder()
+            .setPass(2)
+            .addInput(ffprobe.probe(Samples.big_buck_bunny_720p_1mb))
+            .addOutput("output.mp4")
+            .setTargetSize(1)
+            .done()
+            .build();
   }
 
   protected List<String> args(String... args) {
