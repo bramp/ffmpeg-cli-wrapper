@@ -1,34 +1,54 @@
 package net.bramp.ffmpeg.builder;
 
+import com.google.common.collect.ImmutableList;
+import net.bramp.ffmpeg.FFprobe;
+import net.bramp.ffmpeg.ProcessFunction;
+import net.bramp.ffmpeg.builder.FFmpegBuilder.Verbosity;
+import net.bramp.ffmpeg.fixtures.Samples;
+import net.bramp.ffmpeg.lang.NewProcessAnswer;
+import net.bramp.ffmpeg.options.AudioEncodingOptions;
+import net.bramp.ffmpeg.options.EncodingOptions;
+import net.bramp.ffmpeg.options.MainEncodingOptions;
+import net.bramp.ffmpeg.options.VideoEncodingOptions;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import static com.nitorcreations.Matchers.reflectEquals;
-import static net.bramp.ffmpeg.FFmpeg.AUDIO_FORMAT_S16;
-import static net.bramp.ffmpeg.FFmpeg.AUDIO_SAMPLE_48000;
-import static net.bramp.ffmpeg.FFmpeg.FPS_30;
-import static net.bramp.ffmpeg.builder.FFmpegBuilder.Verbosity;
+import static net.bramp.ffmpeg.FFmpeg.*;
+import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.*;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.tag;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.usable;
 import static net.bramp.ffmpeg.builder.StreamSpecifierType.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
-
-import com.google.common.collect.ImmutableList;
-import java.io.IOException;
-import java.net.URI;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import net.bramp.ffmpeg.builder.FFmpegBuilder.Verbosity;
-import net.bramp.ffmpeg.options.AudioEncodingOptions;
-import net.bramp.ffmpeg.options.EncodingOptions;
-import net.bramp.ffmpeg.options.MainEncodingOptions;
-import net.bramp.ffmpeg.options.VideoEncodingOptions;
-import org.junit.Test;
+import static org.mockito.Mockito.when;
 
 @SuppressWarnings("unused")
+@RunWith(MockitoJUnitRunner.class)
 public class FFmpegBuilderTest {
+  @Mock
+  protected ProcessFunction runFunc;
+  protected FFprobe ffprobe;
 
-  public FFmpegBuilderTest() throws IOException {}
+  @Before
+  public void before() throws IOException {
+    when(runFunc.run(argThatHasItem("-version")))
+            .thenAnswer(new NewProcessAnswer("ffprobe-version"));
+    when(runFunc.run(argThatHasItem(Samples.big_buck_bunny_720p_1mb)))
+            .thenAnswer(new NewProcessAnswer("ffprobe-big_buck_bunny_720p_1mb.mp4"));
+
+    ffprobe = new FFprobe(runFunc);
+  }
 
   @Test
   public void testNormal() {
@@ -494,5 +514,120 @@ public class FFmpegBuilderTest {
   @Test(expected = IllegalArgumentException.class)
   public void testNegativeNumberOfThreads() {
     new FFmpegBuilder().setThreads(-1);
+  }
+
+  @Test
+  public void testOverrideFlagPresent() {
+    assertEquals(args("-y", "-v", "error", "-i", "input.mp4", "output.mp4"), simpleBuilder().overrideOutputFiles(true).build());
+  }
+
+  @Test
+  public void testOverrideFlagAbsent() {
+    assertEquals(args("-n", "-v", "error", "-i", "input.mp4", "output.mp4"), simpleBuilder().overrideOutputFiles(false).build());
+  }
+
+  @Test
+  public void testSetPass() throws IOException {
+    assertEquals(args("-y", "-v", "error", "-i", Samples.big_buck_bunny_720p_1mb, "-pass", "1", "-f", "mp4", "-an", AbstractFFmpegStreamBuilder.DEVNULL), passBuilder().setPass(1).build());
+  }
+
+  @Test
+  public void testSetPassDirectoryIgnoredIfPassNotSet() throws IOException {
+    assertEquals(args("-y", "-v", "error", "-i", Samples.big_buck_bunny_720p_1mb, "-f", "mp4", "output.mp4"), passBuilder().setPassDirectory("./tmp").build());
+  }
+
+  @Test
+  public void testSetPassPrefixIgnoredIfPassNotSet() throws IOException {
+    assertEquals(args("-y", "-v", "error", "-i", Samples.big_buck_bunny_720p_1mb, "-f", "mp4", "output.mp4"), passBuilder().setPassPrefix("pre").build());
+  }
+
+  @Test
+  public void testPass1() throws IOException {
+    assertEquals(args("-y", "-v", "error", "-i", Samples.big_buck_bunny_720p_1mb, "-pass", "1", "-passlogfile", "./tmp/pre", "-f", "mp4", "-an", AbstractFFmpegStreamBuilder.DEVNULL), passBuilder().setPass(1).setPassPrefix("pre").setPassDirectory("./tmp/").build());
+  }
+
+  @Test
+  public void testVerbosityDefault() {
+    assertEquals(args("-y", "-v", "error", "-i", "input.mp4", "output.mp4"), simpleBuilder().build());
+  }
+
+  @Test
+  public void testSetVerbosity() {
+    assertEquals(args("-y", "-v", "info", "-i", "input.mp4", "output.mp4"), simpleBuilder().setVerbosity(Verbosity.INFO).build());
+  }
+
+  @Test
+  public void testSetProgress() throws URISyntaxException {
+    assertEquals(args("-y", "-v", "error", "-progress", "tcp://127.0.0.1:1234", "-i", "input.mp4", "output.mp4"), simpleBuilder().addProgress(new URI("tcp://127.0.0.1:1234")).build());
+  }
+
+  @Test
+  public void testSetUserAgent() {
+    assertEquals(args("-y", "-v", "error", "-user_agent", "ffmpeg-cli-wrapper", "-i", "input.mp4", "output.mp4"), simpleBuilder().setUserAgent("ffmpeg-cli-wrapper").build());
+  }
+
+
+
+
+
+
+
+
+  @Test
+  public void testSetQScale() {
+    assertEquals(args("-y", "-v", "error", "-i", "input.mp4", "-qscale:a", "1", "output.mp4"), simpleBuilder().setVBR(1).build());
+  }
+
+  @Test
+  public void testAddExtraArgs() {
+    assertEquals(args("-y", "-v", "error", "-key", "value", "-i", "input.mp4", "output.mp4"), simpleBuilder().addExtraArgs("-key", "value").build());
+  }
+
+  @Test
+  public void testSetAudioFilter() {
+    assertEquals(args("-y", "-v", "error", "-i", "input.mp4", "-af", "fast", "output.mp4"), simpleBuilder().setAudioFilter("fast").build());
+  }
+
+  @Test
+  public void testSetVideoFilter() {
+    assertEquals(args("-y", "-v", "error", "-i", "input.mp4", "-vf", "fast", "output.mp4"), simpleBuilder().setVideoFilter("fast").build());
+  }
+
+  @Test
+  public void testSetComplexFilter() {
+    assertEquals(args("-y", "-v", "error", "-i", "input.mp4", "-filter_complex", "fast", "output.mp4"), simpleBuilder().setComplexFilter("fast").build());
+  }
+
+  @Test
+  public void testSetFormat() {
+    assertEquals(args("-y", "-v", "error", "-f", "mp4", "-i", "input.mp4", "output.mp4"), simpleBuilder().setFormat("mp4").build());
+  }
+
+  @Test
+  public void testSetStartOffset() {
+    assertEquals(args("-y", "-v", "error", "-ss", "00:00:10", "-i", "input.mp4", "output.mp4"), simpleBuilder().setStartOffset(10, TimeUnit.SECONDS).build());
+  }
+
+  @Test
+  public void testReadAtNativeFrameRate() {
+    assertEquals(args("-y", "-v", "error", "-re", "-i", "input.mp4", "output.mp4"), simpleBuilder().readAtNativeFrameRate().build());
+  }
+
+  protected List<String> args(String... args) {
+    return ImmutableList.copyOf(args);
+  }
+
+  protected FFmpegBuilder simpleBuilder() {
+    return new FFmpegBuilder()
+            .addInput("input.mp4").addOutput("output.mp4").done();
+  }
+
+  protected FFmpegBuilder passBuilder() throws IOException {
+    return new FFmpegBuilder()
+            .addInput(ffprobe.probe(Samples.big_buck_bunny_720p_1mb))
+            .addOutput("output.mp4")
+            .setTargetSize(1)
+            .setFormat("mp4")
+            .done();
   }
 }
