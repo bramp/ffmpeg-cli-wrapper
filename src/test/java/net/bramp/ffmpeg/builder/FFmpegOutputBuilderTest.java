@@ -277,6 +277,27 @@ public class FFmpegOutputBuilderTest extends AbstractFFmpegStreamBuilderTest<FFm
     }
 
     @Test
+    public void setComplexFilterPass0() throws IOException {
+        List<String> build = passBuilder().setComplexFilter("filter").build(0);
+
+        assertEquals(args("-f", "mp4", "-filter_complex", "filter", "output.mp4"), build);
+    }
+
+    @Test
+    public void setComplexFilterPass1() throws IOException {
+        List<String> build = passBuilder().setComplexFilter("filter").build(1);
+
+        assertEquals(args("-f", "mp4", "-filter_complex", "filter", "-an", DEVNULL), build);
+    }
+
+    @Test
+    public void setComplexFilterPass2() throws IOException {
+        List<String> build = passBuilder().setComplexFilter("filter").build(2);
+
+        assertEquals(args("-f", "mp4", "-filter_complex", "filter", "output.mp4"), build);
+    }
+
+    @Test
     public void testPass1() throws IOException {
         FFmpegBuilder ffmpegBuilder = new FFmpegBuilder().addInput(ffprobe.probe(Samples.big_buck_bunny_720p_1mb));
         List<String> build = new FFmpegOutputBuilder().setFilename("output.mp4").setTargetSize(1).setFormat("mp4").build(ffmpegBuilder, 1);

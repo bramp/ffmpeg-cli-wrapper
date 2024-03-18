@@ -183,7 +183,9 @@ public class FFmpegBuilder {
    *
    * @param filter the complex filter string
    * @return this
+   * @deprecated Specifying filters as global argument can lead to unexpected results. Use {@link FFmpegOutputBuilder#setComplexFilter(String)} to specify the filter on a specific output.
    */
+  @Deprecated
   public FFmpegBuilder setComplexFilter(String filter) {
     this.complexFilter = checkNotEmpty(filter, "filter must not be empty");
     return this;
@@ -194,7 +196,9 @@ public class FFmpegBuilder {
    *
    * @param filter the audio filter string
    * @return this
+   * @deprecated Specifying filters as global argument can lead to unexpected results. Use {@link FFmpegOutputBuilder#setAudioFilter(String)} to specify the filter on a specific output.
    */
+  @Deprecated
   public FFmpegBuilder setAudioFilter(String filter) {
     this.audioFilter = checkNotEmpty(filter, "filter must not be empty");
     return this;
@@ -205,7 +209,9 @@ public class FFmpegBuilder {
    *
    * @param filter the video filter string
    * @return this
+   * @deprecated Specifying filters as global argument can lead to unexpected results. Use {@link FFmpegOutputBuilder#setVideoFilter(String)} to specify the filter on a specific output.
    */
+  @Deprecated
   public FFmpegBuilder setVideoFilter(String filter) {
     this.videoFilter = checkNotEmpty(filter, "filter must not be empty");
     return this;
@@ -224,7 +230,7 @@ public class FFmpegBuilder {
   }
 
   /**
-   * Add additional ouput arguments (for flags which aren't currently supported).
+   * Add additional global arguments (for flags which aren't currently supported).
    *
    * @param values The extra arguments.
    * @return this

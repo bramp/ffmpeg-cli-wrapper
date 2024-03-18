@@ -60,6 +60,8 @@ public class FFmpegOutputBuilder extends AbstractFFmpegStreamBuilder<FFmpegOutpu
   @Deprecated
   public String video_bit_stream_filter;
 
+  private String complexFilter;
+
   public FFmpegOutputBuilder() {
     super();
   }
@@ -202,6 +204,17 @@ public class FFmpegOutputBuilder extends AbstractFFmpegStreamBuilder<FFmpegOutpu
   }
 
   /**
+   * Sets the complex filter flag.
+   *
+   * @param filter the complex filter string
+   * @return this
+   */
+  public FFmpegOutputBuilder setComplexFilter(String filter) {
+    this.complexFilter = checkNotEmpty(filter, "filter must not be empty");
+    return this;
+  }
+
+  /**
    * Returns a representation of this Builder that can be safely serialised.
    *
    * <p>NOTE: This method is horribly out of date, and its use should be rethought.
@@ -308,6 +321,10 @@ public class FFmpegOutputBuilder extends AbstractFFmpegStreamBuilder<FFmpegOutpu
 
     if (constantRateFactor != null) {
       args.add("-crf", formatDecimalInteger(constantRateFactor));
+    }
+
+    if (!Strings.isNullOrEmpty(complexFilter)) {
+      args.add("-filter_complex", complexFilter);
     }
   }
 
@@ -422,5 +439,9 @@ public class FFmpegOutputBuilder extends AbstractFFmpegStreamBuilder<FFmpegOutpu
 
   public String getVideoBitStreamFilter() {
     return video_bit_stream_filter;
+  }
+
+  public String getComplexFilter() {
+    return complexFilter;
   }
 }
