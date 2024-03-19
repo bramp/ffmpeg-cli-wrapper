@@ -154,13 +154,13 @@ public class FFmpegBuilder {
     return addInput(filename);
   }
 
-    public FFmpegBuilder setThreads(int threads) {
-        checkArgument(threads > 0, "threads must be greater than zero");
-        this.threads = threads;
-        return this;
-    }
+  public FFmpegBuilder setThreads(int threads) {
+    checkArgument(threads > 0, "threads must be greater than zero");
+    this.threads = threads;
+    return this;
+  }
 
-    public FFmpegBuilder setFormat(String format) {
+  public FFmpegBuilder setFormat(String format) {
     this.format = checkNotNull(format);
     return this;
   }
@@ -213,7 +213,7 @@ public class FFmpegBuilder {
 
   /**
    * Sets vbr quality when decoding mp3 output.
-   * 
+   *
    * @param quality the quality between 0 and 9. Where 0 is best.
    * @return FFmpegBuilder
    */
@@ -259,6 +259,21 @@ public class FFmpegBuilder {
    */
   public FFmpegOutputBuilder addOutput(URI uri) {
     FFmpegOutputBuilder output = new FFmpegOutputBuilder(this, uri);
+    outputs.add(output);
+    return output;
+  }
+
+  /**
+   * Adds new HLS(Http Live Streaming) output file.
+   * <br>
+   * ex) new FFmpegBuilder().addHlsOutput("out.m3u8")
+   *
+   * @param filename output file path
+   *
+   * @return A new {@link FFmpegHlsOutputBuilder}
+   */
+  public FFmpegHlsOutputBuilder addHlsOutput(String filename) {
+    FFmpegHlsOutputBuilder output = new FFmpegHlsOutputBuilder(this, filename);
     outputs.add(output);
     return output;
   }
