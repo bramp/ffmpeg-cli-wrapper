@@ -32,7 +32,7 @@ public class FFmpegHlsOutputBuilder extends FFmpegOutputBuilder {
         checkNotNull(units);
         this.hls_time = units.toMillis(duration);
 
-        return getThis();
+        return this;
     }
 
     /**
@@ -46,7 +46,7 @@ public class FFmpegHlsOutputBuilder extends FFmpegOutputBuilder {
     public FFmpegHlsOutputBuilder setHlsSegmentFileName(String filename) {
         this.hls_segment_filename = checkNotEmpty(filename, "filename must not be empty");
 
-        return getThis();
+        return this;
     }
 
     /**
@@ -59,7 +59,7 @@ public class FFmpegHlsOutputBuilder extends FFmpegOutputBuilder {
         checkNotNull(units);
         this.hls_init_time = units.toMillis(duration);
 
-        return getThis();
+        return this;
     }
 
     /**
@@ -73,7 +73,7 @@ public class FFmpegHlsOutputBuilder extends FFmpegOutputBuilder {
         checkArgument(size >= 0, "Size cannot be less than 0.");
         this.hls_list_size = size;
 
-        return getThis();
+        return this;
     }
 
     /**
@@ -87,7 +87,7 @@ public class FFmpegHlsOutputBuilder extends FFmpegOutputBuilder {
     public FFmpegHlsOutputBuilder setHlsBaseUrl(String baseurl) {
         this.hls_base_url = checkNotEmpty(baseurl, "baseurl must not be empty");
 
-        return getThis();
+        return this;
     }
 
     @Override
