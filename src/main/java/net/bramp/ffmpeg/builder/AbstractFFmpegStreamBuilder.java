@@ -583,6 +583,10 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
       args.add("-sn");
     }
 
+    if(parent.format != null){
+      addFormatArgs(args);
+    }
+
     args.addAll(extra_args);
 
     if (filename != null && uri != null) {
@@ -685,5 +689,9 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     if (video_frame_rate != null) {
       args.add("-r", video_frame_rate.toString());
     }
+  }
+
+  protected void addFormatArgs(ImmutableList.Builder<String> args) {
+
   }
 }
