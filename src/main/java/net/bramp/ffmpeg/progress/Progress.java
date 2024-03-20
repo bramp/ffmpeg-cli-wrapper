@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 // TODO Change to be immutable
 public class Progress {
-
   static final Logger LOG = LoggerFactory.getLogger(Progress.class);
 
   public enum Status {
@@ -49,31 +48,47 @@ public class Progress {
     }
   }
 
-  /** The frame number being processed */
+  /**
+   * The frame number being processed
+   */
   public long frame = 0;
 
-  /** The current frames per second */
+  /**
+   * The current frames per second
+   */
   public Fraction fps = Fraction.ZERO;
 
-  /** Current bitrate */
+  /** 
+   * Current bitrate
+   */
   public long bitrate = 0;
 
-  /** Output file size (in bytes) */
+  /**
+   * Output file size (in bytes)
+   */
   public long total_size = 0;
 
-  /** Output time (in nanoseconds) */
   // TODO Change this to a java.time.Duration
+  /**
+   * Output time (in nanoseconds)
+   */
   public long out_time_ns = 0;
 
   public long dup_frames = 0;
 
-  /** Number of frames dropped */
+  /**
+   * Number of frames dropped
+   */
   public long drop_frames = 0;
 
-  /** Speed of transcoding. 1 means realtime, 2 means twice realtime. */
+  /**
+   * Speed of transcoding. 1 means realtime, 2 means twice realtime.
+   */
   public float speed = 0;
 
-  /** Current status, can be one of "continue", or "end" */
+  /**
+   * Current status, can be one of "continue", or "end"
+   */
   public Status status = null;
 
   public Progress() {
@@ -241,5 +256,41 @@ public class Progress {
         .add("speed", speed)
         .add("status", status)
         .toString();
+  }
+
+  public long getFrame() {
+    return frame;
+  }
+
+  public Fraction getFps() {
+    return fps;
+  }
+
+  public long getBitrate() {
+    return bitrate;
+  }
+
+  public long getTotalSize() {
+    return total_size;
+  }
+
+  public long getOutTimeNs() {
+    return out_time_ns;
+  }
+
+  public long getDupFrames() {
+    return dup_frames;
+  }
+
+  public long getDropFrames() {
+    return drop_frames;
+  }
+
+  public float getSpeed() {
+    return speed;
+  }
+
+  public Status getStatus() {
+    return status;
   }
 }

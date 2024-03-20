@@ -8,4 +8,12 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public class FFmpegError {
   public int code;
   public String string;
+
+  public int getCode() {
+    return code;
+  }
+
+  public String getString() {
+    return string;
+  }
 }

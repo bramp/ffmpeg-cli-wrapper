@@ -237,7 +237,7 @@ public class FFmpegExecutorTest {
   }
 
   @Test
-  public void testIssue112() throws IOException {
+  public void testIssue112() {
     FFmpegBuilder builder =
         new FFmpegBuilder()
             .setInput(Samples.testscreen_jpg)

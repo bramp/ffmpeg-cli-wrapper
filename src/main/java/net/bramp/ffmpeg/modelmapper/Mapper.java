@@ -91,10 +91,10 @@ public class Mapper {
       EncodingOptions opts, AbstractFFmpegStreamBuilder<T> dest) {
     map(opts.getMain(), dest);
 
-    if (opts.getAudio().enabled) {
+    if (opts.getAudio().isEnabled()) {
       map(opts.getAudio(), dest);
     }
-    if (opts.getVideo().enabled) {
+    if (opts.getVideo().isEnabled()) {
       map(opts.getVideo(), dest);
     }
   }

@@ -16,8 +16,9 @@ public class FFmpegProbeResult {
   public FFmpegFormat format;
   public List<FFmpegStream> streams;
   public List<FFmpegChapter> chapters;
-  public List<FFmpegPacket> packets;
-  public List<FFmpegFrame> frames;
+
+  private List<FFmpegPacket> packets;
+  private List<FFmpegFrame> frames;
   public List<FFmpegFrameOrPacket> packets_and_frames;
 
   public FFmpegError getError() {

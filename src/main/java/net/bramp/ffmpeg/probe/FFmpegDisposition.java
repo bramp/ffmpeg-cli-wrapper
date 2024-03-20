@@ -21,4 +21,60 @@ public class FFmpegDisposition {
   public boolean captions;
   public boolean descriptions;
   public boolean metadata;
+
+  public boolean isDefault() {
+    return _default;
+  }
+
+  public boolean isDub() {
+    return dub;
+  }
+
+  public boolean isOriginal() {
+    return original;
+  }
+
+  public boolean isComment() {
+    return comment;
+  }
+
+  public boolean isLyrics() {
+    return lyrics;
+  }
+
+  public boolean isKaraoke() {
+    return karaoke;
+  }
+
+  public boolean isForced() {
+    return forced;
+  }
+
+  public boolean isHearingImpaired() {
+    return hearing_impaired;
+  }
+
+  public boolean isVisualImpaired() {
+    return visual_impaired;
+  }
+
+  public boolean isCleanEffects() {
+    return clean_effects;
+  }
+
+  public boolean isAttachedPic() {
+    return attached_pic;
+  }
+
+  public boolean isCaptions() {
+    return captions;
+  }
+
+  public boolean isDescriptions() {
+    return descriptions;
+  }
+
+  public boolean isMetadata() {
+    return metadata;
+  }
 }
