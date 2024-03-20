@@ -19,10 +19,10 @@ public class FFmpegHlsOutputBuilderTest {
                 new FFmpegBuilder()
                         .setInput("input")
                         .addHlsOutput("output.m3u8")
-                        .setHlsTime("5")
+                        .setHlsTime(5,TimeUnits.MILLISECONDS)
                         .setHlsBaseUrl("test1234/")
                         .setHlsListSize(3)
-                        .setHlsInitTime("3")
+                        .setHlsInitTime(3,TimeUnits.MILLISECONDS)
                         .setHlsSegmentFileName("file%03d.ts")
                         .done()
                         .build();
