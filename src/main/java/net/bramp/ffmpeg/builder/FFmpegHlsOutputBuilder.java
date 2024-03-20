@@ -1,7 +1,9 @@
 package net.bramp.ffmpeg.builder;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
+import java.util.concurrent.TimeUnit;
 
 public class FFmpegHlsOutputBuilder extends FFmpegOutputBuilder{
 
@@ -12,29 +14,15 @@ public class FFmpegHlsOutputBuilder extends FFmpegOutputBuilder{
 
 
     /**
-     * Duration Examples <br>
-     * Default :  "2" <br>
-     * The following examples are all valid time duration:
-     * <br>
-     * "55" -> 55 seconds
-     * <br>
-     * "0.2" -> 0.2 seconds
-     * <br>
-     * "200ms" -> 200 milliseconds, that’s 0.2s
-     * <br>
-     * "200000us" -> 200000 microseconds, that’s 0.2s
-     * <br>
-     * "12:03:45" -> 12 hours, 03 minutes and 45 seconds
-     * <br>
-     * "23.189" -> 23.189 seconds
+     Set the target segment length. Default value is 2.
      *
      * @param duration hls_time to set
      * @return {@link FFmpegHlsOutputBuilder}
      */
-    public FFmpegHlsOutputBuilder setHlsTime(String duration){
-        duration = checkNotEmpty(duration, "duration must not be empty");
+    public FFmpegHlsOutputBuilder setHlsTime(Long duration, TimeUnit units){
+        checkNotNull(units);
         extra_args.add("-hls_time");
-        extra_args.add(duration);
+        extra_args.add(units.toMillis(duration));
         return this;
     }
 
@@ -74,8 +62,8 @@ public class FFmpegHlsOutputBuilder extends FFmpegOutputBuilder{
      * @param duration hls_init_time to set
      * @return {@link FFmpegHlsOutputBuilder}
      */
-    public FFmpegHlsOutputBuilder setHlsInitTime(String duration){
-        duration = checkNotEmpty(duration, "duration must not be empty");
+    public FFmpegHlsOutputBuilder setHlsInitTime(Long duration, TimeUnit units){
+        checkNotNull(units);
         extra_args.add("-hls_init_time");
         extra_args.add(duration);
         return this;
