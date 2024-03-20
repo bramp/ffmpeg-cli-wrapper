@@ -88,7 +88,7 @@ public class FFmpegHlsOutputBuilder extends FFmpegOutputBuilder{
      * @return {@link FFmpegHlsOutputBuilder}
      */
     public FFmpegHlsOutputBuilder setHlsListSize(int size){
-        checkArgument(size>0, "Size cannot be less than 0.");
+        checkArgument(size >= 0, "Size cannot be less than 0.");
         extra_args.add("-hls_list_size");
         extra_args.add(Integer.toString(size));
         return this;
