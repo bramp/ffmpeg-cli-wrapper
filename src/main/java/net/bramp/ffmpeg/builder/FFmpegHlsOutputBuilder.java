@@ -23,7 +23,7 @@ public class FFmpegHlsOutputBuilder extends FFmpegOutputBuilder {
 
 
     /**
-     * Set the target segment length. Default value is 2.
+     * Set the target segment length. Default value is 2 seconds.
      *
      * @param duration hls_time to set
      * @return {@link FFmpegHlsOutputBuilder}
