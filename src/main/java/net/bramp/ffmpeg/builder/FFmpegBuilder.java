@@ -277,7 +277,7 @@ public class FFmpegBuilder {
    * @return A new {@link FFmpegHlsOutputBuilder}
    */
   public FFmpegHlsOutputBuilder addHlsOutput(String filename) {
-    checkArgument(format == null || format.equals("hls"));
+    checkArgument(format == null || format.equals("hls"),"The format is already set to a value other than hls.");
     if(format == null) setFormat("hls");
     FFmpegHlsOutputBuilder output = new FFmpegHlsOutputBuilder(this, filename);
     outputs.add(output);

@@ -1,11 +1,8 @@
 package net.bramp.ffmpeg.builder;
 
 import com.google.common.collect.ImmutableList;
-
 import java.util.concurrent.TimeUnit;
-
 import org.junit.Test;
-
 import java.io.IOException;
 import java.util.List;
 
