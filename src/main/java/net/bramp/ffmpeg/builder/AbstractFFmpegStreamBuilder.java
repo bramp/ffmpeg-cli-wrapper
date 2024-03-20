@@ -583,9 +583,9 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
       args.add("-sn");
     }
 
-    if(parent.format != null){
-      addFormatArgs(args);
-    }
+
+    addFormatArgs(args);
+
 
     args.addAll(extra_args);
 
