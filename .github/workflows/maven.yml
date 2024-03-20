@@ -12,6 +12,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Enable debugging to help resolve:
+    # https://github.com/federicocarboni/setup-ffmpeg/issues/19
+    environment: debug
     strategy:
       matrix:
         # Long term supported versions
