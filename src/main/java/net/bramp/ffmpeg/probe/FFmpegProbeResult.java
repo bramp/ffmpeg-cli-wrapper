@@ -12,20 +12,13 @@ import java.util.List;
     value = {"UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"},
     justification = "POJO objects where the fields are populated by gson")
 public class FFmpegProbeResult {
-  /** @deprecated Use {@link #getError()} instead */
-  @Deprecated
   public FFmpegError error;
-  /** @deprecated Use {@link #getFormat()} instead */
-  @Deprecated
   public FFmpegFormat format;
-  /** @deprecated Use {@link #getStreams()} instead */
-  @Deprecated
   public List<FFmpegStream> streams;
-  /** @deprecated Use {@link #getChapters()} instead */
-  @Deprecated
   public List<FFmpegChapter> chapters;
-  public List<FFmpegPacket> packets;
-  public List<FFmpegFrame> frames;
+
+  private List<FFmpegPacket> packets;
+  private List<FFmpegFrame> frames;
   public List<FFmpegFrameOrPacket> packets_and_frames;
 
   public FFmpegError getError() {
