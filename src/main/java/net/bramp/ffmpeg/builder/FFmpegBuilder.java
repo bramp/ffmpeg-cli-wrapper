@@ -266,7 +266,11 @@ public class FFmpegBuilder {
   /**
    * Adds new HLS(Http Live Streaming) output file.
    * <br>
-   * ex) new FFmpegBuilder().addHlsOutput("out.m3u8")
+   * <pre>
+   * <code>List&lt;String&gt; args = new FFmpegBuilder()
+   *   .addHlsOutput(&quot;output.m3u8&quot;)
+   *   .build();</code>
+   * </pre>
    *
    * @param filename output file path
    *
