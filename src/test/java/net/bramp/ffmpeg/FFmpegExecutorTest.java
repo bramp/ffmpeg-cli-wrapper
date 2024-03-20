@@ -232,8 +232,8 @@ public class FFmpegExecutorTest {
 
     // Since the results of ffmpeg are not predictable, test for the bare minimum.
     assertThat(progesses, hasSize(greaterThanOrEqualTo(2)));
-    assertThat(progesses.get(0).getStatus(), is(Progress.Status.CONTINUE));
-    assertThat(progesses.get(progesses.size() - 1).getStatus(), is(Progress.Status.END));
+    assertThat(progesses.get(0).status, is(Progress.Status.CONTINUE));
+    assertThat(progesses.get(progesses.size() - 1).status, is(Progress.Status.END));
   }
 
   @Test

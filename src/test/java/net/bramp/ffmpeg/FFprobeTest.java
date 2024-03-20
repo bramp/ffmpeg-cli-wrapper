@@ -93,11 +93,11 @@ public class FFprobeTest {
 
     // Only a quick sanity check until we do something better
     assertThat(info.getStreams(), hasSize(2));
-    assertThat(info.getStreams().get(0).getCodecType(), is(CodecType.VIDEO));
-    assertThat(info.getStreams().get(1).getCodecType(), is(CodecType.AUDIO));
+    assertThat(info.getStreams().get(0).codec_type, is(CodecType.VIDEO));
+    assertThat(info.getStreams().get(1).codec_type, is(CodecType.AUDIO));
 
-    assertThat(info.getStreams().get(1).getChannels(), is(6));
-    assertThat(info.getStreams().get(1).getSampleRate(), is(48_000));
+    assertThat(info.getStreams().get(1).channels, is(6));
+    assertThat(info.getStreams().get(1).sample_rate, is(48_000));
 
     assertThat(info.getChapters().isEmpty(), is(true));
     // System.out.println(FFmpegUtils.getGson().toJson(info));
@@ -110,20 +110,20 @@ public class FFprobeTest {
     assertThat(info.getChapters().size(), is(24));
 
     FFmpegChapter firstChapter = info.getChapters().get(0);
-    assertThat(firstChapter.getTimeBase(), is("1/44100"));
-    assertThat(firstChapter.getStart(), is(0L));
-    assertThat(firstChapter.getStartTime(), is("0.000000"));
-    assertThat(firstChapter.getEnd(), is(11951309L));
-    assertThat(firstChapter.getEndTime(), is("271.004739"));
-    assertThat(firstChapter.getTags().getTitle(), is("01 - Sammy Jay Makes a Fuss"));
+    assertThat(firstChapter.time_base, is("1/44100"));
+    assertThat(firstChapter.start, is(0L));
+    assertThat(firstChapter.start_time, is("0.000000"));
+    assertThat(firstChapter.end, is(11951309L));
+    assertThat(firstChapter.end_time, is("271.004739"));
+    assertThat(firstChapter.getTags().title, is("01 - Sammy Jay Makes a Fuss"));
 
     FFmpegChapter lastChapter = info.getChapters().get(info.getChapters().size() - 1);
-    assertThat(lastChapter.getTimeBase(), is("1/44100"));
-    assertThat(lastChapter.getStart(), is(237875790L));
-    assertThat(lastChapter.getStartTime(), is("5394.008844"));
-    assertThat(lastChapter.getEnd(), is(248628224L));
-    assertThat(lastChapter.getEndTime(), is("5637.828209"));
-    assertThat(lastChapter.getTags().getTitle(), is("24 - Chatterer Has His Turn to Laugh"));
+    assertThat(lastChapter.time_base, is("1/44100"));
+    assertThat(lastChapter.start, is(237875790L));
+    assertThat(lastChapter.start_time, is("5394.008844"));
+    assertThat(lastChapter.end, is(248628224L));
+    assertThat(lastChapter.end_time, is("5637.828209"));
+    assertThat(lastChapter.getTags().title, is("24 - Chatterer Has His Turn to Laugh"));
   }
 
   @Test
@@ -361,15 +361,15 @@ public class FFprobeTest {
 
     // Only a quick sanity check until we do something better
     assertThat(info.getStreams(), hasSize(2));
-    assertThat(info.getStreams().get(0).getCodecType(), is(CodecType.VIDEO));
-    assertThat(info.getStreams().get(1).getCodecType(), is(CodecType.AUDIO));
+    assertThat(info.getStreams().get(0).codec_type, is(CodecType.VIDEO));
+    assertThat(info.getStreams().get(1).codec_type, is(CodecType.AUDIO));
 
-    assertThat(info.getStreams().get(1).getChannels(), is(2));
-    assertThat(info.getStreams().get(1).getSampleRate(), is(48_000));
+    assertThat(info.getStreams().get(1).channels, is(2));
+    assertThat(info.getStreams().get(1).sample_rate, is(48_000));
 
     // Test a UTF-8 name
     assertThat(
-        info.getFormat().getFilename(),
+        info.getFormat().filename,
         is("c:\\Users\\Bob\\Always On My Mind [Program Only] - Adelén.mp4"));
 
     // System.out.println(FFmpegUtils.getGson().toJson(info));
@@ -381,7 +381,7 @@ public class FFprobeTest {
     assertFalse(info.hasError());
 
     // Check edge case with a time larger than an integer
-    assertThat(info.getStreams().get(0).getStartPts(), is(8570867078L));
+    assertThat(info.getStreams().get(0).start_pts, is(8570867078L));
   }
 
   @Test
@@ -390,7 +390,7 @@ public class FFprobeTest {
     FFmpegProbeResult info = ffprobe.probe(Samples.divide_by_zero);
     assertFalse(info.hasError());
 
-    assertThat(info.getStreams().get(1).getCodecTimeBase(), is(Fraction.ZERO));
+    assertThat(info.getStreams().get(1).codec_time_base, is(Fraction.ZERO));
 
     // System.out.println(FFmpegUtils.getGson().toJson(info));
   }
@@ -401,20 +401,20 @@ public class FFprobeTest {
 
     // Check edge case with a time larger than an integer
     assertThat(info.getStreams().get(0).getSideDataList().size(), is(1));
-    assertThat(info.getStreams().get(0).getSideDataList().get(0).getSideDataType(), is("Display Matrix"));
+    assertThat(info.getStreams().get(0).getSideDataList().get(0).side_data_type, is("Display Matrix"));
     assertThat(
-            info.getStreams().get(0).getSideDataList().get(0).getDisplaymatrix(),
+            info.getStreams().get(0).getSideDataList().get(0).displaymatrix,
         is(
             "\n00000000:            0      -65536           0\n00000001:        65536           0           0\n00000002:            0           0  1073741824\n"));
-    assertThat(info.getStreams().get(0).getSideDataList().get(0).getRotation(), is(90));
+    assertThat(info.getStreams().get(0).getSideDataList().get(0).rotation, is(90));
   }
 
   @Test
   public void testChaptersWithLongIds() throws IOException {
     FFmpegProbeResult info = ffprobe.probe(Samples.chapters_with_long_id);
 
-    assertThat(info.getChapters().get(0).getId(), is(6613449456311024506L));
-    assertThat(info.getChapters().get(1).getId(), is(-4433436293284298339L));
+    assertThat(info.getChapters().get(0).id, is(6613449456311024506L));
+    assertThat(info.getChapters().get(1).id, is(-4433436293284298339L));
   }
 
   @Test

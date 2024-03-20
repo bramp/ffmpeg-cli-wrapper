@@ -78,16 +78,16 @@ FFmpegProbeResult probeResult = ffprobe.probe("input.mp4");
 
 FFmpegFormat format = probeResult.getFormat();
 System.out.format("%nFile: '%s' ; Format: '%s' ; Duration: %.3fs", 
- format.getFilename(),
- format.getFormatLongName(),
- format.getDuration()
+ format.filename,
+ format.format_long_name,
+ format.duration
 );
 
 FFmpegStream stream = probeResult.getStreams().get(0);
 System.out.format("%nCodec: '%s' ; Width: %dpx ; Height: %dpx",
- stream.getCodecLongName(),
- stream.getWidth(),
- stream.getHeigth()
+ stream.codec_long_name,
+ stream.width,
+ stream.height
 );
 ```
 
@@ -106,21 +106,21 @@ FFmpegBuilder builder = new FFmpegBuilder()
 FFmpegJob job = executor.createJob(builder, new ProgressListener() {
 
  // Using the FFmpegProbeResult determine the duration of the input
- final double duration_ns = in.getFormat().getDuration() * TimeUnit.SECONDS.toNanos(1);
+ final double duration_ns = in.getFormat().duration * TimeUnit.SECONDS.toNanos(1);
 
  @Override
  public void progress(Progress progress) {
-  double percentage = progress.getOutTimeNs() / duration_ns;
+  double percentage = progress.out_time_ns / duration_ns;
 
   // Print out interesting information about the progress
   System.out.println(String.format(
    "[%.0f%%] status:%s frame:%d time:%s ms fps:%.0f speed:%.2fx",
    percentage * 100,
-   progress.getStatus(),
-   progress.getFrame(),
-   FFmpegUtils.toTimecode(progress.getOutTimeNs(), TimeUnit.NANOSECONDS),
-   progress.getFps().doubleValue(),
-   progress.getSpeed()
+   progress.status,
+   progress.frame,
+   FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
+   progress.fps.doubleValue(),
+   progress.speed
   ));
  }
 });

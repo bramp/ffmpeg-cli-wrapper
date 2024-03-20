@@ -14,131 +14,58 @@ import org.apache.commons.lang3.math.Fraction;
     value = {"UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"},
     justification = "POJO objects where the fields are populated by gson")
 public class FFmpegStream {
-  /** @deprecated Use {@link #getIndex()} instead */
-  @Deprecated
   public int index;
-  /** @deprecated Use {@link #getCodecName()} instead */
-  @Deprecated
   public String codec_name;
-  /** @deprecated Use {@link #getCodecLongName()} instead */
-  @Deprecated
   public String codec_long_name;
-  /** @deprecated Use {@link #getProfile()} instead */
-  @Deprecated
   public String profile;
-  /** @deprecated Use {@link #getCodecType()} instead */
-  @Deprecated
   public CodecType codec_type;
-  /** @deprecated Use {@link #getCodecTimeBase()} instead */
-  @Deprecated
   public Fraction codec_time_base;
 
-  /** @deprecated Use {@link #getCodecTagString()} instead */
-  @Deprecated
   public String codec_tag_string;
-  /** @deprecated Use {@link #getCodecTag()} instead */
-  @Deprecated
   public String codec_tag;
 
-  /** @deprecated Use {@link #getWidth()} instead */
-  @Deprecated
   public int width;
-  /** @deprecated Use {@link #getHeight()} instead */
-  @Deprecated
   public int height;
 
-  /** @deprecated Use {@link #getHasBFrames()} instead */
-  @Deprecated
   public int has_b_frames;
 
-  /** @deprecated Use {@link #getSampleAspectRatio()} instead */
-  @Deprecated
   public String sample_aspect_ratio; // TODO Change to a Ratio/Fraction object
-  /** @deprecated Use {@link #getDisplayAspectRatio()} instead */
-  @Deprecated
   public String display_aspect_ratio;
 
-  /** @deprecated Use {@link #getPixFmt()} instead */
-  @Deprecated
   public String pix_fmt;
-  /** @deprecated Use {@link #getLevel()} instead */
-  @Deprecated
   public int level;
-  /** @deprecated Use {@link #getChromaLocation()} instead */
-  @Deprecated
   public String chroma_location;
-  /** @deprecated Use {@link #getRefs()} instead */
-  @Deprecated
   public int refs;
-  /** @deprecated Use {@link #getIsAvc()} instead */
-  @Deprecated
   public String is_avc;
-  /** @deprecated Use {@link #getNalLengthSize()} instead */
-  @Deprecated
   public String nal_length_size;
-  /** @deprecated Use {@link #getRFrameRate()} instead */
-  @Deprecated
   public Fraction r_frame_rate;
-  /** @deprecated Use {@link #getAvgFrameRate()} instead */
-  @Deprecated
   public Fraction avg_frame_rate;
-  /** @deprecated Use {@link #getTimeBase()} instead */
-  @Deprecated
   public Fraction time_base;
 
-  /** @deprecated Use {@link #getStartPts()} instead */
-  @Deprecated
   public long start_pts;
-  /** @deprecated Use {@link #getStartTime()} instead */
-  @Deprecated
   public double start_time;
 
-  /** @deprecated Use {@link #getDurationTs()} instead */
-  @Deprecated
   public long duration_ts;
-  /** @deprecated Use {@link #getDuration()} instead */
-  @Deprecated
   public double duration;
 
-  /** @deprecated Use {@link #getBitRate()} instead */
-  @Deprecated
   public long bit_rate;
-  /** @deprecated Use {@link #getMaxBitRate()} instead */
-  @Deprecated
   public long max_bit_rate;
-  /** @deprecated Use {@link #getBitsPerRawSample()} instead */
-  @Deprecated
   public int bits_per_raw_sample;
-  /** @deprecated Use {@link #getBitsPerSample()} instead */
-  @Deprecated
   public int bits_per_sample;
 
-  /** @deprecated Use {@link #getNbFrames()} instead */
-  @Deprecated
   public long nb_frames;
 
-  /** @deprecated Use {@link #getSampleFmt()} instead */
-  @Deprecated
   public String sample_fmt;
-  /** @deprecated Use {@link #getSampleRate()} instead */
-  @Deprecated
   public int sample_rate;
-  /** @deprecated Use {@link #getChannels()} instead */
-  @Deprecated
   public int channels;
-  /** @deprecated Use {@link #getChannelLayout()} instead */
-  @Deprecated
   public String channel_layout;
 
-  /** @deprecated Use {@link #getDisposition()} instead */
-  @Deprecated
   public FFmpegDisposition disposition;
 
-  /** @deprecated Use {@link #getTags()} instead */
-  @Deprecated
+  // TODO: Make Map immutable
   public Map<String, String> tags;
-  /** @deprecated Use {@link #getSideDataList()} instead */
-  @Deprecated
+
+  // TODO: Convert array to immutable List
   public SideData[] side_data_list;
 
   public int getIndex() {
@@ -294,14 +221,8 @@ public class FFmpegStream {
   }
 
   public static class SideData {
-    /** @deprecated Use {@link #getSideDataType()} instead */
-    @Deprecated
     public String side_data_type;
-    /** @deprecated Use {@link #getDisplaymatrix()} instead */
-    @Deprecated
     public String displaymatrix;
-    /** @deprecated Use {@link #getRotation()} instead */
-    @Deprecated
     public int rotation;
 
     public String getSideDataType() {
