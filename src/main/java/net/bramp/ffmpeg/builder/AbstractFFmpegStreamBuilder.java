@@ -53,7 +53,7 @@ import org.apache.commons.lang3.math.Fraction;
  *
  * @param <T> A concrete class that extends from the AbstractFFmpegStreamBuilder
  */
-public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStreamBuilder<T>> {
+public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegOutputBuilder<T>> {
 
   private static final String DEVNULL = SystemUtils.IS_OS_WINDOWS ? "NUL" : "/dev/null";
 

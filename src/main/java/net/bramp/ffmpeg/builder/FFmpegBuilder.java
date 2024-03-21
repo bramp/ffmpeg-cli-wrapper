@@ -79,7 +79,7 @@ public class FFmpegBuilder {
   final List<String> extra_args = new ArrayList<>();
 
   // Output
-  final List<FFmpegOutputBuilder> outputs = new ArrayList<>();
+  final List<AbstractFFmpegOutputBuilder<?>> outputs = new ArrayList<>();
 
   // Filters
   String audioFilter;
@@ -378,7 +378,7 @@ public class FFmpegBuilder {
       args.add("-qscale:a", qscale.toString());
     }
 
-    for (FFmpegOutputBuilder output : this.outputs) {
+    for (AbstractFFmpegOutputBuilder<?> output : this.outputs) {
       args.addAll(output.build(this, pass));
     }
 

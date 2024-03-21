@@ -8,7 +8,7 @@ import static net.bramp.ffmpeg.FFmpegUtils.toTimecode;
 import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 import java.util.concurrent.TimeUnit;
 
-public class FFmpegHlsOutputBuilder extends FFmpegOutputBuilder {
+public class FFmpegHlsOutputBuilder extends AbstractFFmpegOutputBuilder<FFmpegHlsOutputBuilder> {
 
     public Long hls_time;
     public String hls_segment_filename;
