@@ -11,7 +11,7 @@ def removeLeadingNumbers(text):
 
 def writeCodec(m,codec):
     document = "\t"+"/**"+ m.group(3).rstrip()  +"*/\n"
-    enumCode = "\t" +removeLeadingNumbers(m.group(2).replace(".","_")).upper() +'("'+  m.group(2) +'"),' +'\n'
+    enumCode = "\t" +"public static final String " +removeLeadingNumbers(m.group(2).replace(".","_")).upper() +' = "'+  m.group(2) +'";' +'\n'
     codec.write(document)
     codec.write(enumCode)
 
@@ -35,7 +35,8 @@ videoCodec.write(
  *  @see net.bramp.ffmpeg.FFmpeg#codecs()
  *  @author van1164
  *  */
-public enum VideoCodec {
+public class VideoCodec {
+
 """)
 audioCodec.write(
 """package net.bramp.ffmpeg.builder;
@@ -46,7 +47,8 @@ audioCodec.write(
  *  @see net.bramp.ffmpeg.FFmpeg#codecs()
  *  @author van1164
  *  */
-public enum AudioCodec {
+public class AudioCodec {
+
 """)
 for item in output:
     m = CODECS_REGEX.match(item)
@@ -60,35 +62,8 @@ for item in output:
         writeCodec(m,videoCodec)
 
 
-videoCodec.write("""   
-    ;
-    final String codec;
+videoCodec.write("}")
+audioCodec.write("}")
 
-    VideoCodec(String codec) {
-        this.codec = codec;
-    }
-
-    @Override
-    public String toString() {
-        return this.codec;
-    }
-}
-""")
-
-audioCodec.write("""
-    ;
-    final String codec;
-
-    AudioCodec(String codec) {
-        this.codec = codec;
-    }
-
-    @Override
-    public String toString() {
-        return this.codec;
-    }
-}
-
-""")
 videoCodec.close()
 audioCodec.close()

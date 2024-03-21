@@ -6,563 +6,554 @@ package net.bramp.ffmpeg.builder;
  *  @see net.bramp.ffmpeg.FFmpeg#codecs()
  *  @author van1164
  *  */
-public enum VideoCodec {
+public class VideoCodec {
+
     /**Uncompressed 4:2:2 10-bit*/
-    V("012v"),
+    public static final String V = "012v";
     /**4X Movie*/
-    XM("4xm"),
+    public static final String XM = "4xm";
     /**QuickTime 8BPS video*/
-    BPS("8bps"),
+    public static final String BPS = "8bps";
     /**Multicolor charset for Commodore 64 (encoders: a64multi)*/
-    A64_MULTI("a64_multi"),
+    public static final String A64_MULTI = "a64_multi";
     /**Multicolor charset for Commodore 64, extended with 5th color (colram) (encoders: a64multi5)*/
-    A64_MULTI5("a64_multi5"),
+    public static final String A64_MULTI5 = "a64_multi5";
     /**Autodesk RLE*/
-    AASC("aasc"),
+    public static final String AASC = "aasc";
     /**Amuse Graphics Movie*/
-    AGM("agm"),
+    public static final String AGM = "agm";
     /**Apple Intermediate Codec*/
-    AIC("aic"),
+    public static final String AIC = "aic";
     /**Alias/Wavefront PIX image*/
-    ALIAS_PIX("alias_pix"),
+    public static final String ALIAS_PIX = "alias_pix";
     /**AMV Video*/
-    AMV("amv"),
+    public static final String AMV = "amv";
     /**Deluxe Paint Animation*/
-    ANM("anm"),
+    public static final String ANM = "anm";
     /**ASCII/ANSI art*/
-    ANSI("ansi"),
+    public static final String ANSI = "ansi";
     /**APNG (Animated Portable Network Graphics) image*/
-    APNG("apng"),
+    public static final String APNG = "apng";
     /**Gryphon's Anim Compressor*/
-    ARBC("arbc"),
+    public static final String ARBC = "arbc";
     /**Argonaut Games Video*/
-    ARGO("argo"),
+    public static final String ARGO = "argo";
     /**ASUS V1*/
-    ASV1("asv1"),
+    public static final String ASV1 = "asv1";
     /**ASUS V2*/
-    ASV2("asv2"),
+    public static final String ASV2 = "asv2";
     /**Auravision AURA*/
-    AURA("aura"),
+    public static final String AURA = "aura";
     /**Auravision Aura 2*/
-    AURA2("aura2"),
+    public static final String AURA2 = "aura2";
     /**Alliance for Open Media AV1 (decoders: libaom-av1 av1 av1_cuvid av1_qsv) (encoders: libaom-av1 av1_nvenc av1_qsv av1_amf)*/
-    AV1("av1"),
+    public static final String AV1 = "av1";
     /**Avid AVI Codec*/
-    AVRN("avrn"),
+    public static final String AVRN = "avrn";
     /**Avid 1:1 10-bit RGB Packer*/
-    AVRP("avrp"),
+    public static final String AVRP = "avrp";
     /**AVS (Audio Video Standard) video*/
-    AVS("avs"),
+    public static final String AVS = "avs";
     /**AVS2-P2/IEEE1857.4*/
-    AVS2("avs2"),
+    public static final String AVS2 = "avs2";
     /**AVS3-P2/IEEE1857.10*/
-    AVS3("avs3"),
+    public static final String AVS3 = "avs3";
     /**Avid Meridien Uncompressed*/
-    AVUI("avui"),
+    public static final String AVUI = "avui";
     /**Uncompressed packed MS 4:4:4:4*/
-    AYUV("ayuv"),
+    public static final String AYUV = "ayuv";
     /**Bethesda VID video*/
-    BETHSOFTVID("bethsoftvid"),
+    public static final String BETHSOFTVID = "bethsoftvid";
     /**Brute Force & Ignorance*/
-    BFI("bfi"),
+    public static final String BFI = "bfi";
     /**Bink video*/
-    BINKVIDEO("binkvideo"),
+    public static final String BINKVIDEO = "binkvideo";
     /**Binary text*/
-    BINTEXT("bintext"),
+    public static final String BINTEXT = "bintext";
     /**Bitpacked*/
-    BITPACKED("bitpacked"),
+    public static final String BITPACKED = "bitpacked";
     /**BMP (Windows and OS/2 bitmap)*/
-    BMP("bmp"),
+    public static final String BMP = "bmp";
     /**Discworld II BMV video*/
-    BMV_VIDEO("bmv_video"),
+    public static final String BMV_VIDEO = "bmv_video";
     /**BRender PIX image*/
-    BRENDER_PIX("brender_pix"),
+    public static final String BRENDER_PIX = "brender_pix";
     /**Interplay C93*/
-    C93("c93"),
+    public static final String C93 = "c93";
     /**Chinese AVS (Audio Video Standard) (AVS1-P2, JiZhun profile)*/
-    CAVS("cavs"),
+    public static final String CAVS = "cavs";
     /**CD Graphics video*/
-    CDGRAPHICS("cdgraphics"),
+    public static final String CDGRAPHICS = "cdgraphics";
     /**CDToons video*/
-    CDTOONS("cdtoons"),
+    public static final String CDTOONS = "cdtoons";
     /**Commodore CDXL video*/
-    CDXL("cdxl"),
+    public static final String CDXL = "cdxl";
     /**GoPro CineForm HD*/
-    CFHD("cfhd"),
+    public static final String CFHD = "cfhd";
     /**Cinepak*/
-    CINEPAK("cinepak"),
+    public static final String CINEPAK = "cinepak";
     /**Iterated Systems ClearVideo*/
-    CLEARVIDEO("clearvideo"),
+    public static final String CLEARVIDEO = "clearvideo";
     /**Cirrus Logic AccuPak*/
-    CLJR("cljr"),
+    public static final String CLJR = "cljr";
     /**Canopus Lossless Codec*/
-    CLLC("cllc"),
+    public static final String CLLC = "cllc";
     /**Electronic Arts CMV video (decoders: eacmv)*/
-    CMV("cmv"),
+    public static final String CMV = "cmv";
     /**CPiA video format*/
-    CPIA("cpia"),
+    public static final String CPIA = "cpia";
     /**Cintel RAW*/
-    CRI("cri"),
+    public static final String CRI = "cri";
     /**CamStudio (decoders: camstudio)*/
-    CSCD("cscd"),
+    public static final String CSCD = "cscd";
     /**Creative YUV (CYUV)*/
-    CYUV("cyuv"),
+    public static final String CYUV = "cyuv";
     /**Daala*/
-    DAALA("daala"),
+    public static final String DAALA = "daala";
     /**DirectDraw Surface image decoder*/
-    DDS("dds"),
+    public static final String DDS = "dds";
     /**Chronomaster DFA*/
-    DFA("dfa"),
+    public static final String DFA = "dfa";
     /**Dirac (encoders: vc2)*/
-    DIRAC("dirac"),
+    public static final String DIRAC = "dirac";
     /**VC3/DNxHD*/
-    DNXHD("dnxhd"),
+    public static final String DNXHD = "dnxhd";
     /**DPX (Digital Picture Exchange) image*/
-    DPX("dpx"),
+    public static final String DPX = "dpx";
     /**Delphine Software International CIN video*/
-    DSICINVIDEO("dsicinvideo"),
+    public static final String DSICINVIDEO = "dsicinvideo";
     /**DV (Digital Video)*/
-    DVVIDEO("dvvideo"),
+    public static final String DVVIDEO = "dvvideo";
     /**Feeble Files/ScummVM DXA*/
-    DXA("dxa"),
+    public static final String DXA = "dxa";
     /**Dxtory*/
-    DXTORY("dxtory"),
+    public static final String DXTORY = "dxtory";
     /**Resolume DXV*/
-    DXV("dxv"),
+    public static final String DXV = "dxv";
     /**Escape 124*/
-    ESCAPE124("escape124"),
+    public static final String ESCAPE124 = "escape124";
     /**Escape 130*/
-    ESCAPE130("escape130"),
+    public static final String ESCAPE130 = "escape130";
     /**MPEG-5 EVC (Essential Video Coding)*/
-    EVC("evc"),
+    public static final String EVC = "evc";
     /**OpenEXR image*/
-    EXR("exr"),
+    public static final String EXR = "exr";
     /**FFmpeg video codec #1*/
-    FFV1("ffv1"),
+    public static final String FFV1 = "ffv1";
     /**Huffyuv FFmpeg variant*/
-    FFVHUFF("ffvhuff"),
+    public static final String FFVHUFF = "ffvhuff";
     /**Mirillis FIC*/
-    FIC("fic"),
+    public static final String FIC = "fic";
     /**FITS (Flexible Image Transport System)*/
-    FITS("fits"),
+    public static final String FITS = "fits";
     /**Flash Screen Video v1*/
-    FLASHSV("flashsv"),
+    public static final String FLASHSV = "flashsv";
     /**Flash Screen Video v2*/
-    FLASHSV2("flashsv2"),
+    public static final String FLASHSV2 = "flashsv2";
     /**Autodesk Animator Flic video*/
-    FLIC("flic"),
+    public static final String FLIC = "flic";
     /**FLV / Sorenson Spark / Sorenson H.263 (Flash Video) (decoders: flv) (encoders: flv)*/
-    FLV1("flv1"),
+    public static final String FLV1 = "flv1";
     /**FM Screen Capture Codec*/
-    FMVC("fmvc"),
+    public static final String FMVC = "fmvc";
     /**Fraps*/
-    FRAPS("fraps"),
+    public static final String FRAPS = "fraps";
     /**Forward Uncompressed*/
-    FRWU("frwu"),
+    public static final String FRWU = "frwu";
     /**Go2Meeting*/
-    G2M("g2m"),
+    public static final String G2M = "g2m";
     /**Gremlin Digital Video*/
-    GDV("gdv"),
+    public static final String GDV = "gdv";
     /**GEM Raster image*/
-    GEM("gem"),
+    public static final String GEM = "gem";
     /**CompuServe GIF (Graphics Interchange Format)*/
-    GIF("gif"),
+    public static final String GIF = "gif";
     /**H.261*/
-    H261("h261"),
+    public static final String H261 = "h261";
     /**H.263 / H.263-1996, H.263+ / H.263-1998 / H.263 version 2*/
-    H263("h263"),
+    public static final String H263 = "h263";
     /**Intel H.263*/
-    H263I("h263i"),
+    public static final String H263I = "h263i";
     /**H.263+ / H.263-1998 / H.263 version 2*/
-    H263P("h263p"),
+    public static final String H263P = "h263p";
     /**H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 (decoders: h264 h264_qsv h264_cuvid) (encoders: libx264 libx264rgb h264_amf h264_mf h264_nvenc h264_qsv)*/
-    H264("h264"),
+    public static final String H264 = "h264";
     /**Vidvox Hap*/
-    HAP("hap"),
+    public static final String HAP = "hap";
     /**HDR (Radiance RGBE format) image*/
-    HDR("hdr"),
+    public static final String HDR = "hdr";
     /**H.265 / HEVC (High Efficiency Video Coding) (decoders: hevc hevc_qsv hevc_cuvid) (encoders: libx265 hevc_amf hevc_mf hevc_nvenc hevc_qsv)*/
-    HEVC("hevc"),
+    public static final String HEVC = "hevc";
     /**HNM 4 video*/
-    HNM4VIDEO("hnm4video"),
+    public static final String HNM4VIDEO = "hnm4video";
     /**Canopus HQ/HQA*/
-    HQ_HQA("hq_hqa"),
+    public static final String HQ_HQA = "hq_hqa";
     /**Canopus HQX*/
-    HQX("hqx"),
+    public static final String HQX = "hqx";
     /**HuffYUV*/
-    HUFFYUV("huffyuv"),
+    public static final String HUFFYUV = "huffyuv";
     /**HuffYUV MT*/
-    HYMT("hymt"),
+    public static final String HYMT = "hymt";
     /**id Quake II CIN video (decoders: idcinvideo)*/
-    IDCIN("idcin"),
+    public static final String IDCIN = "idcin";
     /**iCEDraw text*/
-    IDF("idf"),
+    public static final String IDF = "idf";
     /**IFF ACBM/ANIM/DEEP/ILBM/PBM/RGB8/RGBN (decoders: iff)*/
-    IFF_ILBM("iff_ilbm"),
+    public static final String IFF_ILBM = "iff_ilbm";
     /**Infinity IMM4*/
-    IMM4("imm4"),
+    public static final String IMM4 = "imm4";
     /**Infinity IMM5*/
-    IMM5("imm5"),
+    public static final String IMM5 = "imm5";
     /**Intel Indeo 2*/
-    INDEO2("indeo2"),
+    public static final String INDEO2 = "indeo2";
     /**Intel Indeo 3*/
-    INDEO3("indeo3"),
+    public static final String INDEO3 = "indeo3";
     /**Intel Indeo Video Interactive 4*/
-    INDEO4("indeo4"),
+    public static final String INDEO4 = "indeo4";
     /**Intel Indeo Video Interactive 5*/
-    INDEO5("indeo5"),
+    public static final String INDEO5 = "indeo5";
     /**Interplay MVE video*/
-    INTERPLAYVIDEO("interplayvideo"),
+    public static final String INTERPLAYVIDEO = "interplayvideo";
     /**IPU Video*/
-    IPU("ipu"),
+    public static final String IPU = "ipu";
     /**JPEG 2000 (encoders: jpeg2000 libopenjpeg)*/
-    JPEG2000("jpeg2000"),
+    public static final String JPEG2000 = "jpeg2000";
     /**JPEG-LS*/
-    JPEGLS("jpegls"),
+    public static final String JPEGLS = "jpegls";
     /**JPEG XL*/
-    JPEGXL("jpegxl"),
+    public static final String JPEGXL = "jpegxl";
     /**Bitmap Brothers JV video*/
-    JV("jv"),
+    public static final String JV = "jv";
     /**Kega Game Video*/
-    KGV1("kgv1"),
+    public static final String KGV1 = "kgv1";
     /**Karl Morton's video codec*/
-    KMVC("kmvc"),
+    public static final String KMVC = "kmvc";
     /**Lagarith lossless*/
-    LAGARITH("lagarith"),
+    public static final String LAGARITH = "lagarith";
     /**Lossless JPEG*/
-    LJPEG("ljpeg"),
+    public static final String LJPEG = "ljpeg";
     /**LOCO*/
-    LOCO("loco"),
+    public static final String LOCO = "loco";
     /**LEAD Screen Capture*/
-    LSCR("lscr"),
+    public static final String LSCR = "lscr";
     /**Matrox Uncompressed SD*/
-    M101("m101"),
+    public static final String M101 = "m101";
     /**Electronic Arts Madcow Video (decoders: eamad)*/
-    MAD("mad"),
+    public static final String MAD = "mad";
     /**MagicYUV video*/
-    MAGICYUV("magicyuv"),
+    public static final String MAGICYUV = "magicyuv";
     /**Sony PlayStation MDEC (Motion DECoder)*/
-    MDEC("mdec"),
+    public static final String MDEC = "mdec";
     /**Media 100i*/
-    MEDIA100("media100"),
+    public static final String MEDIA100 = "media100";
     /**Mimic*/
-    MIMIC("mimic"),
+    public static final String MIMIC = "mimic";
     /**Motion JPEG (decoders: mjpeg mjpeg_cuvid mjpeg_qsv) (encoders: mjpeg mjpeg_qsv)*/
-    MJPEG("mjpeg"),
+    public static final String MJPEG = "mjpeg";
     /**Apple MJPEG-B*/
-    MJPEGB("mjpegb"),
+    public static final String MJPEGB = "mjpegb";
     /**American Laser Games MM Video*/
-    MMVIDEO("mmvideo"),
+    public static final String MMVIDEO = "mmvideo";
     /**MobiClip Video*/
-    MOBICLIP("mobiclip"),
+    public static final String MOBICLIP = "mobiclip";
     /**Motion Pixels video*/
-    MOTIONPIXELS("motionpixels"),
+    public static final String MOTIONPIXELS = "motionpixels";
     /**MPEG-1 video (decoders: mpeg1video mpeg1_cuvid)*/
-    MPEG1VIDEO("mpeg1video"),
+    public static final String MPEG1VIDEO = "mpeg1video";
     /**MPEG-2 video (decoders: mpeg2video mpegvideo mpeg2_qsv mpeg2_cuvid) (encoders: mpeg2video mpeg2_qsv)*/
-    MPEG2VIDEO("mpeg2video"),
+    public static final String MPEG2VIDEO = "mpeg2video";
     /**MPEG-4 part 2 (decoders: mpeg4 mpeg4_cuvid) (encoders: mpeg4 libxvid)*/
-    MPEG4("mpeg4"),
+    public static final String MPEG4 = "mpeg4";
     /**MS ATC Screen*/
-    MSA1("msa1"),
+    public static final String MSA1 = "msa1";
     /**Mandsoft Screen Capture Codec*/
-    MSCC("mscc"),
+    public static final String MSCC = "mscc";
     /**MPEG-4 part 2 Microsoft variant version 1*/
-    MSMPEG4V1("msmpeg4v1"),
+    public static final String MSMPEG4V1 = "msmpeg4v1";
     /**MPEG-4 part 2 Microsoft variant version 2*/
-    MSMPEG4V2("msmpeg4v2"),
+    public static final String MSMPEG4V2 = "msmpeg4v2";
     /**MPEG-4 part 2 Microsoft variant version 3 (decoders: msmpeg4) (encoders: msmpeg4)*/
-    MSMPEG4V3("msmpeg4v3"),
+    public static final String MSMPEG4V3 = "msmpeg4v3";
     /**Microsoft Paint (MSP) version 2*/
-    MSP2("msp2"),
+    public static final String MSP2 = "msp2";
     /**Microsoft RLE*/
-    MSRLE("msrle"),
+    public static final String MSRLE = "msrle";
     /**MS Screen 1*/
-    MSS1("mss1"),
+    public static final String MSS1 = "mss1";
     /**MS Windows Media Video V9 Screen*/
-    MSS2("mss2"),
+    public static final String MSS2 = "mss2";
     /**Microsoft Video 1*/
-    MSVIDEO1("msvideo1"),
+    public static final String MSVIDEO1 = "msvideo1";
     /**LCL (LossLess Codec Library) MSZH*/
-    MSZH("mszh"),
+    public static final String MSZH = "mszh";
     /**MS Expression Encoder Screen*/
-    MTS2("mts2"),
+    public static final String MTS2 = "mts2";
     /**MidiVid 3.0*/
-    MV30("mv30"),
+    public static final String MV30 = "mv30";
     /**Silicon Graphics Motion Video Compressor 1*/
-    MVC1("mvc1"),
+    public static final String MVC1 = "mvc1";
     /**Silicon Graphics Motion Video Compressor 2*/
-    MVC2("mvc2"),
+    public static final String MVC2 = "mvc2";
     /**MidiVid VQ*/
-    MVDV("mvdv"),
+    public static final String MVDV = "mvdv";
     /**MidiVid Archive Codec*/
-    MVHA("mvha"),
+    public static final String MVHA = "mvha";
     /**MatchWare Screen Capture Codec*/
-    MWSC("mwsc"),
+    public static final String MWSC = "mwsc";
     /**Mobotix MxPEG video*/
-    MXPEG("mxpeg"),
+    public static final String MXPEG = "mxpeg";
     /**NotchLC*/
-    NOTCHLC("notchlc"),
+    public static final String NOTCHLC = "notchlc";
     /**NuppelVideo/RTJPEG*/
-    NUV("nuv"),
+    public static final String NUV = "nuv";
     /**Amazing Studio Packed Animation File Video*/
-    PAF_VIDEO("paf_video"),
+    public static final String PAF_VIDEO = "paf_video";
     /**PAM (Portable AnyMap) image*/
-    PAM("pam"),
+    public static final String PAM = "pam";
     /**PBM (Portable BitMap) image*/
-    PBM("pbm"),
+    public static final String PBM = "pbm";
     /**PC Paintbrush PCX image*/
-    PCX("pcx"),
+    public static final String PCX = "pcx";
     /**PDV (PlayDate Video)*/
-    PDV("pdv"),
+    public static final String PDV = "pdv";
     /**PFM (Portable FloatMap) image*/
-    PFM("pfm"),
+    public static final String PFM = "pfm";
     /**PGM (Portable GrayMap) image*/
-    PGM("pgm"),
+    public static final String PGM = "pgm";
     /**PGMYUV (Portable GrayMap YUV) image*/
-    PGMYUV("pgmyuv"),
+    public static final String PGMYUV = "pgmyuv";
     /**PGX (JPEG2000 Test Format)*/
-    PGX("pgx"),
+    public static final String PGX = "pgx";
     /**PHM (Portable HalfFloatMap) image*/
-    PHM("phm"),
+    public static final String PHM = "phm";
     /**Kodak Photo CD*/
-    PHOTOCD("photocd"),
+    public static final String PHOTOCD = "photocd";
     /**Pictor/PC Paint*/
-    PICTOR("pictor"),
+    public static final String PICTOR = "pictor";
     /**Apple Pixlet*/
-    PIXLET("pixlet"),
+    public static final String PIXLET = "pixlet";
     /**PNG (Portable Network Graphics) image*/
-    PNG("png"),
+    public static final String PNG = "png";
     /**PPM (Portable PixelMap) image*/
-    PPM("ppm"),
+    public static final String PPM = "ppm";
     /**Apple ProRes (iCodec Pro) (encoders: prores prores_aw prores_ks)*/
-    PRORES("prores"),
+    public static final String PRORES = "prores";
     /**Brooktree ProSumer Video*/
-    PROSUMER("prosumer"),
+    public static final String PROSUMER = "prosumer";
     /**Photoshop PSD file*/
-    PSD("psd"),
+    public static final String PSD = "psd";
     /**V.Flash PTX image*/
-    PTX("ptx"),
+    public static final String PTX = "ptx";
     /**Apple QuickDraw*/
-    QDRAW("qdraw"),
+    public static final String QDRAW = "qdraw";
     /**QOI (Quite OK Image)*/
-    QOI("qoi"),
+    public static final String QOI = "qoi";
     /**Q-team QPEG*/
-    QPEG("qpeg"),
+    public static final String QPEG = "qpeg";
     /**QuickTime Animation (RLE) video*/
-    QTRLE("qtrle"),
+    public static final String QTRLE = "qtrle";
     /**AJA Kona 10-bit RGB Codec*/
-    R10K("r10k"),
+    public static final String R10K = "r10k";
     /**Uncompressed RGB 10-bit*/
-    R210("r210"),
+    public static final String R210 = "r210";
     /**RemotelyAnywhere Screen Capture*/
-    RASC("rasc"),
+    public static final String RASC = "rasc";
     /**raw video*/
-    RAWVIDEO("rawvideo"),
+    public static final String RAWVIDEO = "rawvideo";
     /**RL2 video*/
-    RL2("rl2"),
+    public static final String RL2 = "rl2";
     /**id RoQ video (decoders: roqvideo) (encoders: roqvideo)*/
-    ROQ("roq"),
+    public static final String ROQ = "roq";
     /**QuickTime video (RPZA)*/
-    RPZA("rpza"),
+    public static final String RPZA = "rpza";
     /**innoHeim/Rsupport Screen Capture Codec*/
-    RSCC("rscc"),
+    public static final String RSCC = "rscc";
     /**RTV1 (RivaTuner Video)*/
-    RTV1("rtv1"),
+    public static final String RTV1 = "rtv1";
     /**RealVideo 1.0*/
-    RV10("rv10"),
+    public static final String RV10 = "rv10";
     /**RealVideo 2.0*/
-    RV20("rv20"),
+    public static final String RV20 = "rv20";
     /**RealVideo 3.0*/
-    RV30("rv30"),
+    public static final String RV30 = "rv30";
     /**RealVideo 4.0*/
-    RV40("rv40"),
+    public static final String RV40 = "rv40";
     /**LucasArts SANM/SMUSH video*/
-    SANM("sanm"),
+    public static final String SANM = "sanm";
     /**ScreenPressor*/
-    SCPR("scpr"),
+    public static final String SCPR = "scpr";
     /**Screenpresso*/
-    SCREENPRESSO("screenpresso"),
+    public static final String SCREENPRESSO = "screenpresso";
     /**Digital Pictures SGA Video*/
-    SGA("sga"),
+    public static final String SGA = "sga";
     /**SGI image*/
-    SGI("sgi"),
+    public static final String SGI = "sgi";
     /**SGI RLE 8-bit*/
-    SGIRLE("sgirle"),
+    public static final String SGIRLE = "sgirle";
     /**BitJazz SheerVideo*/
-    SHEERVIDEO("sheervideo"),
+    public static final String SHEERVIDEO = "sheervideo";
     /**Simbiosis Interactive IMX Video*/
-    SIMBIOSIS_IMX("simbiosis_imx"),
+    public static final String SIMBIOSIS_IMX = "simbiosis_imx";
     /**Smacker video (decoders: smackvid)*/
-    SMACKVIDEO("smackvideo"),
+    public static final String SMACKVIDEO = "smackvideo";
     /**QuickTime Graphics (SMC)*/
-    SMC("smc"),
+    public static final String SMC = "smc";
     /**Sigmatel Motion Video*/
-    SMVJPEG("smvjpeg"),
+    public static final String SMVJPEG = "smvjpeg";
     /**Snow*/
-    SNOW("snow"),
+    public static final String SNOW = "snow";
     /**Sunplus JPEG (SP5X)*/
-    SP5X("sp5x"),
+    public static final String SP5X = "sp5x";
     /**NewTek SpeedHQ*/
-    SPEEDHQ("speedhq"),
+    public static final String SPEEDHQ = "speedhq";
     /**Screen Recorder Gold Codec*/
-    SRGC("srgc"),
+    public static final String SRGC = "srgc";
     /**Sun Rasterfile image*/
-    SUNRAST("sunrast"),
+    public static final String SUNRAST = "sunrast";
     /**Scalable Vector Graphics*/
-    SVG("svg"),
+    public static final String SVG = "svg";
     /**Sorenson Vector Quantizer 1 / Sorenson Video 1 / SVQ1*/
-    SVQ1("svq1"),
+    public static final String SVQ1 = "svq1";
     /**Sorenson Vector Quantizer 3 / Sorenson Video 3 / SVQ3*/
-    SVQ3("svq3"),
+    public static final String SVQ3 = "svq3";
     /**Truevision Targa image*/
-    TARGA("targa"),
+    public static final String TARGA = "targa";
     /**Pinnacle TARGA CineWave YUV16*/
-    TARGA_Y216("targa_y216"),
+    public static final String TARGA_Y216 = "targa_y216";
     /**TDSC*/
-    TDSC("tdsc"),
+    public static final String TDSC = "tdsc";
     /**Electronic Arts TGQ video (decoders: eatgq)*/
-    TGQ("tgq"),
+    public static final String TGQ = "tgq";
     /**Electronic Arts TGV video (decoders: eatgv)*/
-    TGV("tgv"),
+    public static final String TGV = "tgv";
     /**Theora (encoders: libtheora)*/
-    THEORA("theora"),
+    public static final String THEORA = "theora";
     /**Nintendo Gamecube THP video*/
-    THP("thp"),
+    public static final String THP = "thp";
     /**Tiertex Limited SEQ video*/
-    TIERTEXSEQVIDEO("tiertexseqvideo"),
+    public static final String TIERTEXSEQVIDEO = "tiertexseqvideo";
     /**TIFF image*/
-    TIFF("tiff"),
+    public static final String TIFF = "tiff";
     /**8088flex TMV*/
-    TMV("tmv"),
+    public static final String TMV = "tmv";
     /**Electronic Arts TQI video (decoders: eatqi)*/
-    TQI("tqi"),
+    public static final String TQI = "tqi";
     /**Duck TrueMotion 1.0*/
-    TRUEMOTION1("truemotion1"),
+    public static final String TRUEMOTION1 = "truemotion1";
     /**Duck TrueMotion 2.0*/
-    TRUEMOTION2("truemotion2"),
+    public static final String TRUEMOTION2 = "truemotion2";
     /**Duck TrueMotion 2.0 Real Time*/
-    TRUEMOTION2RT("truemotion2rt"),
+    public static final String TRUEMOTION2RT = "truemotion2rt";
     /**TechSmith Screen Capture Codec (decoders: camtasia)*/
-    TSCC("tscc"),
+    public static final String TSCC = "tscc";
     /**TechSmith Screen Codec 2*/
-    TSCC2("tscc2"),
+    public static final String TSCC2 = "tscc2";
     /**Renderware TXD (TeXture Dictionary) image*/
-    TXD("txd"),
+    public static final String TXD = "txd";
     /**IBM UltiMotion (decoders: ultimotion)*/
-    ULTI("ulti"),
+    public static final String ULTI = "ulti";
     /**Ut Video*/
-    UTVIDEO("utvideo"),
+    public static final String UTVIDEO = "utvideo";
     /**Uncompressed 4:2:2 10-bit*/
-    V210("v210"),
+    public static final String V210 = "v210";
     /**Uncompressed 4:2:2 10-bit*/
-    V210X("v210x"),
+    public static final String V210X = "v210x";
     /**Uncompressed packed 4:4:4*/
-    V308("v308"),
+    public static final String V308 = "v308";
     /**Uncompressed packed QT 4:4:4:4*/
-    V408("v408"),
+    public static final String V408 = "v408";
     /**Uncompressed 4:4:4 10-bit*/
-    V410("v410"),
+    public static final String V410 = "v410";
     /**Beam Software VB*/
-    VB("vb"),
+    public static final String VB = "vb";
     /**VBLE Lossless Codec*/
-    VBLE("vble"),
+    public static final String VBLE = "vble";
     /**Vizrt Binary Image*/
-    VBN("vbn"),
+    public static final String VBN = "vbn";
     /**SMPTE VC-1 (decoders: vc1 vc1_qsv vc1_cuvid)*/
-    VC1("vc1"),
+    public static final String VC1 = "vc1";
     /**Windows Media Video 9 Image v2*/
-    VC1IMAGE("vc1image"),
+    public static final String VC1IMAGE = "vc1image";
     /**ATI VCR1*/
-    VCR1("vcr1"),
+    public static final String VCR1 = "vcr1";
     /**Miro VideoXL (decoders: xl)*/
-    VIXL("vixl"),
+    public static final String VIXL = "vixl";
     /**Sierra VMD video*/
-    VMDVIDEO("vmdvideo"),
+    public static final String VMDVIDEO = "vmdvideo";
     /**vMix Video*/
-    VMIX("vmix"),
+    public static final String VMIX = "vmix";
     /**VMware Screen Codec / VMware Video*/
-    VMNC("vmnc"),
+    public static final String VMNC = "vmnc";
     /**Null video codec*/
-    VNULL("vnull"),
+    public static final String VNULL = "vnull";
     /**On2 VP3*/
-    VP3("vp3"),
+    public static final String VP3 = "vp3";
     /**On2 VP4*/
-    VP4("vp4"),
+    public static final String VP4 = "vp4";
     /**On2 VP5*/
-    VP5("vp5"),
+    public static final String VP5 = "vp5";
     /**On2 VP6*/
-    VP6("vp6"),
+    public static final String VP6 = "vp6";
     /**On2 VP6 (Flash version, with alpha channel)*/
-    VP6A("vp6a"),
+    public static final String VP6A = "vp6a";
     /**On2 VP6 (Flash version)*/
-    VP6F("vp6f"),
+    public static final String VP6F = "vp6f";
     /**On2 VP7*/
-    VP7("vp7"),
+    public static final String VP7 = "vp7";
     /**On2 VP8 (decoders: vp8 libvpx vp8_cuvid vp8_qsv) (encoders: libvpx)*/
-    VP8("vp8"),
+    public static final String VP8 = "vp8";
     /**Google VP9 (decoders: vp9 libvpx-vp9 vp9_cuvid vp9_qsv) (encoders: libvpx-vp9 vp9_qsv)*/
-    VP9("vp9"),
+    public static final String VP9 = "vp9";
     /**ViewQuest VQC*/
-    VQC("vqc"),
+    public static final String VQC = "vqc";
     /**H.266 / VVC (Versatile Video Coding)*/
-    VVC("vvc"),
+    public static final String VVC = "vvc";
     /**WBMP (Wireless Application Protocol Bitmap) image*/
-    WBMP("wbmp"),
+    public static final String WBMP = "wbmp";
     /**WinCAM Motion Video*/
-    WCMV("wcmv"),
+    public static final String WCMV = "wcmv";
     /**WebP (encoders: libwebp_anim libwebp)*/
-    WEBP("webp"),
+    public static final String WEBP = "webp";
     /**Windows Media Video 7*/
-    WMV1("wmv1"),
+    public static final String WMV1 = "wmv1";
     /**Windows Media Video 8*/
-    WMV2("wmv2"),
+    public static final String WMV2 = "wmv2";
     /**Windows Media Video 9*/
-    WMV3("wmv3"),
+    public static final String WMV3 = "wmv3";
     /**Windows Media Video 9 Image*/
-    WMV3IMAGE("wmv3image"),
+    public static final String WMV3IMAGE = "wmv3image";
     /**Winnov WNV1*/
-    WNV1("wnv1"),
+    public static final String WNV1 = "wnv1";
     /**AVFrame to AVPacket passthrough*/
-    WRAPPED_AVFRAME("wrapped_avframe"),
+    public static final String WRAPPED_AVFRAME = "wrapped_avframe";
     /**Westwood Studios VQA (Vector Quantized Animation) video (decoders: vqavideo)*/
-    WS_VQA("ws_vqa"),
+    public static final String WS_VQA = "ws_vqa";
     /**Wing Commander III / Xan*/
-    XAN_WC3("xan_wc3"),
+    public static final String XAN_WC3 = "xan_wc3";
     /**Wing Commander IV / Xxan*/
-    XAN_WC4("xan_wc4"),
+    public static final String XAN_WC4 = "xan_wc4";
     /**eXtended BINary text*/
-    XBIN("xbin"),
+    public static final String XBIN = "xbin";
     /**XBM (X BitMap) image*/
-    XBM("xbm"),
+    public static final String XBM = "xbm";
     /**X-face image*/
-    XFACE("xface"),
+    public static final String XFACE = "xface";
     /**XPM (X PixMap) image*/
-    XPM("xpm"),
+    public static final String XPM = "xpm";
     /**XWD (X Window Dump) image*/
-    XWD("xwd"),
+    public static final String XWD = "xwd";
     /**Uncompressed YUV 4:1:1 12-bit*/
-    Y41P("y41p"),
+    public static final String Y41P = "y41p";
     /**YUY2 Lossless Codec*/
-    YLC("ylc"),
+    public static final String YLC = "ylc";
     /**Psygnosis YOP Video*/
-    YOP("yop"),
+    public static final String YOP = "yop";
     /**Uncompressed packed 4:2:0*/
-    YUV4("yuv4"),
+    public static final String YUV4 = "yuv4";
     /**ZeroCodec Lossless Video*/
-    ZEROCODEC("zerocodec"),
+    public static final String ZEROCODEC = "zerocodec";
     /**LCL (LossLess Codec Library) ZLIB*/
-    ZLIB("zlib"),
+    public static final String ZLIB = "zlib";
     /**Zip Motion Blocks Video*/
-    ZMBV("zmbv");
-    final String codec;
-
-    VideoCodec(String codec) {
-        this.codec = codec;
-    }
-
-    @Override
-    public String toString() {
-        return this.codec;
-    }
+    public static final String ZMBV = "zmbv";
 }
