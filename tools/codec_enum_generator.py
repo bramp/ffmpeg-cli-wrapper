@@ -1,3 +1,8 @@
+"""
+First of all, FFmpeg should be installed on your local PC. 
+Running "python codec_enum_generator.py" in the shell creates Audioodec and VideooCodec. 
+You can update the codec file by putting these two files within the net.bramp.ffmpeg.builder package.
+"""
 import subprocess
 import re
 
@@ -10,7 +15,7 @@ def removeLeadingNumbers(text):
     return text[index:]
 
 def writeCodec(m,codec):
-    document = "\t"+"/**"+ m.group(3).rstrip()  +"*/\n"
+    document = "\t"+"/**"+ m.group(3).replace("&","&amp;").rstrip()  +"*/\n"
     enumCode = "\t" +"public static final String " +removeLeadingNumbers(m.group(2).replace(".","_")).upper() +' = "'+  m.group(2) +'";' +'\n'
     codec.write(document)
     codec.write(enumCode)
