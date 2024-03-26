@@ -94,7 +94,7 @@ public class AudioCodec {
     public static final String ADPCM_IMA_RAD = "adpcm_ima_rad";
     /**ADPCM IMA Loki SDL MJPEG*/
     public static final String ADPCM_IMA_SMJPEG = "adpcm_ima_smjpeg";
-    /**ADPCM IMA Simon & Schuster Interactive*/
+    /**ADPCM IMA Simon &amp; Schuster Interactive*/
     public static final String ADPCM_IMA_SSI = "adpcm_ima_ssi";
     /**ADPCM IMA WAV*/
     public static final String ADPCM_IMA_WAV = "adpcm_ima_wav";

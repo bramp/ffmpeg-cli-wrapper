@@ -64,7 +64,7 @@ public class VideoCodec {
     public static final String AYUV = "ayuv";
     /**Bethesda VID video*/
     public static final String BETHSOFTVID = "bethsoftvid";
-    /**Brute Force & Ignorance*/
+    /**Brute Force &amp; Ignorance*/
     public static final String BFI = "bfi";
     /**Bink video*/
     public static final String BINKVIDEO = "binkvideo";
