@@ -79,7 +79,7 @@ public class FFmpegBuilder {
   final List<String> extra_args = new ArrayList<>();
 
   // Output
-  final List<FFmpegOutputBuilder> outputs = new ArrayList<>();
+  final List<AbstractFFmpegOutputBuilder<?>> outputs = new ArrayList<>();
 
   // Filters
   String audioFilter;
@@ -154,13 +154,13 @@ public class FFmpegBuilder {
     return addInput(filename);
   }
 
-    public FFmpegBuilder setThreads(int threads) {
-        checkArgument(threads > 0, "threads must be greater than zero");
-        this.threads = threads;
-        return this;
-    }
+  public FFmpegBuilder setThreads(int threads) {
+    checkArgument(threads > 0, "threads must be greater than zero");
+    this.threads = threads;
+    return this;
+  }
 
-    public FFmpegBuilder setFormat(String format) {
+  public FFmpegBuilder setFormat(String format) {
     this.format = checkNotNull(format);
     return this;
   }
@@ -213,7 +213,7 @@ public class FFmpegBuilder {
 
   /**
    * Sets vbr quality when decoding mp3 output.
-   * 
+   *
    * @param quality the quality between 0 and 9. Where 0 is best.
    * @return FFmpegBuilder
    */
@@ -259,6 +259,27 @@ public class FFmpegBuilder {
    */
   public FFmpegOutputBuilder addOutput(URI uri) {
     FFmpegOutputBuilder output = new FFmpegOutputBuilder(this, uri);
+    outputs.add(output);
+    return output;
+  }
+
+  /**
+   * Adds new HLS(Http Live Streaming) output file.
+   * <br>
+   * <pre>
+   * <code>List&lt;String&gt; args = new FFmpegBuilder()
+   *   .addHlsOutput(&quot;output.m3u8&quot;)
+   *   .build();</code>
+   * </pre>
+   *
+   * @param filename output file path
+   *
+   * @return A new {@link FFmpegHlsOutputBuilder}
+   */
+  public FFmpegHlsOutputBuilder addHlsOutput(String filename) {
+    checkArgument(format == null || format.equals("hls"),"The format is already set to a value other than hls.");
+    if(format == null) setFormat("hls");
+    FFmpegHlsOutputBuilder output = new FFmpegHlsOutputBuilder(this, filename);
     outputs.add(output);
     return output;
   }
@@ -357,7 +378,7 @@ public class FFmpegBuilder {
       args.add("-qscale:a", qscale.toString());
     }
 
-    for (FFmpegOutputBuilder output : this.outputs) {
+    for (AbstractFFmpegOutputBuilder<?> output : this.outputs) {
       args.addAll(output.build(this, pass));
     }
 
