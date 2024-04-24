@@ -26,6 +26,7 @@ public class FFmpegHlsOutputBuilder extends AbstractFFmpegOutputBuilder<FFmpegHl
      * Set the target segment length. Default value is 2 seconds.
      *
      * @param duration hls_time to set
+     * @param units The units the offset is in
      * @return {@link FFmpegHlsOutputBuilder}
      */
     public FFmpegHlsOutputBuilder setHlsTime(long duration, TimeUnit units) {
@@ -53,6 +54,7 @@ public class FFmpegHlsOutputBuilder extends AbstractFFmpegOutputBuilder<FFmpegHl
      * <strong>Segment will be cut on the next key frame after this time has passed on the first m3u8 list.</strong> <br>
      *
      * @param duration hls_init_time to set
+     * @param units The units the offset is in
      * @return {@link FFmpegHlsOutputBuilder}
      */
     public FFmpegHlsOutputBuilder setHlsInitTime(long duration, TimeUnit units) {
