@@ -19,23 +19,52 @@ import net.bramp.ffmpeg.options.VideoEncodingOptions;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 /** Builds a representation of a single output/encoding setting */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"DeprecatedIsStillUsed", "deprecation","unchecked"})
 public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutputBuilder<T>> extends AbstractFFmpegStreamBuilder<T> {
 
   static final Pattern trailingZero = Pattern.compile("\\.0*$");
-
+  /** @deprecated Use {@link #getConstantRateFactor()} instead*/
+  @Deprecated
   public Double constantRateFactor;
 
+  /** @deprecated Use {@link #getAudioSampleFormat()} instead*/
+  @Deprecated
   public String audio_sample_format;
+
+  /** @deprecated Use {@link #getAudioBitRate()} instead*/
+  @Deprecated
   public long audio_bit_rate;
+
+  /** @deprecated Use {@link #getAudioQuality()} instead*/
+  @Deprecated
   public Double audio_quality;
+
+  /** @deprecated Use {@link #getVideoBitStreamFilter()} instead*/
+  @Deprecated
   public String audio_bit_stream_filter;
+
+  /** @deprecated Use {@link #getAudioFilter()} instead*/
+  @Deprecated
   public String audio_filter;
 
+  /** @deprecated Use {@link #getVideoBitRate()} instead*/
+  @Deprecated
   public long video_bit_rate;
+
+  /** @deprecated Use {@link #getVideoQuality()} instead*/
+  @Deprecated
   public Double video_quality;
+
+  /** @deprecated Use {@link #getVideoPreset()} instead*/
+  @Deprecated
   public String video_preset;
+
+  /** @deprecated Use {@link #getVideoFilter()} instead*/
+  @Deprecated
   public String video_filter;
+
+  /** @deprecated Use {@link #getVideoBitStreamFilter()} instead*/
+  @Deprecated
   public String video_bit_stream_filter;
 
   public AbstractFFmpegOutputBuilder() {
@@ -356,5 +385,50 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
   @Override
   protected T getThis() {
     return (T) this;
+  }
+
+
+  public Double getConstantRateFactor() {
+    return constantRateFactor;
+  }
+
+  public String getAudioSampleFormat() {
+    return audio_sample_format;
+  }
+
+  public long getAudioBitRate() {
+    return audio_bit_rate;
+  }
+
+  public Double getAudioQuality() {
+    return audio_quality;
+  }
+
+  public String getAudioBitStreamFilter() {
+    return audio_bit_stream_filter;
+  }
+
+  public String getAudioFilter() {
+    return audio_filter;
+  }
+
+  public long getVideoBitRate() {
+    return video_bit_rate;
+  }
+
+  public Double getVideoQuality() {
+    return video_quality;
+  }
+
+  public String getVideoPreset() {
+    return video_preset;
+  }
+
+  public String getVideoFilter() {
+    return video_filter;
+  }
+
+  public String getVideoBitStreamFilter() {
+    return video_bit_stream_filter;
   }
 }
