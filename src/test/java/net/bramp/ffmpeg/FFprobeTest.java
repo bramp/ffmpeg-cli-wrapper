@@ -115,7 +115,7 @@ public class FFprobeTest {
     assertThat(firstChapter.start_time, is("0.000000"));
     assertThat(firstChapter.end, is(11951309L));
     assertThat(firstChapter.end_time, is("271.004739"));
-    assertThat(firstChapter.tags.title, is("01 - Sammy Jay Makes a Fuss"));
+    assertThat(firstChapter.getTags().title, is("01 - Sammy Jay Makes a Fuss"));
 
     FFmpegChapter lastChapter = info.getChapters().get(info.getChapters().size() - 1);
     assertThat(lastChapter.time_base, is("1/44100"));
@@ -123,7 +123,7 @@ public class FFprobeTest {
     assertThat(lastChapter.start_time, is("5394.008844"));
     assertThat(lastChapter.end, is(248628224L));
     assertThat(lastChapter.end_time, is("5637.828209"));
-    assertThat(lastChapter.tags.title, is("24 - Chatterer Has His Turn to Laugh"));
+    assertThat(lastChapter.getTags().title, is("24 - Chatterer Has His Turn to Laugh"));
   }
 
   @Test
@@ -400,13 +400,13 @@ public class FFprobeTest {
     FFmpegProbeResult info = ffprobe.probe(Samples.side_data_list);
 
     // Check edge case with a time larger than an integer
-    assertThat(info.getStreams().get(0).side_data_list.length, is(1));
-    assertThat(info.getStreams().get(0).side_data_list[0].side_data_type, is("Display Matrix"));
+    assertThat(info.getStreams().get(0).getSideDataList().size(), is(1));
+    assertThat(info.getStreams().get(0).getSideDataList().get(0).side_data_type, is("Display Matrix"));
     assertThat(
-        info.getStreams().get(0).side_data_list[0].displaymatrix,
+            info.getStreams().get(0).getSideDataList().get(0).displaymatrix,
         is(
             "\n00000000:            0      -65536           0\n00000001:        65536           0           0\n00000002:            0           0  1073741824\n"));
-    assertThat(info.getStreams().get(0).side_data_list[0].rotation, is(90));
+    assertThat(info.getStreams().get(0).getSideDataList().get(0).rotation, is(90));
   }
 
   @Test

@@ -19,7 +19,7 @@ import com.google.errorprone.annotations.Immutable;
 @Immutable
 public class MetadataSpecifier {
 
-  final String spec;
+  private final String spec;
 
   private MetadataSpecifier(String spec) {
     this.spec = checkNotNull(spec);

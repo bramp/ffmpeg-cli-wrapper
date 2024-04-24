@@ -128,7 +128,7 @@ public class FFmpegBuilder {
 
   public FFmpegBuilder addInput(FFmpegProbeResult result) {
     checkNotNull(result);
-    String filename = checkNotNull(result.format).filename;
+    String filename = checkNotNull(result.getFormat()).getFilename();
     inputProbes.put(filename, result);
     return addInput(filename);
   }

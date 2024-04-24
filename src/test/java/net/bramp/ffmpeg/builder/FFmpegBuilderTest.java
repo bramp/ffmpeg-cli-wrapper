@@ -191,6 +191,29 @@ public class FFmpegBuilderTest {
     assertThat(video, reflectEquals(options.getVideo()));
   }
 
+  /** Tests if all the various encoding options actually get stored and used correctly */
+  @Test
+  public void testVideoCodecWithEnum() {
+    MainEncodingOptions main = new MainEncodingOptions("mp4", 1500L, 2L);
+    AudioEncodingOptions audio =
+            new AudioEncodingOptions(true, AudioCodec.AAC, 1, AUDIO_SAMPLE_48000, AUDIO_FORMAT_S16, 1, 2.0);
+    VideoEncodingOptions video =
+            new VideoEncodingOptions(true, VideoCodec.H264, FPS_30, 320, 240, 1, null, null, null);
+
+    EncodingOptions options =
+            new FFmpegBuilder()
+                    .setInput("input")
+                    .addOutput("output")
+                    .useOptions(main)
+                    .useOptions(audio)
+                    .useOptions(video)
+                    .buildOptions();
+
+    assertThat(main, reflectEquals(options.getMain()));
+    assertThat(audio, reflectEquals(options.getAudio()));
+    assertThat(video, reflectEquals(options.getVideo()));
+  }
+
   @Test
   public void testMultipleOutputs() {
 

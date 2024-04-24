@@ -15,4 +15,5 @@ public class FFmpegOutputBuilder extends AbstractFFmpegOutputBuilder<FFmpegOutpu
     protected FFmpegOutputBuilder(FFmpegBuilder parent, URI uri) {
         super(parent, uri);
     }
+
 }

@@ -13,17 +13,26 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @Immutable
 public class Codec {
-  final String name;
-  final String longName;
+  private final String name;
+  private final String longName;
 
   /** Can I decode with this codec */
-  final boolean canDecode;
+  private final boolean canDecode;
 
   /** Can I encode with this codec */
-  final boolean canEncode;
+  private final boolean canEncode;
 
   /** What type of codec is this */
-  final CodecType type;
+  private final CodecType type;
+
+  /** Intra frame only codec */
+  final boolean intraFrameOnly;
+
+  /** Codec supports lossy compression */
+  final boolean lossyCompression;
+
+  /** Codeco supports lessless compression */
+  final boolean losslessCompression;
 
   /**
    * @param name short codec name
@@ -35,6 +44,8 @@ public class Codec {
    * ..V... = Video codec
    * ..A... = Audio codec
    * ..S... = Subtitle codec
+   * ..D... = Data codec
+   * ..T... = Attachment codec
    * ...I.. = Intra frame-only codec
    * ....L. = Lossy compression
    * .....S = Lossless compression
@@ -45,9 +56,19 @@ public class Codec {
     this.longName = Preconditions.checkNotNull(longName).trim();
 
     Preconditions.checkNotNull(flags);
-    Preconditions.checkArgument(flags.length() == 6, "Format flags is invalid '%s'", flags);
-    this.canDecode = flags.charAt(0) == 'D';
-    this.canEncode = flags.charAt(1) == 'E';
+    Preconditions.checkArgument(flags.length() == 6, "Codec flags is invalid '%s'", flags);
+
+    switch (flags.charAt(0)) {
+      case 'D': this.canDecode = true; break;
+      case '.': this.canDecode = false; break;
+      default: throw new IllegalArgumentException("Invalid decoding value '" + flags.charAt(0) + "'");
+    }
+
+    switch (flags.charAt(1)) {
+      case 'E': this.canEncode = true; break;
+      case '.': this.canEncode = false; break;
+      default: throw new IllegalArgumentException("Invalid encoding value '" + flags.charAt(1) + "'");
+    }
 
     switch (flags.charAt(2)) {
       case 'V':
@@ -69,7 +90,24 @@ public class Codec {
         throw new IllegalArgumentException("Invalid codec type '" + flags.charAt(2) + "'");
     }
 
-    // TODO There are more flags to parse
+    switch (flags.charAt(3)) {
+      case 'I': this.intraFrameOnly = true; break;
+      case '.': this.intraFrameOnly = false; break;
+      default: throw new IllegalArgumentException("Invalid encoding value '" + flags.charAt(3) + "'");
+    }
+
+    switch (flags.charAt(4)) {
+      case 'L': this.lossyCompression = true; break;
+      case '.': this.lossyCompression = false; break;
+      default: throw new IllegalArgumentException("Invalid lossy compression value '" + flags.charAt(4) + "'");
+    }
+
+    switch (flags.charAt(5)) {
+      case 'S': this.losslessCompression = true; break;
+      case '.': this.losslessCompression = false; break;
+      default: throw new IllegalArgumentException("Invalid lossless compression value '" + flags.charAt(5) + "'");
+    }
+
   }
 
   @Override
@@ -106,4 +144,17 @@ public class Codec {
   public CodecType getType() {
     return type;
   }
+
+  public boolean isIntraFrameOnly() {
+    return intraFrameOnly;
+  }
+
+  public boolean supportsLossyCompression() {
+    return lossyCompression;
+  }
+
+  public boolean supportsLosslessCompression() {
+    return losslessCompression;
+  }
+
 }
