@@ -189,10 +189,10 @@ public class ExamplesTest {
             .done()
             .addInput("spot.mp4")
             .done()
-            .setComplexFilter(
-                "[1:v]scale=368:207,setpts=PTS-STARTPTS+5/TB [ov]; "
-                    + "[0:v][ov] overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h)/2:enable='between(t,5,15)' [v]")
             .addOutput("with-video.mp4")
+            .setComplexFilter(
+                    "[1:v]scale=368:207,setpts=PTS-STARTPTS+5/TB [ov]; "
+                            + "[0:v][ov] overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h)/2:enable='between(t,5,15)' [v]")
             .addExtraArgs("-map", "[v]")
             .addExtraArgs("-map", "0:a")
             .setVideoCodec("libx264")
@@ -206,9 +206,9 @@ public class ExamplesTest {
         "ffmpeg -y -v error"
             + " -i original.mp4"
             + " -i spot.mp4"
-            + " -filter_complex [1:v]scale=368:207,setpts=PTS-STARTPTS+5/TB [ov]; [0:v][ov] overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h)/2:enable='between(t,5,15)' [v]"
             + " -preset ultrafast"
             + " -crf 20"
+            + " -filter_complex [1:v]scale=368:207,setpts=PTS-STARTPTS+5/TB [ov]; [0:v][ov] overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h)/2:enable='between(t,5,15)' [v]"
             + " -vcodec libx264"
             + " -acodec copy"
             + " -map [v]"

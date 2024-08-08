@@ -17,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.CheckReturnValue;
 import net.bramp.ffmpeg.FFmpegUtils;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Builds a ffmpeg command line
@@ -24,6 +26,8 @@ import net.bramp.ffmpeg.probe.FFmpegProbeResult;
  * @author bramp
  */
 public class FFmpegBuilder {
+
+  private static final Logger log = LoggerFactory.getLogger(FFmpegBuilder.class);
 
   public enum Strict {
     VERY, // strictly conform to an older more strict version of the specifications or reference
@@ -180,6 +184,7 @@ public class FFmpegBuilder {
     return this;
   }
 
+  @Deprecated
   public FFmpegBuilder setFormat(String format) {
     this.format = checkNotNull(format);
     return this;
@@ -204,6 +209,7 @@ public class FFmpegBuilder {
    * @param filter the complex filter string
    * @return this
    */
+  @Deprecated
   public FFmpegBuilder setComplexFilter(String filter) {
     this.complexFilter = checkNotEmpty(filter, "filter must not be empty");
     return this;
@@ -355,6 +361,7 @@ public class FFmpegBuilder {
     }
 
     if (format != null) {
+      log.warn("Using FFmpegBuilder#setFormat is deprecated. Specify it on the inputStream or outputStream instead");
       args.add("-f", format);
     }
 
@@ -389,6 +396,7 @@ public class FFmpegBuilder {
     }
 
     if (!Strings.isNullOrEmpty(complexFilter)) {
+      log.warn("Using FFmpegBuilder#setComplexFilter is deprecated. Specify it on the outputStream instead");
       args.add("-filter_complex", complexFilter);
     }
 

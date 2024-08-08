@@ -67,6 +67,8 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
   @Deprecated
   public String video_bit_stream_filter;
 
+  protected String  complexFilter;
+
   public AbstractFFmpegOutputBuilder() {
     super();
   }
@@ -194,6 +196,12 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
     return (T) this;
   }
 
+  public T setComplexFilter(String filter) {
+    this.complexFilter = checkNotEmpty(filter, "filter must not be empty");
+
+    return (T) this;
+  }
+
   /**
    * Sets Audio Filter
    *
@@ -316,6 +324,10 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
     if (constantRateFactor != null) {
       args.add("-crf", formatDecimalInteger(constantRateFactor));
     }
+
+    if (complexFilter != null) {
+      args.add("-filter_complex", complexFilter);
+    }
   }
 
   @Override
@@ -430,5 +442,9 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
 
   public String getVideoBitStreamFilter() {
     return video_bit_stream_filter;
+  }
+
+  public String getComplexFilter() {
+    return complexFilter;
   }
 }
