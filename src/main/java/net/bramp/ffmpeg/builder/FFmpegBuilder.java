@@ -73,7 +73,7 @@ public class FFmpegBuilder {
   String format;
   Long startOffset; // in millis
   boolean read_at_native_frame_rate = false;
-  final List<String> inputs = new ArrayList<>();
+  final List<AbstractFFmpegInputBuilder<?>> inputs = new ArrayList<>();
   final Map<String, FFmpegProbeResult> inputProbes = new TreeMap<>();
 
   final List<String> extra_args = new ArrayList<>();
@@ -126,17 +126,28 @@ public class FFmpegBuilder {
     return this;
   }
 
-  public FFmpegBuilder addInput(FFmpegProbeResult result) {
+  public FFmpegFileInputBuilder addInput(FFmpegProbeResult result) {
     checkNotNull(result);
     String filename = checkNotNull(result.getFormat()).getFilename();
-    inputProbes.put(filename, result);
-    return addInput(filename);
+
+    return this.doAddInput(new FFmpegFileInputBuilder(this, filename, result));
   }
 
-  public FFmpegBuilder addInput(String filename) {
+  public FFmpegFileInputBuilder addInput(String filename) {
     checkNotNull(filename);
-    inputs.add(filename);
-    return this;
+
+    return this.doAddInput(new FFmpegFileInputBuilder(this, filename));
+  }
+
+  public <T extends AbstractFFmpegInputBuilder<T>> FFmpegBuilder addInput(T input) {
+    return this.doAddInput(input).done();
+  }
+
+  protected <T extends AbstractFFmpegInputBuilder<T>> T doAddInput(T input) {
+    checkNotNull(input);
+
+    inputs.add(input);
+    return input;
   }
 
   protected void clearInputs() {
@@ -144,14 +155,23 @@ public class FFmpegBuilder {
     inputProbes.clear();
   }
 
-  public FFmpegBuilder setInput(FFmpegProbeResult result) {
+  public FFmpegFileInputBuilder setInput(FFmpegProbeResult result) {
     clearInputs();
     return addInput(result);
   }
 
-  public FFmpegBuilder setInput(String filename) {
+  public FFmpegFileInputBuilder setInput(String filename) {
     clearInputs();
     return addInput(filename);
+  }
+
+  public <T extends AbstractFFmpegInputBuilder<T>> FFmpegBuilder setInput(T input) {
+    checkNotNull(input);
+
+    clearInputs();
+    inputs.add(input);
+
+    return this;
   }
 
   public FFmpegBuilder setThreads(int threads) {
@@ -348,8 +368,8 @@ public class FFmpegBuilder {
 
     args.addAll(extra_args);
 
-    for (String input : inputs) {
-      args.add("-i", input);
+    for (AbstractFFmpegInputBuilder<?> input : this.inputs) {
+      args.addAll(input.build(this, pass));
     }
 
     if (pass > 0) {

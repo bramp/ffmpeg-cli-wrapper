@@ -24,6 +24,7 @@ public class FFmpegHlsOutputBuilderTest {
         List<String> args =
                 new FFmpegBuilder()
                         .setInput("input")
+                        .done()
                         .addHlsOutput("output.m3u8")
                         .setHlsTime(5, TimeUnit.MILLISECONDS)
                         .setHlsBaseUrl("test1234/")
@@ -43,6 +44,7 @@ public class FFmpegHlsOutputBuilderTest {
         List<String> args =
                 new FFmpegBuilder()
                         .setInput("input")
+                        .done()
                         .addHlsOutput("output.m3u8")
                         .setHlsTime(5, TimeUnit.MILLISECONDS)
                         .setHlsBaseUrl("test1234/")
@@ -67,6 +69,7 @@ public class FFmpegHlsOutputBuilderTest {
 
         List<String> command = new FFmpegBuilder()
                 .setInput(Samples.TEST_PREFIX + Samples.base_big_buck_bunny_720p_1mb)
+                .done()
                 .addHlsOutput("tmp/output.m3u8")
                 .setHlsTime(5, TimeUnit.SECONDS)
                 .setHlsBaseUrl("test1234/")

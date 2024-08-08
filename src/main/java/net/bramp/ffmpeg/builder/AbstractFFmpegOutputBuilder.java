@@ -272,8 +272,8 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
       checkArgument(
           constantRateFactor == null, "Target size can not be used with constantRateFactor");
 
-      String firstInput = parent.inputs.iterator().next();
-      FFmpegProbeResult input = parent.inputProbes.get(firstInput);
+      AbstractFFmpegInputBuilder<?> firstInput = parent.inputs.iterator().next();
+      FFmpegProbeResult input = firstInput.getProbeResult();
 
       checkState(input != null, "Target size must be used with setInput(FFmpegProbeResult)");
 

@@ -4,7 +4,6 @@ import static com.nitorcreations.Matchers.reflectEquals;
 import static net.bramp.ffmpeg.FFmpeg.AUDIO_FORMAT_S16;
 import static net.bramp.ffmpeg.FFmpeg.AUDIO_SAMPLE_48000;
 import static net.bramp.ffmpeg.FFmpeg.FPS_30;
-import static net.bramp.ffmpeg.builder.FFmpegBuilder.Verbosity;
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.*;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.tag;
 import static net.bramp.ffmpeg.builder.StreamSpecifier.usable;
@@ -40,6 +39,7 @@ public class FFmpegBuilderTest {
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36")
             .setInput("input")
             .setStartOffset(1500, TimeUnit.MILLISECONDS)
+            .done()
             .overrideOutputFiles(true)
             .addOutput("output")
             .setFormat("mp4")
@@ -102,6 +102,7 @@ public class FFmpegBuilderTest {
     List<String> args =
         new FFmpegBuilder()
             .setInput("input")
+            .done()
             .addOutput("output")
             .disableAudio()
             .disableSubtitle()
@@ -119,6 +120,7 @@ public class FFmpegBuilderTest {
     List<String> args =
         new FFmpegBuilder()
             .setInput("input")
+            .done()
             .addOutput("output")
             .disableAudio()
             .disableSubtitle()
@@ -147,6 +149,7 @@ public class FFmpegBuilderTest {
     List<String> args =
         new FFmpegBuilder()
             .setInput("input")
+            .done()
             .addOutput("output")
             .setVideoResolution(320, 240)
             .setVideoFilter("scale='trunc(ow/a/2)*2:320'")
@@ -180,6 +183,7 @@ public class FFmpegBuilderTest {
     EncodingOptions options =
         new FFmpegBuilder()
             .setInput("input")
+            .done()
             .addOutput("output")
             .useOptions(main)
             .useOptions(audio)
@@ -203,6 +207,7 @@ public class FFmpegBuilderTest {
     EncodingOptions options =
             new FFmpegBuilder()
                     .setInput("input")
+                    .done()
                     .addOutput("output")
                     .useOptions(main)
                     .useOptions(audio)
@@ -220,6 +225,7 @@ public class FFmpegBuilderTest {
     List<String> args =
         new FFmpegBuilder()
             .setInput("input")
+            .done()
             .addOutput("output1")
             .setVideoResolution(320, 240)
             .done()
@@ -243,6 +249,7 @@ public class FFmpegBuilderTest {
     List<String> unused =
         new FFmpegBuilder()
             .setInput("input")
+            .done()
             .addOutput("output")
             .setVideoResolution(320, 240)
             .setVideoResolution("ntsc")
@@ -255,6 +262,7 @@ public class FFmpegBuilderTest {
     List<String> args =
         new FFmpegBuilder()
             .setInput("input")
+            .done()
             .addOutput(URI.create("udp://10.1.0.102:1234"))
             .setVideoResolution(320, 240)
             .done()
@@ -271,6 +279,7 @@ public class FFmpegBuilderTest {
     List<String> unused =
         new FFmpegBuilder()
             .setInput("input")
+            .done()
             .addOutput(URI.create("udp://10.1.0.102:1234"))
             .setFilename("filename")
             .done()
@@ -279,13 +288,13 @@ public class FFmpegBuilderTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testAddEmptyFilename() {
-    List<String> unused = new FFmpegBuilder().setInput("input").addOutput("").done().build();
+    List<String> unused = new FFmpegBuilder().setInput("input").done().addOutput("").done().build();
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testSetEmptyFilename() {
     List<String> unused =
-        new FFmpegBuilder().setInput("input").addOutput("output").setFilename("").done().build();
+        new FFmpegBuilder().setInput("input").done().addOutput("output").setFilename("").done().build();
   }
 
   @Test
@@ -294,6 +303,7 @@ public class FFmpegBuilderTest {
     List<String> args =
         new FFmpegBuilder()
             .setInput("input")
+            .done()
             .addOutput("output")
             .addMetaTag("comment", "My Comment")
             .addMetaTag("title", "\"Video\"")
@@ -324,6 +334,7 @@ public class FFmpegBuilderTest {
     List<String> args =
         new FFmpegBuilder()
             .setInput("input")
+            .done()
             .addOutput("output")
             .addMetaTag("title", "Movie Title")
             .addMetaTag(chapter(0), "author", "Bob")
@@ -378,6 +389,7 @@ public class FFmpegBuilderTest {
         new FFmpegBuilder()
             .addExtraArgs("-a", "b")
             .setInput("input")
+            .done()
             .addOutput("output")
             .addExtraArgs("-c", "d")
             .disableAudio()
@@ -396,6 +408,7 @@ public class FFmpegBuilderTest {
     List<String> args =
         new FFmpegBuilder()
             .setInput("input")
+            .done()
             .setVBR(2)
             .addOutput("output")
             .done()
@@ -412,6 +425,7 @@ public class FFmpegBuilderTest {
     List<String> args =
         new FFmpegBuilder()
             .setInput("input")
+            .done()
             .setVBR(-3)
             .addOutput("output")
             .done()
@@ -423,6 +437,7 @@ public class FFmpegBuilderTest {
     List<String> args =
         new FFmpegBuilder()
             .setInput("input")
+            .done()
             .setVBR(10)
             .addOutput("output")
             .done()
@@ -439,7 +454,9 @@ public class FFmpegBuilderTest {
     List<String> args =
         new FFmpegBuilder()
             .addInput("input1")
+            .done()
             .addInput("input2")
+            .done()
             .addOutput("output")
             .done()
             .build();
@@ -453,6 +470,7 @@ public class FFmpegBuilderTest {
     List<String> args =
         new FFmpegBuilder()
             .addInput("input")
+            .done()
             .addOutput(new FFmpegOutputBuilder().setFilename("output.mp4").setVideoCodec("libx264"))
             .addOutput(new FFmpegOutputBuilder().setFilename("output.flv").setVideoCodec("flv"))
             .build();
@@ -478,6 +496,7 @@ public class FFmpegBuilderTest {
     List<String> args =
         new FFmpegBuilder()
             .addInput("input")
+            .done()
             .addOutput("output")
             .setPreset("a")
             .setPresetFilename("b")
@@ -500,6 +519,7 @@ public class FFmpegBuilderTest {
           new FFmpegBuilder()
               .setThreads(2)
               .addInput("input")
+              .done()
               .addOutput("output")
               .done()
               .build();
