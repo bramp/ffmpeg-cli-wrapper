@@ -19,8 +19,18 @@ public class FFmpegHlsOutputBuilder extends AbstractFFmpegOutputBuilder<FFmpegHl
 
     protected FFmpegHlsOutputBuilder(FFmpegBuilder parent, String filename) {
         super(parent, filename);
+        setFormat("hls");
     }
 
+    @Override
+    public FFmpegHlsOutputBuilder setFormat(String format) {
+        if (format == null || !format.equals("hls")) {
+            throw new IllegalArgumentException("Format cannot be set to anything else except 'hls' for FFmpegHlsOutputBuilder");
+        }
+        super.setFormat(format);
+
+        return this;
+    }
 
     /**
      * Set the target segment length. Default value is 2 seconds.
