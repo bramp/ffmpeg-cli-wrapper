@@ -19,7 +19,7 @@ public class FFmpegHlsOutputBuilder extends AbstractFFmpegOutputBuilder<FFmpegHl
 
     protected FFmpegHlsOutputBuilder(FFmpegBuilder parent, String filename) {
         super(parent, filename);
-        super.setFormat("hls");
+        this.format = "hls";
     }
 
     @Override
