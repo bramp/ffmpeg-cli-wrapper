@@ -26,7 +26,7 @@ import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 public class FFmpegBuilder {
 
   public enum Strict {
-    VERY, // strictly conform to a older more strict version of the specifications or reference
+    VERY, // strictly conform to an older more strict version of the specifications or reference
     // software
     STRICT, // strictly conform to all the things in the specificiations no matter what consequences
     NORMAL, // normal
@@ -269,7 +269,7 @@ public class FFmpegBuilder {
    * <pre>
    * <code>List&lt;String&gt; args = new FFmpegBuilder()
    *   .addHlsOutput(&quot;output.m3u8&quot;)
-   *   .build();</code>
+   *   .done().build();</code>
    * </pre>
    *
    * @param filename output file path
@@ -277,8 +277,6 @@ public class FFmpegBuilder {
    * @return A new {@link FFmpegHlsOutputBuilder}
    */
   public FFmpegHlsOutputBuilder addHlsOutput(String filename) {
-    checkArgument(format == null || format.equals("hls"),"The format is already set to a value other than hls.");
-    if(format == null) setFormat("hls");
     FFmpegHlsOutputBuilder output = new FFmpegHlsOutputBuilder(this, filename);
     outputs.add(output);
     return output;
@@ -316,7 +314,7 @@ public class FFmpegBuilder {
 
   @CheckReturnValue
   public List<String> build() {
-    ImmutableList.Builder<String> args = new ImmutableList.Builder<String>();
+    ImmutableList.Builder<String> args = new ImmutableList.Builder<>();
 
     Preconditions.checkArgument(!inputs.isEmpty(), "At least one input must be specified");
     Preconditions.checkArgument(!outputs.isEmpty(), "At least one output must be specified");
