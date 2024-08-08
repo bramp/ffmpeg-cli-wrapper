@@ -423,11 +423,11 @@ public class FFprobeTest {
 
     verify(runFunc, times(2)).run(argsCaptor.capture());
 
-    List<String> value = argsCaptor.getValue();
+    List<String> value = argsCaptor.getValue().subList(1, argsCaptor.getValue().size());
 
     assertThat(
       value,
-      is(ImmutableList.of("ffprobe", "-v", "quiet", "-print_format", "json", "-show_error", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
+      is(ImmutableList.of("-v", "quiet", "-print_format", "json", "-show_error", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
     );
   }
 
@@ -437,11 +437,11 @@ public class FFprobeTest {
 
     verify(runFunc, times(2)).run(argsCaptor.capture());
 
-    List<String> value = argsCaptor.getValue();
+    List<String> value = argsCaptor.getValue().subList(1, argsCaptor.getValue().size());
 
     assertThat(
             value,
-            is(ImmutableList.of("ffprobe", "-v", "quiet", "-print_format", "json", "-show_error", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
+            is(ImmutableList.of("-v", "quiet", "-print_format", "json", "-show_error", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
     );
   }
 
@@ -451,11 +451,11 @@ public class FFprobeTest {
 
     verify(runFunc, times(2)).run(argsCaptor.capture());
 
-    List<String> value = argsCaptor.getValue();
+    List<String> value = argsCaptor.getValue().subList(1, argsCaptor.getValue().size());
 
     assertThat(
             value,
-            is(ImmutableList.of("ffprobe", "-v", "quiet", "-print_format", "json", "-show_error", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
+            is(ImmutableList.of("-v", "quiet", "-print_format", "json", "-show_error", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
     );
   }
 
@@ -465,11 +465,11 @@ public class FFprobeTest {
 
     verify(runFunc, times(2)).run(argsCaptor.capture());
 
-    List<String> value = argsCaptor.getValue();
+    List<String> value = argsCaptor.getValue().subList(1, argsCaptor.getValue().size());
 
     assertThat(
             value,
-            is(ImmutableList.of("ffprobe", "-v", "quiet", "-print_format", "json", "-show_error", "-rw_timeout", "0", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
+            is(ImmutableList.of("-v", "quiet", "-print_format", "json", "-show_error", "-rw_timeout", "0", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
     );
   }
 
@@ -479,11 +479,11 @@ public class FFprobeTest {
 
     verify(runFunc, times(2)).run(argsCaptor.capture());
 
-    List<String> value = argsCaptor.getValue();
+    List<String> value = argsCaptor.getValue().subList(1, argsCaptor.getValue().size());
 
     assertThat(
             value,
-            is(ImmutableList.of("ffprobe", "-v", "quiet", "-print_format", "json", "-show_error", "-user_agent", "ffmpeg-cli-wrapper", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
+            is(ImmutableList.of("-v", "quiet", "-print_format", "json", "-show_error", "-user_agent", "ffmpeg-cli-wrapper", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
     );
   }
 }
