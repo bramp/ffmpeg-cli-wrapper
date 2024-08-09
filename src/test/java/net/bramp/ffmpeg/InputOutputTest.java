@@ -238,4 +238,20 @@ public class InputOutputTest {
 
         assertThat(command, is(ImmutableList.of("-y", "-v", "error", "-i", "input.mp4", "-sn", "output.mp4")));
     }
+
+    @Test
+    public void setExtraArgsToOnMultipleInputs() {
+        List<String> command = new FFmpegBuilder()
+                .addInput("input.mp4")
+                .addExtraArgs("-t", "10")
+                .done()
+                .addInput("input.mkv")
+                .addExtraArgs("-t", "20")
+                .done()
+                .addOutput("output.mp4")
+                .done()
+                .build();
+
+        assertThat(command, is(ImmutableList.of("-y", "-v", "error", "-t", "10", "-i", "input.mp4", "-t", "20", "-i", "input.mkv", "output.mp4")));
+    }
 }

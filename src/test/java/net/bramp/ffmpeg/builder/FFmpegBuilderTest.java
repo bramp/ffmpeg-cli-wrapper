@@ -538,4 +538,39 @@ public class FFmpegBuilderTest {
   public void testNegativeNumberOfThreads() {
     new FFmpegBuilder().setThreads(-1);
   }
+
+  @Test
+  public void testQuestion156(){
+    List<String> args =
+            new FFmpegBuilder()
+                    .overrideOutputFiles(true)
+                    .setVerbosity(FFmpegBuilder.Verbosity.INFO)
+                    // X11 screen input
+                    .addInput(":0.0+0,0")
+                    .setFormat("x11grab")
+                    .setVideoResolution("1280x720")
+                    .setVideoFrameRate(30)
+                    .addExtraArgs("-draw_mouse", "0")
+                    .addExtraArgs("-thread_queue_size", "4096")
+                    .done()
+                    // alsa audio input
+                    .addInput("hw:0,1,0")
+                    .setFormat("alsa")
+                    .addExtraArgs("-thread_queue_size", "4096")
+                    .done()
+                    // Youtube output
+                    .addOutput("rtmp://a.rtmp.youtube.com/live2/XXX")
+                    .setAudioCodec("aac")
+                    .setFormat("flv")
+                    .done()
+                    .build();
+
+    assertEquals(
+            ImmutableList.of("-y", "-v", "info",
+                    "-f", "x11grab", "-s", "1280x720", "-r", "30/1", "-draw_mouse", "0", "-thread_queue_size", "4096", "-i", ":0.0+0,0",
+                    "-f", "alsa", "-thread_queue_size", "4096", "-i", "hw:0,1,0",
+                    "-f", "flv", "-acodec", "aac", "rtmp://a.rtmp.youtube.com/live2/XXX"),
+            args
+    );
+  }
 }
