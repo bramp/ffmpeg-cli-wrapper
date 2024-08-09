@@ -51,6 +51,7 @@
                 "clean_effects": 1,
                 "attached_pic": 1,
                 "timed_thumbnails": 1,
+                "non_diegetic": 1,
                 "captions": 1,
                 "descriptions": 1,
                 "metadata": 1,

@@ -547,7 +547,7 @@ public class FFprobeTest {
     assertEquals(31, stream.getLevel());
     assertEquals("left", stream.getChromaLocation());
     assertEquals(1, stream.getRefs());
-    assertEquals("1", stream.getIsAvc());
+    assertEquals("true", stream.getIsAvc());
     assertEquals("4", stream.getNalLengthSize());
     assertEquals(Fraction.getFraction(25, 1), stream.getRFrameRate());
     assertEquals(Fraction.getFraction(25, 1), stream.getAvgFrameRate());
@@ -565,7 +565,7 @@ public class FFprobeTest {
     assertEquals(0, stream.getSampleRate());
     assertEquals(0, stream.getChannels());
     assertNull(stream.getChannelLayout());
-    assertEquals(3, stream.getTags().size());
+    assertEquals(4, stream.getTags().size());
     assertEquals("und", stream.getTags().get("language"));
     assertEquals(0, stream.getSideDataList().size());
   }
@@ -610,7 +610,7 @@ public class FFprobeTest {
     assertEquals(48000, stream.getSampleRate());
     assertEquals(6, stream.getChannels());
     assertEquals("5.1", stream.getChannelLayout());
-    assertEquals(3, stream.getTags().size());
+    assertEquals(4, stream.getTags().size());
     assertEquals("und", stream.getTags().get("language"));
     assertEquals(0, stream.getSideDataList().size());
   }
