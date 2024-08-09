@@ -18,4 +18,48 @@ public class FFmpegPacket implements FFmpegFrameOrPacket {
   public String size;
   public String pos;
   public String flags;
+
+  public CodecType getCodecType() {
+    return codec_type;
+  }
+
+  public int getStreamIndex() {
+    return stream_index;
+  }
+
+  public long getPts() {
+    return pts;
+  }
+
+  public double getPtsTime() {
+    return pts_time;
+  }
+
+  public long getDts() {
+    return dts;
+  }
+
+  public double getDtsTime() {
+    return dts_time;
+  }
+
+  public long getDuration() {
+    return duration;
+  }
+
+  public float getDurationTime() {
+    return duration_time;
+  }
+
+  public String getSize() {
+    return size;
+  }
+
+  public String getPos() {
+    return pos;
+  }
+
+  public String getFlags() {
+    return flags;
+  }
 }

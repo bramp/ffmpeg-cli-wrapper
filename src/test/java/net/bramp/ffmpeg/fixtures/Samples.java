@@ -1,5 +1,7 @@
 package net.bramp.ffmpeg.fixtures;
 
+import net.bramp.ffmpeg.builder.FFprobeBuilder;
+
 public final class Samples {
   private Samples() {
     throw new AssertionError("No instances for you!");
@@ -20,6 +22,8 @@ public final class Samples {
   public static final String book_with_chapters = TEST_PREFIX + book_m4b;
   private static final String base_side_data_list = "side_data_list";
   public static final String side_data_list = TEST_PREFIX + base_side_data_list;
+  private static final String base_disposition_all_true = "disposition_all_true";
+  public static final String disposition_all_true = TEST_PREFIX + base_disposition_all_true;
 
   // We don't have the following files
   public static final String FAKE_PREFIX = "fake/";
