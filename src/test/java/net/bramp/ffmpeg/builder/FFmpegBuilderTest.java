@@ -12,7 +12,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import com.google.common.collect.ImmutableList;
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -26,9 +25,6 @@ import org.junit.Test;
 
 @SuppressWarnings("unused")
 public class FFmpegBuilderTest {
-
-  public FFmpegBuilderTest() throws IOException {}
-
   @Test
   public void testNormal() {
 

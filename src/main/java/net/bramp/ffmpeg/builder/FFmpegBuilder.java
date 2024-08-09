@@ -44,7 +44,7 @@ public class FFmpegBuilder {
     }
   }
 
-  /** Log level options: https://ffmpeg.org/ffmpeg.html#Generic-options */
+  /** Log level options: <a href="https://ffmpeg.org/ffmpeg.html#Generic-options">ffmpeg documentation</a> */
   public enum Verbosity {
     QUIET,
     PANIC,

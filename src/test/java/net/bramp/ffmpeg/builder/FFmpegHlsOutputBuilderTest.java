@@ -3,6 +3,7 @@ package net.bramp.ffmpeg.builder;
 import com.google.common.collect.ImmutableList;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
@@ -79,9 +80,12 @@ public class FFmpegHlsOutputBuilderTest extends AbstractFFmpegOutputBuilderTest 
 
     @Test
     public void testConvertVideoToHls() throws IOException {
+        Path manifestFilePath = Paths.get("tmp/output.m3u8");
+        Path segmentFilePath = Paths.get("tmp/file000.ts");
+
         Files.createDirectories(Paths.get("tmp/"));
-        Files.deleteIfExists(Paths.get("tmp/output.m3u8"));
-        Files.deleteIfExists(Paths.get("tmp/file000.m3u8"));
+        Files.deleteIfExists(manifestFilePath);
+        Files.deleteIfExists(segmentFilePath);
 
         List<String> command = new FFmpegBuilder()
                 .setInput(Samples.TEST_PREFIX + Samples.base_big_buck_bunny_720p_1mb)
@@ -98,8 +102,8 @@ public class FFmpegHlsOutputBuilderTest extends AbstractFFmpegOutputBuilderTest 
 
         new FFmpeg().run(command);
 
-        assertTrue(Files.exists(Paths.get("tmp/output.m3u8")));
-        assertTrue(Files.exists(Paths.get("tmp/file000.ts")));
+        assertTrue(Files.exists(manifestFilePath));
+        assertTrue(Files.exists(segmentFilePath));
     }
 
     @Test

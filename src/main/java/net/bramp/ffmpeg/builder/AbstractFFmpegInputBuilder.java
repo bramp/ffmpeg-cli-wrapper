@@ -5,7 +5,6 @@ import net.bramp.ffmpeg.options.EncodingOptions;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 import javax.annotation.CheckReturnValue;
-import java.util.List;
 
 public abstract class AbstractFFmpegInputBuilder<T extends AbstractFFmpegInputBuilder<T>> extends AbstractFFmpegStreamBuilder<T> {
     private final FFmpegProbeResult probeResult;

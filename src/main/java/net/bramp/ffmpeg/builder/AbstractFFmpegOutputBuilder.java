@@ -19,7 +19,7 @@ import net.bramp.ffmpeg.options.VideoEncodingOptions;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 /** Builds a representation of a single output/encoding setting */
-@SuppressWarnings({"DeprecatedIsStillUsed", "deprecation","unchecked"})
+@SuppressWarnings({"DeprecatedIsStillUsed", "unchecked"})
 public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutputBuilder<T>> extends AbstractFFmpegStreamBuilder<T> {
 
   static final Pattern trailingZero = Pattern.compile("\\.0*$");
