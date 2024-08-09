@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import com.google.gson.*;
 
 public class BooleanTypeAdapter implements JsonDeserializer<Boolean> {
+    @Override
     public Boolean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         if (((JsonPrimitive) json).isBoolean()) {
             return json.getAsBoolean();
