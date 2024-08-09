@@ -146,4 +146,12 @@ public class FFmpegHlsOutputBuilderTest extends AbstractFFmpegOutputBuilderTest 
 
         assertThat(command, is(ImmutableList.of("-f", "hls", "-hls_base_url", "/base", "output.m3u8")));
     }
+
+    @Override
+    public void testSetFormat() {
+        List<String> command = getBuilder().setFormat("hls").build(0);
+
+        // removeCommon already asserts -f hls and removes that part. Therefore: Expecting no more elements
+        assertEquals(removeCommon(command).size(), 0);
+    }
 }

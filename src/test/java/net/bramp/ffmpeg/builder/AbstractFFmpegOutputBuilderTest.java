@@ -10,9 +10,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public abstract class AbstractFFmpegOutputBuilderTest extends AbstractFFmpegStreamBuilderTest {
 
+    @Override
     protected abstract AbstractFFmpegOutputBuilder<?> getBuilder();
-
-    protected abstract List<String> removeCommon(List<String> command);
 
     @Test
     public void testConstantRateFactor() {
