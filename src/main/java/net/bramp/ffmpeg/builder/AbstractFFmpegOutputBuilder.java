@@ -397,6 +397,24 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
     }
   }
 
+  @Override
+  protected void addSourceTarget(int pass, ImmutableList.Builder<String> args) {
+    if (filename != null && uri != null) {
+      throw new IllegalStateException("Only one of filename and uri can be set");
+    }
+
+    // Output
+    if (pass == 1) {
+      args.add(DEVNULL);
+    } else if (filename != null) {
+      args.add(filename);
+    } else if (uri != null) {
+      args.add(uri.toString());
+    } else {
+      assert false;
+    }
+  }
+
   @CheckReturnValue
   @Override
   protected T getThis() {

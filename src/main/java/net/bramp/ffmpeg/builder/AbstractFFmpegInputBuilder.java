@@ -49,19 +49,6 @@ public abstract class AbstractFFmpegInputBuilder<T extends AbstractFFmpegInputBu
     }
 
     @Override
-    protected List<String> build(FFmpegBuilder parent, int pass) {
-        ImmutableList.Builder<String> args = new ImmutableList.Builder<>();
-
-        addGlobalFlags(parent, args);
-
-        // TODO: Handle input options
-
-        args.addAll(buildInputString());
-
-        return args.build();
-    }
-
-    @Override
     protected void addGlobalFlags(FFmpegBuilder parent, ImmutableList.Builder<String> args) {
         if (this.readAtNativeFrameRate) {
             args.add("-re");
@@ -69,6 +56,4 @@ public abstract class AbstractFFmpegInputBuilder<T extends AbstractFFmpegInputBu
 
         super.addGlobalFlags(parent, args);
     }
-
-    protected abstract List<String> buildInputString();
 }

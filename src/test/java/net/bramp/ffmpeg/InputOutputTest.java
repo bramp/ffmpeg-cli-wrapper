@@ -130,4 +130,112 @@ public class InputOutputTest {
 
         assertThat(command, is(ImmutableList.of("-y", "-v", "error", "-re", "-i", "input.mp4", "-re", "-i", "input.mkv", "output.mp4")));
     }
+
+    @Test
+    public void outputCodec() {
+        List<String> command = new FFmpegBuilder()
+                .addInput("input.mp4")
+                .done()
+                .addOutput("output.mp4")
+                .setVideoCodec("libx264")
+                .setAudioCodec("aac")
+                .setSubtitleCodec("vtt")
+                .done()
+                .build();
+
+        assertThat(command, is(ImmutableList.of("-y", "-v", "error", "-i", "input.mp4", "-vcodec", "libx264", "-acodec", "aac", "-scodec", "vtt", "output.mp4")));
+    }
+
+    @Test
+    public void inputCodec() {
+        List<String> command = new FFmpegBuilder()
+                .addInput("input.mp4")
+                .setVideoCodec("libx264")
+                .setAudioCodec("aac")
+                .setSubtitleCodec("vtt")
+                .done()
+                .addOutput("output.mp4")
+                .done()
+                .build();
+
+        assertThat(command, is(ImmutableList.of("-y", "-v", "error", "-vcodec", "libx264", "-acodec", "aac", "-scodec", "vtt", "-i", "input.mp4", "output.mp4")));
+    }
+
+    @Test
+    public void inputVideoDisabled() {
+        List<String> command = new FFmpegBuilder()
+                .addInput("input.mp4")
+                .disableVideo()
+                .done()
+                .addOutput("output.mp4")
+                .done()
+                .build();
+
+        assertThat(command, is(ImmutableList.of("-y", "-v", "error", "-vn", "-i", "input.mp4", "output.mp4")));
+    }
+
+    @Test
+    public void outputVideoDisabled() {
+        List<String> command = new FFmpegBuilder()
+                .addInput("input.mp4")
+                .done()
+                .addOutput("output.mp4")
+                .disableVideo()
+                .done()
+                .build();
+
+        assertThat(command, is(ImmutableList.of("-y", "-v", "error", "-i", "input.mp4", "-vn", "output.mp4")));
+    }
+
+    @Test
+    public void inputAudioDisabled() {
+        List<String> command = new FFmpegBuilder()
+                .addInput("input.mp4")
+                .disableAudio()
+                .done()
+                .addOutput("output.mp4")
+                .done()
+                .build();
+
+        assertThat(command, is(ImmutableList.of("-y", "-v", "error", "-an", "-i", "input.mp4", "output.mp4")));
+    }
+
+    @Test
+    public void outputAudioDisabled() {
+        List<String> command = new FFmpegBuilder()
+                .addInput("input.mp4")
+                .done()
+                .addOutput("output.mp4")
+                .disableAudio()
+                .done()
+                .build();
+
+        assertThat(command, is(ImmutableList.of("-y", "-v", "error", "-i", "input.mp4", "-an", "output.mp4")));
+    }
+
+    @Test
+    public void inputSubtitleDisabled() {
+        List<String> command = new FFmpegBuilder()
+                .addInput("input.mp4")
+                .disableSubtitle()
+                .done()
+                .addOutput("output.mp4")
+                .done()
+                .build();
+
+        assertThat(command, is(ImmutableList.of("-y", "-v", "error", "-sn", "-i", "input.mp4", "output.mp4")));
+    }
+
+    @Test
+    public void outputSubtitleDisabled() {
+        List<String> command = new FFmpegBuilder()
+                .addInput("input.mp4")
+                .done()
+                .addOutput("output.mp4")
+                .disableSubtitle()
+                .done()
+                .build();
+
+        assertThat(command, is(ImmutableList.of("-y", "-v", "error", "-i", "input.mp4", "-sn", "output.mp4")));
+    }
 }

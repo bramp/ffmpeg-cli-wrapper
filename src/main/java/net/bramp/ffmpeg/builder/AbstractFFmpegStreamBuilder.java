@@ -584,23 +584,12 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
 
     args.addAll(extra_args);
 
-    if (filename != null && uri != null) {
-      throw new IllegalStateException("Only one of filename and uri can be set");
-    }
-
-    // Output
-    if (pass == 1) {
-      args.add(DEVNULL);
-    } else if (filename != null) {
-      args.add(filename);
-    } else if (uri != null) {
-      args.add(uri.toString());
-    } else {
-      assert false;
-    }
+    addSourceTarget(pass, args);
 
     return args.build();
   }
+
+  protected abstract void addSourceTarget(int pass, ImmutableList.Builder<String> args);
 
   protected void addGlobalFlags(FFmpegBuilder parent, ImmutableList.Builder<String> args) {
     if (strict != FFmpegBuilder.Strict.NORMAL) {

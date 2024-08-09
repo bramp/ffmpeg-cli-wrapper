@@ -1,11 +1,7 @@
 package net.bramp.ffmpeg.builder;
 
-import net.bramp.ffmpeg.options.EncodingOptions;
+import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class FFmpegFileInputBuilder extends AbstractFFmpegInputBuilder<FFmpegFileInputBuilder> {
     private final String filename;
@@ -26,7 +22,18 @@ public class FFmpegFileInputBuilder extends AbstractFFmpegInputBuilder<FFmpegFil
     }
 
     @Override
-    protected List<String> buildInputString() {
-        return Arrays.asList("-i", filename);
+    protected void addSourceTarget(int pass, ImmutableList.Builder<String> args) {
+        if (filename != null && uri != null) {
+            throw new IllegalStateException("Only one of filename and uri can be set");
+        }
+
+        // Input
+        if (filename != null) {
+            args.add("-i", filename);
+        } else if (uri != null) {
+            args.add("-i", uri.toString());
+        } else {
+            assert false;
+        }
     }
 }
