@@ -254,4 +254,34 @@ public class InputOutputTest {
 
         assertThat(command, is(ImmutableList.of("-y", "-v", "error", "-t", "10", "-i", "input.mp4", "-t", "20", "-i", "input.mkv", "output.mp4")));
     }
+
+    @Test
+    public void testAddExtraArgsOnInputsAndOutputs() {
+        List<String> command = new FFmpegBuilder()
+                .addExtraArgs("-global", "args")
+                .setVerbosity(FFmpegBuilder.Verbosity.INFO)
+                .addInput("input.mp4")
+                .addExtraArgs("-input_args", "1")
+                .done()
+                .addInput("input.mkv")
+                .addExtraArgs("-input_args", "2")
+                .done()
+                .addOutput("output.mp4")
+                .addExtraArgs("-output_args", "1")
+                .done()
+                .addOutput("output.mkv")
+                .addExtraArgs("-output_args", "2")
+                .done()
+                .build();
+
+        assertThat(
+            command,
+            is(ImmutableList.of(
+                "-y", "-v", "info", "-global", "args",
+                "-input_args", "1", "-i", "input.mp4",
+                "-input_args", "2", "-i", "input.mkv",
+                "-output_args", "1", "output.mp4",
+                "-output_args", "2", "output.mkv")
+        ));
+    }
 }

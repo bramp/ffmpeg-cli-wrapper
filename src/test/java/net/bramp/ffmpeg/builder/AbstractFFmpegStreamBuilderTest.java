@@ -218,4 +218,13 @@ public abstract class AbstractFFmpegStreamBuilderTest {
 
         assertEquals("strict", command.get(command.indexOf("-strict") + 1));
     }
+
+    @Test
+    public void testAddExtraArgs() {
+        List<String> command = getBuilder()
+                .addExtraArgs("-some", "args")
+                .build(0);
+
+        assertThat(removeCommon(command), is(ImmutableList.of("-some", "args")));
+    }
 }
