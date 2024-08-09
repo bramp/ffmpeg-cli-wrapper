@@ -549,6 +549,7 @@ public class FFprobeTest {
     assertEquals(1, stream.getRefs());
     assertEquals("true", stream.getIsAvc());
     assertEquals("4", stream.getNalLengthSize());
+    assertEquals("0x1", stream.getId());
     assertEquals(Fraction.getFraction(25, 1), stream.getRFrameRate());
     assertEquals(Fraction.getFraction(25, 1), stream.getAvgFrameRate());
     assertEquals(Fraction.getFraction(1, 12800), stream.getTimeBase());
@@ -594,6 +595,7 @@ public class FFprobeTest {
     assertEquals(0, stream.getRefs());
     assertNull(stream.getIsAvc());
     assertNull(stream.getNalLengthSize());
+    assertEquals("0x2", stream.getId());
     assertEquals(Fraction.getFraction(0, 1), stream.getRFrameRate());
     assertEquals(Fraction.getFraction(0, 1), stream.getAvgFrameRate());
     assertEquals(Fraction.getFraction(1, 48_000), stream.getTimeBase());

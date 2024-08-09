@@ -39,6 +39,7 @@ public class FFmpegStream {
   public int refs;
   public String is_avc;
   public String nal_length_size;
+  public String id;
   public Fraction r_frame_rate;
   public Fraction avg_frame_rate;
   public Fraction time_base;
@@ -143,6 +144,10 @@ public class FFmpegStream {
 
   public String getNalLengthSize() {
     return nal_length_size;
+  }
+
+  public String getId() {
+    return id;
   }
 
   public Fraction getRFrameRate() {
