@@ -4,20 +4,12 @@ import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 public class FFmpegFileInputBuilder extends AbstractFFmpegInputBuilder<FFmpegFileInputBuilder> {
-    private final String filename;
-
-    public FFmpegFileInputBuilder(String filename) {
-        this.filename = filename;
-    }
-
     public FFmpegFileInputBuilder(FFmpegBuilder parent, String filename) {
-        super(parent);
-        this.filename = filename;
+        super(parent, filename);
     }
 
     public FFmpegFileInputBuilder(FFmpegBuilder parent, String filename, FFmpegProbeResult result) {
-        super(parent, result);
-        this.filename = filename;
+        super(parent, result, filename);
 
     }
 

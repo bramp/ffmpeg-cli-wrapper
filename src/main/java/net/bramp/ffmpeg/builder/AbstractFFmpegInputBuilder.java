@@ -12,18 +12,12 @@ public abstract class AbstractFFmpegInputBuilder<T extends AbstractFFmpegInputBu
 
     private boolean readAtNativeFrameRate;
 
-    public AbstractFFmpegInputBuilder() {
-        this(null, null);
+    protected AbstractFFmpegInputBuilder(FFmpegBuilder parent, String filename) {
+        this(parent, null, filename);
     }
 
-    public AbstractFFmpegInputBuilder(FFmpegBuilder parent) {
-        this(parent, null);
-    }
-
-    public AbstractFFmpegInputBuilder(FFmpegBuilder parent, FFmpegProbeResult probeResult) {
-        // TODO
-
-        super(parent, "ignored");
+    protected AbstractFFmpegInputBuilder(FFmpegBuilder parent, FFmpegProbeResult probeResult, String filename) {
+        super(parent, filename);
         this.probeResult = probeResult;
     }
 
