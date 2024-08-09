@@ -10,6 +10,8 @@ import java.util.List;
 public abstract class AbstractFFmpegInputBuilder<T extends AbstractFFmpegInputBuilder<T>> extends AbstractFFmpegStreamBuilder<T> {
     private final FFmpegProbeResult probeResult;
 
+    private boolean readAtNativeFrameRate;
+
     public AbstractFFmpegInputBuilder() {
         this(null, null);
     }
@@ -23,6 +25,11 @@ public abstract class AbstractFFmpegInputBuilder<T extends AbstractFFmpegInputBu
 
         super(parent, "ignored");
         this.probeResult = probeResult;
+    }
+
+    public T readAtNativeFrameRate() {
+        this.readAtNativeFrameRate = true;
+        return getThis();
     }
 
     public FFmpegProbeResult getProbeResult() {
@@ -52,6 +59,15 @@ public abstract class AbstractFFmpegInputBuilder<T extends AbstractFFmpegInputBu
         args.addAll(buildInputString());
 
         return args.build();
+    }
+
+    @Override
+    protected void addGlobalFlags(FFmpegBuilder parent, ImmutableList.Builder<String> args) {
+        if (this.readAtNativeFrameRate) {
+            args.add("-re");
+        }
+
+        super.addGlobalFlags(parent, args);
     }
 
     protected abstract List<String> buildInputString();

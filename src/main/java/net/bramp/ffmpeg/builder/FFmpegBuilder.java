@@ -125,6 +125,12 @@ public class FFmpegBuilder {
     return this;
   }
 
+  /**
+   * Makes ffmpeg read the first input at the native frame read
+   * @return this
+   * @deprecated Use {@link AbstractFFmpegInputBuilder#readAtNativeFrameRate()} instead
+   */
+  @Deprecated
   public FFmpegBuilder readAtNativeFrameRate() {
     this.read_at_native_frame_rate = true;
     return this;
@@ -184,12 +190,26 @@ public class FFmpegBuilder {
     return this;
   }
 
+  /**
+   * Sets the format for the first input stream
+   * @param format
+   * @return this
+   * @deprecated Specify this option on an input stream using {@link AbstractFFmpegStreamBuilder#setFormat(String)}
+   */
   @Deprecated
   public FFmpegBuilder setFormat(String format) {
     this.format = checkNotNull(format);
     return this;
   }
 
+  /**
+   * Sets the start offset for the first input stream
+   * @param duration
+   * @param units
+   * @return this
+   * @deprecated Specify this option on an input or output stream using {@link AbstractFFmpegStreamBuilder#setStartOffset(long, TimeUnit)}
+   */
+  @Deprecated
   public FFmpegBuilder setStartOffset(long duration, TimeUnit units) {
     checkNotNull(units);
 
@@ -208,6 +228,7 @@ public class FFmpegBuilder {
    *
    * @param filter the complex filter string
    * @return this
+   * @deprecated Use {@link AbstractFFmpegOutputBuilder#setComplexFilter(String)} instead
    */
   @Deprecated
   public FFmpegBuilder setComplexFilter(String filter) {
@@ -353,6 +374,7 @@ public class FFmpegBuilder {
     }
 
     if (startOffset != null) {
+      log.warn("Using FFmpegBuilder#setStartOffset is deprecated. Specify it on the inputStream or outputStream instead");
       args.add("-ss", FFmpegUtils.toTimecode(startOffset, TimeUnit.MILLISECONDS));
     }
 
@@ -366,6 +388,7 @@ public class FFmpegBuilder {
     }
 
     if (read_at_native_frame_rate) {
+      log.warn("Using FFmpegBuilder#readAtNativeFrameRate is deprecated. Specify it on the inputStream instead");
       args.add("-re");
     }
 

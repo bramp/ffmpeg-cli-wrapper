@@ -220,8 +220,8 @@ public class FFmpegExecutorTest {
 
     FFmpegBuilder builder =
         new FFmpegBuilder()
-            .readAtNativeFrameRate() // Slows the test down
             .setInput(in)
+            .readAtNativeFrameRate() // Slows the test down
             .done()
             .overrideOutputFiles(true)
             .addOutput(Samples.output_mp4)

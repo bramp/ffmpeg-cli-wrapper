@@ -45,9 +45,9 @@ public class ExamplesTest {
         new FFmpegBuilder()
             .addExtraArgs("-rtbufsize", "1500M")
             .addExtraArgs("-re")
-            .setFormat("dshow")
             .setInput(
                 "video=\"Microsoft Camera Rear\":audio=\"Microphone Array (Realtek High Definition Audio(SST))\"")
+            .setFormat("dshow")
             .done()
             .addOutput("rtmp://a.rtmp.youtube.com/live2/1234-5678")
             .setFormat("flv")
@@ -69,7 +69,7 @@ public class ExamplesTest {
 
     String expected =
         "ffmpeg\\win64\\bin\\ffmpeg.exe -y -v error"
-            + " -f dshow -rtbufsize 1500M -re"
+            + " -rtbufsize 1500M -re -f dshow"
             + " -i video=\"Microsoft Camera Rear\":audio=\"Microphone Array (Realtek High Definition Audio(SST))\""
             + " -f flv"
             + " -vcodec libx264 -pix_fmt yuv420p -s 426x240 -r 30/1 -b:v 2000000"
