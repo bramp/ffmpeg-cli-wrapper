@@ -192,7 +192,7 @@ public class FFmpegBuilder {
 
   /**
    * Sets the format for the first input stream
-   * @param format
+   * @param format, the format of this input stream, not null
    * @return this
    * @deprecated Specify this option on an input stream using {@link AbstractFFmpegStreamBuilder#setFormat(String)}
    */
@@ -204,8 +204,8 @@ public class FFmpegBuilder {
 
   /**
    * Sets the start offset for the first input stream
-   * @param duration
-   * @param units
+   * @param duration the amount of the offset, measured in terms of the unit
+   * @param units the unit that the duration is measured in, not null
    * @return this
    * @deprecated Specify this option on an input or output stream using {@link AbstractFFmpegStreamBuilder#setStartOffset(long, TimeUnit)}
    */
