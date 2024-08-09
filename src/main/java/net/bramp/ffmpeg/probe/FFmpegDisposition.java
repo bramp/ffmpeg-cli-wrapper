@@ -45,6 +45,12 @@ public class FFmpegDisposition {
   public boolean attached_pic;
 
   @JsonAdapter(BooleanTypeAdapter.class)
+  public boolean timed_thumbnails;
+
+  @JsonAdapter(BooleanTypeAdapter.class)
+  public boolean non_diegetic;
+
+  @JsonAdapter(BooleanTypeAdapter.class)
   public boolean captions;
 
   @JsonAdapter(BooleanTypeAdapter.class)
@@ -52,6 +58,12 @@ public class FFmpegDisposition {
 
   @JsonAdapter(BooleanTypeAdapter.class)
   public boolean metadata;
+
+  @JsonAdapter(BooleanTypeAdapter.class)
+  public boolean dependent;
+
+  @JsonAdapter(BooleanTypeAdapter.class)
+  public boolean still_image;
 
   public boolean isDefault() {
     return _default;
@@ -97,6 +109,14 @@ public class FFmpegDisposition {
     return attached_pic;
   }
 
+  public boolean isTimedThumbnails() {
+    return timed_thumbnails;
+  }
+
+  public boolean isNonDiegetic() {
+    return non_diegetic;
+  }
+
   public boolean isCaptions() {
     return captions;
   }
@@ -107,5 +127,13 @@ public class FFmpegDisposition {
 
   public boolean isMetadata() {
     return metadata;
+  }
+
+  public boolean isDependent() {
+    return dependent;
+  }
+
+  public boolean isStillImage() {
+    return still_image;
   }
 }

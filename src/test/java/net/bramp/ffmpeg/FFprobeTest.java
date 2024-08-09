@@ -663,9 +663,13 @@ public class FFprobeTest {
     assertTrue(disposition.isVisualImpaired());
     assertTrue(disposition.isCleanEffects());
     assertTrue(disposition.isAttachedPic());
+    assertTrue(disposition.isTimedThumbnails());
+    assertTrue(disposition.isNonDiegetic());
     assertTrue(disposition.isCaptions());
     assertTrue(disposition.isDescriptions());
     assertTrue(disposition.isMetadata());
+    assertTrue(disposition.isDependent());
+    assertTrue(disposition.isStillImage());
   }
 
   @Test
