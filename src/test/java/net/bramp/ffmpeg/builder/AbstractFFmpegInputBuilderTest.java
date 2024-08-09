@@ -20,4 +20,22 @@ public abstract class AbstractFFmpegInputBuilderTest extends AbstractFFmpegStrea
 
         assertThat(removeCommon(command), is(ImmutableList.of("-re")));
     }
+
+    @Test
+    public void testSetStreamLoopInfinit() {
+        List<String> command = getBuilder()
+                .setStreamLoop(-1)
+                .build(0);
+
+        assertThat(removeCommon(command), is(ImmutableList.of("-stream_loop", "-1")));
+    }
+
+    @Test
+    public void testSetStreamLoopCounter() {
+        List<String> command = getBuilder()
+                .setStreamLoop(2)
+                .build(0);
+
+        assertThat(removeCommon(command), is(ImmutableList.of("-stream_loop", "2")));
+    }
 }

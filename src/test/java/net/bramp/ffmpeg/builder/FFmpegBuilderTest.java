@@ -529,6 +529,22 @@ public class FFmpegBuilderTest {
           ImmutableList.of("-y", "-v", "error", "-threads", "2", "-i", "input", "output"));
     }
 
+    @Test
+    public void testSetLoop() {
+    List<String> args =
+            new FFmpegBuilder()
+                    .addInput("input")
+                    .setStreamLoop(2)
+                    .done()
+                    .addOutput("output")
+                    .done()
+                    .build();
+
+      assertEquals(
+              args,
+              ImmutableList.of("-y", "-v", "error", "-stream_loop", "2", "-i", "input", "output"));
+    }
+
   @Test(expected = IllegalArgumentException.class)
   public void testZeroThreads() {
     new FFmpegBuilder().setThreads(0);
