@@ -43,4 +43,10 @@ public class Helper {
     checkNotNull(names);
     return sequenceInputStream(Iterables.transform(names, resourceLoader));
   }
+
+  public static <T> List<T> subList(List<T> input, int start) {
+      checkNotNull(input);
+
+      return input.subList(start, input.size());
+  }
 }
