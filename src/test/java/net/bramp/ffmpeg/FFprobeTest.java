@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
@@ -31,8 +32,8 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class FFprobeTest {
 
-  @Mock
-  ProcessFunction runFunc;
+  @Mock ProcessFunction runFunc;
+  @Mock Process mockProcess;
 
   @Captor
   ArgumentCaptor<List<String>> argsCaptor;
@@ -385,6 +386,16 @@ public class FFprobeTest {
     assertThat(info.getStreams().get(1).codec_time_base, is(Fraction.ZERO));
 
     // System.out.println(FFmpegUtils.getGson().toJson(info));
+  }
+
+  @Test
+  public void shouldThrowOnErrorWithFFmpegProbeResult() throws InterruptedException {
+    Mockito.when(mockProcess.waitFor()).thenReturn(-1);
+    final FFmpegError error = new FFmpegError();
+    final FFmpegProbeResult result = new FFmpegProbeResult();
+    result.error = error;
+    FFmpegException e = assertThrows(FFmpegException.class, () -> ffprobe.throwOnError(mockProcess, result));
+    assertEquals(error, e.getError());
   }
 
   @Test
