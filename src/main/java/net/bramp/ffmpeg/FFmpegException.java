@@ -7,7 +7,7 @@ import java.io.IOException;
 public class FFmpegException extends IOException {
 
     private static final long serialVersionUID = 3048288225568984942L;
-    private FFmpegError error;
+    private final FFmpegError error;
 
     public FFmpegException(String message, FFmpegError error) {
         super(message);

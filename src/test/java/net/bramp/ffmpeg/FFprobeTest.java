@@ -547,8 +547,9 @@ public class FFprobeTest {
     assertEquals(31, stream.getLevel());
     assertEquals("left", stream.getChromaLocation());
     assertEquals(1, stream.getRefs());
-    assertEquals("1", stream.getIsAvc());
+    assertEquals("true", stream.getIsAvc());
     assertEquals("4", stream.getNalLengthSize());
+    assertEquals("0x1", stream.getId());
     assertEquals(Fraction.getFraction(25, 1), stream.getRFrameRate());
     assertEquals(Fraction.getFraction(25, 1), stream.getAvgFrameRate());
     assertEquals(Fraction.getFraction(1, 12800), stream.getTimeBase());
@@ -565,7 +566,7 @@ public class FFprobeTest {
     assertEquals(0, stream.getSampleRate());
     assertEquals(0, stream.getChannels());
     assertNull(stream.getChannelLayout());
-    assertEquals(3, stream.getTags().size());
+    assertEquals(4, stream.getTags().size());
     assertEquals("und", stream.getTags().get("language"));
     assertEquals(0, stream.getSideDataList().size());
   }
@@ -594,6 +595,7 @@ public class FFprobeTest {
     assertEquals(0, stream.getRefs());
     assertNull(stream.getIsAvc());
     assertNull(stream.getNalLengthSize());
+    assertEquals("0x2", stream.getId());
     assertEquals(Fraction.getFraction(0, 1), stream.getRFrameRate());
     assertEquals(Fraction.getFraction(0, 1), stream.getAvgFrameRate());
     assertEquals(Fraction.getFraction(1, 48_000), stream.getTimeBase());
@@ -610,7 +612,7 @@ public class FFprobeTest {
     assertEquals(48000, stream.getSampleRate());
     assertEquals(6, stream.getChannels());
     assertEquals("5.1", stream.getChannelLayout());
-    assertEquals(3, stream.getTags().size());
+    assertEquals(4, stream.getTags().size());
     assertEquals("und", stream.getTags().get("language"));
     assertEquals(0, stream.getSideDataList().size());
   }
@@ -663,9 +665,13 @@ public class FFprobeTest {
     assertTrue(disposition.isVisualImpaired());
     assertTrue(disposition.isCleanEffects());
     assertTrue(disposition.isAttachedPic());
+    assertTrue(disposition.isTimedThumbnails());
+    assertTrue(disposition.isNonDiegetic());
     assertTrue(disposition.isCaptions());
     assertTrue(disposition.isDescriptions());
     assertTrue(disposition.isMetadata());
+    assertTrue(disposition.isDependent());
+    assertTrue(disposition.isStillImage());
   }
 
   @Test
