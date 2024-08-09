@@ -55,7 +55,7 @@ import org.apache.commons.lang3.math.Fraction;
  */
 public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStreamBuilder<T>> {
 
-  private static final String DEVNULL = SystemUtils.IS_OS_WINDOWS ? "NUL" : "/dev/null";
+  protected static final String DEVNULL = SystemUtils.IS_OS_WINDOWS ? "NUL" : "/dev/null";
 
   final FFmpegBuilder parent;
 
@@ -550,11 +550,6 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
    */
   protected List<String> build(FFmpegBuilder parent, int pass) {
     checkNotNull(parent);
-
-    if (pass > 0) {
-      // TODO Write a test for this:
-      checkArgument(format != null, "Format must be specified when using two-pass");
-    }
 
     ImmutableList.Builder<String> args = new ImmutableList.Builder<>();
 

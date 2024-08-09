@@ -255,6 +255,7 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
   @Override
   protected List<String> build(int pass) {
     Preconditions.checkState(parent != null, "Can not build without parent being set");
+
     return build(parent, pass);
   }
 
@@ -273,7 +274,10 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
       checkArgument(
           targetSize != 0 || video_bit_rate != 0,
           "Target size, or video bitrate must be specified when using two-pass");
+
+      checkArgument(format != null, "Format must be specified when using two-pass");
     }
+
     if (targetSize > 0) {
       checkState(parent.inputs.size() == 1, "Target size does not support multiple inputs");
 
