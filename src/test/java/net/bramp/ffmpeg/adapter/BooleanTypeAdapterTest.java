@@ -35,6 +35,18 @@ public class BooleanTypeAdapterTest {
     }
 
     @Test
+    public void testReadStringTrue() {
+        Set s  = gson.fromJson("{\"a\":\"true\"}", Set.class);
+        assertTrue(s.a);
+    }
+
+    @Test
+    public void testReadStringFalse() {
+        Set s  = gson.fromJson("{\"a\":\"false\"}", Set.class);
+        assertFalse(s.a);
+    }
+
+    @Test
     public void testRead1() {
         Set s  = gson.fromJson("{\"a\":1}", Set.class);
         assertTrue(s.a);
