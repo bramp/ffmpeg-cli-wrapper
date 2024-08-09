@@ -6,11 +6,11 @@ import com.google.gson.*;
 public class BooleanTypeAdapter implements JsonDeserializer<Boolean> {
     @Override
     public Boolean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        if (((JsonPrimitive) json).isBoolean()) {
+        if (json.isJsonPrimitive() && json.getAsJsonPrimitive().isBoolean()) {
             return json.getAsBoolean();
         }
 
-        if (((JsonPrimitive) json).isString()) {
+        if (json.isJsonPrimitive() && json.getAsJsonPrimitive().isString()) {
             String jsonValue = json.getAsString();
             if (jsonValue.equalsIgnoreCase("true")) {
                 return true;
