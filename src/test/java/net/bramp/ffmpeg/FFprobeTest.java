@@ -389,13 +389,44 @@ public class FFprobeTest {
   }
 
   @Test
-  public void shouldThrowOnErrorWithFFmpegProbeResult() throws InterruptedException {
-    Mockito.when(mockProcess.waitFor()).thenReturn(-1);
+  public void shouldThrowOnErrorWithFFmpegProbeResult() {
+    Mockito.doReturn(1).when(mockProcess).exitValue();
+
     final FFmpegError error = new FFmpegError();
     final FFmpegProbeResult result = new FFmpegProbeResult();
     result.error = error;
     FFmpegException e = assertThrows(FFmpegException.class, () -> ffprobe.throwOnError(mockProcess, result));
     assertEquals(error, e.getError());
+  }
+
+  @Test
+  public void shouldThrowOnErrorEvenIfProbeResultHasNoError() {
+    Mockito.doReturn(1).when(mockProcess).exitValue();
+
+    final FFmpegProbeResult result = new FFmpegProbeResult();
+    FFmpegException e = assertThrows(FFmpegException.class, () -> ffprobe.throwOnError(mockProcess, result));
+    assertNull(e.getError());
+  }
+
+  @Test
+  public void shouldThrowOnErrorEvenIfProbeResultIsNull() {
+    Mockito.doReturn(1).when(mockProcess).exitValue();
+
+    FFmpegException e = assertThrows(FFmpegException.class, () -> ffprobe.throwOnError(mockProcess, null));
+    assertNull(e.getError());
+  }
+
+  @Test
+  public void testShouldThrowErrorWithoutMock() throws IOException {
+    FFprobe probe = new FFprobe();
+    FFmpegException e = assertThrows(FFmpegException.class, () -> probe.probe("doesnotexist.mp4"));
+
+    assertNotNull(e);
+    assertNotNull(e.getError());
+
+    // Intentionally not comparing the values, as those might change for different ffmpeg versions
+    assertNotNull(e.getError().getString());
+    assertNotEquals(0, e.getError().getCode());
   }
 
   @Test
