@@ -72,7 +72,6 @@ abstract class FFcommon {
 
   protected void throwOnError(Process p) throws IOException {
     try {
-      // TODO In java 8 use waitFor(long timeout, TimeUnit unit)
       if (ProcessUtils.waitForWithTimeout(p, 1, TimeUnit.SECONDS) != 0) {
         // TODO Parse the error
         throw new IOException(path + " returned non-zero exit status. Check stdout.");
@@ -84,7 +83,6 @@ abstract class FFcommon {
 
   protected void throwOnError(Process p, FFmpegProbeResult result) throws IOException {
     try {
-      // TODO In java 8 use waitFor(long timeout, TimeUnit unit)
       if (ProcessUtils.waitForWithTimeout(p, 1, TimeUnit.SECONDS) != 0) {
         // TODO Parse the error
         final FFmpegError ffmpegError = null == result ? null : result.getError();
