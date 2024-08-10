@@ -9,37 +9,8 @@ import java.util.concurrent.TimeoutException;
  * @author bramp
  */
 public final class ProcessUtils {
-
   private ProcessUtils() {
     throw new AssertionError("No instances for you!");
-  }
-
-  private static class ProcessThread extends Thread {
-    final Process p;
-    boolean finished = false;
-    int exitValue = -1;
-
-    private ProcessThread(Process p) {
-      this.p = p;
-    }
-
-    @Override
-    public void run() {
-      try {
-        exitValue = p.waitFor();
-        finished = true;
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-      }
-    }
-
-    public boolean hasFinished() {
-      return finished;
-    }
-
-    public int exitValue() {
-      return exitValue;
-    }
   }
 
   /**
@@ -54,20 +25,17 @@ public final class ProcessUtils {
   public static int waitForWithTimeout(final Process p, long timeout, TimeUnit unit)
       throws TimeoutException {
 
-    ProcessThread t = new ProcessThread(p);
-    t.start();
     try {
-      unit.timedJoin(t, timeout);
+      p.waitFor(timeout, unit);
 
     } catch (InterruptedException e) {
-      t.interrupt();
       Thread.currentThread().interrupt();
     }
 
-    if (!t.hasFinished()) {
+    if (p.isAlive()) {
       throw new TimeoutException("Process did not finish within timeout");
     }
 
-    return t.exitValue();
+    return p.exitValue();
   }
 }
