@@ -2,18 +2,22 @@ package net.bramp.ffmpeg;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.google.common.collect.Lists;
+import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.fixtures.Codecs;
 import net.bramp.ffmpeg.fixtures.Filters;
 import net.bramp.ffmpeg.fixtures.Formats;
 import net.bramp.ffmpeg.fixtures.ChannelLayouts;
 import net.bramp.ffmpeg.fixtures.PixelFormats;
+import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.info.Filter;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
 import org.junit.Before;
@@ -59,6 +63,32 @@ public class FFmpegTest {
     assertEquals("ffmpeg version 0.10.9-7:0.10.9-1~raring1", ffmpeg.version());
 
     verify(runFunc, times(1)).run(argThatHasItem("-version"));
+  }
+
+  @Test
+  public void testStartOffsetOption() throws Exception {
+    FFmpeg ffmpeg = new FFmpeg();
+
+    FFmpegBuilder builder = ffmpeg.builder().addInput(Samples.big_buck_bunny_720p_1mb).setStartOffset(1, TimeUnit.SECONDS).done().addOutput(Samples.output_mp4).done();
+
+    try {
+      ffmpeg.run(builder);
+    } catch (Throwable t) {
+      fail(t.getClass().getSimpleName() + " was thrown");
+    }
+  }
+
+  @Test
+  public void testDurationOption() throws Exception {
+    FFmpeg ffmpeg = new FFmpeg();
+
+    FFmpegBuilder builder = ffmpeg.builder().addInput(Samples.big_buck_bunny_720p_1mb).setDuration(1, TimeUnit.SECONDS).done().addOutput(Samples.output_mp4).done();
+
+    try {
+      ffmpeg.run(builder);
+    } catch (Throwable t) {
+      fail(t.getClass().getSimpleName() + " was thrown");
+    }
   }
 
   @Test

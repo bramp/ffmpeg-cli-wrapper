@@ -107,6 +107,54 @@ public class FFmpegHlsOutputBuilderTest extends AbstractFFmpegOutputBuilderTest 
     }
 
     @Test
+    public void testConvertVideoToHlsSetHlsTime() throws IOException {
+        Path manifestFilePath = Paths.get("tmp/output.m3u8");
+        Path segmentFilePath = Paths.get("tmp/file000.ts");
+
+        Files.createDirectories(Paths.get("tmp/"));
+        Files.deleteIfExists(manifestFilePath);
+        Files.deleteIfExists(segmentFilePath);
+
+        List<String> command = new FFmpegBuilder()
+                .setInput(Samples.TEST_PREFIX + Samples.base_big_buck_bunny_720p_1mb)
+                .done()
+                .addHlsOutput("tmp/output.m3u8")
+                .setHlsTime(5, TimeUnit.SECONDS)
+                .setHlsSegmentFileName("tmp/file%03d.ts")
+                .done()
+                .build();
+
+        new FFmpeg().run(command);
+
+        assertTrue(Files.exists(manifestFilePath));
+        assertTrue(Files.exists(segmentFilePath));
+    }
+
+    @Test
+    public void testConvertVideoToHlsSetHlsInitTime() throws IOException {
+        Path manifestFilePath = Paths.get("tmp/output.m3u8");
+        Path segmentFilePath = Paths.get("tmp/file000.ts");
+
+        Files.createDirectories(Paths.get("tmp/"));
+        Files.deleteIfExists(manifestFilePath);
+        Files.deleteIfExists(segmentFilePath);
+
+        List<String> command = new FFmpegBuilder()
+                .setInput(Samples.TEST_PREFIX + Samples.base_big_buck_bunny_720p_1mb)
+                .done()
+                .addHlsOutput("tmp/output.m3u8")
+                .setHlsInitTime(5, TimeUnit.SECONDS)
+                .setHlsSegmentFileName("tmp/file%03d.ts")
+                .done()
+                .build();
+
+        new FFmpeg().run(command);
+
+        assertTrue(Files.exists(manifestFilePath));
+        assertTrue(Files.exists(segmentFilePath));
+    }
+
+    @Test
     public void testHlsTime() {
         List<String> command = new FFmpegHlsOutputBuilder(new FFmpegBuilder(), "output.m3u8")
                 .setHlsTime(5, TimeUnit.SECONDS)
