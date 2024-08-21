@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,7 @@ public class FFmpegStream {
   public int refs;
   public String is_avc;
   public String nal_length_size;
+  public String id;
   public Fraction r_frame_rate;
   public Fraction avg_frame_rate;
   public Fraction time_base;
@@ -144,6 +146,10 @@ public class FFmpegStream {
     return nal_length_size;
   }
 
+  public String getId() {
+    return id;
+  }
+
   public Fraction getRFrameRate() {
     return r_frame_rate;
   }
@@ -217,6 +223,10 @@ public class FFmpegStream {
   }
 
   public List<SideData> getSideDataList() {
+    if (side_data_list == null) {
+      return Collections.emptyList();
+    }
+
     return ImmutableList.copyOf(side_data_list);
   }
 

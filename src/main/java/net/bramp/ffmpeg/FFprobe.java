@@ -107,7 +107,7 @@ public class FFprobe extends FFcommon {
 
       FFmpegProbeResult result = gson.fromJson(reader, FFmpegProbeResult.class);
 
-      throwOnError(p);
+      throwOnError(p, result);
 
       if (result == null) {
         throw new IllegalStateException("Gson returned null, which shouldn't happen :(");
