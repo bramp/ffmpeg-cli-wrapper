@@ -585,4 +585,17 @@ public class FFmpegBuilderTest {
             args
     );
   }
+
+  @Test
+  public void testSetStrict() {
+    List<String> args = new FFmpegBuilder()
+            .addInput("input.mp4")
+            .done()
+            .addOutput("output.mp4")
+            .done()
+            .setStrict(Strict.EXPERIMENTAL)
+            .build();
+
+    assertEquals(ImmutableList.of("-strict", "experimental", "-y", "-v", "error", "-i", "input.mp4", "output.mp4"), args);
+  }
 }

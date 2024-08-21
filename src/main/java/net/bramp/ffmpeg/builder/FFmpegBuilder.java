@@ -29,21 +29,6 @@ public class FFmpegBuilder {
 
   private static final Logger log = LoggerFactory.getLogger(FFmpegBuilder.class);
 
-  public enum Strict {
-    VERY, // strictly conform to an older more strict version of the specifications or reference
-    // software
-    STRICT, // strictly conform to all the things in the specificiations no matter what consequences
-    NORMAL, // normal
-    UNOFFICIAL, // allow unofficial extensions
-    EXPERIMENTAL;
-
-    @Override
-    public String toString() {
-      // ffmpeg command line requires these options in lower case
-      return Ascii.toLowerCase(name());
-    }
-  }
-
   /** Log level options: <a href="https://ffmpeg.org/ffmpeg.html#Generic-options">ffmpeg documentation</a> */
   public enum Verbosity {
     QUIET,
@@ -85,10 +70,17 @@ public class FFmpegBuilder {
   // Output
   final List<AbstractFFmpegOutputBuilder<?>> outputs = new ArrayList<>();
 
+  protected Strict strict = Strict.NORMAL;
+
   // Filters
   String audioFilter;
   String videoFilter;
   String complexFilter;
+
+  public FFmpegBuilder setStrict(Strict strict) {
+    this.strict = checkNotNull(strict);
+    return this;
+  }
 
   public FFmpegBuilder overrideOutputFiles(boolean override) {
     this.override = override;
@@ -365,6 +357,10 @@ public class FFmpegBuilder {
 
     Preconditions.checkArgument(!inputs.isEmpty(), "At least one input must be specified");
     Preconditions.checkArgument(!outputs.isEmpty(), "At least one output must be specified");
+
+    if (strict != Strict.NORMAL) {
+      args.add("-strict", strict.toString());
+    }
 
     args.add(override ? "-y" : "-n");
     args.add("-v", this.verbosity.toString());
