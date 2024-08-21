@@ -74,14 +74,6 @@ public final class FFmpegUtils {
     return ZERO.trimTrailingFrom(String.format("%02d:%02d:%02d.%09d", hours, minutes, seconds, ns));
   }
 
-  public static String toSeconds(long duration, TimeUnit units) {
-    // FIXME Negative durations are also supported.
-    // https://www.ffmpeg.org/ffmpeg-utils.html#Time-duration
-    checkArgument(duration >= 0, "duration must be positive");
-
-    return Float.toString(units.toMillis(duration) / 1_000f);
-  }
-
   /**
    * Returns the number of nanoseconds this timecode represents. The string is expected to be in the
    * format "hour:minute:second", where second can be a decimal number.
