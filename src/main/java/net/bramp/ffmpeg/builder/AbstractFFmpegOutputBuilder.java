@@ -128,7 +128,7 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
 
   /**
    * Sets the number of b-frames ffmpeg is allowed to use.
-   * 0 -> Do not use b-frames at all
+   * 0 means: Do not use b-frames at all
    *
    * @param bFrames number of b-frames
    * @return this
