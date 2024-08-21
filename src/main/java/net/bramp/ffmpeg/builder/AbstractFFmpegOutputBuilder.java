@@ -67,6 +67,12 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
   @Deprecated
   public String video_bit_stream_filter;
 
+  /**
+   * Specifies the number of b-frames ffmpeg is allowed to use.
+   * 0 will disable b-frames, null will let ffmpeg decide.
+   */
+  private Integer bFrames;
+
   public AbstractFFmpegOutputBuilder() {
     super();
   }
@@ -115,6 +121,18 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
   public T setVideoPreset(String preset) {
     this.video_enabled = true;
     this.video_preset = checkNotEmpty(preset, "video preset must not be empty");
+    return (T) this;
+  }
+
+  /**
+   * Sets the number of b-frames ffmpeg is allowed to use.
+   * 0 -> Do not use b-frames at all
+   *
+   * @param bFrames number of b-frames
+   * @return this
+   */
+  public T setBFrames(int bFrames) {
+    this.bFrames = bFrames;
     return (T) this;
   }
 
@@ -348,6 +366,10 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
 
     if (!Strings.isNullOrEmpty(video_bit_stream_filter)) {
       args.add("-bsf:v", video_bit_stream_filter);
+    }
+
+    if (bFrames != null) {
+      args.add("-bf", Integer.toString(bFrames));
     }
   }
 
