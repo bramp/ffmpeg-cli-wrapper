@@ -111,4 +111,13 @@ public abstract class AbstractFFmpegOutputBuilderTest extends AbstractFFmpegStre
 
         assertThat(removeCommon(command), is(ImmutableList.of("-filter_complex", "complex-filter")));
     }
+
+    @Test
+    public void testSetBFrames() {
+        List<String> command = getBuilder()
+                .setBFrames(2)
+                .build(0);
+
+        assertThat(removeCommon(command), is(ImmutableList.of("-bf", "2")));
+    }
 }
