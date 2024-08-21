@@ -37,7 +37,7 @@ public class FFmpegHlsOutputBuilderTest {
                         .done()
                         .build();
 
-        assertEquals(ImmutableList.of("-y", "-v", "error", "-i", "input", "-f", "hls", "-hls_time", "00:00:00.005",
+        assertEquals(ImmutableList.of("-y", "-v", "error", "-i", "input", "-f", "hls", "-hls_time", "0.005",
                         "-hls_segment_filename", "file%03d.ts", "-hls_init_time", "00:00:00.003",
                         "-hls_list_size", "3", "-hls_base_url", "test1234/", "output.m3u8"), args);
     }
@@ -58,7 +58,7 @@ public class FFmpegHlsOutputBuilderTest {
                         .done()
                         .build();
 
-        assertEquals(ImmutableList.of("-y", "-v", "error", "-i", "input","-f","hls","-b:v","3","-vf","TEST","-hls_time", "00:00:00.005",
+        assertEquals(ImmutableList.of("-y", "-v", "error", "-i", "input","-f","hls","-b:v","3","-vf","TEST","-hls_time", "0.005",
                         "-hls_segment_filename", "file%03d.ts", "-hls_init_time", "00:00:00.003",
                         "-hls_list_size", "3", "-hls_base_url", "test1234/", "output.m3u8"), args);
     }
@@ -129,7 +129,7 @@ public class FFmpegHlsOutputBuilderTest {
     }
 
     private void cleanupTmp() throws IOException {
-        Path tmpFolder = Paths.get("tmp/");     
+        Path tmpFolder = Paths.get("tmp/");
         if (!Files.exists(tmpFolder)) {
             return;
         }
