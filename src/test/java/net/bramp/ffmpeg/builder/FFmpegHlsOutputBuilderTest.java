@@ -131,6 +131,7 @@ public class FFmpegHlsOutputBuilderTest {
     private void cleanupTmp() throws IOException {
         Path tmpFolder = Paths.get("tmp/");
         if (!Files.exists(tmpFolder)) {
+            Files.createDirectory(tmpFolder);
             return;
         }
 
