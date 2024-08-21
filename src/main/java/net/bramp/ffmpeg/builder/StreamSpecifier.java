@@ -3,7 +3,7 @@ package net.bramp.ffmpeg.builder;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
 
-/** https://ffmpeg.org/ffmpeg.html#Stream-specifiers */
+/** <a href="https://ffmpeg.org/ffmpeg.html#Stream-specifiers">Stream specifier</a> */
 public class StreamSpecifier {
 
   private final String spec;

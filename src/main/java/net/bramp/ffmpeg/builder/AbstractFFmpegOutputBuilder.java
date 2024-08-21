@@ -19,7 +19,7 @@ import net.bramp.ffmpeg.options.VideoEncodingOptions;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 /** Builds a representation of a single output/encoding setting */
-@SuppressWarnings({"DeprecatedIsStillUsed", "deprecation","unchecked"})
+@SuppressWarnings({"DeprecatedIsStillUsed", "unchecked"})
 public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutputBuilder<T>> extends AbstractFFmpegStreamBuilder<T> {
 
   static final Pattern trailingZero = Pattern.compile("\\.0*$");
@@ -66,6 +66,8 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
   /** @deprecated Use {@link #getVideoBitStreamFilter()} instead*/
   @Deprecated
   public String video_bit_stream_filter;
+
+  protected String  complexFilter;
 
   public AbstractFFmpegOutputBuilder() {
     super();
@@ -194,6 +196,12 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
     return (T) this;
   }
 
+  public T setComplexFilter(String filter) {
+    this.complexFilter = checkNotEmpty(filter, "filter must not be empty");
+
+    return (T) this;
+  }
+
   /**
    * Sets Audio Filter
    *
@@ -247,6 +255,7 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
   @Override
   protected List<String> build(int pass) {
     Preconditions.checkState(parent != null, "Can not build without parent being set");
+
     return build(parent, pass);
   }
 
@@ -265,15 +274,18 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
       checkArgument(
           targetSize != 0 || video_bit_rate != 0,
           "Target size, or video bitrate must be specified when using two-pass");
+
+      checkArgument(format != null, "Format must be specified when using two-pass");
     }
+
     if (targetSize > 0) {
       checkState(parent.inputs.size() == 1, "Target size does not support multiple inputs");
 
       checkArgument(
           constantRateFactor == null, "Target size can not be used with constantRateFactor");
 
-      String firstInput = parent.inputs.iterator().next();
-      FFmpegProbeResult input = parent.inputProbes.get(firstInput);
+      AbstractFFmpegInputBuilder<?> firstInput = parent.inputs.iterator().next();
+      FFmpegProbeResult input = firstInput.getProbeResult();
 
       checkState(input != null, "Target size must be used with setInput(FFmpegProbeResult)");
 
@@ -315,6 +327,10 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
 
     if (constantRateFactor != null) {
       args.add("-crf", formatDecimalInteger(constantRateFactor));
+    }
+
+    if (complexFilter != null) {
+      args.add("-filter_complex", complexFilter);
     }
   }
 
@@ -381,6 +397,24 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
     }
   }
 
+  @Override
+  protected void addSourceTarget(int pass, ImmutableList.Builder<String> args) {
+    if (filename != null && uri != null) {
+      throw new IllegalStateException("Only one of filename and uri can be set");
+    }
+
+    // Output
+    if (pass == 1) {
+      args.add(DEVNULL);
+    } else if (filename != null) {
+      args.add(filename);
+    } else if (uri != null) {
+      args.add(uri.toString());
+    } else {
+      assert false;
+    }
+  }
+
   @CheckReturnValue
   @Override
   protected T getThis() {
@@ -430,5 +464,9 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
 
   public String getVideoBitStreamFilter() {
     return video_bit_stream_filter;
+  }
+
+  public String getComplexFilter() {
+    return complexFilter;
   }
 }

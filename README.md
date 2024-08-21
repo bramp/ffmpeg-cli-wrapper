@@ -39,6 +39,7 @@ FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
 FFmpegBuilder builder = new FFmpegBuilder()
 
   .setInput("input.mp4")     // Filename, or a FFmpegProbeResult
+  .done()
   .overrideOutputFiles(true) // Override the output if it exists
 
   .addOutput("output.mp4")   // Filename for the destination
@@ -100,6 +101,7 @@ FFmpegProbeResult in = ffprobe.probe("input.flv");
 
 FFmpegBuilder builder = new FFmpegBuilder()
  .setInput(in) // Or filename
+ .done()
  .addOutput("output.mp4")
  .done();
 
