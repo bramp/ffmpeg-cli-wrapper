@@ -19,6 +19,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import net.bramp.ffmpeg.builder.Strict;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.job.FFmpegJob;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
@@ -104,7 +105,7 @@ public class FFmpegExecutorTest {
             // .setVideoPixelFormat("yuv420p")
             // .setVideoBitStreamFilter("noise")
             .setVideoQuality(2)
-            .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
+            .setStrict(Strict.EXPERIMENTAL)
             .done();
 
     FFmpegJob job = ffExecutor.createJob(builder);
@@ -254,7 +255,7 @@ public class FFmpegExecutorTest {
             .setVideoCodec("libx264")
             .setVideoFrameRate(24, 1)
             .setVideoResolution(640, 480)
-            .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL) // Allow FFmpeg to use experimental specs
+            .setStrict(Strict.EXPERIMENTAL) // Allow FFmpeg to use experimental specs
             .done();
 
     // Run a one-pass encode

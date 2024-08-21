@@ -96,7 +96,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   public String presetFilename;
   public final List<String> extra_args = new ArrayList<>();
 
-  public FFmpegBuilder.Strict strict = FFmpegBuilder.Strict.NORMAL;
+  public Strict strict = Strict.NORMAL;
 
   public long targetSize = 0; // in bytes
   public long pass_padding_bitrate = 1024; // in bits per second
@@ -455,7 +455,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     return getThis();
   }
 
-  public T setStrict(FFmpegBuilder.Strict strict) {
+  public T setStrict(Strict strict) {
     this.strict = checkNotNull(strict);
     return getThis();
   }
@@ -608,7 +608,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   }
 
   protected void addGlobalFlags(FFmpegBuilder parent, ImmutableList.Builder<String> args) {
-    if (strict != FFmpegBuilder.Strict.NORMAL) {
+    if (strict != Strict.NORMAL) {
       args.add("-strict", strict.toString());
     }
 
