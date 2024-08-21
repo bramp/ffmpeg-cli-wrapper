@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import javax.annotation.CheckReturnValue;
 import static com.google.common.base.Preconditions.*;
+import static net.bramp.ffmpeg.FFmpegUtils.toSeconds;
 import static net.bramp.ffmpeg.FFmpegUtils.toTimecode;
 import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 import java.util.concurrent.TimeUnit;
@@ -106,7 +107,7 @@ public class FFmpegHlsOutputBuilder extends AbstractFFmpegOutputBuilder<FFmpegHl
     protected void addFormatArgs(ImmutableList.Builder<String> args) {
         super.addFormatArgs(args);
         if (hls_time != null) {
-            args.add("-hls_time", toTimecode(hls_time, TimeUnit.MILLISECONDS));
+            args.add("-hls_time", toSeconds(hls_time, TimeUnit.MILLISECONDS));
         }
 
         if (!Strings.isNullOrEmpty(hls_segment_filename)) {
