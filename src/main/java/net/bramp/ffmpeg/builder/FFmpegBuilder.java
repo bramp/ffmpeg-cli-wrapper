@@ -17,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.CheckReturnValue;
 import net.bramp.ffmpeg.FFmpegUtils;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Builds a ffmpeg command line
@@ -24,6 +26,8 @@ import net.bramp.ffmpeg.probe.FFmpegProbeResult;
  * @author bramp
  */
 public class FFmpegBuilder {
+
+  private static final Logger log = LoggerFactory.getLogger(FFmpegBuilder.class);
 
   public enum Strict {
     VERY, // strictly conform to an older more strict version of the specifications or reference
@@ -40,7 +44,7 @@ public class FFmpegBuilder {
     }
   }
 
-  /** Log level options: https://ffmpeg.org/ffmpeg.html#Generic-options */
+  /** Log level options: <a href="https://ffmpeg.org/ffmpeg.html#Generic-options">ffmpeg documentation</a> */
   public enum Verbosity {
     QUIET,
     PANIC,
@@ -73,7 +77,7 @@ public class FFmpegBuilder {
   String format;
   Long startOffset; // in millis
   boolean read_at_native_frame_rate = false;
-  final List<String> inputs = new ArrayList<>();
+  final List<AbstractFFmpegInputBuilder<?>> inputs = new ArrayList<>();
   final Map<String, FFmpegProbeResult> inputProbes = new TreeMap<>();
 
   final List<String> extra_args = new ArrayList<>();
@@ -121,22 +125,39 @@ public class FFmpegBuilder {
     return this;
   }
 
+  /**
+   * Makes ffmpeg read the first input at the native frame read
+   * @return this
+   * @deprecated Use {@link AbstractFFmpegInputBuilder#readAtNativeFrameRate()} instead
+   */
+  @Deprecated
   public FFmpegBuilder readAtNativeFrameRate() {
     this.read_at_native_frame_rate = true;
     return this;
   }
 
-  public FFmpegBuilder addInput(FFmpegProbeResult result) {
+  public FFmpegFileInputBuilder addInput(FFmpegProbeResult result) {
     checkNotNull(result);
     String filename = checkNotNull(result.getFormat()).getFilename();
-    inputProbes.put(filename, result);
-    return addInput(filename);
+
+    return this.doAddInput(new FFmpegFileInputBuilder(this, filename, result));
   }
 
-  public FFmpegBuilder addInput(String filename) {
+  public FFmpegFileInputBuilder addInput(String filename) {
     checkNotNull(filename);
-    inputs.add(filename);
-    return this;
+
+    return this.doAddInput(new FFmpegFileInputBuilder(this, filename));
+  }
+
+  public <T extends AbstractFFmpegInputBuilder<T>> FFmpegBuilder addInput(T input) {
+    return this.doAddInput(input).done();
+  }
+
+  protected <T extends AbstractFFmpegInputBuilder<T>> T doAddInput(T input) {
+    checkNotNull(input);
+
+    inputs.add(input);
+    return input;
   }
 
   protected void clearInputs() {
@@ -144,14 +165,23 @@ public class FFmpegBuilder {
     inputProbes.clear();
   }
 
-  public FFmpegBuilder setInput(FFmpegProbeResult result) {
+  public FFmpegFileInputBuilder setInput(FFmpegProbeResult result) {
     clearInputs();
     return addInput(result);
   }
 
-  public FFmpegBuilder setInput(String filename) {
+  public FFmpegFileInputBuilder setInput(String filename) {
     clearInputs();
     return addInput(filename);
+  }
+
+  public <T extends AbstractFFmpegInputBuilder<T>> FFmpegBuilder setInput(T input) {
+    checkNotNull(input);
+
+    clearInputs();
+    inputs.add(input);
+
+    return this;
   }
 
   public FFmpegBuilder setThreads(int threads) {
@@ -160,11 +190,26 @@ public class FFmpegBuilder {
     return this;
   }
 
+  /**
+   * Sets the format for the first input stream
+   * @param format, the format of this input stream, not null
+   * @return this
+   * @deprecated Specify this option on an input stream using {@link AbstractFFmpegStreamBuilder#setFormat(String)}
+   */
+  @Deprecated
   public FFmpegBuilder setFormat(String format) {
     this.format = checkNotNull(format);
     return this;
   }
 
+  /**
+   * Sets the start offset for the first input stream
+   * @param duration the amount of the offset, measured in terms of the unit
+   * @param units the unit that the duration is measured in, not null
+   * @return this
+   * @deprecated Specify this option on an input or output stream using {@link AbstractFFmpegStreamBuilder#setStartOffset(long, TimeUnit)}
+   */
+  @Deprecated
   public FFmpegBuilder setStartOffset(long duration, TimeUnit units) {
     checkNotNull(units);
 
@@ -183,7 +228,9 @@ public class FFmpegBuilder {
    *
    * @param filter the complex filter string
    * @return this
+   * @deprecated Use {@link AbstractFFmpegOutputBuilder#setComplexFilter(String)} instead
    */
+  @Deprecated
   public FFmpegBuilder setComplexFilter(String filter) {
     this.complexFilter = checkNotEmpty(filter, "filter must not be empty");
     return this;
@@ -327,6 +374,7 @@ public class FFmpegBuilder {
     }
 
     if (startOffset != null) {
+      log.warn("Using FFmpegBuilder#setStartOffset is deprecated. Specify it on the inputStream or outputStream instead");
       args.add("-ss", FFmpegUtils.toTimecode(startOffset, TimeUnit.MILLISECONDS));
     }
 
@@ -335,10 +383,12 @@ public class FFmpegBuilder {
     }
 
     if (format != null) {
+      log.warn("Using FFmpegBuilder#setFormat is deprecated. Specify it on the inputStream or outputStream instead");
       args.add("-f", format);
     }
 
     if (read_at_native_frame_rate) {
+      log.warn("Using FFmpegBuilder#readAtNativeFrameRate is deprecated. Specify it on the inputStream instead");
       args.add("-re");
     }
 
@@ -348,8 +398,8 @@ public class FFmpegBuilder {
 
     args.addAll(extra_args);
 
-    for (String input : inputs) {
-      args.add("-i", input);
+    for (AbstractFFmpegInputBuilder<?> input : this.inputs) {
+      args.addAll(input.build(this, pass));
     }
 
     if (pass > 0) {
@@ -369,6 +419,7 @@ public class FFmpegBuilder {
     }
 
     if (!Strings.isNullOrEmpty(complexFilter)) {
+      log.warn("Using FFmpegBuilder#setComplexFilter is deprecated. Specify it on the outputStream instead");
       args.add("-filter_complex", complexFilter);
     }
 

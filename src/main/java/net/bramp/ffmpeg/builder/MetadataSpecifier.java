@@ -14,7 +14,7 @@ import com.google.errorprone.annotations.Immutable;
 
 /**
  * Metadata spec, as described in the "map_metadata" section of
- * https://www.ffmpeg.org/ffmpeg-all.html#Main-options
+ * <a href="https://www.ffmpeg.org/ffmpeg-all.html#Main-options">Main options</a>
  */
 @Immutable
 public class MetadataSpecifier {
