@@ -66,10 +66,17 @@ public class FFmpegBuilder {
   // Output
   final List<AbstractFFmpegOutputBuilder<?>> outputs = new ArrayList<>();
 
+  protected Strict strict = Strict.NORMAL;
+
   // Filters
   String audioFilter;
   String videoFilter;
   String complexFilter;
+
+  public FFmpegBuilder setStrict(Strict strict) {
+    this.strict = checkNotNull(strict);
+    return this;
+  }
 
   public FFmpegBuilder overrideOutputFiles(boolean override) {
     this.override = override;
@@ -303,6 +310,10 @@ public class FFmpegBuilder {
 
     Preconditions.checkArgument(!inputs.isEmpty(), "At least one input must be specified");
     Preconditions.checkArgument(!outputs.isEmpty(), "At least one output must be specified");
+
+    if (strict != Strict.NORMAL) {
+      args.add("-strict", strict.toString());
+    }
 
     args.add(override ? "-y" : "-n");
     args.add("-v", this.verbosity.toString());
