@@ -598,4 +598,72 @@ public class FFmpegBuilderTest {
 
     assertEquals(ImmutableList.of("-strict", "experimental", "-y", "-v", "error", "-i", "input.mp4", "output.mp4"), args);
   }
+
+  @Test
+  public void testQuestion65() {
+    List<String> args = new FFmpegBuilder()
+            .addInput("aevalsrc=0")
+            .setFormat("lavfi")
+            .done()
+            .addInput("1.mp4")
+            .done()
+            .addOutput("output.mp4")
+            .setVideoCodec("copy")
+            .setAudioCodec("aac")
+            .addExtraArgs("-map", "0:0")
+            .addExtraArgs("-map", "1:0")
+            .addExtraArgs("-shortest")
+            .done()
+            .build();
+
+    assertEquals(ImmutableList.of("-y", "-v", "error", "-f", "lavfi", "-i", "aevalsrc=0", "-i", "1.mp4", "-vcodec", "copy", "-acodec", "aac", "-map", "0:0", "-map", "1:0", "-shortest", "output.mp4"), args);
+  }
+
+  @Test
+  public void testQuestion295() {
+    List<String> args = new FFmpegBuilder()
+            .addInput("audio=<device>")
+            .setFormat("dshow")
+            .done()
+            .addInput("desktop")
+            .setFormat("gdigrab")
+            .setFrames(30)
+            .done()
+            .addOutput("video_file_name.mp4")
+            .setVideoCodec("libx264")
+            .done()
+            .build();
+
+    assertEquals(ImmutableList.of(
+            "-y", "-v", "error", "-f", "dshow", "-i", "audio=<device>", "-f", "gdigrab", "-vframes", "30", "-i", "desktop", "-vcodec", "libx264", "video_file_name.mp4"
+    ), args);
+  }
+
+  @Test
+  public void testQuestion252() {
+    List<String> args = new FFmpegBuilder()
+            .addInput("video_160x90_250k.webm").setFormat("webm_dash_manifest").done()
+            .addInput("video_320x180_500k.webm").setFormat("webm_dash_manifest").done()
+            .addInput("video_640x360_750k.webm").setFormat("webm_dash_manifest").done()
+            .addInput("video_640x360_1000k.webm").setFormat("webm_dash_manifest").done()
+            .addInput("video_1280x720_600k.webm").setFormat("webm_dash_manifest").done()
+            .addInput("audio_128k.webm").setFormat("webm_dash_manifest").done()
+            .addOutput("manifest.mp4")
+            .setVideoCodec("copy")
+            .setAudioCodec("copy")
+            .addExtraArgs("-map", "0")
+            .addExtraArgs("-map", "1")
+            .addExtraArgs("-map", "2")
+            .addExtraArgs("-map", "3")
+            .addExtraArgs("-map", "4")
+            .addExtraArgs("-map", "5")
+            .setFormat("webm_dash_manifest")
+            .addExtraArgs("-adaptation_sets", "id=0,streams=0,1,2,3,4 id=1,streams=5")
+            .done()
+            .build();
+
+    assertEquals(ImmutableList.of(
+            "-y",  "-v", "error", "-f", "webm_dash_manifest", "-i", "video_160x90_250k.webm", "-f", "webm_dash_manifest", "-i", "video_320x180_500k.webm", "-f", "webm_dash_manifest", "-i", "video_640x360_750k.webm", "-f", "webm_dash_manifest", "-i", "video_640x360_1000k.webm", "-f", "webm_dash_manifest", "-i", "video_1280x720_600k.webm", "-f", "webm_dash_manifest", "-i", "audio_128k.webm", "-f", "webm_dash_manifest", "-vcodec", "copy", "-acodec", "copy", "-map", "0", "-map", "1", "-map", "2", "-map", "3", "-map", "4", "-map", "5", "-adaptation_sets", "id=0,streams=0,1,2,3,4 id=1,streams=5", "manifest.mp4"
+    ), args);
+  }
 }
