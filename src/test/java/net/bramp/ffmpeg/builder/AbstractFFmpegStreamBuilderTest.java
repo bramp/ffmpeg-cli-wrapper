@@ -7,6 +7,8 @@ import org.junit.Test;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static net.bramp.ffmpeg.builder.StreamSpecifier.stream;
+import static net.bramp.ffmpeg.builder.StreamSpecifierType.*;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -226,5 +228,14 @@ public abstract class AbstractFFmpegStreamBuilderTest {
                 .build(0);
 
         assertThat(removeCommon(command), is(ImmutableList.of("-some", "args")));
+    }
+
+    @Test
+    public void testAddMap() {
+        List<String> command = getBuilder()
+                .addMap(0, stream(Video))
+                .build(0);
+
+        assertThat(removeCommon(command), is(ImmutableList.of("-map", "0:v")));
     }
 }
