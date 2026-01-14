@@ -69,6 +69,9 @@ public class FFprobeTest {
     when(runFunc.run(argThatHasItem(Samples.big_buck_bunny_720p_1mb_with_packets_and_frames)))
         .thenAnswer(new NewProcessAnswer("ffprobe-big_buck_bunny_720p_1mb_packets_and_frames.mp4"));
 
+    when(runFunc.run(argThatHasItem(Samples.video_with_reserved_color_space)))
+        .thenAnswer(new NewProcessAnswer("ffprobe-video_with_reserved_color_space.mp4"));
+
     when(runFunc.run(argThatHasItem(Samples.side_data_list)))
         .thenAnswer(new NewProcessAnswer("ffprobe-side_data_list"));
 
@@ -749,5 +752,18 @@ public class FFprobeTest {
     assertEquals(1024, frame.getNbSamples());
     assertEquals(6, frame.getChannels());
     assertEquals("5.1", frame.getChannelLayout());
+  }
+
+  @Test
+  public void testReservedColorSpaceVideo() throws IOException {
+    FFprobeBuilder probeBuilder = ffprobe.builder().setShowStreams(true).setInput(Samples.video_with_reserved_color_space);
+    List<FFmpegStream> streams = ffprobe.probe(probeBuilder).getStreams();
+    assertEquals(1, streams.size());
+    FFmpegStream stream = streams.get(0);
+
+    assertEquals("tv", stream.getColorRange());
+    assertEquals("reserved", stream.getColorSpace());
+    assertEquals("arib-std-b67", stream.getColorTransfer());
+    assertEquals("bt2020", stream.getColorPrimaries());
   }
 }
