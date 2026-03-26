@@ -26,7 +26,7 @@ jobs:
     name: JDK ${{ matrix.java-version }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Set up FFmpeg
       uses: FedericoCarboni/setup-ffmpeg@v3
