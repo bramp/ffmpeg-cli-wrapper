@@ -6,8 +6,8 @@ by Andrew Brampton ([bramp.net](https://bramp.net)) (c) 2013-2024
 
 A fluent interface for running FFmpeg from Java.
 
-![Java](https://img.shields.io/badge/Java-8+-brightgreen.svg)
-[![Build Status](https://github.com/bramp/ffmpeg-cli-wrapper/actions/workflows/maven.yml/badge.svg)](https://github.com/bramp/ffmpeg-cli-wrapper/actions/workflows/maven.yml)
+![Java](https://img.shields.io/badge/Java-11+-brightgreen.svg)
+[![Build Status](https://github.com/bramp/ffmpeg-cli-wrapper/actions/workflows/test.yml/badge.svg)](https://github.com/bramp/ffmpeg-cli-wrapper/actions/workflows/test.yml)
 [![Coverage Status](https://img.shields.io/coveralls/bramp/ffmpeg-cli-wrapper.svg)](https://coveralls.io/github/bramp/ffmpeg-cli-wrapper)
 [![Maven](https://img.shields.io/maven-central/v/net.bramp.ffmpeg/ffmpeg.svg)](http://mvnrepository.com/artifact/net.bramp.ffmpeg/ffmpeg)
 [![Libraries.io](https://img.shields.io/librariesio/github/bramp/ffmpeg-cli-wrapper.svg)](https://libraries.io/github/bramp/ffmpeg-cli-wrapper)
@@ -16,7 +16,7 @@ A fluent interface for running FFmpeg from Java.
 
 ## Install
 
-We currently support Java 8 and above. Use Maven to install the dependency.
+We currently support Java 11 and above. Use Maven to install the dependency.
 
 ```xml
 <dependency>
@@ -78,7 +78,7 @@ FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
 FFmpegProbeResult probeResult = ffprobe.probe("input.mp4");
 
 FFmpegFormat format = probeResult.getFormat();
-System.out.format("%nFile: '%s' ; Format: '%s' ; Duration: %.3fs", 
+System.out.format("%nFile: '%s' ; Format: '%s' ; Duration: %.3fs",
  format.filename,
  format.format_long_name,
  format.duration
@@ -158,7 +158,7 @@ mvn clean javadoc:aggregate scm-publish:publish-scm
 mvn versions:display-plugin-updates
 
 # Library Dependencies
-mvn versions:display-dependency-updates 
+mvn versions:display-dependency-updates
 ```
 
 ## Install FFmpeg on Ubuntu
