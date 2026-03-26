@@ -8,27 +8,40 @@ import java.beans.ConstructorProperties;
  * @author bramp
  */
 public class AudioEncodingOptions {
-  /** @deprecated Use {@link #isEnabled()} instead */
-  @Deprecated
-  public final boolean enabled;
-  /** @deprecated Use {@link #getCodec()} instead */
-  @Deprecated
-  public final String codec;
-  /** @deprecated Use {@link #getChannels()} instead */
-  @Deprecated
-  public final int channels;
-  /** @deprecated Use {@link #getSampleRate()} instead */
-  @Deprecated
-  public final int sample_rate;
-  /** @deprecated Use {@link #getSampleFormat()} instead */
-  @Deprecated
-  public final String sample_format;
-  /** @deprecated Use {@link #getBitRate()} instead */
-  @Deprecated
-  public final long bit_rate;
-  /** @deprecated Use {@link #getQuality()} instead */
-  @Deprecated
-  public final Double quality;
+  /**
+   * @deprecated Use {@link #isEnabled()} instead
+   */
+  @Deprecated public final boolean enabled;
+
+  /**
+   * @deprecated Use {@link #getCodec()} instead
+   */
+  @Deprecated public final String codec;
+
+  /**
+   * @deprecated Use {@link #getChannels()} instead
+   */
+  @Deprecated public final int channels;
+
+  /**
+   * @deprecated Use {@link #getSampleRate()} instead
+   */
+  @Deprecated public final int sample_rate;
+
+  /**
+   * @deprecated Use {@link #getSampleFormat()} instead
+   */
+  @Deprecated public final String sample_format;
+
+  /**
+   * @deprecated Use {@link #getBitRate()} instead
+   */
+  @Deprecated public final long bit_rate;
+
+  /**
+   * @deprecated Use {@link #getQuality()} instead
+   */
+  @Deprecated public final Double quality;
 
   @ConstructorProperties({
     "enabled",

@@ -156,7 +156,8 @@ public class ExamplesTest {
     FFmpeg ffmpeg = new FFmpeg("/path/to/ffmpeg", func);
     FFprobe ffprobe = new FFprobe("/path/to/ffprobe", func);
 
-    FFmpegBuilder builder = new FFmpegBuilder().setInput("input").done().addOutput("output.mp4").done();
+    FFmpegBuilder builder =
+        new FFmpegBuilder().setInput("input").done().addOutput("output.mp4").done();
 
     FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 
@@ -191,8 +192,8 @@ public class ExamplesTest {
             .done()
             .addOutput("with-video.mp4")
             .setComplexFilter(
-                    "[1:v]scale=368:207,setpts=PTS-STARTPTS+5/TB [ov]; "
-                            + "[0:v][ov] overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h)/2:enable='between(t,5,15)' [v]")
+                "[1:v]scale=368:207,setpts=PTS-STARTPTS+5/TB [ov]; "
+                    + "[0:v][ov] overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h)/2:enable='between(t,5,15)' [v]")
             .addExtraArgs("-map", "[v]")
             .addExtraArgs("-map", "0:a")
             .setVideoCodec("libx264")
@@ -323,7 +324,8 @@ public class ExamplesTest {
   @Test
   @Ignore("because this test will invoke /path/to/ffmpeg.")
   public void testExample11() throws IOException, InterruptedException {
-    FFmpegBuilder builder = new FFmpegBuilder().setInput("input").done().addOutput("output.mp4").done();
+    FFmpegBuilder builder =
+        new FFmpegBuilder().setInput("input").done().addOutput("output.mp4").done();
 
     List<String> args = new ArrayList<>();
     args.add("/path/to/ffmpeg");

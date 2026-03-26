@@ -7,7 +7,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.InlineMe;
-
 import java.net.URI;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -20,56 +19,69 @@ import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 /** Builds a representation of a single output/encoding setting */
 @SuppressWarnings({"DeprecatedIsStillUsed", "unchecked"})
-public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutputBuilder<T>> extends AbstractFFmpegStreamBuilder<T> {
+public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutputBuilder<T>>
+    extends AbstractFFmpegStreamBuilder<T> {
 
   static final Pattern trailingZero = Pattern.compile("\\.0*$");
-  /** @deprecated Use {@link #getConstantRateFactor()} instead*/
-  @Deprecated
-  public Double constantRateFactor;
-
-  /** @deprecated Use {@link #getAudioSampleFormat()} instead*/
-  @Deprecated
-  public String audio_sample_format;
-
-  /** @deprecated Use {@link #getAudioBitRate()} instead*/
-  @Deprecated
-  public long audio_bit_rate;
-
-  /** @deprecated Use {@link #getAudioQuality()} instead*/
-  @Deprecated
-  public Double audio_quality;
-
-  /** @deprecated Use {@link #getVideoBitStreamFilter()} instead*/
-  @Deprecated
-  public String audio_bit_stream_filter;
-
-  /** @deprecated Use {@link #getAudioFilter()} instead*/
-  @Deprecated
-  public String audio_filter;
-
-  /** @deprecated Use {@link #getVideoBitRate()} instead*/
-  @Deprecated
-  public long video_bit_rate;
-
-  /** @deprecated Use {@link #getVideoQuality()} instead*/
-  @Deprecated
-  public Double video_quality;
-
-  /** @deprecated Use {@link #getVideoPreset()} instead*/
-  @Deprecated
-  public String video_preset;
-
-  /** @deprecated Use {@link #getVideoFilter()} instead*/
-  @Deprecated
-  public String video_filter;
-
-  /** @deprecated Use {@link #getVideoBitStreamFilter()} instead*/
-  @Deprecated
-  public String video_bit_stream_filter;
 
   /**
-   * Specifies the number of b-frames ffmpeg is allowed to use.
-   * 0 will disable b-frames, null will let ffmpeg decide.
+   * @deprecated Use {@link #getConstantRateFactor()} instead
+   */
+  @Deprecated public Double constantRateFactor;
+
+  /**
+   * @deprecated Use {@link #getAudioSampleFormat()} instead
+   */
+  @Deprecated public String audio_sample_format;
+
+  /**
+   * @deprecated Use {@link #getAudioBitRate()} instead
+   */
+  @Deprecated public long audio_bit_rate;
+
+  /**
+   * @deprecated Use {@link #getAudioQuality()} instead
+   */
+  @Deprecated public Double audio_quality;
+
+  /**
+   * @deprecated Use {@link #getVideoBitStreamFilter()} instead
+   */
+  @Deprecated public String audio_bit_stream_filter;
+
+  /**
+   * @deprecated Use {@link #getAudioFilter()} instead
+   */
+  @Deprecated public String audio_filter;
+
+  /**
+   * @deprecated Use {@link #getVideoBitRate()} instead
+   */
+  @Deprecated public long video_bit_rate;
+
+  /**
+   * @deprecated Use {@link #getVideoQuality()} instead
+   */
+  @Deprecated public Double video_quality;
+
+  /**
+   * @deprecated Use {@link #getVideoPreset()} instead
+   */
+  @Deprecated public String video_preset;
+
+  /**
+   * @deprecated Use {@link #getVideoFilter()} instead
+   */
+  @Deprecated public String video_filter;
+
+  /**
+   * @deprecated Use {@link #getVideoBitStreamFilter()} instead
+   */
+  @Deprecated public String video_bit_stream_filter;
+
+  /**
+   * Specifies the number of b-frames ffmpeg is allowed to use. 0 will disable b-frames, null will
+   * let ffmpeg decide.
    */
   protected Integer bFrames;
 
@@ -127,8 +139,7 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
   }
 
   /**
-   * Sets the number of b-frames ffmpeg is allowed to use.
-   * 0 means: Do not use b-frames at all
+   * Sets the number of b-frames ffmpeg is allowed to use. 0 means: Do not use b-frames at all
    *
    * @param bFrames number of b-frames
    * @return this
@@ -166,7 +177,7 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
    */
   @Deprecated
   @InlineMe(replacement = "this.setAudioSampleFormat(bit_depth)")
-  final public T setAudioBitDepth(String bit_depth) {
+  public final T setAudioBitDepth(String bit_depth) {
     return setAudioSampleFormat(bit_depth);
   }
 
@@ -442,7 +453,6 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
   protected T getThis() {
     return (T) this;
   }
-
 
   public Double getConstantRateFactor() {
     return constantRateFactor;

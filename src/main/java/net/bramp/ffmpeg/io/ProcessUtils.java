@@ -5,7 +5,7 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * A collection of utility methods for dealing with processes.
- * 
+ *
  * @author bramp
  */
 public final class ProcessUtils {

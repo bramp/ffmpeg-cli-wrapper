@@ -6,10 +6,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharStreams;
-import net.bramp.ffmpeg.io.ProcessUtils;
-import net.bramp.ffmpeg.probe.FFmpegError;
-import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +15,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.annotation.Nonnull;
+import net.bramp.ffmpeg.io.ProcessUtils;
+import net.bramp.ffmpeg.probe.FFmpegError;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 /** Private class to contain common methods for both FFmpeg and FFprobe. */
 abstract class FFcommon {
@@ -87,7 +86,7 @@ abstract class FFcommon {
         // TODO Parse the error
         final FFmpegError ffmpegError = null == result ? null : result.getError();
         throw new FFmpegException(
-                path + " returned non-zero exit status. Check stdout.", ffmpegError);
+            path + " returned non-zero exit status. Check stdout.", ffmpegError);
       }
     } catch (TimeoutException e) {
       throw new IOException("Timed out waiting for " + path + " to finish.");

@@ -2,7 +2,6 @@ package net.bramp.ffmpeg.probe;
 
 import com.google.common.collect.ImmutableList;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

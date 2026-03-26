@@ -1,6 +1,17 @@
 package net.bramp.ffmpeg;
 
+import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import com.google.common.collect.ImmutableList;
+import java.io.IOException;
+import java.util.List;
 import net.bramp.ffmpeg.builder.FFprobeBuilder;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
@@ -17,26 +28,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.IOException;
-import java.util.List;
-
-import static net.bramp.ffmpeg.FFmpegTest.argThatHasItem;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.startsWith;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 @RunWith(MockitoJUnitRunner.class)
 public class FFprobeTest {
 
   @Mock ProcessFunction runFunc;
   @Mock Process mockProcess;
 
-  @Captor
-  ArgumentCaptor<List<String>> argsCaptor;
+  @Captor ArgumentCaptor<List<String>> argsCaptor;
 
   FFprobe ffprobe;
 
@@ -73,7 +71,7 @@ public class FFprobeTest {
         .thenAnswer(new NewProcessAnswer("ffprobe-side_data_list"));
 
     when(runFunc.run(argThatHasItem(Samples.disposition_all_true)))
-            .thenAnswer(new NewProcessAnswer("ffprobe-disposition_all_true"));
+        .thenAnswer(new NewProcessAnswer("ffprobe-disposition_all_true"));
 
     when(runFunc.run(argThatHasItem(Samples.chapters_with_long_id)))
         .thenAnswer(new NewProcessAnswer("chapters_with_long_id.m4b"));
@@ -133,12 +131,13 @@ public class FFprobeTest {
 
   @Test
   public void testProbeWithPackets() throws IOException {
-    FFmpegProbeResult info = ffprobe.probe(
-        ffprobe
-            .builder()
-            .setInput(Samples.big_buck_bunny_720p_1mb_with_packets)
-            .setShowPackets(true)
-            .build());
+    FFmpegProbeResult info =
+        ffprobe.probe(
+            ffprobe
+                .builder()
+                .setInput(Samples.big_buck_bunny_720p_1mb_with_packets)
+                .setShowPackets(true)
+                .build());
     assertThat(info.hasError(), is(false));
     assertThat(info.getPackets().size(), is(381));
 
@@ -184,12 +183,13 @@ public class FFprobeTest {
 
   @Test
   public void testProbeWithFrames() throws IOException {
-    FFmpegProbeResult info = ffprobe.probe(
-        ffprobe
-            .builder()
-            .setInput(Samples.big_buck_bunny_720p_1mb_with_frames)
-            .setShowFrames(true)
-            .build());
+    FFmpegProbeResult info =
+        ffprobe.probe(
+            ffprobe
+                .builder()
+                .setInput(Samples.big_buck_bunny_720p_1mb_with_frames)
+                .setShowFrames(true)
+                .build());
     assertThat(info.hasError(), is(false));
     assertThat(info.getFrames().size(), is(381));
 
@@ -236,13 +236,14 @@ public class FFprobeTest {
 
   @Test
   public void testProbeWithPacketsAndFrames() throws IOException {
-    FFmpegProbeResult info = ffprobe.probe(
-        ffprobe
-            .builder()
-            .setInput(Samples.big_buck_bunny_720p_1mb_with_packets_and_frames)
-            .setShowPackets(true)
-            .setShowFrames(true)
-            .build());
+    FFmpegProbeResult info =
+        ffprobe.probe(
+            ffprobe
+                .builder()
+                .setInput(Samples.big_buck_bunny_720p_1mb_with_packets_and_frames)
+                .setShowPackets(true)
+                .setShowFrames(true)
+                .build());
     assertThat(info.hasError(), is(false));
     assertThat(info.getPackets().size(), is(381));
     assertThat(info.getFrames().size(), is(381));
@@ -395,7 +396,8 @@ public class FFprobeTest {
     final FFmpegError error = new FFmpegError();
     final FFmpegProbeResult result = new FFmpegProbeResult();
     result.error = error;
-    FFmpegException e = assertThrows(FFmpegException.class, () -> ffprobe.throwOnError(mockProcess, result));
+    FFmpegException e =
+        assertThrows(FFmpegException.class, () -> ffprobe.throwOnError(mockProcess, result));
     assertEquals(error, e.getError());
   }
 
@@ -404,7 +406,8 @@ public class FFprobeTest {
     Mockito.doReturn(1).when(mockProcess).exitValue();
 
     final FFmpegProbeResult result = new FFmpegProbeResult();
-    FFmpegException e = assertThrows(FFmpegException.class, () -> ffprobe.throwOnError(mockProcess, result));
+    FFmpegException e =
+        assertThrows(FFmpegException.class, () -> ffprobe.throwOnError(mockProcess, result));
     assertNull(e.getError());
   }
 
@@ -412,7 +415,8 @@ public class FFprobeTest {
   public void shouldThrowOnErrorEvenIfProbeResultIsNull() {
     Mockito.doReturn(1).when(mockProcess).exitValue();
 
-    FFmpegException e = assertThrows(FFmpegException.class, () -> ffprobe.throwOnError(mockProcess, null));
+    FFmpegException e =
+        assertThrows(FFmpegException.class, () -> ffprobe.throwOnError(mockProcess, null));
     assertNull(e.getError());
   }
 
@@ -435,9 +439,10 @@ public class FFprobeTest {
 
     // Check edge case with a time larger than an integer
     assertThat(info.getStreams().get(0).getSideDataList().size(), is(1));
-    assertThat(info.getStreams().get(0).getSideDataList().get(0).side_data_type, is("Display Matrix"));
     assertThat(
-            info.getStreams().get(0).getSideDataList().get(0).displaymatrix,
+        info.getStreams().get(0).getSideDataList().get(0).side_data_type, is("Display Matrix"));
+    assertThat(
+        info.getStreams().get(0).getSideDataList().get(0).displaymatrix,
         is(
             "\n00000000:            0      -65536           0\n00000001:        65536           0           0\n00000002:            0           0  1073741824\n"));
     assertThat(info.getStreams().get(0).getSideDataList().get(0).rotation, is(90));
@@ -460,9 +465,18 @@ public class FFprobeTest {
     List<String> value = Helper.subList(argsCaptor.getValue(), 1);
 
     assertThat(
-      value,
-      is(ImmutableList.of("-v", "quiet", "-print_format", "json", "-show_error", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
-    );
+        value,
+        is(
+            ImmutableList.of(
+                "-v",
+                "quiet",
+                "-print_format",
+                "json",
+                "-show_error",
+                "-show_format",
+                "-show_streams",
+                "-show_chapters",
+                Samples.always_on_my_mind)));
   }
 
   @Test
@@ -474,9 +488,18 @@ public class FFprobeTest {
     List<String> value = Helper.subList(argsCaptor.getValue(), 1);
 
     assertThat(
-            value,
-            is(ImmutableList.of("-v", "quiet", "-print_format", "json", "-show_error", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
-    );
+        value,
+        is(
+            ImmutableList.of(
+                "-v",
+                "quiet",
+                "-print_format",
+                "json",
+                "-show_error",
+                "-show_format",
+                "-show_streams",
+                "-show_chapters",
+                Samples.always_on_my_mind)));
   }
 
   @Test
@@ -488,9 +511,18 @@ public class FFprobeTest {
     List<String> value = Helper.subList(argsCaptor.getValue(), 1);
 
     assertThat(
-            value,
-            is(ImmutableList.of("-v", "quiet", "-print_format", "json", "-show_error", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
-    );
+        value,
+        is(
+            ImmutableList.of(
+                "-v",
+                "quiet",
+                "-print_format",
+                "json",
+                "-show_error",
+                "-show_format",
+                "-show_streams",
+                "-show_chapters",
+                Samples.always_on_my_mind)));
   }
 
   @Test
@@ -502,9 +534,20 @@ public class FFprobeTest {
     List<String> value = Helper.subList(argsCaptor.getValue(), 1);
 
     assertThat(
-            value,
-            is(ImmutableList.of("-v", "quiet", "-print_format", "json", "-show_error", "-rw_timeout", "0", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
-    );
+        value,
+        is(
+            ImmutableList.of(
+                "-v",
+                "quiet",
+                "-print_format",
+                "json",
+                "-show_error",
+                "-rw_timeout",
+                "0",
+                "-show_format",
+                "-show_streams",
+                "-show_chapters",
+                Samples.always_on_my_mind)));
   }
 
   @Test
@@ -516,9 +559,20 @@ public class FFprobeTest {
     List<String> value = Helper.subList(argsCaptor.getValue(), 1);
 
     assertThat(
-            value,
-            is(ImmutableList.of("-v", "quiet", "-print_format", "json", "-show_error", "-user_agent", "ffmpeg-cli-wrapper", "-show_format", "-show_streams", "-show_chapters", Samples.always_on_my_mind))
-    );
+        value,
+        is(
+            ImmutableList.of(
+                "-v",
+                "quiet",
+                "-print_format",
+                "json",
+                "-show_error",
+                "-user_agent",
+                "ffmpeg-cli-wrapper",
+                "-show_format",
+                "-show_streams",
+                "-show_chapters",
+                Samples.always_on_my_mind)));
   }
 
   @Test
@@ -707,7 +761,11 @@ public class FFprobeTest {
 
   @Test
   public void testFullPacketDeserialization() throws IOException {
-    FFprobeBuilder probeBuilder = ffprobe.builder().setShowPackets(true).setInput(Samples.big_buck_bunny_720p_1mb_with_packets);
+    FFprobeBuilder probeBuilder =
+        ffprobe
+            .builder()
+            .setShowPackets(true)
+            .setInput(Samples.big_buck_bunny_720p_1mb_with_packets);
     List<FFmpegPacket> packets = ffprobe.probe(probeBuilder).getPackets();
 
     FFmpegPacket packet = packets.get(packets.size() - 1);
@@ -727,7 +785,8 @@ public class FFprobeTest {
 
   @Test
   public void testFullFrameDeserialization() throws IOException {
-    FFprobeBuilder probeBuilder = ffprobe.builder().setShowFrames(true).setInput(Samples.big_buck_bunny_720p_1mb_with_frames);
+    FFprobeBuilder probeBuilder =
+        ffprobe.builder().setShowFrames(true).setInput(Samples.big_buck_bunny_720p_1mb_with_frames);
     List<FFmpegFrame> frames = ffprobe.probe(probeBuilder).getFrames();
 
     FFmpegFrame frame = frames.get(frames.size() - 1);

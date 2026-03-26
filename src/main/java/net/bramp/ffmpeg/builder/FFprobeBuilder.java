@@ -1,19 +1,16 @@
 package net.bramp.ffmpeg.builder;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-
-import javax.annotation.CheckReturnValue;
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 
-/**
- * Builds a ffprobe command line
- */
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.CheckReturnValue;
+
+/** Builds a ffprobe command line */
 public class FFprobeBuilder {
   private boolean showFormat = true;
   private boolean showStreams = true;
@@ -78,10 +75,7 @@ public class FFprobeBuilder {
 
     Preconditions.checkNotNull(input, "Input must be specified");
 
-    args
-        .add("-v", "quiet")
-        .add("-print_format", "json")
-        .add("-show_error");
+    args.add("-v", "quiet").add("-print_format", "json").add("-show_error");
 
     if (userAgent != null) {
       args.add("-user_agent", userAgent);
