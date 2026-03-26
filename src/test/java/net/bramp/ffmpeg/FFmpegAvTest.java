@@ -37,9 +37,7 @@ public class FFmpegAvTest {
         "avconv version 11.4, Copyright (c) 2000-2014 the Libav developers", ffmpeg.version());
   }
 
-  /**
-   * We don't support avconv, so all methods should throw an exception.
-   */
+  /** We don't support avconv, so all methods should throw an exception. */
   @Test(expected = IllegalArgumentException.class)
   public void testProbeVideo() throws IOException {
     ffmpeg.run(Collections.<String>emptyList());

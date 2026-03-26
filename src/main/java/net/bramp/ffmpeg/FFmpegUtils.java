@@ -40,9 +40,9 @@ public final class FFmpegUtils {
    */
   @Deprecated
   @InlineMe(
-    replacement = "FFmpegUtils.toTimecode(milliseconds, MILLISECONDS)",
-    imports = "net.bramp.ffmpeg.FFmpegUtils",
-    staticImports = "java.util.concurrent.TimeUnit.MILLISECONDS")
+      replacement = "FFmpegUtils.toTimecode(milliseconds, MILLISECONDS)",
+      imports = "net.bramp.ffmpeg.FFmpegUtils",
+      staticImports = "java.util.concurrent.TimeUnit.MILLISECONDS")
   public static String millisecondsToString(long milliseconds) {
     return toTimecode(milliseconds, MILLISECONDS);
   }

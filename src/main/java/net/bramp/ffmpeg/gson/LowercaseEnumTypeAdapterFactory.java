@@ -36,7 +36,7 @@ public class LowercaseEnumTypeAdapterFactory implements TypeAdapterFactory {
     @SuppressWarnings("Immutable")
     private final ImmutableMap<String, T> lowercaseToEnum;
 
-    public MyTypeAdapter(Map<String, T> lowercaseToEnum) {
+    MyTypeAdapter(Map<String, T> lowercaseToEnum) {
       this.lowercaseToEnum = ImmutableMap.copyOf(lowercaseToEnum);
     }
 

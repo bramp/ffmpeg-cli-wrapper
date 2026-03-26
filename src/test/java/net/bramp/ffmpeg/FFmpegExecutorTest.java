@@ -183,9 +183,7 @@ public class FFmpegExecutorTest {
     assertEquals(FFmpegJob.State.FINISHED, job.getState());
   }
 
-  /**
-   * Test if addStdoutOutput() actually works, and the output can be correctly captured.
-   */
+  /** Test if addStdoutOutput() actually works, and the output can be correctly captured. */
   @Test
   public void testStdout() throws InterruptedException, ExecutionException, IOException {
 

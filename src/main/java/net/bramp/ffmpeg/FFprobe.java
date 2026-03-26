@@ -1,21 +1,20 @@
 package net.bramp.ffmpeg;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.MoreObjects;
 import com.google.gson.Gson;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.List;
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import net.bramp.ffmpeg.builder.FFprobeBuilder;
 import net.bramp.ffmpeg.io.LoggingFilterReader;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Wrapper around FFprobe
@@ -90,8 +89,11 @@ public class FFprobe extends FFcommon {
     return probe(builder.build());
   }
 
-  public FFmpegProbeResult probe(String mediaPath, @Nullable String userAgent, @Nullable String... extraArgs) throws IOException {
-    return probe(this.builder().setInput(mediaPath).setUserAgent(userAgent).addExtraArgs(extraArgs).build());
+  public FFmpegProbeResult probe(
+      String mediaPath, @Nullable String userAgent, @Nullable String... extraArgs)
+      throws IOException {
+    return probe(
+        this.builder().setInput(mediaPath).setUserAgent(userAgent).addExtraArgs(extraArgs).build());
   }
 
   // TODO Add Probe Inputstream

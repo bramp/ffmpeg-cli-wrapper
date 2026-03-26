@@ -29,7 +29,10 @@ public class FFmpegBuilder {
 
   private static final Logger log = LoggerFactory.getLogger(FFmpegBuilder.class);
 
-  /** Log level options: <a href="https://ffmpeg.org/ffmpeg.html#Generic-options">ffmpeg documentation</a> */
+  /**
+   * Log level options: <a href="https://ffmpeg.org/ffmpeg.html#Generic-options">ffmpeg
+   * documentation</a>
+   */
   public enum Verbosity {
     QUIET,
     PANIC,
@@ -119,6 +122,7 @@ public class FFmpegBuilder {
 
   /**
    * Makes ffmpeg read the first input at the native frame read
+   *
    * @return this
    * @deprecated Use {@link AbstractFFmpegInputBuilder#readAtNativeFrameRate()} instead
    */
@@ -184,9 +188,11 @@ public class FFmpegBuilder {
 
   /**
    * Sets the format for the first input stream
+   *
    * @param format, the format of this input stream, not null
    * @return this
-   * @deprecated Specify this option on an input stream using {@link AbstractFFmpegStreamBuilder#setFormat(String)}
+   * @deprecated Specify this option on an input stream using {@link
+   *     AbstractFFmpegStreamBuilder#setFormat(String)}
    */
   @Deprecated
   public FFmpegBuilder setFormat(String format) {
@@ -196,10 +202,12 @@ public class FFmpegBuilder {
 
   /**
    * Sets the start offset for the first input stream
+   *
    * @param duration the amount of the offset, measured in terms of the unit
    * @param units the unit that the duration is measured in, not null
    * @return this
-   * @deprecated Specify this option on an input or output stream using {@link AbstractFFmpegStreamBuilder#setStartOffset(long, TimeUnit)}
+   * @deprecated Specify this option on an input or output stream using {@link
+   *     AbstractFFmpegStreamBuilder#setStartOffset(long, TimeUnit)}
    */
   @Deprecated
   public FFmpegBuilder setStartOffset(long duration, TimeUnit units) {
@@ -303,8 +311,8 @@ public class FFmpegBuilder {
   }
 
   /**
-   * Adds new HLS(Http Live Streaming) output file.
-   * <br>
+   * Adds new HLS(Http Live Streaming) output file. <br>
+   *
    * <pre>
    * <code>List&lt;String&gt; args = new FFmpegBuilder()
    *   .addHlsOutput(&quot;output.m3u8&quot;)
@@ -312,7 +320,6 @@ public class FFmpegBuilder {
    * </pre>
    *
    * @param filename output file path
-   *
    * @return A new {@link FFmpegHlsOutputBuilder}
    */
   public FFmpegHlsOutputBuilder addHlsOutput(String filename) {
@@ -370,7 +377,8 @@ public class FFmpegBuilder {
     }
 
     if (startOffset != null) {
-      log.warn("Using FFmpegBuilder#setStartOffset is deprecated. Specify it on the inputStream or outputStream instead");
+      log.warn(
+          "Using FFmpegBuilder#setStartOffset is deprecated. Specify it on the inputStream or outputStream instead");
       args.add("-ss", FFmpegUtils.toTimecode(startOffset, TimeUnit.MILLISECONDS));
     }
 
@@ -379,12 +387,14 @@ public class FFmpegBuilder {
     }
 
     if (format != null) {
-      log.warn("Using FFmpegBuilder#setFormat is deprecated. Specify it on the inputStream or outputStream instead");
+      log.warn(
+          "Using FFmpegBuilder#setFormat is deprecated. Specify it on the inputStream or outputStream instead");
       args.add("-f", format);
     }
 
     if (read_at_native_frame_rate) {
-      log.warn("Using FFmpegBuilder#readAtNativeFrameRate is deprecated. Specify it on the inputStream instead");
+      log.warn(
+          "Using FFmpegBuilder#readAtNativeFrameRate is deprecated. Specify it on the inputStream instead");
       args.add("-re");
     }
 
@@ -415,7 +425,8 @@ public class FFmpegBuilder {
     }
 
     if (!Strings.isNullOrEmpty(complexFilter)) {
-      log.warn("Using FFmpegBuilder#setComplexFilter is deprecated. Specify it on the outputStream instead");
+      log.warn(
+          "Using FFmpegBuilder#setComplexFilter is deprecated. Specify it on the outputStream instead");
       args.add("-filter_complex", complexFilter);
     }
 

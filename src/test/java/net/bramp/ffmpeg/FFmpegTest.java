@@ -6,16 +6,15 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
+import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import com.google.common.collect.Lists;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import net.bramp.ffmpeg.fixtures.ChannelLayouts;
 import net.bramp.ffmpeg.fixtures.Codecs;
 import net.bramp.ffmpeg.fixtures.Filters;
 import net.bramp.ffmpeg.fixtures.Formats;
-import net.bramp.ffmpeg.fixtures.ChannelLayouts;
 import net.bramp.ffmpeg.fixtures.PixelFormats;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.info.Filter;
@@ -47,7 +46,7 @@ public class FFmpegTest {
     when(runFunc.run(argThatHasItem("-filters")))
         .thenAnswer(new NewProcessAnswer("ffmpeg-filters"));
     when(runFunc.run(argThatHasItem("-layouts")))
-            .thenAnswer(new NewProcessAnswer("ffmpeg-layouts"));
+        .thenAnswer(new NewProcessAnswer("ffmpeg-layouts"));
 
     ffmpeg = new FFmpeg(runFunc);
   }
@@ -69,7 +68,14 @@ public class FFmpegTest {
   public void testStartOffsetOption() throws Exception {
     FFmpeg ffmpeg = new FFmpeg();
 
-    FFmpegBuilder builder = ffmpeg.builder().addInput(Samples.big_buck_bunny_720p_1mb).setStartOffset(1, TimeUnit.SECONDS).done().addOutput(Samples.output_mp4).done();
+    FFmpegBuilder builder =
+        ffmpeg
+            .builder()
+            .addInput(Samples.big_buck_bunny_720p_1mb)
+            .setStartOffset(1, TimeUnit.SECONDS)
+            .done()
+            .addOutput(Samples.output_mp4)
+            .done();
 
     try {
       ffmpeg.run(builder);
@@ -82,7 +88,14 @@ public class FFmpegTest {
   public void testDurationOption() throws Exception {
     FFmpeg ffmpeg = new FFmpeg();
 
-    FFmpegBuilder builder = ffmpeg.builder().addInput(Samples.big_buck_bunny_720p_1mb).setDuration(1, TimeUnit.SECONDS).done().addOutput(Samples.output_mp4).done();
+    FFmpegBuilder builder =
+        ffmpeg
+            .builder()
+            .addInput(Samples.big_buck_bunny_720p_1mb)
+            .setDuration(1, TimeUnit.SECONDS)
+            .done()
+            .addOutput(Samples.output_mp4)
+            .done();
 
     try {
       ffmpeg.run(builder);

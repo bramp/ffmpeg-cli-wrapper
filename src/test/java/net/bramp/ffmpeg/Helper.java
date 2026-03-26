@@ -36,17 +36,15 @@ public class Helper {
     return FFmpegTest.class.getResourceAsStream("fixtures/" + name);
   }
 
-  /**
-   * Loads all resources, and returns one stream containing them all.
-   */
+  /** Loads all resources, and returns one stream containing them all. */
   public static InputStream combineResource(List<String> names) {
     checkNotNull(names);
     return sequenceInputStream(Iterables.transform(names, resourceLoader));
   }
 
   public static <T> List<T> subList(List<T> input, int start) {
-      checkNotNull(input);
+    checkNotNull(input);
 
-      return input.subList(start, input.size());
+    return input.subList(start, input.size());
   }
 }
