@@ -22,10 +22,6 @@ public class Helper {
         }
       };
 
-  /**
-   * Simple wrapper around "new SequenceInputStream", so the user doesn't have to deal with the
-   * horribly dated Enumeration type.
-   */
   public static InputStream sequenceInputStream(Iterable<InputStream> input) {
     checkNotNull(input);
     return new SequenceInputStream(asEnumeration(input.iterator()));

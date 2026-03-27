@@ -368,12 +368,12 @@
                     <destDir>apidocs</destDir>
                     <nohelp>true</nohelp>
                     <linksource>true</linksource>
-                    <source>8</source>
+                    <source>${base.java.version}</source>
+                    <doclint>none</doclint>
                     <links>
-                        <link>https://javadoc.io/doc/com.google.code.gson/gson/</link>
+                        <link>https://javadoc.io/doc/com.google.code.gson/gson/latest/</link>
                         <link>https://commons.apache.org/proper/commons-lang/javadocs/api-release/</link>
-                        <link>http://modelmapper.org/javadoc/</link>
-                        <link>http://findbugs.sourceforge.net/api/</link>
+                        <link>https://javadoc.io/doc/org.modelmapper/modelmapper/latest/</link>
                     </links>
                 </configuration>
                 <executions>

@@ -81,7 +81,7 @@ public class FFmpegExecutorTest {
   public void testNormal() throws InterruptedException, ExecutionException, IOException {
     FFmpegBuilder builder =
         new FFmpegBuilder()
-            .setVerbosity(FFmpegBuilder.Verbosity.DEBUG)
+            .setVerbosity(FFmpegBuilder.Verbosity.ERROR)
             .setUserAgent(
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36")
             .setInput(getWebserverRoot() + Samples.base_big_buck_bunny_720p_1mb)
