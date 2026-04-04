@@ -104,9 +104,17 @@ public class FFmpegBuilder {
     return this;
   }
 
+  public String getPassDirectory() {
+    return this.pass_directory;
+  }
+
   public FFmpegBuilder setPassPrefix(String prefix) {
     this.pass_prefix = checkNotNull(prefix);
     return this;
+  }
+
+  public String getPassPrefix() {
+    return this.pass_prefix;
   }
 
   public FFmpegBuilder setVerbosity(Verbosity verbosity) {
