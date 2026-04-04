@@ -10,7 +10,9 @@ import static net.bramp.ffmpeg.builder.MetadataSpecifier.checkValidKey;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import java.io.File;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -169,6 +171,30 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   }
 
   /**
+   * Sets a file to use containing presets.
+   *
+   * <p>Uses `-fpre`.
+   *
+   * @param presetFile the preset by file
+   * @return this
+   */
+  public T setPresetFilename(File presetFile) {
+    return setPresetFilename(checkNotNull(presetFile).getPath());
+  }
+
+  /**
+   * Sets a file to use containing presets.
+   *
+   * <p>Uses `-fpre`.
+   *
+   * @param presetPath the preset by path
+   * @return this
+   */
+  public T setPresetFilename(Path presetPath) {
+    return setPresetFilename(checkNotNull(presetPath).toString());
+  }
+
+  /**
    * Sets a preset by name (this only works with some codecs).
    *
    * <p>Uses `-preset`.
@@ -184,6 +210,26 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   public T setFilename(String filename) {
     this.filename = checkNotEmpty(filename, "filename must not be empty");
     return getThis();
+  }
+
+  /**
+   * Sets the output filename.
+   *
+   * @param file The file
+   * @return this
+   */
+  public T setFilename(File file) {
+    return setFilename(checkNotNull(file).getPath());
+  }
+
+  /**
+   * Sets the output filename.
+   *
+   * @param path The path
+   * @return this
+   */
+  public T setFilename(Path path) {
+    return setFilename(checkNotNull(path).toString());
   }
 
   public String getFilename() {

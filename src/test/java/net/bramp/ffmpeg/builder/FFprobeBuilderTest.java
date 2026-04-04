@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.collect.ImmutableList;
+import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import org.junit.Test;
 
@@ -88,7 +90,9 @@ public class FFprobeBuilderTest {
   @Test
   public void throwsExceptionIfInputIsNull() {
     final FFprobeBuilder builder = new FFprobeBuilder();
-    assertThrows(NullPointerException.class, () -> builder.setInput(null));
+    assertThrows(NullPointerException.class, () -> builder.setInput((String) null));
+    assertThrows(NullPointerException.class, () -> builder.setInput((File) null));
+    assertThrows(NullPointerException.class, () -> builder.setInput((Path) null));
   }
 
   @Test

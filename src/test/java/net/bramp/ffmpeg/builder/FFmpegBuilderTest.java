@@ -12,7 +12,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import com.google.common.collect.ImmutableList;
+import java.io.File;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import net.bramp.ffmpeg.builder.FFmpegBuilder.Verbosity;
@@ -280,6 +282,51 @@ public class FFmpegBuilderTest {
             .setFilename("filename")
             .done()
             .build();
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testSetInputNullString() {
+    new FFmpegBuilder().setInput((String) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testSetInputNullFile() {
+    new FFmpegBuilder().setInput((File) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testSetInputNullPath() {
+    new FFmpegBuilder().setInput((Path) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testAddInputNullString() {
+    new FFmpegBuilder().addInput((String) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testAddInputNullFile() {
+    new FFmpegBuilder().addInput((File) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testAddInputNullPath() {
+    new FFmpegBuilder().addInput((Path) null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddOutputNullString() {
+    new FFmpegBuilder().addOutput((String) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testAddOutputNullFile() {
+    new FFmpegBuilder().addOutput((File) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testAddOutputNullPath() {
+    new FFmpegBuilder().addOutput((Path) null);
   }
 
   @Test(expected = IllegalArgumentException.class)

@@ -6,6 +6,8 @@ import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.CheckReturnValue;
@@ -56,6 +58,14 @@ public class FFprobeBuilder {
     checkNotNull(filename);
     this.input = filename;
     return this;
+  }
+
+  public FFprobeBuilder setInput(File file) {
+    return setInput(checkNotNull(file).getPath());
+  }
+
+  public FFprobeBuilder setInput(Path path) {
+    return setInput(checkNotNull(path).toString());
   }
 
   public FFprobeBuilder addExtraArgs(String... values) {

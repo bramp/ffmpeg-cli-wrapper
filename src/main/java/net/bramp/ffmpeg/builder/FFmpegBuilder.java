@@ -8,7 +8,10 @@ import com.google.common.base.Ascii;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import java.io.File;
 import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -104,6 +107,14 @@ public class FFmpegBuilder {
     return this;
   }
 
+  public FFmpegBuilder setPassDirectory(File directory) {
+    return setPassDirectory(checkNotNull(directory).getPath());
+  }
+
+  public FFmpegBuilder setPassDirectory(Path directory) {
+    return setPassDirectory(checkNotNull(directory).toString());
+  }
+
   public String getPassDirectory() {
     return this.pass_directory;
   }
@@ -153,6 +164,14 @@ public class FFmpegBuilder {
     return this.doAddInput(new FFmpegFileInputBuilder(this, filename));
   }
 
+  public FFmpegFileInputBuilder addInput(File file) {
+    return addInput(checkNotNull(file).getPath());
+  }
+
+  public FFmpegFileInputBuilder addInput(Path path) {
+    return addInput(checkNotNull(path).toString());
+  }
+
   public <T extends AbstractFFmpegInputBuilder<T>> FFmpegBuilder addInput(T input) {
     return this.doAddInput(input).done();
   }
@@ -177,6 +196,16 @@ public class FFmpegBuilder {
   public FFmpegFileInputBuilder setInput(String filename) {
     clearInputs();
     return addInput(filename);
+  }
+
+  public FFmpegFileInputBuilder setInput(File file) {
+    clearInputs();
+    return addInput(file);
+  }
+
+  public FFmpegFileInputBuilder setInput(Path path) {
+    clearInputs();
+    return addInput(path);
   }
 
   public <T extends AbstractFFmpegInputBuilder<T>> FFmpegBuilder setInput(T input) {
@@ -306,6 +335,14 @@ public class FFmpegBuilder {
     return output;
   }
 
+  public FFmpegOutputBuilder addOutput(File file) {
+    return addOutput(checkNotNull(file).getPath());
+  }
+
+  public FFmpegOutputBuilder addOutput(Path path) {
+    return addOutput(checkNotNull(path).toString());
+  }
+
   /**
    * Adds new output file.
    *
@@ -334,6 +371,14 @@ public class FFmpegBuilder {
     FFmpegHlsOutputBuilder output = new FFmpegHlsOutputBuilder(this, filename);
     outputs.add(output);
     return output;
+  }
+
+  public FFmpegHlsOutputBuilder addHlsOutput(File file) {
+    return addHlsOutput(checkNotNull(file).getPath());
+  }
+
+  public FFmpegHlsOutputBuilder addHlsOutput(Path path) {
+    return addHlsOutput(checkNotNull(path).toString());
   }
 
   /**
@@ -420,7 +465,7 @@ public class FFmpegBuilder {
       args.add("-pass", Integer.toString(pass));
 
       if (pass_prefix != null) {
-        args.add("-passlogfile", pass_directory + pass_prefix);
+        args.add("-passlogfile", Paths.get(pass_directory, pass_prefix).toString());
       }
     }
 
