@@ -22,7 +22,7 @@ We currently support Java 11 and above. Use Maven to install the dependency.
 <dependency>
   <groupId>net.bramp.ffmpeg</groupId>
   <artifactId>ffmpeg</artifactId>
-  <version>0.8.1-SNAPSHOT</version>
+  <version>0.9.0-SNAPSHOT</version>
 </dependency>
 ```
 

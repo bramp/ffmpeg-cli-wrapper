@@ -1,6 +1,9 @@
 name: Publish to Maven Central
 
 on:
+  push:
+    tags:
+      - 'ffmpeg-*'
   release:
     types: [published]
   workflow_dispatch:
