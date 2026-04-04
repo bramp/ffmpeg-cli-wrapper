@@ -6,6 +6,7 @@ name: Java CI with Maven
 on:
   push:
     branches: [ "master" ]
+    tags: [ "ffmpeg-*" ]
   pull_request:
     branches: [ "master" ]
 
