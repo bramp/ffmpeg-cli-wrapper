@@ -427,8 +427,6 @@
                             <goal>sign</goal>
                         </goals>
                         <configuration>
-                            <bestPractices>true</bestPractices>
-                            <passphrase>${env.GPG_PASSPHRASE}</passphrase>
                             <gpgArguments>
                                 <arg>--batch</arg>
                                 <arg>--pinentry-mode</arg>
