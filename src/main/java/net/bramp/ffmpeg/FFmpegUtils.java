@@ -24,7 +24,7 @@ public final class FFmpegUtils {
 
   static final Gson gson = FFmpegUtils.setupGson();
   static final Pattern BITRATE_REGEX = Pattern.compile("(\\d+(?:\\.\\d+)?)kbits/s");
-  static final Pattern TIME_REGEX = Pattern.compile("(\\d+):(\\d+):(\\d+(?:\\.\\d+)?)");
+  static final Pattern TIME_REGEX = Pattern.compile("(-?)(\\d+):(\\d+):(\\d+(?:\\.\\d+)?)");
   static final CharMatcher ZERO = CharMatcher.is('0');
 
   FFmpegUtils() {
@@ -40,9 +40,9 @@ public final class FFmpegUtils {
    */
   @Deprecated
   @InlineMe(
-    replacement = "FFmpegUtils.toTimecode(milliseconds, MILLISECONDS)",
-    imports = "net.bramp.ffmpeg.FFmpegUtils",
-    staticImports = "java.util.concurrent.TimeUnit.MILLISECONDS")
+      replacement = "FFmpegUtils.toTimecode(milliseconds, MILLISECONDS)",
+      imports = "net.bramp.ffmpeg.FFmpegUtils",
+      staticImports = "java.util.concurrent.TimeUnit.MILLISECONDS")
   public static String millisecondsToString(long milliseconds) {
     return toTimecode(milliseconds, MILLISECONDS);
   }
@@ -55,9 +55,11 @@ public final class FFmpegUtils {
    * @return the timecode representation.
    */
   public static String toTimecode(long duration, TimeUnit units) {
-    // FIXME Negative durations are also supported.
-    // https://www.ffmpeg.org/ffmpeg-utils.html#Time-duration
-    checkArgument(duration >= 0, "duration must be positive");
+    String prefix = "";
+    if (duration < 0) {
+      prefix = "-";
+      duration = Math.abs(duration);
+    }
 
     long nanoseconds = units.toNanos(duration); // TODO This will clip at Long.MAX_VALUE
     long seconds = units.toSeconds(duration);
@@ -69,11 +71,14 @@ public final class FFmpegUtils {
     long hours = MINUTES.toHours(minutes);
     minutes -= HOURS.toMinutes(hours);
 
+    String result;
     if (ns == 0) {
-      return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+      result = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    } else {
+      result = ZERO.trimTrailingFrom(String.format("%02d:%02d:%02d.%09d", hours, minutes, seconds, ns));
     }
 
-    return ZERO.trimTrailingFrom(String.format("%02d:%02d:%02d.%09d", hours, minutes, seconds, ns));
+    return prefix + result;
   }
 
   /**
@@ -95,11 +100,12 @@ public final class FFmpegUtils {
       throw new IllegalArgumentException("invalid time '" + time + "'");
     }
 
-    long hours = Long.parseLong(m.group(1));
-    long mins = Long.parseLong(m.group(2));
-    double secs = Double.parseDouble(m.group(3));
+    long sign = m.group(1).equals("-") ? -1 : 1;
+    long hours = Long.parseLong(m.group(2));
+    long mins = Long.parseLong(m.group(3));
+    double secs = Double.parseDouble(m.group(4));
 
-    return HOURS.toNanos(hours) + MINUTES.toNanos(mins) + (long) (SECONDS.toNanos(1) * secs);
+    return sign * (HOURS.toNanos(hours) + MINUTES.toNanos(mins) + (long) (SECONDS.toNanos(1) * secs));
   }
 
   /**

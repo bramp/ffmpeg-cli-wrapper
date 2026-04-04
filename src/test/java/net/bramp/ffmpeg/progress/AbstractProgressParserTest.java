@@ -66,7 +66,7 @@ public abstract class AbstractProgressParserTest {
     assertTrue(progesses.isEmpty());
   }
 
-  @Test()
+  @Test
   public void testStopNoStart() throws IOException {
     parser.stop();
     assertTrue(progesses.isEmpty());

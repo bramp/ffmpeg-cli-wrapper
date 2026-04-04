@@ -1,7 +1,6 @@
 package net.bramp.ffmpeg.probe;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import java.io.Serializable;
 
 @SuppressFBWarnings(

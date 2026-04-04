@@ -25,7 +25,7 @@ public class FractionAdapterTest {
     final String s;
     final Fraction f;
 
-    public TestData(String s, Fraction f) {
+    TestData(String s, Fraction f) {
       this.s = s;
       this.f = f;
     }

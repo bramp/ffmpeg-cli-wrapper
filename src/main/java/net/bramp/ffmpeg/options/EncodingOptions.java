@@ -4,19 +4,24 @@ import java.beans.ConstructorProperties;
 
 /**
  * Audio, Video and Main encoding options for ffmpeg.
- * 
+ *
  * @author bramp
  */
 public class EncodingOptions {
-  /** @deprecated Use {@link #getMain()} instead */
-  @Deprecated
-  public final MainEncodingOptions main;
-  /** @deprecated Use {@link #getAudio()} instead */
-  @Deprecated
-  public final AudioEncodingOptions audio;
-  /** @deprecated Use {@link #getVideo()} instead */
-  @Deprecated
-  public final VideoEncodingOptions video;
+  /**
+   * @deprecated Use {@link #getMain()} instead
+   */
+  @Deprecated public final MainEncodingOptions main;
+
+  /**
+   * @deprecated Use {@link #getAudio()} instead
+   */
+  @Deprecated public final AudioEncodingOptions audio;
+
+  /**
+   * @deprecated Use {@link #getVideo()} instead
+   */
+  @Deprecated public final VideoEncodingOptions video;
 
   @ConstructorProperties({"main", "audio", "video"})
   public EncodingOptions(

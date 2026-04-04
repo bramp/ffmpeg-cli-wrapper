@@ -9,33 +9,50 @@ import org.apache.commons.lang3.math.Fraction;
  * @author bramp
  */
 public class VideoEncodingOptions {
-  /** @deprecated Use {@link #isEnabled()} instead */
-  @Deprecated
-  public final boolean enabled;
-  /** @deprecated Use {@link #getCodec()} instead */
-  @Deprecated
-  public final String codec;
-  /** @deprecated Use {@link #getFrameRate()} instead */
-  @Deprecated
-  public final Fraction frame_rate;
-  /** @deprecated Use {@link #getWidth()} instead */
-  @Deprecated
-  public final int width;
-  /** @deprecated Use {@link #getHeight()} instead */
-  @Deprecated
-  public final int height;
-  /** @deprecated Use {@link #getBitRate()} instead */
-  @Deprecated
-  public final long bit_rate;
-  /** @deprecated Use {@link #getFrames()} instead */
-  @Deprecated
-  public final Integer frames;
-  /** @deprecated Use {@link #getFilter()} instead */
-  @Deprecated
-  public final String filter;
-  /** @deprecated Use {@link #getPreset()} instead */
-  @Deprecated
-  public final String preset;
+  /**
+   * @deprecated Use {@link #isEnabled()} instead
+   */
+  @Deprecated public final boolean enabled;
+
+  /**
+   * @deprecated Use {@link #getCodec()} instead
+   */
+  @Deprecated public final String codec;
+
+  /**
+   * @deprecated Use {@link #getFrameRate()} instead
+   */
+  @Deprecated public final Fraction frame_rate;
+
+  /**
+   * @deprecated Use {@link #getWidth()} instead
+   */
+  @Deprecated public final int width;
+
+  /**
+   * @deprecated Use {@link #getHeight()} instead
+   */
+  @Deprecated public final int height;
+
+  /**
+   * @deprecated Use {@link #getBitRate()} instead
+   */
+  @Deprecated public final long bit_rate;
+
+  /**
+   * @deprecated Use {@link #getFrames()} instead
+   */
+  @Deprecated public final Integer frames;
+
+  /**
+   * @deprecated Use {@link #getFilter()} instead
+   */
+  @Deprecated public final String filter;
+
+  /**
+   * @deprecated Use {@link #getPreset()} instead
+   */
+  @Deprecated public final String preset;
 
   @ConstructorProperties({
     "enabled",

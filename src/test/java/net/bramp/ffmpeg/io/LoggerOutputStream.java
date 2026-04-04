@@ -23,6 +23,7 @@ public class LoggerOutputStream extends OutputStream {
   public void write(int b) throws IOException {
     buffer.write(b);
     if (b == '\n') {
+      @SuppressWarnings("JdkObsolete")
       String line = buffer.toString(StandardCharsets.UTF_8.name());
       switch (level) {
         case TRACE:

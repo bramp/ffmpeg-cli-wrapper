@@ -59,15 +59,25 @@ public class Codec {
     Preconditions.checkArgument(flags.length() == 6, "Codec flags is invalid '%s'", flags);
 
     switch (flags.charAt(0)) {
-      case 'D': this.canDecode = true; break;
-      case '.': this.canDecode = false; break;
-      default: throw new IllegalArgumentException("Invalid decoding value '" + flags.charAt(0) + "'");
+      case 'D':
+        this.canDecode = true;
+        break;
+      case '.':
+        this.canDecode = false;
+        break;
+      default:
+        throw new IllegalArgumentException("Invalid decoding value '" + flags.charAt(0) + "'");
     }
 
     switch (flags.charAt(1)) {
-      case 'E': this.canEncode = true; break;
-      case '.': this.canEncode = false; break;
-      default: throw new IllegalArgumentException("Invalid encoding value '" + flags.charAt(1) + "'");
+      case 'E':
+        this.canEncode = true;
+        break;
+      case '.':
+        this.canEncode = false;
+        break;
+      default:
+        throw new IllegalArgumentException("Invalid encoding value '" + flags.charAt(1) + "'");
     }
 
     switch (flags.charAt(2)) {
@@ -91,23 +101,39 @@ public class Codec {
     }
 
     switch (flags.charAt(3)) {
-      case 'I': this.intraFrameOnly = true; break;
-      case '.': this.intraFrameOnly = false; break;
-      default: throw new IllegalArgumentException("Invalid encoding value '" + flags.charAt(3) + "'");
+      case 'I':
+        this.intraFrameOnly = true;
+        break;
+      case '.':
+        this.intraFrameOnly = false;
+        break;
+      default:
+        throw new IllegalArgumentException("Invalid encoding value '" + flags.charAt(3) + "'");
     }
 
     switch (flags.charAt(4)) {
-      case 'L': this.lossyCompression = true; break;
-      case '.': this.lossyCompression = false; break;
-      default: throw new IllegalArgumentException("Invalid lossy compression value '" + flags.charAt(4) + "'");
+      case 'L':
+        this.lossyCompression = true;
+        break;
+      case '.':
+        this.lossyCompression = false;
+        break;
+      default:
+        throw new IllegalArgumentException(
+            "Invalid lossy compression value '" + flags.charAt(4) + "'");
     }
 
     switch (flags.charAt(5)) {
-      case 'S': this.losslessCompression = true; break;
-      case '.': this.losslessCompression = false; break;
-      default: throw new IllegalArgumentException("Invalid lossless compression value '" + flags.charAt(5) + "'");
+      case 'S':
+        this.losslessCompression = true;
+        break;
+      case '.':
+        this.losslessCompression = false;
+        break;
+      default:
+        throw new IllegalArgumentException(
+            "Invalid lossless compression value '" + flags.charAt(5) + "'");
     }
-
   }
 
   @Override
@@ -156,5 +182,4 @@ public class Codec {
   public boolean supportsLosslessCompression() {
     return losslessCompression;
   }
-
 }

@@ -46,8 +46,6 @@ public class TcpProgressParserTest extends AbstractProgressParserTest {
     assertThat(progesses, equalTo(Progresses.allProgresses));
   }
 
-
-
   @Test
   public void testNaProgressPackets() throws IOException, InterruptedException, URISyntaxException {
     parser.start();
@@ -72,8 +70,7 @@ public class TcpProgressParserTest extends AbstractProgressParserTest {
   }
 
   @Test
-  public void testPrematureDisconnect()
-      throws IOException {
+  public void testPrematureDisconnect() throws IOException {
     parser.start();
     new Socket(uri.getHost(), uri.getPort()).close();
     parser.stop();

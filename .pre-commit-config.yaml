@@ -1,0 +1,25 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.5.0
+  hooks:
+  - id: check-yaml
+    args: [--allow-multiple-documents]
+  - id: end-of-file-fixer
+    exclude: ^src/test/resources/
+  - id: trailing-whitespace
+    exclude: ^src/test/resources/
+- repo: local
+  hooks:
+  - id: maven-format
+    name: Maven Format
+    entry: mvn fmt:format
+    language: system
+    types: [java]
+    pass_filenames: false
+
+  - id: maven-test
+    name: Maven Test
+    entry: mvn test
+    language: system
+    types: [java]
+    pass_filenames: false
