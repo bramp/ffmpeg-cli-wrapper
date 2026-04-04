@@ -82,6 +82,24 @@ public final class FFmpegUtils {
   }
 
   /**
+   * Converts milliseconds to a seconds string representation. Uses integer format when there are no
+   * fractional seconds, otherwise uses decimal format with up to 3 decimal places and trailing
+   * zeros removed.
+   *
+   * @param millis duration in milliseconds
+   * @return seconds as a string (e.g. "5", "0.005", "1.5")
+   */
+  public static String millisToSeconds(long millis) {
+    if (millis % 1000 == 0) {
+      return String.valueOf(millis / 1000);
+    }
+    // Use up to 3 decimal places, trim trailing zeros
+    String s = String.format("%.3f", millis / 1000.0);
+    s = s.contains(".") ? s.replaceAll("0+$", "").replaceAll("\\.$", "") : s;
+    return s;
+  }
+
+  /**
    * Returns the number of nanoseconds this timecode represents. The string is expected to be in the
    * format "hour:minute:second", where second can be a decimal number.
    *

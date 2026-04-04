@@ -73,4 +73,18 @@ public class FFmpegUtilsTest {
   public void testParseBitrateInvalidNumber() {
     parseBitrate("12.3");
   }
+
+  @Test
+  public void testMillisToSeconds() {
+    assertEquals("0", millisToSeconds(0));
+    assertEquals("5", millisToSeconds(5000));
+    assertEquals("120", millisToSeconds(120000));
+    assertEquals("0.001", millisToSeconds(1));
+    assertEquals("0.005", millisToSeconds(5));
+    assertEquals("0.01", millisToSeconds(10));
+    assertEquals("0.1", millisToSeconds(100));
+    assertEquals("0.5", millisToSeconds(500));
+    assertEquals("1.5", millisToSeconds(1500));
+    assertEquals("0.003", millisToSeconds(3));
+  }
 }

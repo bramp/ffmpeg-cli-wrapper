@@ -58,11 +58,11 @@ public class FFmpegHlsOutputBuilderTest extends AbstractFFmpegOutputBuilderTest 
             "-f",
             "hls",
             "-hls_time",
-            "00:00:00.005",
+            "0.005",
             "-hls_segment_filename",
             "file%03d.ts",
             "-hls_init_time",
-            "00:00:00.003",
+            "0.003",
             "-hls_list_size",
             "3",
             "-hls_base_url",
@@ -102,11 +102,11 @@ public class FFmpegHlsOutputBuilderTest extends AbstractFFmpegOutputBuilderTest 
             "-vf",
             "TEST",
             "-hls_time",
-            "00:00:00.005",
+            "0.005",
             "-hls_segment_filename",
             "file%03d.ts",
             "-hls_init_time",
-            "00:00:00.003",
+            "0.003",
             "-hls_list_size",
             "3",
             "-hls_base_url",
@@ -201,7 +201,7 @@ public class FFmpegHlsOutputBuilderTest extends AbstractFFmpegOutputBuilderTest 
             .setHlsTime(5, TimeUnit.SECONDS)
             .build(0);
 
-    assertThat(command, is(ImmutableList.of("-f", "hls", "-hls_time", "00:00:05", "output.m3u8")));
+    assertThat(command, is(ImmutableList.of("-f", "hls", "-hls_time", "5", "output.m3u8")));
   }
 
   @Test
@@ -226,7 +226,7 @@ public class FFmpegHlsOutputBuilderTest extends AbstractFFmpegOutputBuilderTest 
             .build(0);
 
     assertThat(
-        command, is(ImmutableList.of("-f", "hls", "-hls_init_time", "00:00:00.01", "output.m3u8")));
+        command, is(ImmutableList.of("-f", "hls", "-hls_init_time", "0.01", "output.m3u8")));
   }
 
   @Test
