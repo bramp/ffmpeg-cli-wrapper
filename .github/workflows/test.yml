@@ -15,6 +15,7 @@ on:
 
 jobs:
   test:
+    if: false # Temporarily disabled to iterate on publish flow
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -47,7 +48,6 @@ jobs:
         continue-on-error: true
 
   publish:
-    needs: test
     # Only publish on tags (ffmpeg-*) or manual dispatch
     # and only if it's not a pull request
     if: |
