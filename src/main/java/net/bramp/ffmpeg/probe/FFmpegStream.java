@@ -60,6 +60,11 @@ public class FFmpegStream {
   public int channels;
   public String channel_layout;
 
+  public String color_range;
+  public String color_space;
+  public String color_transfer;
+  public String color_primaries;
+
   public FFmpegDisposition disposition;
 
   // TODO: Make Map immutable
@@ -210,6 +215,22 @@ public class FFmpegStream {
 
   public String getChannelLayout() {
     return channel_layout;
+  }
+
+  public String getColorRange() {
+    return color_range;
+  }
+
+  public String getColorSpace() {
+    return color_space;
+  }
+
+  public String getColorTransfer() {
+    return color_transfer;
+  }
+
+  public String getColorPrimaries() {
+    return color_primaries;
   }
 
   public FFmpegDisposition getDisposition() {
