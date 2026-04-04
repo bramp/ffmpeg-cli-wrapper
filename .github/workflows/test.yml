@@ -16,6 +16,7 @@ jobs:
     # https://github.com/federicocarboni/setup-ffmpeg/issues/19
     environment: debug
     strategy:
+      fail-fast: false
       matrix:
         # Long term supported versions
         java-version: [11, 17, 21]

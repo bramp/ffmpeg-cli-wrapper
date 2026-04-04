@@ -45,6 +45,8 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <error.prone.version>2.31.0</error.prone.version>
     </properties>
 
     <dependencyManagement>
@@ -257,6 +259,19 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.15.0</version>
+                    <configuration>
+                        <source>${base.java.version}</source>
+                        <target>${base.java.version}</target>
+                        <showWarnings>true</showWarnings>
+                        <failOnError>true</failOnError>
+                        <failOnWarning>true</failOnWarning>
+                        <compilerArgs>
+                            <!-- Surpress maven option warnings because we are
+                            focusing on code issues -->
+                            <arg>-Xlint:-options</arg>
+                            <arg>-Xlint:all</arg>
+                        </compilerArgs>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>net.revelc.code</groupId>
@@ -319,19 +334,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${base.java.version}</source>
-                    <target>${base.java.version}</target>
-                    <showWarnings>true</showWarnings>
-                    <failOnError>true</failOnError>
-                    <failOnWarning>true</failOnWarning>
-                    <compilerArgs>
-                        <!-- Surpress maven option warnings because we are
-                        focusing on code issues -->
-                        <arg>-Xlint:-options</arg>
-                        <arg>-Xlint:all</arg>
-                    </compilerArgs>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -754,7 +756,7 @@
                                     <path>
                                         <groupId>com.google.errorprone</groupId>
                                         <artifactId>error_prone_core</artifactId>
-                                        <version>2.48.0</version>
+                                        <version>${error.prone.version}</version>
                                     </path>
                                     <!-- Other annotation processors go here.
 
@@ -808,6 +810,42 @@
                                     <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
                                     <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
                                     <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+                                </compilerArgs>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+
+        <profile>
+            <id>Java 17+</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+            <properties>
+                <error.prone.version>2.42.0</error.prone.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>Java 21+</id>
+            <activation>
+                <jdk>[21,)</jdk>
+            </activation>
+            <properties>
+                <error.prone.version>2.48.0</error.prone.version>
+            </properties>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <configuration>
+                                <compilerArgs combine.children="append">
+                                    <!-- Flag needed for JDK 21+ Error Prone -->
+                                    <arg>-XDaddTypeAnnotationsToSymbol=true</arg>
                                 </compilerArgs>
                             </configuration>
                         </plugin>
