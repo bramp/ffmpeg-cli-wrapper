@@ -580,7 +580,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
-				<version>3.21.2</version>
+				<version>3.28.0</version>
 				<configuration>
 					<aggregate>true</aggregate>
 					<!-- The minimum tokens before a violation -->
