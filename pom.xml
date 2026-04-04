@@ -426,6 +426,12 @@
                         <goals>
                             <goal>sign</goal>
                         </goals>
+                        <configuration>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -728,7 +734,7 @@
         </profile>
 
         <profile>
-            <id>Java 11+</id>
+            <id>java11plus</id>
             <activation>
                 <jdk>[11,)</jdk>
             </activation>

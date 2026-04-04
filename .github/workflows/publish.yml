@@ -46,7 +46,7 @@ jobs:
           mvn clean deploy \
             -DskipTests=${{ github.event.inputs.skipTests || 'true' }} \
             --no-transfer-progress \
-            -P Java11+
+            -P java11plus
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
