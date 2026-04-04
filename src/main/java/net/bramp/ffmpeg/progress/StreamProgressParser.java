@@ -2,12 +2,12 @@ package net.bramp.ffmpeg.progress;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.base.Charsets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 
 public class StreamProgressParser {
 
@@ -29,7 +29,7 @@ public class StreamProgressParser {
 
   public void processStream(InputStream stream) throws IOException {
     checkNotNull(stream);
-    processReader(new InputStreamReader(stream, Charsets.UTF_8));
+    processReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
   }
 
   public void processReader(Reader reader) throws IOException {

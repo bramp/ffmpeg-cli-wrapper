@@ -1,12 +1,11 @@
 package net.bramp.ffmpeg.builder;
 
-import com.google.common.collect.ImmutableList;
-import org.junit.Test;
-
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+
+import com.google.common.collect.ImmutableList;
+import java.util.List;
+import org.junit.Test;
 
 public class FFprobeBuilderTest {
   @Test
@@ -29,7 +28,8 @@ public class FFprobeBuilderTest {
 
   @Test
   public void testPacketsAndFramesEnabled() {
-    final List<String> args = new FFprobeBuilder().setInput("input").setShowPackets(true).setShowFrames(true).build();
+    final List<String> args =
+        new FFprobeBuilder().setInput("input").setShowPackets(true).setShowFrames(true).build();
 
     assertEquals(
         args,
@@ -49,33 +49,28 @@ public class FFprobeBuilderTest {
 
   @Test
   public void testDefaultOptionsDisabled() {
-    final List<String> args = new FFprobeBuilder()
-        .setInput("input")
-        .setShowChapters(false)
-        .setShowStreams(false)
-        .setShowFormat(false)
-        .build();
+    final List<String> args =
+        new FFprobeBuilder()
+            .setInput("input")
+            .setShowChapters(false)
+            .setShowStreams(false)
+            .setShowFormat(false)
+            .build();
 
     assertEquals(
-        args,
-        ImmutableList.of(
-            "-v",
-            "quiet",
-            "-print_format",
-            "json",
-            "-show_error",
-            "input"));
+        args, ImmutableList.of("-v", "quiet", "-print_format", "json", "-show_error", "input"));
   }
 
   @Test
   public void testSpecifyUserAgent() {
-    final List<String> args = new FFprobeBuilder()
-        .setInput("input")
-        .setShowChapters(false)
-        .setShowStreams(false)
-        .setShowFormat(false)
-        .setUserAgent("user agent")
-        .build();
+    final List<String> args =
+        new FFprobeBuilder()
+            .setInput("input")
+            .setShowChapters(false)
+            .setShowStreams(false)
+            .setShowFormat(false)
+            .setUserAgent("user agent")
+            .build();
 
     assertEquals(
         args,
@@ -91,15 +86,13 @@ public class FFprobeBuilderTest {
   }
 
   @Test
-  public void throwsExceptionIfInputIsNull()
-  {
+  public void throwsExceptionIfInputIsNull() {
     final FFprobeBuilder builder = new FFprobeBuilder();
     assertThrows(NullPointerException.class, () -> builder.setInput(null));
   }
 
   @Test
-  public void throwsExceptionIfNoInputIsGiven()
-  {
+  public void throwsExceptionIfNoInputIsGiven() {
     final FFprobeBuilder builder = new FFprobeBuilder();
     assertThrows(NullPointerException.class, builder::build);
   }

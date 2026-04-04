@@ -1,6 +1,6 @@
 """
-First of all, FFmpeg should be installed on your local PC. 
-Running "python codec_enum_generator.py" in the shell creates Audioodec and VideooCodec. 
+First of all, FFmpeg should be installed on your local PC.
+Running "python codec_enum_generator.py" in the shell creates Audioodec and VideooCodec.
 You can update the codec file by putting these two files within the net.bramp.ffmpeg.builder package.
 """
 import subprocess
@@ -23,7 +23,7 @@ def writeCodec(m,codec):
 
 output = subprocess.check_output("ffmpeg -codecs", shell=True).decode('utf-8')
 
-print(output) 
+print(output)
 
 output = output.split("\n")
 

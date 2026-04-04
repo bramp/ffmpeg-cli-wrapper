@@ -3,9 +3,9 @@ package net.bramp.ffmpeg.nut;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static net.bramp.ffmpeg.nut.Packet.Startcode;
 
-import com.google.common.base.Charsets;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +54,7 @@ public class NutReader {
 
     if (!Arrays.equals(b, HEADER)) {
       throw new IOException(
-          "file_id_string does not match. got: " + new String(b, Charsets.ISO_8859_1));
+          "file_id_string does not match. got: " + new String(b, StandardCharsets.ISO_8859_1));
     }
   }
 

@@ -17,19 +17,13 @@ public class FFmpegFormat {
   public double start_time;
 
   // TODO Change this to java.time.Duration
-  /**
-   * Duration in seconds
-   */
+  /** Duration in seconds */
   public double duration;
 
-  /**
-   * File size in bytes
-   */
+  /** File size in bytes */
   public long size;
 
-  /**
-   * Bitrate
-   */
+  /** Bitrate */
   public long bit_rate;
 
   public int probe_score;

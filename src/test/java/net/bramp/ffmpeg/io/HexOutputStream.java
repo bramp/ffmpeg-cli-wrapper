@@ -1,10 +1,10 @@
 package net.bramp.ffmpeg.io;
 
-import com.google.common.base.Charsets;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 
 /** Converts bytes into hex output */
 public class HexOutputStream extends OutputStream {
@@ -19,7 +19,7 @@ public class HexOutputStream extends OutputStream {
    *     use, or <code>null</code> if this instance is to be created without an underlying stream.
    */
   public HexOutputStream(OutputStream out) {
-    writer = new OutputStreamWriter(out, Charsets.UTF_8);
+    writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
   }
 
   @Override

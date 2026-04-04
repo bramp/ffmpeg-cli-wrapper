@@ -15,7 +15,6 @@ import com.google.common.collect.ImmutableList;
 import java.net.URI;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import net.bramp.ffmpeg.builder.FFmpegBuilder.Verbosity;
 import net.bramp.ffmpeg.options.AudioEncodingOptions;
 import net.bramp.ffmpeg.options.EncodingOptions;
@@ -196,19 +195,20 @@ public class FFmpegBuilderTest {
   public void testVideoCodecWithEnum() {
     MainEncodingOptions main = new MainEncodingOptions("mp4", 1500L, 2L);
     AudioEncodingOptions audio =
-            new AudioEncodingOptions(true, AudioCodec.AAC, 1, AUDIO_SAMPLE_48000, AUDIO_FORMAT_S16, 1, 2.0);
+        new AudioEncodingOptions(
+            true, AudioCodec.AAC, 1, AUDIO_SAMPLE_48000, AUDIO_FORMAT_S16, 1, 2.0);
     VideoEncodingOptions video =
-            new VideoEncodingOptions(true, VideoCodec.H264, FPS_30, 320, 240, 1, null, null, null);
+        new VideoEncodingOptions(true, VideoCodec.H264, FPS_30, 320, 240, 1, null, null, null);
 
     EncodingOptions options =
-            new FFmpegBuilder()
-                    .setInput("input")
-                    .done()
-                    .addOutput("output")
-                    .useOptions(main)
-                    .useOptions(audio)
-                    .useOptions(video)
-                    .buildOptions();
+        new FFmpegBuilder()
+            .setInput("input")
+            .done()
+            .addOutput("output")
+            .useOptions(main)
+            .useOptions(audio)
+            .useOptions(video)
+            .buildOptions();
 
     assertThat(main, reflectEquals(options.getMain()));
     assertThat(audio, reflectEquals(options.getAudio()));
@@ -290,7 +290,13 @@ public class FFmpegBuilderTest {
   @Test(expected = IllegalArgumentException.class)
   public void testSetEmptyFilename() {
     List<String> unused =
-        new FFmpegBuilder().setInput("input").done().addOutput("output").setFilename("").done().build();
+        new FFmpegBuilder()
+            .setInput("input")
+            .done()
+            .addOutput("output")
+            .setFilename("")
+            .done()
+            .build();
   }
 
   @Test
@@ -402,42 +408,22 @@ public class FFmpegBuilderTest {
   @Test
   public void testVbr() {
     List<String> args =
-        new FFmpegBuilder()
-            .setInput("input")
-            .done()
-            .setVBR(2)
-            .addOutput("output")
-            .done()
-            .build();
+        new FFmpegBuilder().setInput("input").done().setVBR(2).addOutput("output").done().build();
 
     assertEquals(
-            args,
-            ImmutableList.of(
-                    "-y", "-v", "error", "-i", "input", "-qscale:a", "2", "output"));
+        args, ImmutableList.of("-y", "-v", "error", "-i", "input", "-qscale:a", "2", "output"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testVbrNegativeParam() {
     List<String> args =
-        new FFmpegBuilder()
-            .setInput("input")
-            .done()
-            .setVBR(-3)
-            .addOutput("output")
-            .done()
-            .build();
+        new FFmpegBuilder().setInput("input").done().setVBR(-3).addOutput("output").done().build();
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testVbrQualityExceedsRange() {
     List<String> args =
-        new FFmpegBuilder()
-            .setInput("input")
-            .done()
-            .setVBR(10)
-            .addOutput("output")
-            .done()
-            .build();
+        new FFmpegBuilder().setInput("input").done().setVBR(10).addOutput("output").done().build();
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -507,39 +493,37 @@ public class FFmpegBuilderTest {
         ImmutableList.of(
             "-y", "-v", "error", "-i", "input", "-preset", "a", "-fpre", "b", "-vpre", "c", "-apre",
             "d", "-spre", "e", "output"));
-    }
+  }
 
   @Test
   public void testThreads() {
-      List<String> args =
-          new FFmpegBuilder()
-              .setThreads(2)
-              .addInput("input")
-              .done()
-              .addOutput("output")
-              .done()
-              .build();
-
-      assertEquals(
-          args,
-          ImmutableList.of("-y", "-v", "error", "-threads", "2", "-i", "input", "output"));
-    }
-
-    @Test
-    public void testSetLoop() {
     List<String> args =
-            new FFmpegBuilder()
-                    .addInput("input")
-                    .setStreamLoop(2)
-                    .done()
-                    .addOutput("output")
-                    .done()
-                    .build();
+        new FFmpegBuilder()
+            .setThreads(2)
+            .addInput("input")
+            .done()
+            .addOutput("output")
+            .done()
+            .build();
 
-      assertEquals(
-              args,
-              ImmutableList.of("-y", "-v", "error", "-stream_loop", "2", "-i", "input", "output"));
-    }
+    assertEquals(
+        args, ImmutableList.of("-y", "-v", "error", "-threads", "2", "-i", "input", "output"));
+  }
+
+  @Test
+  public void testSetLoop() {
+    List<String> args =
+        new FFmpegBuilder()
+            .addInput("input")
+            .setStreamLoop(2)
+            .done()
+            .addOutput("output")
+            .done()
+            .build();
+
+    assertEquals(
+        args, ImmutableList.of("-y", "-v", "error", "-stream_loop", "2", "-i", "input", "output"));
+  }
 
   @Test(expected = IllegalArgumentException.class)
   public void testZeroThreads() {
@@ -552,43 +536,66 @@ public class FFmpegBuilderTest {
   }
 
   @Test
-  public void testQuestion156(){
+  public void testQuestion156() {
     List<String> args =
-            new FFmpegBuilder()
-                    .overrideOutputFiles(true)
-                    .setVerbosity(FFmpegBuilder.Verbosity.INFO)
-                    // X11 screen input
-                    .addInput(":0.0+0,0")
-                    .setFormat("x11grab")
-                    .setVideoResolution("1280x720")
-                    .setVideoFrameRate(30)
-                    .addExtraArgs("-draw_mouse", "0")
-                    .addExtraArgs("-thread_queue_size", "4096")
-                    .done()
-                    // alsa audio input
-                    .addInput("hw:0,1,0")
-                    .setFormat("alsa")
-                    .addExtraArgs("-thread_queue_size", "4096")
-                    .done()
-                    // Youtube output
-                    .addOutput("rtmp://a.rtmp.youtube.com/live2/XXX")
-                    .setAudioCodec("aac")
-                    .setFormat("flv")
-                    .done()
-                    .build();
+        new FFmpegBuilder()
+            .overrideOutputFiles(true)
+            .setVerbosity(FFmpegBuilder.Verbosity.INFO)
+            // X11 screen input
+            .addInput(":0.0+0,0")
+            .setFormat("x11grab")
+            .setVideoResolution("1280x720")
+            .setVideoFrameRate(30)
+            .addExtraArgs("-draw_mouse", "0")
+            .addExtraArgs("-thread_queue_size", "4096")
+            .done()
+            // alsa audio input
+            .addInput("hw:0,1,0")
+            .setFormat("alsa")
+            .addExtraArgs("-thread_queue_size", "4096")
+            .done()
+            // Youtube output
+            .addOutput("rtmp://a.rtmp.youtube.com/live2/XXX")
+            .setAudioCodec("aac")
+            .setFormat("flv")
+            .done()
+            .build();
 
     assertEquals(
-            ImmutableList.of("-y", "-v", "info",
-                    "-f", "x11grab", "-s", "1280x720", "-r", "30/1", "-draw_mouse", "0", "-thread_queue_size", "4096", "-i", ":0.0+0,0",
-                    "-f", "alsa", "-thread_queue_size", "4096", "-i", "hw:0,1,0",
-                    "-f", "flv", "-acodec", "aac", "rtmp://a.rtmp.youtube.com/live2/XXX"),
-            args
-    );
+        ImmutableList.of(
+            "-y",
+            "-v",
+            "info",
+            "-f",
+            "x11grab",
+            "-s",
+            "1280x720",
+            "-r",
+            "30/1",
+            "-draw_mouse",
+            "0",
+            "-thread_queue_size",
+            "4096",
+            "-i",
+            ":0.0+0,0",
+            "-f",
+            "alsa",
+            "-thread_queue_size",
+            "4096",
+            "-i",
+            "hw:0,1,0",
+            "-f",
+            "flv",
+            "-acodec",
+            "aac",
+            "rtmp://a.rtmp.youtube.com/live2/XXX"),
+        args);
   }
 
   @Test
   public void testSetStrict() {
-    List<String> args = new FFmpegBuilder()
+    List<String> args =
+        new FFmpegBuilder()
             .addInput("input.mp4")
             .done()
             .addOutput("output.mp4")
@@ -596,12 +603,16 @@ public class FFmpegBuilderTest {
             .setStrict(Strict.EXPERIMENTAL)
             .build();
 
-    assertEquals(ImmutableList.of("-strict", "experimental", "-y", "-v", "error", "-i", "input.mp4", "output.mp4"), args);
+    assertEquals(
+        ImmutableList.of(
+            "-strict", "experimental", "-y", "-v", "error", "-i", "input.mp4", "output.mp4"),
+        args);
   }
 
   @Test
   public void testQuestion65() {
-    List<String> args = new FFmpegBuilder()
+    List<String> args =
+        new FFmpegBuilder()
             .addInput("aevalsrc=0")
             .setFormat("lavfi")
             .done()
@@ -616,12 +627,34 @@ public class FFmpegBuilderTest {
             .done()
             .build();
 
-    assertEquals(ImmutableList.of("-y", "-v", "error", "-f", "lavfi", "-i", "aevalsrc=0", "-i", "1.mp4", "-vcodec", "copy", "-acodec", "aac", "-map", "0:0", "-map", "1:0", "-shortest", "output.mp4"), args);
+    assertEquals(
+        ImmutableList.of(
+            "-y",
+            "-v",
+            "error",
+            "-f",
+            "lavfi",
+            "-i",
+            "aevalsrc=0",
+            "-i",
+            "1.mp4",
+            "-vcodec",
+            "copy",
+            "-acodec",
+            "aac",
+            "-map",
+            "0:0",
+            "-map",
+            "1:0",
+            "-shortest",
+            "output.mp4"),
+        args);
   }
 
   @Test
   public void testQuestion295() {
-    List<String> args = new FFmpegBuilder()
+    List<String> args =
+        new FFmpegBuilder()
             .addInput("audio=<device>")
             .setFormat("dshow")
             .done()
@@ -634,20 +667,49 @@ public class FFmpegBuilderTest {
             .done()
             .build();
 
-    assertEquals(ImmutableList.of(
-            "-y", "-v", "error", "-f", "dshow", "-i", "audio=<device>", "-f", "gdigrab", "-vframes", "30", "-i", "desktop", "-vcodec", "libx264", "video_file_name.mp4"
-    ), args);
+    assertEquals(
+        ImmutableList.of(
+            "-y",
+            "-v",
+            "error",
+            "-f",
+            "dshow",
+            "-i",
+            "audio=<device>",
+            "-f",
+            "gdigrab",
+            "-vframes",
+            "30",
+            "-i",
+            "desktop",
+            "-vcodec",
+            "libx264",
+            "video_file_name.mp4"),
+        args);
   }
 
   @Test
   public void testQuestion252() {
-    List<String> args = new FFmpegBuilder()
-            .addInput("video_160x90_250k.webm").setFormat("webm_dash_manifest").done()
-            .addInput("video_320x180_500k.webm").setFormat("webm_dash_manifest").done()
-            .addInput("video_640x360_750k.webm").setFormat("webm_dash_manifest").done()
-            .addInput("video_640x360_1000k.webm").setFormat("webm_dash_manifest").done()
-            .addInput("video_1280x720_600k.webm").setFormat("webm_dash_manifest").done()
-            .addInput("audio_128k.webm").setFormat("webm_dash_manifest").done()
+    List<String> args =
+        new FFmpegBuilder()
+            .addInput("video_160x90_250k.webm")
+            .setFormat("webm_dash_manifest")
+            .done()
+            .addInput("video_320x180_500k.webm")
+            .setFormat("webm_dash_manifest")
+            .done()
+            .addInput("video_640x360_750k.webm")
+            .setFormat("webm_dash_manifest")
+            .done()
+            .addInput("video_640x360_1000k.webm")
+            .setFormat("webm_dash_manifest")
+            .done()
+            .addInput("video_1280x720_600k.webm")
+            .setFormat("webm_dash_manifest")
+            .done()
+            .addInput("audio_128k.webm")
+            .setFormat("webm_dash_manifest")
+            .done()
             .addOutput("manifest.mp4")
             .setVideoCodec("copy")
             .setAudioCodec("copy")
@@ -662,8 +724,56 @@ public class FFmpegBuilderTest {
             .done()
             .build();
 
-    assertEquals(ImmutableList.of(
-            "-y",  "-v", "error", "-f", "webm_dash_manifest", "-i", "video_160x90_250k.webm", "-f", "webm_dash_manifest", "-i", "video_320x180_500k.webm", "-f", "webm_dash_manifest", "-i", "video_640x360_750k.webm", "-f", "webm_dash_manifest", "-i", "video_640x360_1000k.webm", "-f", "webm_dash_manifest", "-i", "video_1280x720_600k.webm", "-f", "webm_dash_manifest", "-i", "audio_128k.webm", "-f", "webm_dash_manifest", "-vcodec", "copy", "-acodec", "copy", "-map", "0", "-map", "1", "-map", "2", "-map", "3", "-map", "4", "-map", "5", "-adaptation_sets", "id=0,streams=0,1,2,3,4 id=1,streams=5", "manifest.mp4"
-    ), args);
+    assertEquals(
+        ImmutableList.of(
+            "-y",
+            "-v",
+            "error",
+            "-f",
+            "webm_dash_manifest",
+            "-i",
+            "video_160x90_250k.webm",
+            "-f",
+            "webm_dash_manifest",
+            "-i",
+            "video_320x180_500k.webm",
+            "-f",
+            "webm_dash_manifest",
+            "-i",
+            "video_640x360_750k.webm",
+            "-f",
+            "webm_dash_manifest",
+            "-i",
+            "video_640x360_1000k.webm",
+            "-f",
+            "webm_dash_manifest",
+            "-i",
+            "video_1280x720_600k.webm",
+            "-f",
+            "webm_dash_manifest",
+            "-i",
+            "audio_128k.webm",
+            "-f",
+            "webm_dash_manifest",
+            "-vcodec",
+            "copy",
+            "-acodec",
+            "copy",
+            "-map",
+            "0",
+            "-map",
+            "1",
+            "-map",
+            "2",
+            "-map",
+            "3",
+            "-map",
+            "4",
+            "-map",
+            "5",
+            "-adaptation_sets",
+            "id=0,streams=0,1,2,3,4 id=1,streams=5",
+            "manifest.mp4"),
+        args);
   }
 }

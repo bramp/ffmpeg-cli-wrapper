@@ -287,8 +287,8 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
 
   public T setVideoResolution(int width, int height) {
     checkArgument(
-            isValidSize(width) && isValidSize(height),
-            "Both width and height must be -1 or greater than zero");
+        isValidSize(width) && isValidSize(height),
+        "Both width and height must be -1 or greater than zero");
 
     this.video_enabled = true;
     this.video_width = width;
@@ -578,9 +578,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
       args.add("-sn");
     }
 
-
     addFormatArgs(args);
-
 
     args.addAll(extra_args);
 
@@ -660,8 +658,8 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
 
     if (video_size != null) {
       checkArgument(
-              video_width == 0 && video_height == 0,
-              "Can not specific width or height, as well as an abbreviatied video size");
+          video_width == 0 && video_height == 0,
+          "Can not specific width or height, as well as an abbreviatied video size");
       args.add("-s", video_size);
 
     } else if (video_width != 0 && video_height != 0) {
@@ -675,7 +673,5 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     }
   }
 
-  protected void addFormatArgs(ImmutableList.Builder<String> args) {
-
-  }
+  protected void addFormatArgs(ImmutableList.Builder<String> args) {}
 }

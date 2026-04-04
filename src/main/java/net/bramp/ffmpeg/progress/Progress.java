@@ -48,47 +48,31 @@ public class Progress {
     }
   }
 
-  /**
-   * The frame number being processed
-   */
+  /** The frame number being processed */
   public long frame = 0;
 
-  /**
-   * The current frames per second
-   */
+  /** The current frames per second */
   public Fraction fps = Fraction.ZERO;
 
-  /** 
-   * Current bitrate
-   */
+  /** Current bitrate */
   public long bitrate = 0;
 
-  /**
-   * Output file size (in bytes)
-   */
+  /** Output file size (in bytes) */
   public long total_size = 0;
 
   // TODO Change this to a java.time.Duration
-  /**
-   * Output time (in nanoseconds)
-   */
+  /** Output time (in nanoseconds) */
   public long out_time_ns = 0;
 
   public long dup_frames = 0;
 
-  /**
-   * Number of frames dropped
-   */
+  /** Number of frames dropped */
   public long drop_frames = 0;
 
-  /**
-   * Speed of transcoding. 1 means realtime, 2 means twice realtime.
-   */
+  /** Speed of transcoding. 1 means realtime, 2 means twice realtime. */
   public float speed = 0;
 
-  /**
-   * Current status, can be one of "continue", or "end"
-   */
+  /** Current status, can be one of "continue", or "end" */
   public Status status = null;
 
   public Progress() {
