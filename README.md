@@ -132,24 +132,35 @@ job.run();
 
 ## Building & Releasing
 
-If you wish to make changes, then building and releasing is simple:
+If you wish to make changes, then building and testing is simple:
 
 ```bash
 # To build
-mvn
+mvn compile
 
 # To test
 mvn test
 
-# To release (pushing jar to maven central)
-# (don't forget to set up your ~/.m2/settings.xml)
-mvn release:prepare
-mvn release:perform
-
-# To publish javadoc
-git checkout ffmpeg-0.x
-mvn clean javadoc:aggregate scm-publish:publish-scm
+# To test across all supported JDKs (11, 17, 21)
+make test
 ```
+
+### Releasing
+
+Releasing is automated via GitHub Actions. To trigger a release to Maven Central:
+
+1. Update the version in `pom.xml` (remove `-SNAPSHOT`).
+2. Commit and push the change.
+3. Create and push a tag:
+```bash
+git tag ffmpeg-0.9.0
+git push origin ffmpeg-0.9.0
+```
+
+The GitHub Action will:
+1. Run the full test matrix across all supported JDKs.
+2. If successful, sign and publish the artifacts to the Sonatype Central Portal.
+3. Create a GitHub Release with automatically generated release notes.
 
 ## Bumpings Deps
 
