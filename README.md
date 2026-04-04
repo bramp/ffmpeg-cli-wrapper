@@ -22,7 +22,7 @@ We currently support Java 11 and above. Use Maven to install the dependency.
 <dependency>
   <groupId>net.bramp.ffmpeg</groupId>
   <artifactId>ffmpeg</artifactId>
-  <version>0.9.0</version>
+  <version>0.9.1</version>
 </dependency>
 ```
 
@@ -153,8 +153,8 @@ Releasing is automated via GitHub Actions. To trigger a release to Maven Central
 2. Commit and push the change.
 3. Create and push a tag:
 ```bash
-git tag ffmpeg-0.9.0
-git push origin ffmpeg-0.9.0
+git tag ffmpeg-0.9.1
+git push origin ffmpeg-0.9.1
 ```
 
 The GitHub Action will:
