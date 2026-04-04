@@ -1,36 +1,37 @@
-FFmpeg Java
-===========
-by Andrew Brampton ([bramp.net](https://bramp.net)) (c) 2013-2014,2016
+# FFmpeg CLI Wrapper for Java
 
-A fluent interface to running FFmpeg from Java.
+by Andrew Brampton ([bramp.net](https://bramp.net)) (c) 2013-2024
 
-![Java](https://img.shields.io/badge/Java-8+-brightgreen.svg)
-[![Build Status](https://img.shields.io/travis/bramp/ffmpeg-cli-wrapper/master.svg)](https://travis-ci.org/bramp/ffmpeg-cli-wrapper)
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/bramp)
+
+A fluent interface for running FFmpeg from Java.
+
+![Java](https://img.shields.io/badge/Java-11+-brightgreen.svg)
+[![Build Status](https://github.com/bramp/ffmpeg-cli-wrapper/actions/workflows/test.yml/badge.svg)](https://github.com/bramp/ffmpeg-cli-wrapper/actions/workflows/test.yml)
 [![Coverage Status](https://img.shields.io/coveralls/bramp/ffmpeg-cli-wrapper.svg)](https://coveralls.io/github/bramp/ffmpeg-cli-wrapper)
 [![Maven](https://img.shields.io/maven-central/v/net.bramp.ffmpeg/ffmpeg.svg)](http://mvnrepository.com/artifact/net.bramp.ffmpeg/ffmpeg)
 [![Libraries.io](https://img.shields.io/librariesio/github/bramp/ffmpeg-cli-wrapper.svg)](https://libraries.io/github/bramp/ffmpeg-cli-wrapper)
 
 [GitHub](https://github.com/bramp/ffmpeg-cli-wrapper) | [API docs](https://bramp.github.io/ffmpeg-cli-wrapper/)
 
-Install
--------
+## Install
 
-We currently support Java 8 and above. Use Maven to install the dependency.
+We currently support Java 11 and above. Use Maven to install the dependency.
 
 ```xml
 <dependency>
   <groupId>net.bramp.ffmpeg</groupId>
   <artifactId>ffmpeg</artifactId>
-  <version>0.8.0</version>
+  <version>0.9.0</version>
 </dependency>
 ```
 
-Usage
------
+## Usage
 
 ### Video Encoding
 
 Code:
+
 ```java
 FFmpeg ffmpeg = new FFmpeg("/path/to/ffmpeg");
 FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
@@ -38,6 +39,7 @@ FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
 FFmpegBuilder builder = new FFmpegBuilder()
 
   .setInput("input.mp4")     // Filename, or a FFmpegProbeResult
+  .done()
   .overrideOutputFiles(true) // Override the output if it exists
 
   .addOutput("output.mp4")   // Filename for the destination
@@ -55,7 +57,8 @@ FFmpegBuilder builder = new FFmpegBuilder()
     .setVideoFrameRate(24, 1)     // at 24 frames per second
     .setVideoResolution(640, 480) // at 640x480 resolution
 
-    .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL); // Allow FFmpeg to use experimental specs
+    .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL) // Allow FFmpeg to use experimental specs
+  .done();
 
 FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 
@@ -69,101 +72,113 @@ executor.createTwoPassJob(builder).run();
 ### Get Media Information
 
 Code:
+
 ```java
 FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
 FFmpegProbeResult probeResult = ffprobe.probe("input.mp4");
 
 FFmpegFormat format = probeResult.getFormat();
-System.out.format("%nFile: '%s' ; Format: '%s' ; Duration: %.3fs", 
-	format.filename, 
-	format.format_long_name,
-	format.duration
+System.out.format("%nFile: '%s' ; Format: '%s' ; Duration: %.3fs",
+ format.filename,
+ format.format_long_name,
+ format.duration
 );
 
 FFmpegStream stream = probeResult.getStreams().get(0);
 System.out.format("%nCodec: '%s' ; Width: %dpx ; Height: %dpx",
-	stream.codec_long_name,
-	stream.width,
-	stream.height
+ stream.codec_long_name,
+ stream.width,
+ stream.height
 );
 ```
 
 ### Get progress while encoding
+
 ```java
 FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 
 FFmpegProbeResult in = ffprobe.probe("input.flv");
 
 FFmpegBuilder builder = new FFmpegBuilder()
-	.setInput(in) // Or filename
-	.addOutput("output.mp4")
-	.done();
+ .setInput(in) // Or filename
+ .done()
+ .addOutput("output.mp4")
+ .done();
 
 FFmpegJob job = executor.createJob(builder, new ProgressListener() {
 
-	// Using the FFmpegProbeResult determine the duration of the input
-	final double duration_ns = in.getFormat().duration * TimeUnit.SECONDS.toNanos(1);
+ // Using the FFmpegProbeResult determine the duration of the input
+ final double duration_ns = in.getFormat().duration * TimeUnit.SECONDS.toNanos(1);
 
-	@Override
-	public void progress(Progress progress) {
-		double percentage = progress.out_time_ns / duration_ns;
+ @Override
+ public void progress(Progress progress) {
+  double percentage = progress.out_time_ns / duration_ns;
 
-		// Print out interesting information about the progress
-		System.out.println(String.format(
-			"[%.0f%%] status:%s frame:%d time:%s ms fps:%.0f speed:%.2fx",
-			percentage * 100,
-			progress.status,
-			progress.frame,
-			FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
-			progress.fps.doubleValue(),
-			progress.speed
-		));
-	}
+  // Print out interesting information about the progress
+  System.out.println(String.format(
+   "[%.0f%%] status:%s frame:%d time:%s ms fps:%.0f speed:%.2fx",
+   percentage * 100,
+   progress.status,
+   progress.frame,
+   FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
+   progress.fps.doubleValue(),
+   progress.speed
+  ));
+ }
 });
 
 job.run();
 ```
 
-Building & Releasing
---------------
-If you wish to make changes, then building and releasing is simple:
+## Building & Releasing
+
+If you wish to make changes, then building and testing is simple:
+
 ```bash
 # To build
-mvn
+mvn compile
 
 # To test
 mvn test
 
-# To release (pushing jar to maven central)
-# (don't forget to set up your ~/.m2/settings.xml)
-mvn release:prepare
-mvn release:perform
-
-# To publish javadoc
-git checkout ffmpeg-0.x
-mvn clean javadoc:aggregate scm-publish:publish-scm
+# To test across all supported JDKs (11, 17, 21)
+make test
 ```
 
-Bumpings Deps
------
+### Releasing
+
+Releasing is automated via GitHub Actions. To trigger a release to Maven Central:
+
+1. Update the version in `pom.xml` (remove `-SNAPSHOT`).
+2. Commit and push the change.
+3. Create and push a tag:
+```bash
+git tag ffmpeg-0.9.0
+git push origin ffmpeg-0.9.0
+```
+
+The GitHub Action will:
+1. Run the full test matrix across all supported JDKs.
+2. If successful, sign and publish the artifacts to the Sonatype Central Portal.
+3. Create a GitHub Release with automatically generated release notes.
+
+## Bumpings Deps
 
 ```bash
 # Update Maven Plugins
 mvn versions:display-plugin-updates
 
 # Library Dependencies
-mvn versions:display-dependency-updates 
+mvn versions:display-dependency-updates
 ```
 
-Install FFmpeg on Ubuntu
------------------
+## Install FFmpeg on Ubuntu
 
 We only the support the original FFmpeg, not the libav version. Before Ubuntu 12.04, and in 15.04
 and later the original FFmpeg is shipped. If you have to run on a version with libav, you can install
 FFmpeg from a PPA, or using the static build. More information [here](http://askubuntu.com/q/373322/34845)
 
-Get involved!
--------------
+## Get involved
 
 We welcome contributions. Please check the [issue tracker](https://github.com/bramp/ffmpeg-cli-wrapper/issues).
 If you see something you wish to work on, please either comment on the issue, or just send a pull
@@ -171,10 +186,10 @@ request. Want to work on something else, then just open a issue, and we can disc
 documentation improvements, code cleanup, or new features. Please be mindful that all work is done
 on a volunteer basis, thus we can be slow to reply.
 
-Licence (Simplified BSD License)
---------------------------------
-```
-Copyright (c) 2016-2022, Andrew Brampton
+## Licence (Simplified BSD License)
+
+```plaintext
+Copyright (c) 2013-2024, Andrew Brampton
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

@@ -72,29 +72,28 @@ public class Mapper {
     }
   }
 
-  public static <T extends AbstractFFmpegStreamBuilder<T>> void map(
-      MainEncodingOptions opts, AbstractFFmpegStreamBuilder<T> dest) {
+  public static <T extends AbstractFFmpegStreamBuilder<?>> void map(
+      MainEncodingOptions opts, T dest) {
     mapper.map(opts, dest);
   }
 
-  public static <T extends AbstractFFmpegStreamBuilder<T>> void map(
-      AudioEncodingOptions opts, AbstractFFmpegStreamBuilder<T> dest) {
+  public static <T extends AbstractFFmpegStreamBuilder<?>> void map(
+      AudioEncodingOptions opts, T dest) {
     mapper.map(new AudioWrapper(opts), dest);
   }
 
-  public static <T extends AbstractFFmpegStreamBuilder<T>> void map(
-      VideoEncodingOptions opts, AbstractFFmpegStreamBuilder<T> dest) {
+  public static <T extends AbstractFFmpegStreamBuilder<?>> void map(
+      VideoEncodingOptions opts, T dest) {
     mapper.map(new VideoWrapper(opts), dest);
   }
 
-  public static <T extends AbstractFFmpegStreamBuilder<T>> void map(
-      EncodingOptions opts, AbstractFFmpegStreamBuilder<T> dest) {
+  public static <T extends AbstractFFmpegStreamBuilder<?>> void map(EncodingOptions opts, T dest) {
     map(opts.getMain(), dest);
 
-    if (opts.getAudio().enabled) {
+    if (opts.getAudio().isEnabled()) {
       map(opts.getAudio(), dest);
     }
-    if (opts.getVideo().enabled) {
+    if (opts.getVideo().isEnabled()) {
       map(opts.getVideo(), dest);
     }
   }

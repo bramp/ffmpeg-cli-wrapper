@@ -21,3 +21,4 @@ apidocs
 *.log
 *.log.mbtree
 output.mp4
+tmp/

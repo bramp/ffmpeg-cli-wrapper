@@ -12,11 +12,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @Immutable
 public class Format {
-  final String name;
-  final String longName;
+  private final String name;
+  private final String longName;
 
-  final boolean canDemux;
-  final boolean canMux;
+  private final boolean canDemux;
+  private final boolean canMux;
 
   /**
    * @param name short format name
@@ -32,7 +32,7 @@ public class Format {
     this.longName = Preconditions.checkNotNull(longName).trim();
 
     Preconditions.checkNotNull(flags);
-    Preconditions.checkArgument(flags.length() == 2, "Format flags is invalid '{}'", flags);
+    Preconditions.checkArgument(flags.length() == 2, "Format flags is invalid '%s'", flags);
     canDemux = flags.charAt(0) == 'D';
     canMux = flags.charAt(1) == 'E';
   }

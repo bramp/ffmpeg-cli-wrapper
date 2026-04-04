@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharStreams;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -15,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.annotation.Nonnull;
 import net.bramp.ffmpeg.io.ProcessUtils;
+import net.bramp.ffmpeg.probe.FFmpegError;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 /** Private class to contain common methods for both FFmpeg and FFprobe. */
 abstract class FFcommon {
@@ -28,6 +31,12 @@ abstract class FFcommon {
   /** Version string */
   String version = null;
 
+  /** Process input stream */
+  Appendable processOutputStream = System.out;
+
+  /** Process error stream */
+  Appendable processErrorStream = System.err;
+
   public FFcommon(@Nonnull String path) {
     this(path, new RunProcessFunction());
   }
@@ -38,16 +47,46 @@ abstract class FFcommon {
     this.path = path;
   }
 
+  public void setProcessOutputStream(@Nonnull Appendable processOutputStream) {
+    Preconditions.checkNotNull(processOutputStream);
+    this.processOutputStream = processOutputStream;
+  }
+
+  public void setProcessErrorStream(@Nonnull Appendable processErrorStream) {
+    Preconditions.checkNotNull(processErrorStream);
+    this.processErrorStream = processErrorStream;
+  }
+
+  private BufferedReader _wrapInReader(final InputStream inputStream) {
+    return new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+  }
+
   protected BufferedReader wrapInReader(Process p) {
-    return new BufferedReader(new InputStreamReader(p.getInputStream(), StandardCharsets.UTF_8));
+    return _wrapInReader(p.getInputStream());
+  }
+
+  protected BufferedReader wrapErrorInReader(Process p) {
+    return _wrapInReader(p.getErrorStream());
   }
 
   protected void throwOnError(Process p) throws IOException {
     try {
-      // TODO In java 8 use waitFor(long timeout, TimeUnit unit)
       if (ProcessUtils.waitForWithTimeout(p, 1, TimeUnit.SECONDS) != 0) {
         // TODO Parse the error
         throw new IOException(path + " returned non-zero exit status. Check stdout.");
+      }
+    } catch (TimeoutException e) {
+      throw new IOException("Timed out waiting for " + path + " to finish.");
+    }
+  }
+
+  protected void throwOnError(Process p, FFmpegProbeResult result) throws IOException {
+    try {
+      if (ProcessUtils.waitForWithTimeout(p, 1, TimeUnit.SECONDS) != 0) {
+        // TODO Parse the error
+        final FFmpegError ffmpegError = null == result ? null : result.getError();
+        throw new FFmpegException(
+            path + " returned non-zero exit status. Check stdout.", ffmpegError);
       }
     } catch (TimeoutException e) {
       throw new IOException("Timed out waiting for " + path + " to finish.");
@@ -107,8 +146,8 @@ abstract class FFcommon {
       // TODO Move the copy onto a thread, so that FFmpegProgressListener can be on this thread.
 
       // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
-      CharStreams.copy(wrapInReader(p), System.out); // TODO Should I be outputting to stdout?
-
+      CharStreams.copy(wrapInReader(p), processOutputStream);
+      CharStreams.copy(wrapErrorInReader(p), processErrorStream);
       throwOnError(p);
 
     } finally {

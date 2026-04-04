@@ -6,7 +6,6 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import net.bramp.ffmpeg.fixtures.Progresses;
 import org.junit.Test;
 
@@ -23,6 +22,18 @@ public class StreamProgressParserTest {
     InputStream inputStream = combineResource(Progresses.allFiles);
     parser.processStream(inputStream);
 
-    assertThat(listener.progesses, equalTo((List<Progress>) Progresses.allProgresses));
+    assertThat(listener.progesses, equalTo(Progresses.allProgresses));
+  }
+
+  @Test
+  public void testNaProgressPackets() throws IOException {
+    listener.reset();
+
+    StreamProgressParser parser = new StreamProgressParser(listener);
+
+    InputStream inputStream = combineResource(Progresses.naProgressFile);
+    parser.processStream(inputStream);
+
+    assertThat(listener.progesses, equalTo(Progresses.naProgresses));
   }
 }

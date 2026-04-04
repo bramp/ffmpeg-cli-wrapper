@@ -5,15 +5,18 @@ import static java.util.concurrent.TimeUnit.*;
 import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 
 import com.google.common.base.CharMatcher;
+import com.google.errorprone.annotations.InlineMe;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.bramp.commons.lang3.math.gson.FractionAdapter;
+import net.bramp.ffmpeg.adapter.FFmpegPacketsAndFramesAdapter;
+import net.bramp.ffmpeg.adapter.FFmpegStreamSideDataAdapter;
 import net.bramp.ffmpeg.gson.LowercaseEnumTypeAdapterFactory;
-import net.bramp.ffmpeg.gson.NamedBitsetAdapter;
-import net.bramp.ffmpeg.probe.FFmpegDisposition;
+import net.bramp.ffmpeg.probe.FFmpegFrameOrPacket;
+import net.bramp.ffmpeg.probe.FFmpegStream;
 import org.apache.commons.lang3.math.Fraction;
 
 /** Helper class with commonly used methods */
@@ -21,7 +24,7 @@ public final class FFmpegUtils {
 
   static final Gson gson = FFmpegUtils.setupGson();
   static final Pattern BITRATE_REGEX = Pattern.compile("(\\d+(?:\\.\\d+)?)kbits/s");
-  static final Pattern TIME_REGEX = Pattern.compile("(\\d+):(\\d+):(\\d+(?:\\.\\d+)?)");
+  static final Pattern TIME_REGEX = Pattern.compile("(-?)(\\d+):(\\d+):(\\d+(?:\\.\\d+)?)");
   static final CharMatcher ZERO = CharMatcher.is('0');
 
   FFmpegUtils() {
@@ -36,6 +39,10 @@ public final class FFmpegUtils {
    * @deprecated please use #toTimecode() instead.
    */
   @Deprecated
+  @InlineMe(
+      replacement = "FFmpegUtils.toTimecode(milliseconds, MILLISECONDS)",
+      imports = "net.bramp.ffmpeg.FFmpegUtils",
+      staticImports = "java.util.concurrent.TimeUnit.MILLISECONDS")
   public static String millisecondsToString(long milliseconds) {
     return toTimecode(milliseconds, MILLISECONDS);
   }
@@ -48,9 +55,11 @@ public final class FFmpegUtils {
    * @return the timecode representation.
    */
   public static String toTimecode(long duration, TimeUnit units) {
-    // FIXME Negative durations are also supported.
-    // https://www.ffmpeg.org/ffmpeg-utils.html#Time-duration
-    checkArgument(duration >= 0, "duration must be positive");
+    String prefix = "";
+    if (duration < 0) {
+      prefix = "-";
+      duration = Math.abs(duration);
+    }
 
     long nanoseconds = units.toNanos(duration); // TODO This will clip at Long.MAX_VALUE
     long seconds = units.toSeconds(duration);
@@ -62,11 +71,14 @@ public final class FFmpegUtils {
     long hours = MINUTES.toHours(minutes);
     minutes -= HOURS.toMinutes(hours);
 
+    String result;
     if (ns == 0) {
-      return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+      result = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    } else {
+      result = ZERO.trimTrailingFrom(String.format("%02d:%02d:%02d.%09d", hours, minutes, seconds, ns));
     }
 
-    return ZERO.trimTrailingFrom(String.format("%02d:%02d:%02d.%09d", hours, minutes, seconds, ns));
+    return prefix + result;
   }
 
   /**
@@ -74,20 +86,26 @@ public final class FFmpegUtils {
    * format "hour:minute:second", where second can be a decimal number.
    *
    * @param time the timecode to parse.
-   * @return the number of nanoseconds.
+   * @return the number of nanoseconds or -1 if time is 'N/A'
    */
   public static long fromTimecode(String time) {
     checkNotEmpty(time, "time must not be empty string");
+
+    if (time.equals("N/A")) {
+      return -1;
+    }
+
     Matcher m = TIME_REGEX.matcher(time);
     if (!m.find()) {
       throw new IllegalArgumentException("invalid time '" + time + "'");
     }
 
-    long hours = Long.parseLong(m.group(1));
-    long mins = Long.parseLong(m.group(2));
-    double secs = Double.parseDouble(m.group(3));
+    long sign = m.group(1).equals("-") ? -1 : 1;
+    long hours = Long.parseLong(m.group(2));
+    long mins = Long.parseLong(m.group(3));
+    double secs = Double.parseDouble(m.group(4));
 
-    return HOURS.toNanos(hours) + MINUTES.toNanos(mins) + (long) (SECONDS.toNanos(1) * secs);
+    return sign * (HOURS.toNanos(hours) + MINUTES.toNanos(mins) + (long) (SECONDS.toNanos(1) * secs));
   }
 
   /**
@@ -97,6 +115,8 @@ public final class FFmpegUtils {
    * @return the bitrate in bits per second or -1 if bitrate is 'N/A'
    */
   public static long parseBitrate(String bitrate) {
+    checkNotEmpty(bitrate, "bitrate must not be empty string");
+
     if ("N/A".equals(bitrate)) {
       return -1;
     }
@@ -117,8 +137,8 @@ public final class FFmpegUtils {
 
     builder.registerTypeAdapterFactory(new LowercaseEnumTypeAdapterFactory());
     builder.registerTypeAdapter(Fraction.class, new FractionAdapter());
-    builder.registerTypeAdapter(
-        FFmpegDisposition.class, new NamedBitsetAdapter<>(FFmpegDisposition.class));
+    builder.registerTypeAdapter(FFmpegFrameOrPacket.class, new FFmpegPacketsAndFramesAdapter());
+    builder.registerTypeAdapter(FFmpegStream.SideData.class, new FFmpegStreamSideDataAdapter());
 
     return builder.create();
   }

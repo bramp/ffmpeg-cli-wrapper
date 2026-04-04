@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 // TODO Change to be immutable
 public class Progress {
-
   static final Logger LOG = LoggerFactory.getLogger(Progress.class);
 
   public enum Status {
@@ -61,8 +60,8 @@ public class Progress {
   /** Output file size (in bytes) */
   public long total_size = 0;
 
-  /** Output time (in nanoseconds) */
   // TODO Change this to a java.time.Duration
+  /** Output time (in nanoseconds) */
   public long out_time_ns = 0;
 
   public long dup_frames = 0;
@@ -208,7 +207,8 @@ public class Progress {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (!(o instanceof Progress)) return false;
+
     Progress progress1 = (Progress) o;
     return frame == progress1.frame
         && bitrate == progress1.bitrate
@@ -240,5 +240,41 @@ public class Progress {
         .add("speed", speed)
         .add("status", status)
         .toString();
+  }
+
+  public long getFrame() {
+    return frame;
+  }
+
+  public Fraction getFps() {
+    return fps;
+  }
+
+  public long getBitrate() {
+    return bitrate;
+  }
+
+  public long getTotalSize() {
+    return total_size;
+  }
+
+  public long getOutTimeNs() {
+    return out_time_ns;
+  }
+
+  public long getDupFrames() {
+    return dup_frames;
+  }
+
+  public long getDropFrames() {
+    return drop_frames;
+  }
+
+  public float getSpeed() {
+    return speed;
+  }
+
+  public Status getStatus() {
+    return status;
   }
 }

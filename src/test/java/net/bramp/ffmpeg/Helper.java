@@ -22,13 +22,6 @@ public class Helper {
         }
       };
 
-  /**
-   * Simple wrapper around "new SequenceInputStream", so the user doesn't have to deal with the
-   * horribly dated Enumeration type.
-   *
-   * @param input
-   * @return
-   */
   public static InputStream sequenceInputStream(Iterable<InputStream> input) {
     checkNotNull(input);
     return new SequenceInputStream(asEnumeration(input.iterator()));
@@ -39,14 +32,15 @@ public class Helper {
     return FFmpegTest.class.getResourceAsStream("fixtures/" + name);
   }
 
-  /**
-   * Loads all resources, and returns one stream containing them all.
-   *
-   * @param names
-   * @return
-   */
+  /** Loads all resources, and returns one stream containing them all. */
   public static InputStream combineResource(List<String> names) {
     checkNotNull(names);
     return sequenceInputStream(Iterables.transform(names, resourceLoader));
+  }
+
+  public static <T> List<T> subList(List<T> input, int start) {
+    checkNotNull(input);
+
+    return input.subList(start, input.size());
   }
 }

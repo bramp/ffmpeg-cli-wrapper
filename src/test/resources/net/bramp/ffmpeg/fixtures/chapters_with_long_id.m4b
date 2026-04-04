@@ -1,0 +1,134 @@
+{
+    "streams": [
+        {
+            "index": 0,
+            "codec_name": "aac",
+            "codec_long_name": "AAC (Advanced Audio Coding)",
+            "profile": "LC",
+            "codec_type": "audio",
+            "codec_time_base": "1/44100",
+            "codec_tag_string": "mp4a",
+            "codec_tag": "0x6134706d",
+            "sample_fmt": "fltp",
+            "sample_rate": "44100",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 0,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_pts": 0,
+            "start_time": "0.000000",
+            "duration_ts": 248628224,
+            "duration": "5637.828209",
+            "bit_rate": "62993",
+            "max_bit_rate": "75648",
+            "nb_frames": "242801",
+            "disposition": {
+                "default": 1,
+                "dub": 0,
+                "original": 0,
+                "comment": 0,
+                "lyrics": 0,
+                "karaoke": 0,
+                "forced": 0,
+                "hearing_impaired": 0,
+                "visual_impaired": 0,
+                "clean_effects": 0,
+                "attached_pic": 0,
+                "timed_thumbnails": 0
+            },
+            "tags": {
+                "creation_time": "2016-02-21T08:27:56.000000Z",
+                "language": "und"
+            }
+        },
+        {
+            "index": 1,
+            "codec_name": "bin_data",
+            "codec_long_name": "binary data",
+            "codec_type": "data",
+            "codec_tag_string": "text",
+            "codec_tag": "0x74786574",
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_pts": 0,
+            "start_time": "0.000000",
+            "duration_ts": 248628224,
+            "duration": "5637.828209",
+            "bit_rate": "1",
+            "nb_frames": "24",
+            "disposition": {
+                "default": 0,
+                "dub": 0,
+                "original": 0,
+                "comment": 0,
+                "lyrics": 0,
+                "karaoke": 0,
+                "forced": 0,
+                "hearing_impaired": 0,
+                "visual_impaired": 0,
+                "clean_effects": 0,
+                "attached_pic": 0,
+                "timed_thumbnails": 0
+            },
+            "tags": {
+                "creation_time": "2016-02-21T08:28:13.000000Z",
+                "language": "und"
+            }
+        }
+    ],
+    "chapters": [
+        {
+            "id": 6613449456311024506,
+            "time_base": "1/1000000000",
+            "start": 0,
+            "start_time": "0.000000",
+            "end": 435458000000,
+            "end_time": "435.458000",
+            "tags": {
+                "title": "Chapitre 01"
+            }
+        },
+        {
+            "id": -4433436293284298339,
+            "time_base": "1/1000000000",
+            "start": 435458000000,
+            "start_time": "435.458000",
+            "end": 852333000000,
+            "end_time": "852.333000",
+            "tags": {
+                "title": "Chapitre 02"
+            }
+        }
+    ],
+    "format": {
+        "filename": "sammyjay_1602_librivox.m4b",
+        "nb_streams": 2,
+        "nb_programs": 0,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "format_long_name": "QuickTime / MOV",
+        "start_time": "0.000000",
+        "duration": "5637.828209",
+        "size": "45417172",
+        "bit_rate": "64446",
+        "probe_score": 100,
+        "tags": {
+            "major_brand": "M4A",
+            "minor_version": "0",
+            "compatible_brands": "3gp5isom",
+            "creation_time": "2016-02-21T08:27:56.000000Z",
+            "genre": "Audiobook",
+            "media_type": "2",
+            "encoder": "Chapter and Verse V 1.5",
+            "title": "The Adventures of Sammy Jay",
+            "artist": "Thornton W. Burgess",
+            "album": "The Adventures of Sammy Jay",
+            "comment": "https://archive.org/details/sammyjay_1602_librivox",
+            "copyright": "PD1.0",
+            "track": "1",
+            "Encoding Params": "vers"
+        }
+    }
+}

@@ -13,13 +13,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.errorprone.annotations.Immutable;
 
 /**
- * Metadata spec, as described in the "map_metadata" section of
- * https://www.ffmpeg.org/ffmpeg-all.html#Main-options
+ * Metadata spec, as described in the "map_metadata" section of <a
+ * href="https://www.ffmpeg.org/ffmpeg-all.html#Main-options">Main options</a>
  */
 @Immutable
 public class MetadataSpecifier {
 
-  final String spec;
+  private final String spec;
 
   private MetadataSpecifier(String spec) {
     this.spec = checkNotNull(spec);

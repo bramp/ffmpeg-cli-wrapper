@@ -1,6 +1,7 @@
 ---
 name: Question
 about: Have a question on how to use ffmpeg-cli-wrapper
+labels: question
 
 ---
 

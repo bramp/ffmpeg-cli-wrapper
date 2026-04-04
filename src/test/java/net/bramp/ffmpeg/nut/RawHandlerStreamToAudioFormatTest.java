@@ -24,7 +24,7 @@ public class RawHandlerStreamToAudioFormatTest {
           {"ULAW", 48000, 1, 3, new AudioFormat(ULAW, 48000, 8, 3, 3, 48000, false)},
           {"PSD\u0008", 48000, 1, 4, new AudioFormat(PCM_SIGNED, 48000, 8, 4, 4, 48000, false)},
           {"\u0010DUP", 48000, 1, 6, new AudioFormat(PCM_UNSIGNED, 48000, 16, 6, 12, 48000, true)},
-          {"PFD\u0020", 48000, 1, 8, new AudioFormat(PCM_FLOAT, 48000, 32, 8, 32, 48000, false)},
+          {"PFD ", 48000, 1, 8, new AudioFormat(PCM_FLOAT, 48000, 32, 8, 32, 48000, false)},
         });
   }
 

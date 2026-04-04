@@ -13,15 +13,19 @@
             "height": 720,
             "coded_width": 1280,
             "coded_height": 720,
+            "closed_captions": 0,
+            "film_grain": 0,
             "has_b_frames": 0,
             "sample_aspect_ratio": "1:1",
             "display_aspect_ratio": "16:9",
             "pix_fmt": "yuv420p",
             "level": 31,
             "chroma_location": "left",
+            "field_order": "progressive",
             "refs": 1,
-            "is_avc": "1",
+            "is_avc": "true",
             "nal_length_size": "4",
+            "id": "0x1",
             "r_frame_rate": "25/1",
             "avg_frame_rate": "25/1",
             "time_base": "1/12800",
@@ -32,6 +36,7 @@
             "bit_rate": "1205959",
             "bits_per_raw_sample": "8",
             "nb_frames": "132",
+            "extradata_size": 38,
             "disposition": {
                 "default": 1,
                 "dub": 0,
@@ -43,12 +48,20 @@
                 "hearing_impaired": 0,
                 "visual_impaired": 0,
                 "clean_effects": 0,
-                "attached_pic": 0
+                "attached_pic": 0,
+                "timed_thumbnails": 0,
+                "non_diegetic": 0,
+                "captions": 0,
+                "descriptions": 0,
+                "metadata": 0,
+                "dependent": 0,
+                "still_image": 0
             },
             "tags": {
                 "creation_time": "1970-01-01 00:00:00",
                 "language": "und",
-                "handler_name": "VideoHandler"
+                "handler_name": "VideoHandler",
+                "vendor_id": "[0][0][0][0]"
             }
         },
         {
@@ -65,6 +78,8 @@
             "channels": 6,
             "channel_layout": "5.1",
             "bits_per_sample": 0,
+            "initial_padding": 0,
+            "id": "0x2",
             "r_frame_rate": "0/0",
             "avg_frame_rate": "0/0",
             "time_base": "1/48000",
@@ -75,6 +90,7 @@
             "bit_rate": "384828",
             "max_bit_rate": "400392",
             "nb_frames": "249",
+            "extradata_size": 2,
             "disposition": {
                 "default": 1,
                 "dub": 0,
@@ -86,12 +102,20 @@
                 "hearing_impaired": 0,
                 "visual_impaired": 0,
                 "clean_effects": 0,
-                "attached_pic": 0
+                "attached_pic": 0,
+                "timed_thumbnails": 0,
+                "non_diegetic": 0,
+                "captions": 0,
+                "descriptions": 0,
+                "metadata": 0,
+                "dependent": 0,
+                "still_image": 0
             },
             "tags": {
-                "creation_time": "1970-01-01 00:00:00",
+                "creation_time": "1970-01-01T00:00:00.000000Z",
                 "language": "und",
-                "handler_name": "SoundHandler"
+                "handler_name": "SoundHandler",
+                "vendor_id": "[0][0][0][0]"
             }
         }
     ],

@@ -1,0 +1,502 @@
+Filters:
+  T.. = Timeline support
+  .S. = Slice threading
+  ..C = Command support
+  A = Audio input/output
+  V = Video input/output
+  N = Dynamic number and/or type of input/output
+  | = Source or sink filter
+ ... abench            A->A       Benchmark part of a filtergraph.
+ ..C acompressor       A->A       Audio compressor.
+ ... acontrast         A->A       Simple audio dynamic range compression/expansion filter.
+ ... acopy             A->A       Copy the input audio unchanged to the output.
+ ... acue              A->A       Delay filtering to match a cue.
+ ... acrossfade        AA->A      Cross fade two input audio streams.
+ .S. acrossover        A->N       Split audio into per-bands streams.
+ T.C acrusher          A->A       Reduce audio bit resolution.
+ TS. adeclick          A->A       Remove impulsive noise from input audio.
+ TS. adeclip           A->A       Remove clipping from input audio.
+ TS. adecorrelate      A->A       Apply decorrelation to input audio.
+ T.C adelay            A->A       Delay one or more audio channels.
+ TSC adenorm           A->A       Remedy denormals by adding extremely low-level noise.
+ T.. aderivative       A->A       Compute derivative of input audio.
+ TSC adrc              A->A       Audio Spectral Dynamic Range Controller.
+ TSC adynamicequalizer A->A       Apply Dynamic Equalization of input audio.
+ T.C adynamicsmooth    A->A       Apply Dynamic Smoothing of input audio.
+ ... aecho             A->A       Add echoing to the audio.
+ TSC aemphasis         A->A       Audio emphasis.
+ T.. aeval             A->A       Filter audio signal according to a specified expression.
+ T.C aexciter          A->A       Enhance high frequency part of audio.
+ T.C afade             A->A       Fade in/out input audio.
+ TSC afftdn            A->A       Denoise audio samples using FFT.
+ TS. afftfilt          A->A       Apply arbitrary expressions to samples in frequency domain.
+ .SC afir              N->N       Apply Finite Impulse Response filter with supplied coefficients in additional stream(s).
+ ... aformat           A->A       Convert the input audio to one of the specified formats.
+ TSC afreqshift        A->A       Apply frequency shifting to input audio.
+ TSC afwtdn            A->A       Denoise audio stream using Wavelets.
+ T.C agate             A->A       Audio gate.
+ .S. aiir              A->N       Apply Infinite Impulse Response filter with supplied coefficients.
+ T.. aintegral         A->A       Compute integral of input audio.
+ ... ainterleave       N->A       Temporally interleave audio inputs.
+ T.. alatency          A->A       Report audio filtering latency.
+ T.C alimiter          A->A       Audio lookahead limiter.
+ TSC allpass           A->A       Apply a two-pole all-pass filter.
+ ... aloop             A->A       Loop audio samples.
+ ... amerge            N->A       Merge two or more audio streams into a single multi-channel stream.
+ T.. ametadata         A->A       Manipulate audio frame metadata.
+ ..C amix              N->A       Audio mixing.
+ ... amultiply         AA->A      Multiply two audio streams.
+ TSC anequalizer       A->N       Apply high-order audio parametric multi band equalizer.
+ TSC anlmdn            A->A       Reduce broadband noise from stream using Non-Local Means.
+ TSC anlmf             AA->A      Apply Normalized Least-Mean-Fourth algorithm to first audio stream.
+ TSC anlms             AA->A      Apply Normalized Least-Mean-Squares algorithm to first audio stream.
+ ... anull             A->A       Pass the source unchanged to the output.
+ T.. apad              A->A       Pad audio with silence.
+ T.C aperms            A->A       Set permissions for the output audio frame.
+ ... aphaser           A->A       Add a phasing effect to the audio.
+ TSC aphaseshift       A->A       Apply phase shifting to input audio.
+ TS. apsnr             AA->A      Measure Audio Peak Signal-to-Noise Ratio.
+ TSC apsyclip          A->A       Audio Psychoacoustic Clipper.
+ ... apulsator         A->A       Audio pulsator.
+ ..C arealtime         A->A       Slow down filtering to match realtime.
+ ... aresample         A->A       Resample audio data.
+ ... areverse          A->A       Reverse an audio clip.
+ TSC arls              AA->A      Apply Recursive Least Squares algorithm to first audio stream.
+ TSC arnndn            A->A       Reduce noise from speech using Recurrent Neural Networks.
+ TS. asdr              AA->A      Measure Audio Signal-to-Distortion Ratio.
+ ... asegment          A->N       Segment audio stream.
+ ... aselect           A->N       Select audio frames to pass in output.
+ ... asendcmd          A->A       Send commands to filters.
+ T.C asetnsamples      A->A       Set the number of samples for each output audio frames.
+ ..C asetpts           A->A       Set PTS for the output audio frame.
+ ... asetrate          A->A       Change the sample rate without altering the data.
+ ... asettb            A->A       Set timebase for the audio output link.
+ ... ashowinfo         A->A       Show textual information for each audio frame.
+ T.. asidedata         A->A       Manipulate audio frame side data.
+ TS. asisdr            AA->A      Measure Audio Scale-Invariant Signal-to-Distortion Ratio.
+ TSC asoftclip         A->A       Audio Soft Clipper.
+ .S. aspectralstats    A->A       Show frequency domain statistics about audio frames.
+ ... asplit            A->N       Pass on the audio input to N audio outputs.
+ .S. astats            A->A       Show time domain statistics about audio frames.
+ ..C astreamselect     N->N       Select audio streams
+ TSC asubboost         A->A       Boost subwoofer frequencies.
+ TSC asubcut           A->A       Cut subwoofer frequencies.
+ TSC asupercut         A->A       Cut super frequencies.
+ TSC asuperpass        A->A       Apply high order Butterworth band-pass filter.
+ TSC asuperstop        A->A       Apply high order Butterworth band-stop filter.
+ ..C atempo            A->A       Adjust audio tempo.
+ TSC atilt             A->A       Apply spectral tilt to audio.
+ ... atrim             A->A       Pick one continuous section from the input, drop the rest.
+ ... axcorrelate       AA->A      Cross-correlate two audio streams.
+ ... azmq              A->A       Receive commands through ZMQ and broker them to filters.
+ TSC bandpass          A->A       Apply a two-pole Butterworth band-pass filter.
+ TSC bandreject        A->A       Apply a two-pole Butterworth band-reject filter.
+ TSC bass              A->A       Boost or cut lower frequencies.
+ TSC biquad            A->A       Apply a biquad IIR filter with the given coefficients.
+ ... channelmap        A->A       Remap audio channels.
+ ... channelsplit      A->N       Split audio into per-channel streams.
+ ... chorus            A->A       Add a chorus effect to the audio.
+ ... compand           A->A       Compress or expand audio dynamic range.
+ T.C compensationdelay A->A       Audio Compensation Delay Line.
+ T.C crossfeed         A->A       Apply headphone crossfeed filter.
+ TSC crystalizer       A->A       Simple audio noise sharpening filter.
+ T.. dcshift           A->A       Apply a DC shift to the audio.
+ T.. deesser           A->A       Apply de-essing to the audio.
+ T.C dialoguenhance    A->A       Audio Dialogue Enhancement.
+ ... drmeter           A->A       Measure audio dynamic range.
+ TSC dynaudnorm        A->A       Dynamic Audio Normalizer.
+ ... earwax            A->A       Widen the stereo image.
+ ... ebur128           A->N       EBU R128 scanner.
+ TSC equalizer         A->A       Apply two-pole peaking equalization (EQ) filter.
+ T.C extrastereo       A->A       Increase difference between stereo audio channels.
+ ..C firequalizer      A->A       Finite Impulse Response Equalizer.
+ ... flanger           A->A       Apply a flanging effect to the audio.
+ ... haas              A->A       Apply Haas Stereo Enhancer.
+ ... hdcd              A->A       Apply High Definition Compatible Digital (HDCD) decoding.
+ .S. headphone         N->A       Apply headphone binaural spatialization with HRTFs in additional streams.
+ TSC highpass          A->A       Apply a high-pass filter with 3dB point frequency.
+ TSC highshelf         A->A       Apply a high shelf filter.
+ ... join              N->A       Join multiple audio streams into multi-channel output.
+ ... loudnorm          A->A       EBU R128 loudness normalization
+ TSC lowpass           A->A       Apply a low-pass filter with 3dB point frequency.
+ TSC lowshelf          A->A       Apply a low shelf filter.
+ ... mcompand          A->A       Multiband Compress or expand audio dynamic range.
+ ... pan               A->A       Remix channels with coefficients (panning).
+ ... replaygain        A->A       ReplayGain scanner.
+ ..C rubberband        A->A       Apply time-stretching and pitch-shifting.
+ ..C sidechaincompress AA->A      Sidechain compressor.
+ T.C sidechaingate     AA->A      Audio sidechain gate.
+ ... silencedetect     A->A       Detect silence.
+ T.C silenceremove     A->A       Remove silence.
+ T.C speechnorm        A->A       Speech Normalizer.
+ T.C stereotools       A->A       Apply various stereo tools.
+ T.C stereowiden       A->A       Apply stereo widening effect.
+ ... superequalizer    A->A       Apply 18 band equalization filter.
+ .SC surround          A->A       Apply audio surround upmix filter.
+ TSC tiltshelf         A->A       Apply a tilt shelf filter.
+ TSC treble            A->A       Boost or cut upper frequencies.
+ T.. tremolo           A->A       Apply tremolo effect.
+ T.. vibrato           A->A       Apply vibrato effect.
+ T.C virtualbass       A->A       Audio Virtual Bass.
+ T.C volume            A->A       Change input volume.
+ ... volumedetect      A->A       Detect audio volume.
+ ... aevalsrc          |->A       Generate an audio signal generated by an expression.
+ ... afdelaysrc        |->A       Generate a Fractional delay FIR coefficients.
+ ... afireqsrc         |->A       Generate a FIR equalizer coefficients audio stream.
+ ... afirsrc           |->A       Generate a FIR coefficients audio stream.
+ ... anoisesrc         |->A       Generate a noise audio signal.
+ ... anullsrc          |->A       Null audio source, return empty audio frames.
+ ... hilbert           |->A       Generate a Hilbert transform FIR coefficients.
+ ... sinc              |->A       Generate a sinc kaiser-windowed low-pass, high-pass, band-pass, or band-reject FIR coefficients.
+ ... sine              |->A       Generate sine wave audio signal.
+ ... anullsink         A->|       Do absolutely nothing with the input audio.
+ ... addroi            V->V       Add region of interest to frame.
+ ... alphaextract      V->V       Extract an alpha channel as a grayscale image component.
+ T.. alphamerge        VV->V      Copy the luma value of the second input into the alpha channel of the first input.
+ TSC amplify           V->V       Amplify changes between successive video frames.
+ ... ass               V->V       Render ASS subtitles onto input video using the libass library.
+ TSC atadenoise        V->V       Apply an Adaptive Temporal Averaging Denoiser.
+ T.C avgblur           V->V       Apply Average Blur filter.
+ TSC backgroundkey     V->V       Turns a static background into transparency.
+ T.C bbox              V->V       Compute bounding box for each frame.
+ ... bench             V->V       Benchmark part of a filtergraph.
+ TSC bilateral         V->V       Apply Bilateral filter.
+ T.. bitplanenoise     V->V       Measure bit plane noise.
+ .S. blackdetect       V->V       Detect video intervals that are (almost) black.
+ ... blackframe        V->V       Detect frames that are (almost) black.
+ TSC blend             VV->V      Blend two video frames into each other.
+ ... blockdetect       V->V       Blockdetect filter.
+ ... blurdetect        V->V       Blurdetect filter.
+ TS. bm3d              N->V       Block-Matching 3D denoiser.
+ T.. boxblur           V->V       Blur the input.
+ TS. bwdif             V->V       Deinterlace the input image.
+ TSC cas               V->V       Contrast Adaptive Sharpen.
+ ... ccrepack          V->V       Repack CEA-708 closed caption metadata
+ TSC chromahold        V->V       Turns a certain color range into gray.
+ TSC chromakey         V->V       Turns a certain color into transparency. Operates on YUV colors.
+ TSC chromanr          V->V       Reduce chrominance noise.
+ TSC chromashift       V->V       Shift chroma.
+ ... ciescope          V->V       Video CIE scope.
+ T.. codecview         V->V       Visualize information about some codecs.
+ TSC colorbalance      V->V       Adjust the color balance.
+ TSC colorchannelmixer V->V       Adjust colors by mixing color channels.
+ TSC colorcontrast     V->V       Adjust color contrast between RGB components.
+ TSC colorcorrect      V->V       Adjust color white balance selectively for blacks and whites.
+ TSC colorize          V->V       Overlay a solid color on the video stream.
+ TSC colorkey          V->V       Turns a certain color into transparency. Operates on RGB colors.
+ TSC colorhold         V->V       Turns a certain color range into gray. Operates on RGB colors.
+ TSC colorlevels       V->V       Adjust the color levels.
+ TSC colormap          VVV->V     Apply custom Color Maps to video stream.
+ TS. colormatrix       V->V       Convert color matrix.
+ TS. colorspace        V->V       Convert between colorspaces.
+ TSC colortemperature  V->V       Adjust color temperature of video.
+ TSC convolution       V->V       Apply convolution filter.
+ TS. convolve          VV->V      Convolve first video stream with second video stream.
+ ... copy              V->V       Copy the input video unchanged to the output.
+ ... coreimage         V->V       Video filtering using CoreImage API.
+ T.. corr              VV->V      Calculate the correlation between two video streams.
+ ... cover_rect        V->V       Find and cover a user specified object.
+ ..C crop              V->V       Crop the input video.
+ T.C cropdetect        V->V       Auto-detect crop size.
+ ... cue               V->V       Delay filtering to match a cue.
+ TSC curves            V->V       Adjust components curves.
+ .SC datascope         V->V       Video data analysis.
+ T.C dblur             V->V       Apply Directional Blur filter.
+ TS. dctdnoiz          V->V       Denoise frames using 2D DCT.
+ TSC deband            V->V       Debands video.
+ T.C deblock           V->V       Deblock video.
+ ... decimate          N->V       Decimate frames (post field matching filter).
+ TS. deconvolve        VV->V      Deconvolve first video stream with second video stream.
+ TS. dedot             V->V       Reduce cross-luminance and cross-color.
+ TSC deflate           V->V       Apply deflate effect.
+ ... deflicker         V->V       Remove temporal frame luminance variations.
+ ... dejudder          V->V       Remove judder produced by pullup.
+ T.. delogo            V->V       Remove logo from input video.
+ T.. derain            V->V       Apply derain filter to the input.
+ ... deshake           V->V       Stabilize shaky video.
+ TSC despill           V->V       Despill video.
+ ... detelecine        V->V       Apply an inverse telecine pattern.
+ TSC dilation          V->V       Apply dilation effect.
+ TSC displace          VVV->V     Displace pixels.
+ ... dnn_classify      V->V       Apply DNN classify filter to the input.
+ ... dnn_detect        V->V       Apply DNN detect filter to the input.
+ ... dnn_processing    V->V       Apply DNN processing filter to the input.
+ .S. doubleweave       V->V       Weave input video fields into double number of frames.
+ T.C drawbox           V->V       Draw a colored box on the input video.
+ ... drawgraph         V->V       Draw a graph using input video metadata.
+ T.C drawgrid          V->V       Draw a colored grid on the input video.
+ T.C drawtext          V->V       Draw text on top of video frames using libfreetype library.
+ T.. edgedetect        V->V       Detect and draw edge.
+ ... elbg              V->V       Apply posterize effect, using the ELBG algorithm.
+ T.. entropy           V->V       Measure video frames entropy.
+ .S. epx               V->V       Scale the input using EPX algorithm.
+ T.C eq                V->V       Adjust brightness, contrast, gamma, and saturation.
+ TSC erosion           V->V       Apply erosion effect.
+ TSC estdif            V->V       Apply Edge Slope Tracing deinterlace.
+ TSC exposure          V->V       Adjust exposure of the video stream.
+ ... extractplanes     V->N       Extract planes as grayscale frames.
+ TS. fade              V->V       Fade in/out input video.
+ ..C feedback          VV->VV     Apply feedback video filter.
+ TSC fftdnoiz          V->V       Denoise frames using 3D FFT.
+ TS. fftfilt           V->V       Apply arbitrary expressions to pixels in frequency domain.
+ ... field             V->V       Extract a field from the input video.
+ ... fieldhint         V->V       Field matching using hints.
+ ... fieldmatch        N->V       Field matching for inverse telecine.
+ T.. fieldorder        V->V       Set the field order.
+ T.C fillborders       V->V       Fill borders of the input video.
+ ... find_rect         V->V       Find a user specified object.
+ T.. floodfill         V->V       Fill area with same color with another color.
+ ... format            V->V       Convert the input video to one of the specified pixel formats.
+ ... fps               V->V       Force constant framerate.
+ ... framepack         VV->V      Generate a frame packed stereoscopic video.
+ .S. framerate         V->V       Upsamples or downsamples progressive source between specified frame rates.
+ T.. framestep         V->V       Select one frame every N frames.
+ ... freezedetect      V->V       Detects frozen video input.
+ ... freezeframes      VV->V      Freeze video frames.
+ T.C frei0r            V->V       Apply a frei0r effect.
+ T.. fspp              V->V       Apply Fast Simple Post-processing filter.
+ TSC gblur             V->V       Apply Gaussian Blur filter.
+ TS. geq               V->V       Apply generic equation to each pixel.
+ T.. gradfun           V->V       Debands video quickly using gradients.
+ ..C graphmonitor      V->V       Show various filtergraph stats.
+ TS. grayworld         V->V       Adjust white balance using LAB gray world algorithm
+ TS. greyedge          V->V       Estimates scene illumination by grey edge assumption.
+ TSC guided            N->V       Apply Guided filter.
+ TSC haldclut          VV->V      Adjust colors using a Hald CLUT.
+ TS. hflip             V->V       Horizontally flip the input video.
+ T.. histeq            V->V       Apply global color histogram equalization.
+ ... histogram         V->V       Compute and draw a histogram.
+ TSC hqdn3d            V->V       Apply a High Quality 3D Denoiser.
+ .S. hqx               V->V       Scale the input by 2, 3 or 4 using the hq*x magnification algorithm.
+ .S. hstack            N->V       Stack video inputs horizontally.
+ TSC hsvhold           V->V       Turns a certain HSV range into gray.
+ TSC hsvkey            V->V       Turns a certain HSV range into transparency. Operates on YUV colors.
+ T.C hue               V->V       Adjust the hue and saturation of the input video.
+ TSC huesaturation     V->V       Apply hue-saturation-intensity adjustments.
+ ... hwdownload        V->V       Download a hardware frame to a normal frame
+ ... hwmap             V->V       Map hardware frames
+ ... hwupload          V->V       Upload a normal frame to a hardware frame
+ T.. hysteresis        VV->V      Grow first stream into second stream by connecting components.
+ TS. identity          VV->V      Calculate the Identity between two video streams.
+ ... idet              V->V       Interlace detect Filter.
+ T.C il                V->V       Deinterleave or interleave fields.
+ TSC inflate           V->V       Apply inflate effect.
+ ... interlace         V->V       Convert progressive video into interlaced.
+ ... interleave        N->V       Temporally interleave video inputs.
+ ... kerndeint         V->V       Apply kernel deinterlacing to the input.
+ TSC kirsch            V->V       Apply kirsch operator.
+ TSC lagfun            V->V       Slowly update darker pixels.
+ T.. latency           V->V       Report video filtering latency.
+ TSC lenscorrection    V->V       Rectify the image by correcting for lens distortion.
+ ... libvmaf           VV->V      Calculate the VMAF between two video streams.
+ TSC limitdiff         N->V       Apply filtering with limiting difference.
+ TSC limiter           V->V       Limit pixels components to the specified range.
+ ... loop              V->V       Loop video frames.
+ TSC lumakey           V->V       Turns a certain luma into transparency.
+ TSC lut               V->V       Compute and apply a lookup table to the RGB/YUV input video.
+ TSC lut1d             V->V       Adjust colors using a 1D LUT.
+ TSC lut2              VV->V      Compute and apply a lookup table from two video inputs.
+ TSC lut3d             V->V       Adjust colors using a 3D LUT.
+ TSC lutrgb            V->V       Compute and apply a lookup table to the RGB input video.
+ TSC lutyuv            V->V       Compute and apply a lookup table to the YUV input video.
+ TSC maskedclamp       VVV->V     Clamp first stream with second stream and third stream.
+ TSC maskedmax         VVV->V     Apply filtering with maximum difference of two streams.
+ TSC maskedmerge       VVV->V     Merge first stream with second stream using third stream as mask.
+ TSC maskedmin         VVV->V     Apply filtering with minimum difference of two streams.
+ TSC maskedthreshold   VV->V      Pick pixels comparing absolute difference of two streams with threshold.
+ TSC maskfun           V->V       Create Mask.
+ ... mcdeint           V->V       Apply motion compensating deinterlacing.
+ TSC median            V->V       Apply Median filter.
+ ... mergeplanes       N->V       Merge planes.
+ ... mestimate         V->V       Generate motion vectors.
+ T.. metadata          V->V       Manipulate video frame metadata.
+ T.. midequalizer      VV->V      Apply Midway Equalization.
+ ... minterpolate      V->V       Frame rate conversion using Motion Interpolation.
+ TSC mix               N->V       Mix video inputs.
+ TSC monochrome        V->V       Convert video to gray using custom color filter.
+ TSC morpho            VV->V      Apply Morphological filter.
+ ... mpdecimate        V->V       Remove near-duplicate frames.
+ TS. msad              VV->V      Calculate the MSAD between two video streams.
+ TSC multiply          VV->V      Multiply first video stream with second video stream.
+ TSC negate            V->V       Negate input video.
+ TS. nlmeans           V->V       Non-local means denoiser.
+ TSC nnedi             V->V       Apply neural network edge directed interpolation intra-only deinterlacer.
+ ... noformat          V->V       Force libavfilter not to use any of the specified pixel formats for the input to the next filter.
+ TS. noise             V->V       Add noise.
+ T.C normalize         V->V       Normalize RGB video.
+ ... null              V->V       Pass the source unchanged to the output.
+ ... ocr               V->V       Optical Character Recognition.
+ T.C oscilloscope      V->V       2D Video Oscilloscope.
+ TSC overlay           VV->V      Overlay a video source on top of the input.
+ T.. owdenoise         V->V       Denoise using wavelets.
+ ... pad               V->V       Pad the input video.
+ ... palettegen        V->V       Find the optimal palette for a given stream.
+ ... paletteuse        VV->V      Use a palette to downsample an input video stream.
+ T.C perms             V->V       Set permissions for the output video frame.
+ TS. perspective       V->V       Correct the perspective of video.
+ T.C phase             V->V       Phase shift fields.
+ ... photosensitivity  V->V       Filter out photosensitive epilepsy seizure-inducing flashes.
+ ... pixdesctest       V->V       Test pixel format definitions.
+ TSC pixelize          V->V       Pixelize video.
+ T.C pixscope          V->V       Pixel data analysis.
+ T.C pp                V->V       Filter video using libpostproc.
+ T.. pp7               V->V       Apply Postprocessing 7 filter.
+ TS. premultiply       N->V       PreMultiply first stream with first plane of second stream.
+ TSC prewitt           V->V       Apply prewitt operator.
+ TSC pseudocolor       V->V       Make pseudocolored video frames.
+ TS. psnr              VV->V      Calculate the PSNR between two video streams.
+ ... pullup            V->V       Pullup from field sequence to frames.
+ T.. qp                V->V       Change video quantization parameters.
+ ... random            V->V       Return random frames.
+ TSC readeia608        V->V       Read EIA-608 Closed Caption codes from input video and write them to frame metadata.
+ ... readvitc          V->V       Read vertical interval timecode and write it to frame metadata.
+ ..C realtime          V->V       Slow down filtering to match realtime.
+ .S. remap             VVV->V     Remap pixels.
+ TS. removegrain       V->V       Remove grain.
+ T.. removelogo        V->V       Remove a TV logo based on a mask image.
+ ... repeatfields      V->V       Hard repeat fields based on MPEG repeat field flag.
+ ... reverse           V->V       Reverse a clip.
+ TSC rgbashift         V->V       Shift RGBA.
+ TSC roberts           V->V       Apply roberts cross operator.
+ TSC rotate            V->V       Rotate the input image.
+ T.. sab               V->V       Apply shape adaptive blur.
+ ..C scale             V->V       Scale the input video size and/or convert the image format.
+ ... scale_vt          V->V       Scale Videotoolbox frames
+ ..C scale2ref         VV->VV     Scale the input video size and/or convert the image format to the given reference.
+ ... scdet             V->V       Detect video scene change
+ TSC scharr            V->V       Apply scharr operator.
+ TSC scroll            V->V       Scroll input video.
+ ... segment           V->N       Segment video stream.
+ ... select            V->N       Select video frames to pass in output.
+ TS. selectivecolor    V->V       Apply CMYK adjustments to specific color ranges.
+ ... sendcmd           V->V       Send commands to filters.
+ ... separatefields    V->V       Split input video frames into fields.
+ ... setdar            V->V       Set the frame display aspect ratio.
+ ... setfield          V->V       Force field for the output video frame.
+ ... setparams         V->V       Force field, or color property for the output video frame.
+ ..C setpts            V->V       Set PTS for the output video frame.
+ ... setrange          V->V       Force color range for the output video frame.
+ ... setsar            V->V       Set the pixel sample aspect ratio.
+ ... settb             V->V       Set timebase for the video output link.
+ TSC shear             V->V       Shear transform the input image.
+ ... showinfo          V->V       Show textual information for each video frame.
+ ... showpalette       V->V       Display frame palette.
+ T.. shuffleframes     V->V       Shuffle video frames.
+ TS. shufflepixels     V->V       Shuffle video pixels.
+ T.. shuffleplanes     V->V       Shuffle video planes.
+ T.. sidedata          V->V       Manipulate video frame side data.
+ .S. signalstats       V->V       Generate statistics from video analysis.
+ ... signature         N->V       Calculate the MPEG-7 video signature
+ ... siti              V->V       Calculate spatial information (SI) and temporal information (TI).
+ T.. smartblur         V->V       Blur the input video without impacting the outlines.
+ TSC sobel             V->V       Apply sobel operator.
+ ... split             V->N       Pass on the input to N video outputs.
+ T.C spp               V->V       Apply a simple post processing filter.
+ ... sr                V->V       Apply DNN-based image super resolution to the input.
+ TS. ssim              VV->V      Calculate the SSIM between two video streams.
+ ... ssim360           VV->V      Calculate the SSIM between two 360 video streams.
+ .S. stereo3d          V->V       Convert video stereoscopic 3D view.
+ ..C streamselect      N->N       Select video streams
+ ... subtitles         V->V       Render text subtitles onto input video using the libass library.
+ .S. super2xsai        V->V       Scale the input by 2x using the Super2xSaI pixel art algorithm.
+ T.C swaprect          V->V       Swap 2 rectangular objects in video.
+ T.. swapuv            V->V       Swap U and V components.
+ TSC tblend            V->V       Blend successive frames.
+ ... telecine          V->V       Apply a telecine pattern.
+ ... thistogram        V->V       Compute and draw a temporal histogram.
+ TSC threshold         VVVV->V    Threshold first video stream using other video streams.
+ TS. thumbnail         V->V       Select the most representative frame in a given sequence of consecutive frames.
+ ... tile              V->V       Tile several successive frames together.
+ ... tinterlace        V->V       Perform temporal field interlacing.
+ TSC tlut2             V->V       Compute and apply a lookup table from two successive frames.
+ TSC tmedian           V->V       Pick median pixels from successive frames.
+ T.. tmidequalizer     V->V       Apply Temporal Midway Equalization.
+ TSC tmix              V->V       Mix successive video frames.
+ .S. tonemap           V->V       Conversion to/from different dynamic ranges.
+ ... tpad              V->V       Temporarily pad video frames.
+ .S. transpose         V->V       Transpose input video.
+ ... transpose_vt      V->V       Transpose Videotoolbox frames
+ ... trim              V->V       Pick one continuous section from the input, drop the rest.
+ TS. unpremultiply     N->V       UnPreMultiply first stream with first plane of second stream.
+ TS. unsharp           V->V       Sharpen or blur the input video.
+ ... untile            V->V       Untile a frame into a sequence of frames.
+ TS. uspp              V->V       Apply Ultra Simple / Slow Post-processing filter.
+ .SC v360              V->V       Convert 360 projection of video.
+ T.. vaguedenoiser     V->V       Apply a Wavelet based Denoiser.
+ TSC varblur           VV->V      Apply Variable Blur filter.
+ ..C vectorscope       V->V       Video vectorscope.
+ T.. vflip             V->V       Flip the input video vertically.
+ ... vfrdet            V->V       Variable frame rate detect filter.
+ TSC vibrance          V->V       Boost or alter saturation.
+ ... vidstabdetect     V->V       Extract relative transformations, pass 1 of 2 for stabilization (see vidstabtransform for pass 2).
+ ... vidstabtransform  V->V       Transform the frames, pass 2 of 2 for stabilization (see vidstabdetect for pass 1).
+ TS. vif               VV->V      Calculate the VIF between two video streams.
+ T.. vignette          V->V       Make or reverse a vignette effect.
+ ... vmafmotion        V->V       Calculate the VMAF Motion score.
+ .S. vstack            N->V       Stack video inputs vertically.
+ TSC w3fdif            V->V       Apply Martin Weston three field deinterlace.
+ .SC waveform          V->V       Video waveform monitor.
+ .S. weave             V->V       Weave input video fields into frames.
+ .S. xbr               V->V       Scale the input using xBR algorithm.
+ TS. xcorrelate        VV->V      Cross-correlate first video stream with second video stream.
+ .S. xfade             VV->V      Cross fade one video with another video.
+ TSC xmedian           N->V       Pick median pixels from several video inputs.
+ .S. xstack            N->V       Stack video inputs into custom layout.
+ TS. yadif             V->V       Deinterlace the input image.
+ T.. yadif_videotoolbox V->V       YADIF for VideoToolbox frames using Metal compute
+ TSC yaepblur          V->V       Yet another edge preserving blur filter.
+ ... zmq               V->V       Receive commands through ZMQ and broker them to filters.
+ ... zoompan           V->V       Apply Zoom & Pan effect.
+ .SC zscale            V->V       Apply resizing, colorspace and bit depth conversion.
+ ... allrgb            |->V       Generate all RGB colors.
+ ... allyuv            |->V       Generate all yuv colors.
+ ... cellauto          |->V       Create pattern generated by an elementary cellular automaton.
+ ..C color             |->V       Provide an uniformly colored input.
+ ... colorchart        |->V       Generate color checker chart.
+ ... colorspectrum     |->V       Generate colors spectrum.
+ ... coreimagesrc      |->V       Video source using image generators of CoreImage API.
+ ... frei0r_src        |->V       Generate a frei0r source.
+ .S. gradients         |->V       Draw a gradients.
+ ... haldclutsrc       |->V       Provide an identity Hald CLUT.
+ ... life              |->V       Create life.
+ ... mandelbrot        |->V       Render a Mandelbrot fractal.
+ ... mptestsrc         |->V       Generate various test pattern.
+ ... nullsrc           |->V       Null video source, return unprocessed video frames.
+ ... pal75bars         |->V       Generate PAL 75% color bars.
+ ... pal100bars        |->V       Generate PAL 100% color bars.
+ ... rgbtestsrc        |->V       Generate RGB test pattern.
+ .S. sierpinski        |->V       Render a Sierpinski fractal.
+ ... smptebars         |->V       Generate SMPTE color bars.
+ ... smptehdbars       |->V       Generate SMPTE HD color bars.
+ ... testsrc           |->V       Generate test pattern.
+ ... testsrc2          |->V       Generate another test pattern.
+ ... yuvtestsrc        |->V       Generate YUV test pattern.
+ .SC zoneplate         |->V       Generate zone-plate.
+ ... nullsink          V->|       Do absolutely nothing with the input video.
+ ..C a3dscope          A->V       Convert input audio to 3d scope video output.
+ ... abitscope         A->V       Convert input audio to audio bit scope video output.
+ ... adrawgraph        A->V       Draw a graph using input audio metadata.
+ ..C agraphmonitor     A->V       Show various filtergraph stats.
+ ... ahistogram        A->V       Convert input audio to histogram video output.
+ ... aphasemeter       A->N       Convert input audio to phase meter video output.
+ .SC avectorscope      A->V       Convert input audio to vectorscope video output.
+ ..C concat            N->N       Concatenate audio and video streams.
+ ... showcqt           A->V       Convert input audio to a CQT (Constant/Clamped Q Transform) spectrum video output.
+ .S. showcwt           A->V       Convert input audio to a CWT (Continuous Wavelet Transform) spectrum video output.
+ ... showfreqs         A->V       Convert input audio to a frequencies video output.
+ .S. showspatial       A->V       Convert input audio to a spatial video output.
+ .S. showspectrum      A->V       Convert input audio to a spectrum video output.
+ .S. showspectrumpic   A->V       Convert input audio to a spectrum video output single picture.
+ ... showvolume        A->V       Convert input audio volume to video output.
+ ... showwaves         A->V       Convert input audio to a video output.
+ ... showwavespic      A->V       Convert input audio to a video output single picture.
+ ... spectrumsynth     VV->A      Convert input spectrum videos to audio output.
+ ..C avsynctest        |->AV      Generate an Audio Video Sync Test.
+ ..C amovie            |->N       Read audio from a movie source.
+ ..C movie             |->N       Read from a movie source.
+ ... afifo             A->A       Buffer input frames and send them when they are requested.
+ ... fifo              V->V       Buffer input images and send them when they are requested.
+ ... abuffer           |->A       Buffer audio frames, and make them accessible to the filterchain.
+ ... buffer            |->V       Buffer video frames, and make them accessible to the filterchain.
+ ... abuffersink       A->|       Buffer audio frames, and make them available to the end of the filter graph.
+ ... buffersink        V->|       Buffer video frames, and make them available to the end of the filter graph.
