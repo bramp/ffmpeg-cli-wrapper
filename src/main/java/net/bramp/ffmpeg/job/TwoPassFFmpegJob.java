@@ -40,7 +40,7 @@ public class TwoPassFFmpegJob extends FFmpegJob {
   }
 
   protected void deletePassLog() throws IOException {
-    final Path cwd = Paths.get("");
+    final Path cwd = Paths.get(builder.getPassDirectory());
     try (DirectoryStream<Path> stream = Files.newDirectoryStream(cwd, passlogPrefix + "*.log*")) {
       for (Path p : stream) {
         Files.deleteIfExists(p);

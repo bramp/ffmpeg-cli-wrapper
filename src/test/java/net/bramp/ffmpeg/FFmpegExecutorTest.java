@@ -12,6 +12,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CountingOutputStream;
 import com.google.common.net.HostAndPort;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -266,6 +268,43 @@ public class FFmpegExecutorTest {
 
     // Run a one-pass encode
     ffExecutor.createJob(builder).run();
+  }
+
+
+  @Test
+  public void testIssue287() throws InterruptedException, ExecutionException, IOException {
+    FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
+    assertFalse(in.hasError());
+
+    String tempDir = System.getProperty("java.io.tmpdir");
+
+    FFmpegBuilder builder =
+            new FFmpegBuilder()
+                    .setInput(in)
+                    .done()
+                    .overrideOutputFiles(true)
+                    .addOutput(Samples.output_mp4)
+                    .setFormat("mp4")
+                    .disableAudio()
+                    .setVideoCodec("mpeg4")
+                    .setVideoFrameRate(FFmpeg.FPS_30)
+                    .setVideoResolution(320, 240)
+                    .setTargetSize(1024 * 1024)
+                    .done().setPassDirectory(tempDir);
+
+    FFmpegJob job = ffExecutor.createTwoPassJob(builder);
+    runAndWait(job);
+
+    assertEquals(FFmpegJob.State.FINISHED, job.getState());
+
+    File passDir = new File(builder.getPassDirectory());
+    String passPrefix = builder.getPassPrefix();
+
+    File[] remainingFiles = passDir.listFiles((dir, name) ->
+            name.startsWith(passPrefix) && name.contains(".log")
+    );
+
+    assertEquals(true, remainingFiles == null || remainingFiles.length == 0);
   }
 
   protected void runAndWait(FFmpegJob job) throws ExecutionException, InterruptedException {
