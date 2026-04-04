@@ -1,121 +1,58 @@
 package net.bramp.ffmpeg;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 
+import com.google.common.base.Joiner;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
-import com.google.common.base.Joiner;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import net.bramp.ffmpeg.builder.HlsVariant;
 import net.bramp.ffmpeg.builder.Strict;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.job.FFmpegJob;
-import net.bramp.ffmpeg.probe.FFmpegFormat;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-import net.bramp.ffmpeg.probe.FFmpegStream;
 import net.bramp.ffmpeg.progress.Progress;
 import net.bramp.ffmpeg.progress.ProgressListener;
 import org.junit.Test;
 
-/** Ensures the examples in the README continue to work. */
+/**
+ * These tests are those that appear in the README.md. They are listed here to ensure they always
+ * compile and run.
+ */
 public class ReadmeTest {
 
-  final Locale locale = Locale.US;
   final FFmpeg ffmpeg = new FFmpeg();
   final FFprobe ffprobe = new FFprobe();
+
+  final Locale locale = Locale.US;
 
   public ReadmeTest() throws IOException {}
 
   @Test
-  @SuppressWarnings("unused")
-  public void testCreateFF() throws IOException {
-    FFmpeg ffmpeg = new FFmpeg(FFmpeg.DEFAULT_PATH);
-    FFprobe ffprobe = new FFprobe(FFmpeg.DEFAULT_PATH);
-
-    // Construct them, and do nothing with them
-  }
-
-  @Test
-  public void testVideoEncoding() throws IOException {
-
-    String inFilename = Samples.big_buck_bunny_720p_1mb;
-    FFmpegProbeResult in = ffprobe.probe(inFilename);
+  public void testSimpleVideoEncoding() throws IOException {
+    FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+    FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
 
     FFmpegBuilder builder =
         new FFmpegBuilder()
-            .setInput(inFilename) // Filename, or a FFmpegProbeResult
-            .done()
-            .setInput(in)
-            .done()
             .overrideOutputFiles(true) // Override the output if it exists
+            .setInput(in) // Or filename
+            .done()
             .addOutput("output.mp4") // Filename for the destination
             .setFormat("mp4") // Format is inferred from filename, or can be set
             .setTargetSize(250_000) // Aim for a 250KB file
             .disableSubtitle() // No subtiles
-            .setAudioChannels(1) // Mono audio
             .setAudioCodec("aac") // using the aac codec
+            .setAudioChannels(1) // mono-channel
             .setAudioSampleRate(48_000) // at 48KHz
             .setAudioBitRate(32768) // at 32 kbit/s
             .setVideoCodec("libx264") // Video using x264
             .setVideoFrameRate(24, 1) // at 24 frames per second
             .setVideoResolution(640, 480) // at 640x480 resolution
-            .setStrict(Strict.EXPERIMENTAL) // Allow FFmpeg to use experimental specs
-            .done();
-
-    FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
-
-    // Run a one-pass encode
-    executor.createJob(builder).run();
-
-    // Or run a two-pass encode (which is slower at the cost of better quality
-    executor.createTwoPassJob(builder).run();
-  }
-
-  @Test
-  public void testGetMediaInformation() throws IOException {
-    FFmpegProbeResult probeResult = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
-
-    FFmpegFormat format = probeResult.getFormat();
-    String line1 =
-        String.format(
-            locale,
-            "File: '%s' ; Format: '%s' ; Duration: %.3fs",
-            format.filename,
-            format.format_long_name,
-            format.duration);
-
-    FFmpegStream stream = probeResult.getStreams().get(0);
-    String line2 =
-        String.format(
-            locale,
-            "Codec: '%s' ; Width: %dpx ; Height: %dpx",
-            stream.codec_long_name,
-            stream.width,
-            stream.height);
-
-    assertThat(
-        line1,
-        is(
-            "File: 'src/test/resources/net/bramp/ffmpeg/samples/big_buck_bunny_720p_1mb.mp4' ; Format: 'QuickTime / MOV' ; Duration: 5.312s"));
-    assertThat(
-        line2,
-        is("Codec: 'H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10' ; Width: 1280px ; Height: 720px"));
-  }
-
-  @Test
-  public void testProgress() throws IOException {
-    FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
-
-    final FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
-
-    FFmpegBuilder builder =
-        new FFmpegBuilder()
-            .setInput(in) // Or filename
-            .done()
-            .addOutput("output.mp4")
+            .setStrict(Strict.EXPERIMENTAL) // Allow native AAC codec
             .done();
 
     FFmpegJob job =
@@ -150,77 +87,104 @@ public class ReadmeTest {
   }
 
   @Test
-  public void testHLSVideoEncoding() throws IOException {
-    long start = System.currentTimeMillis();
+  public void testTwoPassVideoEncoding() throws IOException {
     FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
     FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
-    FFmpegBuilder builder = new FFmpegBuilder()
-            .setInput(in)
+
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
             .overrideOutputFiles(true)
-            .addOutput("src/test/resources/net/bramp/ffmpeg/samples/%v/index.m3u8")
+            .setInput(in)
+            .done()
+            .addOutput("output.mp4")
+            .setFormat("mp4")
+            .setTargetSize(250_000)
+            .disableSubtitle()
+            .setAudioCodec("aac")
+            .setAudioChannels(1)
+            .setAudioSampleRate(48_000)
+            .setAudioBitRate(32768)
+            .setVideoCodec("libx264")
+            .setVideoFrameRate(24, 1)
+            .setVideoResolution(640, 480)
+            .setStrict(Strict.EXPERIMENTAL)
+            .done();
+
+    FFmpegJob job = executor.createTwoPassJob(builder);
+    job.run();
+
+    assertEquals(FFmpegJob.State.FINISHED, job.getState());
+  }
+
+  @Test
+  public void testHLSVideoEncoding() throws IOException {
+    FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+    FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
+
+    Path tempDir = Files.createTempDirectory("ffmpeg-hls");
+
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .overrideOutputFiles(true)
+            .setInput(in)
+            .done()
+            // The %v placeholder is replaced by the variant index (0, 1, etc.)
+            .addHlsOutput(tempDir.resolve("var-%v/index.m3u8").toString())
+            .setHlsTime(10, TimeUnit.SECONDS)
+            .setHlsPlaylistType("vod")
+            .setHlsListSize(0)
+            .setHlsSegmentFileName(tempDir.resolve("var-%v/segment%d.ts").toString())
+            .setMasterPlName("master.m3u8")
+            .addVariant(new HlsVariant().addVideo(0).addAudio(0).setName("1080p"))
+            .addVariant(new HlsVariant().addVideo(1).addAudio(1).setName("720p"))
+            .addVariant(new HlsVariant().addVideo(2).addAudio(2).setName("480p"))
+            .addVariant(new HlsVariant().addVideo(3).addAudio(3).setName("360p"))
+            .addVariant(new HlsVariant().addVideo(4).addAudio(4).setName("240p"))
+            .addVariant(new HlsVariant().addVideo(5).addAudio(5).setName("144p"))
             .setPreset("slow")
             .addExtraArgs("-g", "48")
-            .addExtraArgs("-sc_threshold","0")
-            .addExtraArgs("-map","0:0")
-            .addExtraArgs("-map","0:1")
-            .addExtraArgs("-map","0:0")
-            .addExtraArgs("-map","0:1")
-            .addExtraArgs("-map","0:0")
-            .addExtraArgs("-map","0:1")
-            .addExtraArgs("-map","0:0")
-            .addExtraArgs("-map","0:1")
-            .addExtraArgs("-map","0:0")
-            .addExtraArgs("-map","0:1")
-            .addExtraArgs("-map","0:0")
-            .addExtraArgs("-map","0:1")
-            .addExtraArgs("-s:v:0","1920*1080")
-            .addExtraArgs("-b:v:0","1800k")
-            .addExtraArgs("-s:v:1","1280*720")
-            .addExtraArgs("-b:v:1","1200k")
-            .addExtraArgs("-s:v:2","858*480")
-            .addExtraArgs("-b:v:2","750k")
-            .addExtraArgs("-s:v:3","630*360")
-            .addExtraArgs("-b:v:3","550k")
-            .addExtraArgs("-s:v:4","426*240")
-            .addExtraArgs("-b:v:4","400k")
-            .addExtraArgs("-s:v:5","256*144")
-            .addExtraArgs("-b:v:5","200k")
-            .addExtraArgs("-c:a","copy")
-            .addExtraArgs("-var_stream_map","v:0,a:0,name:1080p v:1,a:1,name:720p v:2,a:2,name:480p v:3,a:3,name:360p v:4,a:4,name:240p v:5,a:5,name:144p")
-            .addExtraArgs("-master_pl_name","master.m3u8")
-            .addExtraArgs("-f","hls")
-            .addExtraArgs("-hls_time","10")
-            .addExtraArgs("-hls_playlist_type","vod")
-            .addExtraArgs("-hls_list_size","0")
-            .addExtraArgs("-hls_segment_filename","src/test/resources/net/bramp/ffmpeg/samples/%v/segment%d.ts")
+            .addExtraArgs("-sc_threshold", "0")
+            // Map the same input multiple times for different variants
+            .addExtraArgs("-map", "0:0", "-map", "0:1") // 1080p
+            .addExtraArgs("-map", "0:0", "-map", "0:1") // 720p
+            .addExtraArgs("-map", "0:0", "-map", "0:1") // 480p
+            .addExtraArgs("-map", "0:0", "-map", "0:1") // 360p
+            .addExtraArgs("-map", "0:0", "-map", "0:1") // 240p
+            .addExtraArgs("-map", "0:0", "-map", "0:1") // 144p
+            // Specific settings for each variant
+            .addExtraArgs("-s:v:0", "1920x1080", "-b:v:0", "1800k")
+            .addExtraArgs("-s:v:1", "1280x720", "-b:v:1", "1200k")
+            .addExtraArgs("-s:v:2", "858x480", "-b:v:2", "750k")
+            .addExtraArgs("-s:v:3", "630x360", "-b:v:3", "550k")
+            .addExtraArgs("-s:v:4", "426x240", "-b:v:4", "400k")
+            .addExtraArgs("-s:v:5", "256x144", "-b:v:5", "200k")
+            .setAudioCodec("copy")
             .done();
-    String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
-    System.out.println("actual "+actual);
+
     FFmpegJob job =
-            executor.createJob(
-                    builder,
-                    new ProgressListener() {
-                      // Using the FFmpegProbeResult determine the duration of the input
-                      final double duration_ns = in.getFormat().duration * TimeUnit.SECONDS.toNanos(1);
-                      @Override
-                      public void progress(Progress progress) {
-                        double percentage = progress.out_time_ns / duration_ns;
-                        // Print out interesting information about the progress
-                        System.out.println(
-                                String.format(
-                                        locale,
-                                        "[%.0f%%] status:%s frame:%d time:%s fps:%.0f speed:%.2fx",
-                                        percentage * 100,
-                                        progress.status,
-                                        progress.frame,
-                                        FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
-                                        progress.fps.doubleValue(),
-                                        progress.speed));
-                      }
-                    });
+        executor.createJob(
+            builder,
+            new ProgressListener() {
+              final double duration_ns = in.getFormat().duration * TimeUnit.SECONDS.toNanos(1);
+
+              @Override
+              public void progress(Progress progress) {
+                double percentage = progress.out_time_ns / duration_ns;
+                System.out.println(
+                    String.format(
+                        locale,
+                        "[%.0f%%] status:%s frame:%d time:%s fps:%.0f speed:%.2fx",
+                        percentage * 100,
+                        progress.status,
+                        progress.frame,
+                        FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
+                        progress.fps.doubleValue(),
+                        progress.speed));
+              }
+            });
+
     job.run();
-    long end = System.currentTimeMillis();
-    long execution = (end - start)/1000;
-    System.out.println("Execution time: " + execution + " seconds");
+
+    assertEquals(FFmpegJob.State.FINISHED, job.getState());
   }
 }

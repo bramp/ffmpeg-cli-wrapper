@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "gh-cli": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "computedHash": "cbe644b0c6760ae2a1eaafa39133920d889331327065d92a131675a665273e56"
+    }
+  }
+}
