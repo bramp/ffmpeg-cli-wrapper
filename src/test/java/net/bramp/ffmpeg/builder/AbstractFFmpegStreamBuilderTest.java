@@ -1,5 +1,7 @@
 package net.bramp.ffmpeg.builder;
 
+import static net.bramp.ffmpeg.builder.StreamSpecifier.stream;
+import static net.bramp.ffmpeg.builder.StreamSpecifierType.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
@@ -224,5 +226,12 @@ public abstract class AbstractFFmpegStreamBuilderTest {
     List<String> command = getBuilder().addExtraArgs("-some", "args").build(0);
 
     assertThat(removeCommon(command), is(ImmutableList.of("-some", "args")));
+  }
+
+  @Test
+  public void testAddMap() {
+    List<String> command = getBuilder().addMap(0, stream(Video)).build(0);
+
+    assertThat(removeCommon(command), is(ImmutableList.of("-map", "0:v")));
   }
 }
