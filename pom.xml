@@ -208,7 +208,7 @@
     <distributionManagement>
         <snapshotRepository>
             <id>central</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -457,6 +457,7 @@
                     <publishingServerId>central</publishingServerId>
                     <autoPublish>true</autoPublish>
                     <waitUntil>published</waitUntil>
+                    <deploymentName>${project.artifactId}:${project.version}</deploymentName>
                 </configuration>
             </plugin>
 
