@@ -45,6 +45,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+        <maven.compiler.release>${base.java.version}</maven.compiler.release>
+
         <error.prone.version>2.31.0</error.prone.version>
     </properties>
 
@@ -205,13 +207,6 @@
         </dependency>
     </dependencies>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>central</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <build>
         <pluginManagement>
             <plugins>
@@ -223,7 +218,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.1.4</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -232,23 +227,8 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>3.12.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.2.5</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>cobertura-maven-plugin</artifactId>
-                    <version>2.7</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.eluder.coveralls</groupId>
-                    <artifactId>coveralls-maven-plugin</artifactId>
-                    <version>4.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -269,11 +249,6 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>net.revelc.code</groupId>
-                    <artifactId>formatter-maven-plugin</artifactId>
-                    <version>0.5.2</version>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>3.3.0</version>
@@ -290,11 +265,6 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-scm-publish-plugin</artifactId>
-                    <version>3.2.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>3.1.4</version>
                 </plugin>
@@ -302,11 +272,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>3.2.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.sonatype.central</groupId>
@@ -356,13 +321,9 @@
             </plugin>
 
             <plugin>
-                <!-- mvn clean javadoc:aggregate scm-publish:publish-scm -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
-                    <reportOutputDirectory>${project.reporting.outputDirectory}/apidocs
-                    </reportOutputDirectory>
-                    <destDir>apidocs</destDir>
                     <nohelp>true</nohelp>
                     <linksource>true</linksource>
                     <source>${base.java.version}</source>
@@ -380,35 +341,7 @@
                             <goal>jar</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>aggregate</id>
-                        <goals>
-                            <goal>aggregate</goal>
-                        </goals>
-                        <phase>site</phase>
-                        <configuration />
-                    </execution>
                 </executions>
-            </plugin>
-
-            <!--
-                http://blog.progs.be/517/publishing-javadoc-to-github-using-maven
-                To build and publish the javadoc run
-                mvn clean javadoc:aggregate scm-publish:publish-scm
-            -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-publish-plugin</artifactId>
-                <configuration>
-                    <checkoutDirectory>${project.build.directory}/scmpublish</checkoutDirectory>
-                    <checkinComment>
-                        Publishing javadoc for ${project.artifactId}:${project.version}
-                    </checkinComment>
-                    <content>${project.reporting.outputDirectory}/apidocs</content>
-                    <skipDeletedFiles>true</skipDeletedFiles>
-                    <pubScmUrl>${project.scm.connection}</pubScmUrl>
-                    <scmBranch>gh-pages</scmBranch>
-                </configuration>
             </plugin>
 
             <plugin>
@@ -438,20 +371,8 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <releaseProfiles>release</releaseProfiles>
-                    <goals>deploy</goals>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.7.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>central</publishingServerId>
@@ -468,7 +389,7 @@
                     <dependency>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>extra-enforcer-rules</artifactId>
-                        <version>1.8.0</version>
+                        <version>1.12.0</version>
                     </dependency>
                 </dependencies>
                 <executions>
@@ -500,241 +421,12 @@
                 </executions>
             </plugin>
 
-            <!-- Coverage reporting -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <configuration>
-                    <format>xml</format>
-                    <maxmem>256m</maxmem>
-                    <!-- aggregated reports for multi-module projects -->
-                    <aggregate>true</aggregate>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-                <configuration>
-                    <sourceEncoding>UTF-8</sourceEncoding>
-                </configuration>
-            </plugin>
         </plugins>
 
         <defaultGoal>install</defaultGoal>
     </build>
 
-    <reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>3.9.0</version>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>versions-maven-plugin</artifactId>
-				<version>2.16.2</version>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>taglist-maven-plugin</artifactId>
-				<version>3.2.2</version>
-				<configuration>
-					<aggregate>true</aggregate>
-					<tagListOptions>
-						<tagClasses>
-							<tagClass>
-								<displayName>Todo Work</displayName>
-								<tags>
-									<tag>
-										<matchString>TODO</matchString>
-										<matchType>ignoreCase</matchType>
-									</tag>
-									<tag>
-										<matchString>@todo</matchString>
-										<matchType>exact</matchType>
-									</tag>
-									<tag>
-										<matchString>FIXME</matchString>
-										<matchType>exact</matchType>
-									</tag>
-								</tags>
-							</tagClass>
-							<tagClass>
-								<displayName>Deprecated</displayName>
-								<tags>
-									<tag>
-										<matchString>@Deprecated</matchString>
-										<matchType>exact</matchType>
-									</tag>
-								</tags>
-							</tagClass>
-						</tagClasses>
-					</tagListOptions>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<version>3.21.2</version>
-				<configuration>
-					<aggregate>true</aggregate>
-					<!-- The minimum tokens before a violation -->
-					<minimumTokens>100</minimumTokens>
-					<verbose>true</verbose>
-					<rulesets>
-						<ruleset>/rulesets/maven.xml</ruleset>
-						<ruleset>/rulesets/java/android.xml</ruleset>
-						<ruleset>/rulesets/java/basic.xml</ruleset>
-						<ruleset>/rulesets/java/braces.xml</ruleset>
-						<ruleset>/rulesets/java/clone.xml</ruleset>
-						<ruleset>/rulesets/java/codesize.xml</ruleset>
-						<ruleset>/rulesets/java/comments.xml</ruleset>
-						<ruleset>/rulesets/java/controversial.xml</ruleset>
-						<ruleset>/rulesets/java/coupling.xml</ruleset>
-						<ruleset>/rulesets/java/design.xml</ruleset>
-						<ruleset>/rulesets/java/empty.xml</ruleset>
-						<ruleset>/rulesets/java/finalizers.xml</ruleset>
-						<ruleset>/rulesets/java/imports.xml</ruleset>
-						<ruleset>/rulesets/java/j2ee.xml</ruleset>
-						<ruleset>/rulesets/java/javabeans.xml</ruleset>
-						<ruleset>/rulesets/java/junit.xml</ruleset>
-						<ruleset>/rulesets/java/logging-jakarta-commons.xml</ruleset>
-						<ruleset>/rulesets/java/logging-java.xml</ruleset>
-						<ruleset>/rulesets/java/migrating.xml</ruleset>
-						<ruleset>/rulesets/java/naming.xml</ruleset>
-						<ruleset>/rulesets/java/optimizations.xml</ruleset>
-						<ruleset>/rulesets/java/strictexception.xml</ruleset>
-						<ruleset>/rulesets/java/strings.xml</ruleset>
-						<ruleset>/rulesets/java/sunsecure.xml</ruleset>
-						<ruleset>/rulesets/java/typeresolution.xml</ruleset>
-						<ruleset>/rulesets/java/unnecessary.xml</ruleset>
-						<ruleset>/rulesets/java/unusedcode.xml</ruleset>
-					</rulesets>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.5</version>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-changes-plugin</artifactId>
-				<version>2.12.1</version>
-				<configuration>
-					<includeOpenIssues>true</includeOpenIssues>
-				</configuration>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>changes-report</report>
-							<report>github-report</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.0.0-M1</version>
-				<configuration>
-					<aggregate>true</aggregate>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jxr-plugin</artifactId>
-				<version>3.3.2</version>
-				<configuration>
-					<aggregate>true</aggregate>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>3.3.1</version>
-				<configuration>
-					<configLocation>google_checks.xml</configLocation>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>3.2.5</version>
-				<configuration>
-					<outputDirectory>${project.reporting.outputDirectory}/testresults</outputDirectory>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.7</version>
-				<configuration>
-					<aggregate>true</aggregate>
-					<outputDirectory>%{project.reporting.outputDirectory}/cobertura</outputDirectory>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
-
     <profiles>
-        <profile>
-            <!-- Some of the plugins and test deps have stopped working for Java
-                 8, so we specify old versions here.  This is so we can continue
-                 to run tests on Java 8, but allow the default version to use
-                 the latest versions. (As long as API is compatible with Java 8) -->
-            <id>Java 8</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <dependencyManagement>
-                <dependencies>
-                    <!-- Test Scope -->
-                    <dependency>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-classic</artifactId>
-                        <!-- logback 1.4 requires JDK 11+ -->
-                        <version>1.3.14</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.mockito</groupId>
-                        <artifactId>mockito-core</artifactId>
-                        <!-- mockito 5 requires JDK 11+ -->
-                        <version>4.11.0</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.glassfish.grizzly</groupId>
-                        <artifactId>grizzly-http-server</artifactId>
-                        <!-- grizzly 4.0.0 requires JDK 11+ -->
-                        <version>3.0.1</version>
-                    </dependency>
-                </dependencies>
-            </dependencyManagement>
-        </profile>
-
-        <profile>
-            <id>Java 9+</id>
-            <activation>
-                <jdk>[9,)</jdk>
-            </activation>
-            <properties>
-                <!-- This flag was added from 9+ -->
-                <maven.compiler.release>${base.java.version}</maven.compiler.release>
-            </properties>
-        </profile>
-
         <profile>
             <id>java11plus</id>
             <activation>

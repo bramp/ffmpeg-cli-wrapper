@@ -70,6 +70,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   public Long duration; // in milliseconds
 
   public final List<String> meta_tags = new ArrayList<>();
+  public final List<String> maps = new ArrayList<>();
 
   public boolean audio_enabled = true;
   public String audio_codec;
@@ -361,6 +362,18 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     checkNotEmpty(value, "value must not be empty");
     meta_tags.add("-metadata:" + spec.spec());
     meta_tags.add(key + "=" + value);
+    return getThis();
+  }
+
+  public T addMap(int inputIndex) {
+    checkArgument(inputIndex >= 0, "inputIndex must be greater or equal to zero");
+    this.maps.add(String.valueOf(inputIndex));
+    return getThis();
+  }
+
+  public T addMap(int inputIndex, StreamSpecifier spec) {
+    checkArgument(inputIndex >= 0, "inputIndex must be greater or equal to zero");
+    this.maps.add(inputIndex + ":" + spec.spec());
     return getThis();
   }
 
@@ -673,5 +686,9 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     }
   }
 
-  protected void addFormatArgs(ImmutableList.Builder<String> args) {}
+  protected void addFormatArgs(ImmutableList.Builder<String> args) {
+    for (String map : maps) {
+      args.add("-map", map);
+    }
+  }
 }
