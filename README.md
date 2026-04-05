@@ -26,6 +26,12 @@ We currently support Java 11 and above. Use Maven to install the dependency.
 </dependency>
 ```
 
+## Compatibility
+
+- **Java**: 11 and above (tested on JDK 11, 17, and 21).
+- **FFmpeg**: Any reasonably modern version of FFmpeg should work (5.x, 6.x, 7.x, etc.). The library generates command-line arguments, so compatibility depends on which FFmpeg features you use.
+- **OS**: Pure Java — runs anywhere Java and FFmpeg are available (Linux, macOS, Windows).
+
 ## Usage
 
 ### Video Encoding
