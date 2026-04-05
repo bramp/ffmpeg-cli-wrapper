@@ -4,6 +4,20 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      # Grizzly 4.0.x is the last version for Java 11.
+      # Grizzly 4.1.x requires Java 17.
+      # Grizzly 5.0.x requires Java 21.
+      # TODO: Remove this ignore rule when bumping base.java.version beyond 11.
+      - dependency-name: "org.glassfish.grizzly:grizzly-http-server"
+        versions: [">= 4.1.0"]
+
+      # Error Prone 2.31.0 is the last version that supports running on Java 11.
+      # Versions 2.32.0+ require Java 17+, and 2.43.0+ require Java 21+.
+      # TODO: Remove this ignore rule when bumping base.java.version beyond 11.
+      - dependency-name: "com.google.errorprone:error_prone_core"
+        versions: [">= 2.32.0"]
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

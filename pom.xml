@@ -38,6 +38,7 @@
     </developers>
 
     <properties>
+        <!-- NOTE: If bumping this, also re-evaluate ignore rules in .github/dependabot.yml -->
         <base.java.version>11</base.java.version>
         <maven.compiler.source>${base.java.version}</maven.compiler.source>
         <maven.compiler.target>${base.java.version}</maven.compiler.target>
