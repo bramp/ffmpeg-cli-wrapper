@@ -2,7 +2,6 @@ package net.bramp.ffmpeg;
 
 import static org.junit.Assert.assertEquals;
 
-import com.google.common.base.Joiner;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,7 +12,9 @@ import net.bramp.ffmpeg.builder.HlsVariant;
 import net.bramp.ffmpeg.builder.Strict;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.job.FFmpegJob;
+import net.bramp.ffmpeg.probe.FFmpegFormat;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
+import net.bramp.ffmpeg.probe.FFmpegStream;
 import net.bramp.ffmpeg.progress.Progress;
 import net.bramp.ffmpeg.progress.ProgressListener;
 import org.junit.Test;

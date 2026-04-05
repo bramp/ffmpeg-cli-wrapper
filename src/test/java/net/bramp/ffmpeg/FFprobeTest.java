@@ -815,7 +815,8 @@ public class FFprobeTest {
 
   @Test
   public void testReservedColorSpaceVideo() throws IOException {
-    FFprobeBuilder probeBuilder = ffprobe.builder().setShowStreams(true).setInput(Samples.video_with_reserved_color_space);
+    FFprobeBuilder probeBuilder =
+        ffprobe.builder().setShowStreams(true).setInput(Samples.video_with_reserved_color_space);
     List<FFmpegStream> streams = ffprobe.probe(probeBuilder).getStreams();
     assertEquals(1, streams.size());
     FFmpegStream stream = streams.get(0);

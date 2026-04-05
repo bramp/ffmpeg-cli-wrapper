@@ -1,6 +1,5 @@
 package net.bramp.ffmpeg;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.concurrent.TimeUnit.*;
 import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 
@@ -75,7 +74,8 @@ public final class FFmpegUtils {
     if (ns == 0) {
       result = String.format("%02d:%02d:%02d", hours, minutes, seconds);
     } else {
-      result = ZERO.trimTrailingFrom(String.format("%02d:%02d:%02d.%09d", hours, minutes, seconds, ns));
+      result =
+          ZERO.trimTrailingFrom(String.format("%02d:%02d:%02d.%09d", hours, minutes, seconds, ns));
     }
 
     return prefix + result;
@@ -123,7 +123,8 @@ public final class FFmpegUtils {
     long mins = Long.parseLong(m.group(3));
     double secs = Double.parseDouble(m.group(4));
 
-    return sign * (HOURS.toNanos(hours) + MINUTES.toNanos(mins) + (long) (SECONDS.toNanos(1) * secs));
+    return sign
+        * (HOURS.toNanos(hours) + MINUTES.toNanos(mins) + (long) (SECONDS.toNanos(1) * secs));
   }
 
   /**

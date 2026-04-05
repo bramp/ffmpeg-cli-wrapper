@@ -225,8 +225,7 @@ public class FFmpegHlsOutputBuilderTest extends AbstractFFmpegOutputBuilderTest 
             .setHlsInitTime(10, TimeUnit.MILLISECONDS)
             .build(0);
 
-    assertThat(
-        command, is(ImmutableList.of("-f", "hls", "-hls_init_time", "0.01", "output.m3u8")));
+    assertThat(command, is(ImmutableList.of("-f", "hls", "-hls_init_time", "0.01", "output.m3u8")));
   }
 
   @Test
