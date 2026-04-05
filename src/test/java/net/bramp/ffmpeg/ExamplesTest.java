@@ -37,8 +37,10 @@ public class ExamplesTest {
     ffmpeg = new FFmpeg("ffmpeg", runFunc);
   }
 
+  // Stream from a webcam (via DirectShow on Windows) to YouTube Live via RTMP.
+  // Demonstrates: input format override, RTMP output, hardware-specific input names.
   @Test
-  public void testExample1() throws IOException {
+  public void testWebcamToYouTubeRtmp() throws IOException {
     ffmpeg = new FFmpeg("ffmpeg\\win64\\bin\\ffmpeg.exe", runFunc);
 
     FFmpegBuilder builder =
@@ -82,8 +84,11 @@ public class ExamplesTest {
     assertEquals(expected, actual);
   }
 
+  // Encode to OGV (Theora/Vorbis) with quality-based settings instead of bitrate.
   @Test
-  public void testExample2() throws IOException {
+  public void testOgvQualitySettings() throws IOException {
+    // <!-- example: OGV Quality Settings -->
+    // Codec-specific quality scales via addExtraArgs.
     FFmpegBuilder builder =
         new FFmpegBuilder()
             .setInput("input.mkv")
@@ -94,6 +99,7 @@ public class ExamplesTest {
             .setAudioCodec("libvorbis")
             .addExtraArgs("-qscale:a", "5")
             .done();
+    // <!-- /example -->
 
     String expected =
         "ffmpeg -y -v error"
@@ -108,8 +114,12 @@ public class ExamplesTest {
     assertEquals(expected, actual);
   }
 
+  // Extract a single frame as a PNG thumbnail.
   @Test
-  public void testExample3() throws IOException {
+  public void testExtractThumbnail() throws IOException {
+    // <!-- example: Extract a Thumbnail -->
+    // Skip the first 10 frames and scale to 200px wide.
+    // Demonstrates: setFrames, setVideoFilter.
     FFmpegBuilder builder =
         new FFmpegBuilder()
             .setInput("sample.avi")
@@ -118,6 +128,7 @@ public class ExamplesTest {
             .setFrames(1)
             .setVideoFilter("select='gte(n\\,10)',scale=200:-1")
             .done();
+    // <!-- /example -->
 
     String expected =
         "ffmpeg -y -v error"
@@ -129,9 +140,12 @@ public class ExamplesTest {
     assertEquals(expected, actual);
   }
 
-  // Read from RTSP (IP camera)
+  // Capture frames from an RTSP IP camera.
   @Test
-  public void testExample4() throws IOException {
+  public void testReadFromRtspCamera() throws IOException {
+    // <!-- example: Read from RTSP Camera -->
+    // Save frames as numbered JPEG images.
+    // Demonstrates: RTSP input, image2 output format.
     FFmpegBuilder builder =
         new FFmpegBuilder()
             .setInput("rtsp://192.168.1.1:1234/")
@@ -139,6 +153,7 @@ public class ExamplesTest {
             .addOutput("img%03d.jpg")
             .setFormat("image2")
             .done();
+    // <!-- /example -->
 
     String expected = "ffmpeg -y -v error -i rtsp://192.168.1.1:1234/ -f image2 img%03d.jpg";
 
@@ -146,10 +161,13 @@ public class ExamplesTest {
     assertEquals(expected, actual);
   }
 
-  // Set the working directory of ffmpeg
+  // Run ffmpeg with a custom working directory.
   @Ignore("because this test will invoke /path/to/ffmpeg.")
   @Test
-  public void testExample5() throws IOException {
+  public void testSetWorkingDirectory() throws IOException {
+    // <!-- example: Set Working Directory -->
+    // Useful when input/output paths are relative.
+    // Demonstrates: RunProcessFunction.setWorkingDirectory.
     RunProcessFunction func = new RunProcessFunction();
     func.setWorkingDirectory("/path/to/working/dir");
 
@@ -163,11 +181,15 @@ public class ExamplesTest {
 
     // Run a two-pass encode
     executor.createTwoPassJob(builder).run();
+    // <!-- /example -->
   }
 
-  // Create a video from images
+  // Create a video from a numbered sequence of PNG images.
   @Test
-  public void testExample6() throws IOException {
+  public void testCreateVideoFromImages() throws IOException {
+    // <!-- example: Create Video from Images -->
+    // Input pattern image%03d.png matches image000.png, image001.png, etc.
+    // Demonstrates: image sequence input, setVideoFrameRate.
     FFmpegBuilder builder =
         new FFmpegBuilder()
             .addInput("image%03d.png")
@@ -175,6 +197,7 @@ public class ExamplesTest {
             .addOutput("output.mp4")
             .setVideoFrameRate(FFmpeg.FPS_24)
             .done();
+    // <!-- /example -->
 
     String expected = "ffmpeg -y -v error -i image%03d.png -r 24/1 output.mp4";
 
@@ -182,8 +205,12 @@ public class ExamplesTest {
     assertEquals(expected, actual);
   }
 
+  // Overlay a smaller video on top of a main video (picture-in-picture).
   @Test
-  public void testExample7() throws IOException {
+  public void testComplexFilterPictureInPicture() throws IOException {
+    // <!-- example: Complex Filter - Picture-in-Picture -->
+    // Uses a complex filter graph with stream mapping.
+    // Demonstrates: multiple inputs, setComplexFilter, -map.
     FFmpegBuilder builder =
         new FFmpegBuilder()
             .addInput("original.mp4")
@@ -202,6 +229,7 @@ public class ExamplesTest {
             .setAudioCodec("copy")
             .addExtraArgs("-shortest")
             .done();
+    // <!-- /example -->
 
     String expected =
         "ffmpeg -y -v error"
@@ -221,9 +249,12 @@ public class ExamplesTest {
     assertEquals(expected, actual);
   }
 
-  // Transcode to iOS HEVC format, with video filter set before output
+  // Transcode to HEVC (H.265) for iOS compatibility.
   @Test
-  public void testExample8() throws IOException {
+  public void testHevcTranscoding() throws IOException {
+    // <!-- example: HEVC/H.265 Transcoding -->
+    // Uses the hvc1 tag required by Apple devices.
+    // Demonstrates: libx265 codec, tag:v extra arg, video filter set before output.
     FFmpegBuilder builder =
         new FFmpegBuilder()
             .addInput("original.mp4")
@@ -233,6 +264,7 @@ public class ExamplesTest {
             .addExtraArgs("-tag:v", "hvc1")
             .setVideoCodec("libx265")
             .done();
+    // <!-- /example -->
 
     String expected =
         "ffmpeg -y -v error"
@@ -246,9 +278,11 @@ public class ExamplesTest {
     assertEquals(expected, actual);
   }
 
-  // Convert a stereo mp3 into two mono tracks.
+  // Split a stereo MP3 into separate left and right mono files.
   @Test
-  public void testExample9() throws IOException {
+  public void testSplitStereoToMono() throws IOException {
+    // <!-- example: Split Stereo to Mono Tracks -->
+    // Demonstrates: multiple outputs, -map_channel, verbosity control.
     FFmpegBuilder builder =
         new FFmpegBuilder()
             .setVerbosity(FFmpegBuilder.Verbosity.DEBUG)
@@ -261,6 +295,7 @@ public class ExamplesTest {
             .addOutput("right.mp3")
             .addExtraArgs("-map_channel", "0.0.1")
             .done();
+    // <!-- /example -->
 
     String expected =
         "ffmpeg -y -v debug "
@@ -272,9 +307,9 @@ public class ExamplesTest {
     assertEquals(expected, actual);
   }
 
-  // A test with videos added in a loop.
+  // Create a WebM DASH manifest (MPD) from audio and multiple video tracks.
   @Test
-  public void testExample10() throws IOException {
+  public void testWebmDashManifest() throws IOException {
     String expected =
         "ffmpeg -y -v error"
             + " -f webm_dash_manifest"
@@ -290,6 +325,8 @@ public class ExamplesTest {
             + " -adaptation_sets \"id=0,streams=0 id=1,streams=1,2,3\""
             + " output.mpd";
 
+    // <!-- example: WebM DASH Manifest -->
+    // Demonstrates: adding inputs in a loop, webm_dash_manifest format, adaptation sets.
     ArrayList<String> streams = new ArrayList<>();
     FFmpegBuilder builder = new FFmpegBuilder();
 
@@ -315,15 +352,18 @@ public class ExamplesTest {
             "-adaptation_sets",
             String.format("\"id=0,streams=0 id=1,streams=%s\"", Joiner.on(",").join(streams)))
         .done();
+    // <!-- /example -->
 
     String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
     assertEquals(expected, actual);
   }
 
-  // Directly use a Process instead of a FFmpegJob
+  // Use ProcessBuilder directly instead of FFmpegExecutor.
   @Test
   @Ignore("because this test will invoke /path/to/ffmpeg.")
-  public void testExample11() throws IOException, InterruptedException {
+  public void testDirectProcessControl() throws IOException, InterruptedException {
+    // <!-- example: Direct Process Control -->
+    // Useful when you need direct access to the Process (e.g., to stop it).
     FFmpegBuilder builder =
         new FFmpegBuilder().setInput("input").done().addOutput("output.mp4").done();
 
@@ -339,10 +379,15 @@ public class ExamplesTest {
     Thread.sleep(1000);
 
     p.destroy();
+    // <!-- /example -->
   }
 
+  // Extract a segment of a video without re-encoding.
   @Test
-  public void testExampleExample() throws IOException {
+  public void testTrimSplitByTime() throws IOException {
+    // <!-- example: Trim/Split by Time -->
+    // Extract a 1-minute segment starting at the 1-minute mark.
+    // Demonstrates: setStartOffset (input -ss), setDuration (output -t), stream copy.
     FFmpegBuilder builder =
         new FFmpegBuilder()
             .setInput("input.mp4")
@@ -353,9 +398,127 @@ public class ExamplesTest {
             .setVideoCodec("copy")
             .setAudioCodec("copy")
             .done();
+    // <!-- /example -->
 
     String expected =
         "ffmpeg -y -v error -ss 00:01:00 -i input.mp4 -t 00:01:00 -vcodec copy -acodec copy output.mp4";
+    String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
+    assertEquals(expected, actual);
+  }
+
+  // Strip the audio track from a video.
+  @Test
+  public void testRemoveAudio() throws IOException {
+    // <!-- example: Remove Audio from Video -->
+    // Keeps video untouched via stream copy.
+    // Demonstrates: disableAudio, setVideoCodec("copy").
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .setInput("input.mp4")
+            .done()
+            .addOutput("output-no-audio.mp4")
+            .setVideoCodec("copy")
+            .disableAudio()
+            .done();
+    // <!-- /example -->
+
+    String expected = "ffmpeg -y -v error -i input.mp4 -vcodec copy -an output-no-audio.mp4";
+    String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
+    assertEquals(expected, actual);
+  }
+
+  // Extract the audio track from a video as an MP3 file.
+  @Test
+  public void testExtractAudio() throws IOException {
+    // <!-- example: Extract Audio from Video -->
+    // Re-encodes audio to MP3 at 192kbps.
+    // Demonstrates: disableVideo, setAudioCodec, setAudioBitRate.
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .setInput("input.mp4")
+            .done()
+            .addOutput("audio.mp3")
+            .disableVideo()
+            .setAudioCodec("libmp3lame")
+            .setAudioBitRate(192_000)
+            .done();
+    // <!-- /example -->
+
+    String expected =
+        "ffmpeg -y -v error -i input.mp4 -vn -acodec libmp3lame -b:a 192000 audio.mp3";
+    String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
+    assertEquals(expected, actual);
+  }
+
+  // Convert an MP4 video to an animated GIF.
+  @Test
+  public void testMp4ToGif() throws IOException {
+    // <!-- example: MP4 to GIF -->
+    // Reduces resolution and frame rate for a smaller file.
+    // Demonstrates: format conversion, setVideoResolution, setVideoFrameRate.
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .setInput("input.mp4")
+            .done()
+            .addOutput("output.gif")
+            .setVideoResolution(320, 240)
+            .setVideoFrameRate(10)
+            .done();
+    // <!-- /example -->
+
+    String expected = "ffmpeg -y -v error -i input.mp4 -s 320x240 -r 10/1 output.gif";
+    String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
+    assertEquals(expected, actual);
+  }
+
+  // Burn a text string onto the video.
+  @Test
+  public void testTextOverlay() throws IOException {
+    // <!-- example: Add Text Overlay -->
+    // Uses the drawtext filter with font styling and positioning.
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .setInput("input.mp4")
+            .done()
+            .addOutput("output-with-text.mp4")
+            .setVideoCodec("libx264")
+            .setVideoFilter("drawtext=text='Hello World':fontsize=24:fontcolor=white:x=10:y=10")
+            .done();
+    // <!-- /example -->
+
+    String expected =
+        "ffmpeg -y -v error -i input.mp4"
+            + " -vcodec libx264"
+            + " -vf drawtext=text='Hello World':fontsize=24:fontcolor=white:x=10:y=10"
+            + " output-with-text.mp4";
+    String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
+    assertEquals(expected, actual);
+  }
+
+  // Overlay a logo image onto a video.
+  @Test
+  public void testWatermark() throws IOException {
+    // <!-- example: Add Watermark -->
+    // Places a PNG logo at position (10,10) using the overlay complex filter.
+    // Demonstrates: multiple inputs, setComplexFilter.
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .addInput("video.mp4")
+            .done()
+            .addInput("logo.png")
+            .done()
+            .addOutput("watermarked.mp4")
+            .setComplexFilter("overlay=10:10")
+            .setVideoCodec("libx264")
+            .done();
+    // <!-- /example -->
+
+    String expected =
+        "ffmpeg -y -v error"
+            + " -i video.mp4 -i logo.png"
+            + " -filter_complex overlay=10:10"
+            + " -vcodec libx264"
+            + " watermarked.mp4";
     String actual = Joiner.on(" ").join(ffmpeg.path(builder.build()));
     assertEquals(expected, actual);
   }

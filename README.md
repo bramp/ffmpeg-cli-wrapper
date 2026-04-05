@@ -12,7 +12,7 @@ A fluent interface for running FFmpeg from Java.
 [![Maven](https://img.shields.io/maven-central/v/net.bramp.ffmpeg/ffmpeg.svg)](http://mvnrepository.com/artifact/net.bramp.ffmpeg/ffmpeg)
 [![Libraries.io](https://img.shields.io/librariesio/github/bramp/ffmpeg-cli-wrapper.svg)](https://libraries.io/github/bramp/ffmpeg-cli-wrapper)
 
-[GitHub](https://github.com/bramp/ffmpeg-cli-wrapper) | [API docs](https://bramp.github.io/ffmpeg-cli-wrapper/)
+[GitHub](https://github.com/bramp/ffmpeg-cli-wrapper) | [API docs](https://bramp.github.io/ffmpeg-cli-wrapper/) | [Examples](EXAMPLES.md)
 
 ## Install
 
@@ -38,33 +38,42 @@ We currently support Java 11 and above. Use Maven to install the dependency.
 
 Code:
 
+<!-- readme: Video Encoding -->
 ```java
 FFmpeg ffmpeg = new FFmpeg("/path/to/ffmpeg");
 FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
 
-FFmpegBuilder builder = new FFmpegBuilder()
+FFmpegProbeResult in = ffprobe.probe("input.mp4");
 
-  .setInput("input.mp4")     // Filename, or a FFmpegProbeResult
-  .done()
-  .overrideOutputFiles(true) // Override the output if it exists
+FFmpegBuilder builder =
+    new FFmpegBuilder()
+        // Input
+        .setInput(in) // Filename, or a FFmpegProbeResult
+        .done()
 
-  .addOutput("output.mp4")   // Filename for the destination
-    .setFormat("mp4")        // Format is inferred from filename, or can be set
-    .setTargetSize(250_000)  // Aim for a 250KB file
+        // Output
+        .overrideOutputFiles(true) // Override the output if it exists
+        .addOutput("output.mp4") // Filename for the destination
+        .setFormat("mp4") // Format is inferred from filename, or can be set
+        .setTargetSize(250_000) // Aim for a 250KB file
 
-    .disableSubtitle()       // No subtiles
+        // No subtiles
+        .disableSubtitle()
 
-    .setAudioChannels(1)         // Mono audio
-    .setAudioCodec("aac")        // using the aac codec
-    .setAudioSampleRate(48_000)  // at 48KHz
-    .setAudioBitRate(32768)      // at 32 kbit/s
+        // Audio
+        .setAudioChannels(1) // Mono audio
+        .setAudioCodec("aac") // using the aac codec
+        .setAudioSampleRate(48_000) // at 48KHz
+        .setAudioBitRate(32768) // at 32 kbit/s
 
-    .setVideoCodec("libx264")     // Video using x264
-    .setVideoFrameRate(24, 1)     // at 24 frames per second
-    .setVideoResolution(640, 480) // at 640x480 resolution
+        // Video
+        .setVideoCodec("libx264") // Video using x264
+        .setVideoFrameRate(24, 1) // at 24 frames per second
+        .setVideoResolution(640, 480) // at 640x480 resolution
 
-    .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL) // Allow FFmpeg to use experimental specs
-  .done();
+        // Allow FFmpeg to use experimental specs (such as x264 / aac encoders)
+        .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
+        .done();
 
 FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 
@@ -74,67 +83,72 @@ executor.createJob(builder).run();
 // Or run a two-pass encode (which is better quality at the cost of being slower)
 executor.createTwoPassJob(builder).run();
 ```
+<!-- /readme -->
 
 ### Get Media Information
 
 Code:
 
+<!-- readme: Get Media Information -->
 ```java
 FFprobe ffprobe = new FFprobe("/path/to/ffprobe");
 FFmpegProbeResult probeResult = ffprobe.probe("input.mp4");
 
 FFmpegFormat format = probeResult.getFormat();
-System.out.format("%nFile: '%s' ; Format: '%s' ; Duration: %.3fs",
- format.filename,
- format.format_long_name,
- format.duration
-);
+System.out.format(
+    "%nFile: '%s' ; Format: '%s' ; Duration: %.3fs",
+    format.filename, format.format_long_name, format.duration);
 
 FFmpegStream stream = probeResult.getStreams().get(0);
-System.out.format("%nCodec: '%s' ; Width: %dpx ; Height: %dpx",
- stream.codec_long_name,
- stream.width,
- stream.height
-);
+System.out.format(
+    "%nCodec: '%s' ; Width: %dpx ; Height: %dpx",
+    stream.codec_long_name, stream.width, stream.height);
 ```
+<!-- /readme -->
 
 ### Get progress while encoding
 
+<!-- readme: Get progress while encoding -->
 ```java
 FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
 
-FFmpegProbeResult in = ffprobe.probe("input.flv");
+FFmpegProbeResult in = ffprobe.probe("input.mp4");
 
-FFmpegBuilder builder = new FFmpegBuilder()
- .setInput(in) // Or filename
- .done()
- .addOutput("output.mp4")
- .done();
+FFmpegBuilder builder =
+    new FFmpegBuilder()
+        .setInput(in) // Or filename
+        .done()
+        .addOutput("output.mp4")
+        .done();
 
-FFmpegJob job = executor.createJob(builder, new ProgressListener() {
+FFmpegJob job =
+    executor.createJob(
+        builder,
+        new ProgressListener() {
 
- // Using the FFmpegProbeResult determine the duration of the input
- final double duration_ns = in.getFormat().duration * TimeUnit.SECONDS.toNanos(1);
+          // Using the FFmpegProbeResult determine the duration of the input
+          final double duration_ns = in.getFormat().duration * TimeUnit.SECONDS.toNanos(1);
 
- @Override
- public void progress(Progress progress) {
-  double percentage = progress.out_time_ns / duration_ns;
+          @Override
+          public void progress(Progress progress) {
+            double percentage = progress.out_time_ns / duration_ns;
 
-  // Print out interesting information about the progress
-  System.out.println(String.format(
-   "[%.0f%%] status:%s frame:%d time:%s ms fps:%.0f speed:%.2fx",
-   percentage * 100,
-   progress.status,
-   progress.frame,
-   FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
-   progress.fps.doubleValue(),
-   progress.speed
-  ));
- }
-});
+            // Print out interesting information about the progress
+            System.out.println(
+                String.format(
+                    "[%.0f%%] status:%s frame:%d time:%s fps:%.0f speed:%.2fx",
+                    percentage * 100,
+                    progress.status,
+                    progress.frame,
+                    FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
+                    progress.fps.doubleValue(),
+                    progress.speed));
+          }
+        });
 
 job.run();
 ```
+<!-- /readme -->
 
 ## Building & Releasing
 

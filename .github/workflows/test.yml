@@ -50,6 +50,16 @@ jobs:
       - name: Test with Maven
         run: mvn --batch-mode verify -Dgpg.skip
 
+      - name: Check EXAMPLES.md is up to date
+        if: matrix.java-version == '21'
+        run: |
+          python3 tools/generate_examples.py
+          if ! git diff --quiet EXAMPLES.md README.md; then
+            echo "::error::EXAMPLES.md or README.md is out of date. Run 'make examples' and commit the result."
+            git diff EXAMPLES.md README.md
+            exit 1
+          fi
+
       - name: Update dependency graph
         if: matrix.java-version == '21' && github.event_name == 'push'
         uses: advanced-security/maven-dependency-submission-action@v5

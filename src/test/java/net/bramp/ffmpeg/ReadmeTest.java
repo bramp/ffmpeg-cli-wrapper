@@ -34,26 +34,89 @@ public class ReadmeTest {
 
   @Test
   public void testSimpleVideoEncoding() throws IOException {
-    FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+    // <!-- example: Simple Video Encoding -->
+    // Encode a video to MP4 using x264/aac with a target file size.
+
+    // <!-- readme: Video Encoding -->
     FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
 
     FFmpegBuilder builder =
         new FFmpegBuilder()
-            .overrideOutputFiles(true) // Override the output if it exists
-            .setInput(in) // Or filename
+            // Input
+            .setInput(in) // Filename, or a FFmpegProbeResult
             .done()
+
+            // Output
+            .overrideOutputFiles(true) // Override the output if it exists
             .addOutput("output.mp4") // Filename for the destination
             .setFormat("mp4") // Format is inferred from filename, or can be set
             .setTargetSize(250_000) // Aim for a 250KB file
-            .disableSubtitle() // No subtiles
+
+            // No subtiles
+            .disableSubtitle()
+
+            // Audio
+            .setAudioChannels(1) // Mono audio
             .setAudioCodec("aac") // using the aac codec
-            .setAudioChannels(1) // mono-channel
             .setAudioSampleRate(48_000) // at 48KHz
             .setAudioBitRate(32768) // at 32 kbit/s
+
+            // Video
             .setVideoCodec("libx264") // Video using x264
             .setVideoFrameRate(24, 1) // at 24 frames per second
             .setVideoResolution(640, 480) // at 640x480 resolution
-            .setStrict(Strict.EXPERIMENTAL) // Allow native AAC codec
+
+            // Allow FFmpeg to use experimental specs (such as x264 / aac encoders)
+            .setStrict(Strict.EXPERIMENTAL)
+            .done();
+
+    FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+
+    // Run a one-pass encode
+    executor.createJob(builder).run();
+
+    // Or run a two-pass encode (which is better quality at the cost of being slower)
+    executor.createTwoPassJob(builder).run();
+    // <!-- /readme -->
+    // <!-- /example -->
+  }
+
+  @Test
+  public void testGetMediaInformation() throws IOException {
+    // <!-- example: Get Media Information -->
+    // Use FFprobe to inspect format and stream details of a media file.
+
+    // <!-- readme: Get Media Information -->
+    FFmpegProbeResult probeResult = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
+
+    FFmpegFormat format = probeResult.getFormat();
+    System.out.format(
+        "%nFile: '%s' ; Format: '%s' ; Duration: %.3fs",
+        format.filename, format.format_long_name, format.duration);
+
+    FFmpegStream stream = probeResult.getStreams().get(0);
+    System.out.format(
+        "%nCodec: '%s' ; Width: %dpx ; Height: %dpx",
+        stream.codec_long_name, stream.width, stream.height);
+    // <!-- /readme -->
+    // <!-- /example -->
+  }
+
+  @Test
+  public void testGetProgressWhileEncoding() throws IOException {
+    // <!-- example: Get Progress While Encoding -->
+    // Track encoding progress using a ProgressListener.
+
+    // <!-- readme: Get progress while encoding -->
+    FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+
+    FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
+
+    FFmpegBuilder builder =
+        new FFmpegBuilder()
+            .setInput(in) // Or filename
+            .done()
+            .addOutput("output.mp4")
             .done();
 
     FFmpegJob job =
@@ -71,7 +134,6 @@ public class ReadmeTest {
                 // Print out interesting information about the progress
                 System.out.println(
                     String.format(
-                        locale,
                         "[%.0f%%] status:%s frame:%d time:%s fps:%.0f speed:%.2fx",
                         percentage * 100,
                         progress.status,
@@ -83,12 +145,17 @@ public class ReadmeTest {
             });
 
     job.run();
+    // <!-- /readme -->
+    // <!-- /example -->
 
     assertEquals(FFmpegJob.State.FINISHED, job.getState());
   }
 
   @Test
   public void testTwoPassVideoEncoding() throws IOException {
+    // <!-- example: Two-Pass Encoding -->
+    // Two-pass encoding produces higher quality at the cost of being slower.
+    // The executor handles creating and cleaning up passlog files.
     FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
     FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
 
@@ -113,12 +180,16 @@ public class ReadmeTest {
 
     FFmpegJob job = executor.createTwoPassJob(builder);
     job.run();
+    // <!-- /example -->
 
     assertEquals(FFmpegJob.State.FINISHED, job.getState());
   }
 
   @Test
   public void testHLSVideoEncoding() throws IOException {
+    // <!-- example: HLS Multi-Variant Streaming -->
+    // Create an HLS adaptive bitrate stream with multiple quality variants.
+    // Generates a master playlist and per-variant segment files.
     FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
     FFmpegProbeResult in = ffprobe.probe(Samples.big_buck_bunny_720p_1mb);
 
@@ -185,6 +256,7 @@ public class ReadmeTest {
             });
 
     job.run();
+    // <!-- /example -->
 
     assertEquals(FFmpegJob.State.FINISHED, job.getState());
   }

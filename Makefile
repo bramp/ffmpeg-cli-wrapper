@@ -3,10 +3,14 @@ JDK_VERSIONS := 11 17 21
 .PHONY: help
 help:
 	@echo "Usage:"
-	@echo "  make test         - Run full tests (clean verify) on all supported JDKs ($(JDK_VERSIONS))"
-	@echo "  make compile      - Run clean compile on all supported JDKs ($(JDK_VERSIONS))"
-	@echo "  make version      - Show current project version"
-	@echo "  make test-jdk-XX  - Run tests on a specific JDK version (e.g., make test-jdk-11)"
+	@echo "  make test           - Run full tests (clean verify) on all supported JDKs ($(JDK_VERSIONS))"
+	@echo "  make compile        - Run clean compile on all supported JDKs ($(JDK_VERSIONS))"
+	@echo "  make format         - Auto-format code (Google Java Style)"
+	@echo "  make check-format   - Check code formatting (Google Java Style)"
+	@echo "  make examples       - Regenerate EXAMPLES.md and README.md from test source code"
+	@echo "  make check-examples - Verify EXAMPLES.md and README.md are up to date"
+	@echo "  make version        - Show current project version"
+	@echo "  make test-jdk-XX    - Run tests on a specific JDK version (e.g., make test-jdk-11)"
 
 .PHONY: version
 version:
@@ -60,3 +64,25 @@ compile-jdk-%:
 	export JAVA_HOME="$$actual_home"; \
 	mvn -version; \
 	mvn clean compile
+
+.PHONY: format
+format:
+	mvn fmt:format
+
+.PHONY: check-format
+check-format:
+	mvn fmt:check
+
+.PHONY: examples
+examples:
+	python3 tools/generate_examples.py
+
+.PHONY: check-examples
+check-examples:
+	@python3 tools/generate_examples.py
+	@if ! git diff --quiet EXAMPLES.md README.md; then \
+		echo "ERROR: EXAMPLES.md or README.md is out of date. Run 'make examples' and commit the result."; \
+		git diff EXAMPLES.md README.md; \
+		exit 1; \
+	fi
+	@echo "EXAMPLES.md and README.md are up to date."
