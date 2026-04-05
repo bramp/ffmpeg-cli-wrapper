@@ -47,7 +47,7 @@
 
         <maven.compiler.release>${base.java.version}</maven.compiler.release>
 
-        <error.prone.version>2.31.0</error.prone.version>
+        <error.prone.version>2.48.0</error.prone.version>
     </properties>
 
     <dependencyManagement>
