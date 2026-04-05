@@ -422,18 +422,6 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>com.spotify.fmt</groupId>
-                <artifactId>fmt-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
 
         <defaultGoal>install</defaultGoal>
@@ -474,17 +462,6 @@
                                     together with other annotation processors' below. -->
                                 </annotationProcessorPaths>
                             </configuration>
-                        </plugin>
-                        <!-- Add formatting to Java 11+ -->
-                        <plugin>
-                            <groupId>com.spotify.fmt</groupId>
-                            <artifactId>fmt-maven-plugin</artifactId>
-                            <!-- Starting from version 1.8, Google Java
-                            Formatter requires Java 11 to run. Incidently, all
-                            versions of this plugin starting from 2.10
-                            inclusively also require this Java version to
-                            properly function.
-                            -->
                         </plugin>
                     </plugins>
                 </pluginManagement>
@@ -535,6 +512,21 @@
             <properties>
                 <error.prone.version>2.42.0</error.prone.version>
             </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.spotify.fmt</groupId>
+                        <artifactId>fmt-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
 
         <profile>
