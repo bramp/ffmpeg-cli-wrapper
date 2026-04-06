@@ -99,7 +99,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: target/site/apidocs
+          path: target/reports/apidocs
 
       - name: Deploy to GitHub Pages
         id: deployment
