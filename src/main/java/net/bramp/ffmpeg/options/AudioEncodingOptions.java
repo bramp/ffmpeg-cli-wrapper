@@ -3,46 +3,61 @@ package net.bramp.ffmpeg.options;
 import java.beans.ConstructorProperties;
 
 /**
- * Encoding options for audio
+ * Encoding options for audio.
  *
  * @author bramp
  */
 public class AudioEncodingOptions {
   /**
-   * @deprecated Use {@link #isEnabled()} instead
+   * Whether encoding is enabled.
+   *
+   * @deprecated Use {@link #isEnabled()} instead.
    */
   @Deprecated public final boolean enabled;
 
   /**
-   * @deprecated Use {@link #getCodec()} instead
+   * The codec name.
+   *
+   * @deprecated Use {@link #getCodec()} instead.
    */
   @Deprecated public final String codec;
 
   /**
-   * @deprecated Use {@link #getChannels()} instead
+   * The number of audio channels.
+   *
+   * @deprecated Use {@link #getChannels()} instead.
    */
   @Deprecated public final int channels;
 
   /**
-   * @deprecated Use {@link #getSampleRate()} instead
+   * The audio sample rate.
+   *
+   * @deprecated Use {@link #getSampleRate()} instead.
    */
   @Deprecated public final int sample_rate;
 
   /**
-   * @deprecated Use {@link #getSampleFormat()} instead
+   * The audio sample format.
+   *
+   * @deprecated Use {@link #getSampleFormat()} instead.
    */
   @Deprecated public final String sample_format;
 
   /**
-   * @deprecated Use {@link #getBitRate()} instead
+   * The bit rate.
+   *
+   * @deprecated Use {@link #getBitRate()} instead.
    */
   @Deprecated public final long bit_rate;
 
   /**
-   * @deprecated Use {@link #getQuality()} instead
+   * The audio quality.
+   *
+   * @deprecated Use {@link #getQuality()} instead.
    */
   @Deprecated public final Double quality;
 
+  /** Constructs audio encoding options with the specified parameters. */
   @ConstructorProperties({
     "enabled",
     "codec",

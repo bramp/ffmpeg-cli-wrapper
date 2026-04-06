@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 
+/** Parses FFmpeg progress output from an input stream. */
 public class StreamProgressParser {
 
   final ProgressListener listener;
@@ -27,11 +28,13 @@ public class StreamProgressParser {
     return new BufferedReader(reader);
   }
 
+  /** Parses FFmpeg progress output from the given input stream. */
   public void processStream(InputStream stream) throws IOException {
     checkNotNull(stream);
     processReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
   }
 
+  /** Processes progress output from the given reader. */
   public void processReader(Reader reader) throws IOException {
     final BufferedReader in = wrapInBufferedReader(reader);
 

@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Information about supported Format
+ * Information about supported Format.
  *
  * @author bramp
  */
@@ -19,13 +19,15 @@ public class Format {
   private final boolean canMux;
 
   /**
+   * Creates a new Format.
+   *
    * @param name short format name
    * @param longName long format name
    * @param flags is expected to be in the following format:
    *     <pre>
-   * D. = Demuxing supported
-   * .E = Muxing supported
-   * </pre>
+   *     D. = Demuxing supported
+   *     .E = Muxing supported
+   *     </pre>
    */
   public Format(String name, String longName, String flags) {
     this.name = Preconditions.checkNotNull(name).trim();

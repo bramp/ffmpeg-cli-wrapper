@@ -22,19 +22,19 @@ import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 /** Private class to contain common methods for both FFmpeg and FFprobe. */
 abstract class FFcommon {
 
-  /** Path to the binary (e.g. /usr/bin/ffmpeg) */
+  /** Path to the binary (e.g. /usr/bin/ffmpeg). */
   final String path;
 
-  /** Function to run FFmpeg. We define it like this so we can swap it out (during testing) */
+  /** Function to run FFmpeg. We define it like this so we can swap it out (during testing). */
   final ProcessFunction runFunc;
 
-  /** Version string */
+  /** Version string. */
   String version = null;
 
-  /** Process input stream */
+  /** Process input stream. */
   Appendable processOutputStream = System.out;
 
-  /** Process error stream */
+  /** Process error stream. */
   Appendable processErrorStream = System.err;
 
   public FFcommon(@Nonnull String path) {
@@ -57,16 +57,16 @@ abstract class FFcommon {
     this.processErrorStream = processErrorStream;
   }
 
-  private BufferedReader _wrapInReader(final InputStream inputStream) {
+  private BufferedReader wrapInReader(final InputStream inputStream) {
     return new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
   }
 
   protected BufferedReader wrapInReader(Process p) {
-    return _wrapInReader(p.getInputStream());
+    return wrapInReader(p.getInputStream());
   }
 
   protected BufferedReader wrapErrorInReader(Process p) {
-    return _wrapInReader(p.getErrorStream());
+    return wrapInReader(p.getErrorStream());
   }
 
   protected void throwOnError(Process p) throws IOException {

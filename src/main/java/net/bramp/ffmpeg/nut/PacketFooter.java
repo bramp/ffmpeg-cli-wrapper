@@ -3,9 +3,11 @@ package net.bramp.ffmpeg.nut;
 import com.google.common.base.MoreObjects;
 import java.io.IOException;
 
+/** Represents the footer of a NUT packet containing a checksum. */
 public class PacketFooter {
   int checksum;
 
+  /** Reads and validates the packet footer checksum. */
   public void read(NutDataInputStream in) throws IOException {
     long expected = in.getCRC();
     checksum = in.readInt();

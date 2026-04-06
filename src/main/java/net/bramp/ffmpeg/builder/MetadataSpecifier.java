@@ -14,7 +14,7 @@ import com.google.errorprone.annotations.Immutable;
 
 /**
  * Metadata spec, as described in the "map_metadata" section of <a
- * href="https://www.ffmpeg.org/ffmpeg-all.html#Main-options">Main options</a>
+ * href="https://www.ffmpeg.org/ffmpeg-all.html#Main-options">Main options</a>.
  */
 @Immutable
 public class MetadataSpecifier {
@@ -33,10 +33,12 @@ public class MetadataSpecifier {
     this.spec = checkNotNull(prefix) + ":" + checkNotNull(spec).spec();
   }
 
+  /** Returns the metadata specifier string. */
   public String spec() {
     return spec;
   }
 
+  /** Validates and returns the given metadata key. */
   public static String checkValidKey(String key) {
     checkNotNull(key);
     checkArgument(!key.isEmpty(), "key must not be empty");

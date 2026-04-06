@@ -9,6 +9,7 @@ import net.bramp.ffmpeg.job.SinglePassFFmpegJob;
 import net.bramp.ffmpeg.job.TwoPassFFmpegJob;
 import net.bramp.ffmpeg.progress.ProgressListener;
 
+/** Executor that creates and runs FFmpeg jobs. */
 public class FFmpegExecutor {
 
   final FFmpeg ffmpeg;

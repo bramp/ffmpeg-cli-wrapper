@@ -7,15 +7,18 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 
+/** Parses FFmpeg progress output over a TCP socket connection. */
 public class TcpProgressParser extends AbstractSocketProgressParser {
 
   final ServerSocket server;
   final URI address;
 
+  /** Constructs a TCP progress parser listening on a random available port. */
   public TcpProgressParser(ProgressListener listener) throws IOException, URISyntaxException {
     this(listener, 0, InetAddress.getLoopbackAddress());
   }
 
+  /** Creates a new TCP progress parser bound to the given port and address. */
   public TcpProgressParser(ProgressListener listener, int port, InetAddress addr)
       throws IOException, URISyntaxException {
     super(listener);

@@ -14,6 +14,7 @@ import java.util.Arrays;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
+/** Handles decoding of raw audio and video data in the NUT multimedia container format. */
 public class RawHandler {
 
   private static int[] bytesToInts(byte[] bytes) {
@@ -24,6 +25,7 @@ public class RawHandler {
     return data;
   }
 
+  /** Converts a video frame to a BufferedImage. */
   public static BufferedImage toBufferedImage(Frame frame) {
     checkNotNull(frame);
 
@@ -132,6 +134,7 @@ public class RawHandler {
         encoding, sampleRate, bits, header.channels, frameSize, frameRate, bigEndian);
   }
 
+  /** Converts an audio frame to an AudioInputStream. */
   public static AudioInputStream toAudioInputStream(Frame frame) {
     checkNotNull(frame);
     final StreamHeaderPacket header = checkNotNull(frame.stream.header);

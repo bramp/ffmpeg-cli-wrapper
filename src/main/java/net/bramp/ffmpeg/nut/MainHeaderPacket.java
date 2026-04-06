@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.math.Fraction;
 
+/** Represents the main header packet in the NUT multimedia container format. */
 public class MainHeaderPacket extends Packet {
 
   public static final int BROADCAST_MODE = 0;

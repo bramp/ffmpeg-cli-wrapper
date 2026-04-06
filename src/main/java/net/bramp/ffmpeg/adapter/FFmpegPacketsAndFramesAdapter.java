@@ -1,11 +1,16 @@
 package net.bramp.ffmpeg.adapter;
 
-import com.google.gson.*;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 import net.bramp.ffmpeg.probe.FFmpegFrame;
 import net.bramp.ffmpeg.probe.FFmpegFrameOrPacket;
 import net.bramp.ffmpeg.probe.FFmpegPacket;
 
+/** Gson type adapter that deserializes FFmpeg packets and frames from JSON. */
 public class FFmpegPacketsAndFramesAdapter implements JsonDeserializer<FFmpegFrameOrPacket> {
   @Override
   public FFmpegFrameOrPacket deserialize(

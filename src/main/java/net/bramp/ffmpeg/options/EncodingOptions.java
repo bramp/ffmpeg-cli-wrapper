@@ -9,20 +9,27 @@ import java.beans.ConstructorProperties;
  */
 public class EncodingOptions {
   /**
-   * @deprecated Use {@link #getMain()} instead
+   * The main encoding options.
+   *
+   * @deprecated Use {@link #getMain()} instead.
    */
   @Deprecated public final MainEncodingOptions main;
 
   /**
-   * @deprecated Use {@link #getAudio()} instead
+   * The audio encoding options.
+   *
+   * @deprecated Use {@link #getAudio()} instead.
    */
   @Deprecated public final AudioEncodingOptions audio;
 
   /**
-   * @deprecated Use {@link #getVideo()} instead
+   * The video encoding options.
+   *
+   * @deprecated Use {@link #getVideo()} instead.
    */
   @Deprecated public final VideoEncodingOptions video;
 
+  /** Constructs encoding options with main, audio, and video settings. */
   @ConstructorProperties({"main", "audio", "video"})
   public EncodingOptions(
       MainEncodingOptions main, AudioEncodingOptions audio, VideoEncodingOptions video) {

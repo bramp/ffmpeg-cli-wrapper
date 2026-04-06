@@ -3,6 +3,7 @@ package net.bramp.ffmpeg.nut;
 import com.google.common.base.MoreObjects;
 import java.io.IOException;
 
+/** Represents the header of a NUT packet containing startcode and forward pointer. */
 public class PacketHeader {
 
   long startcode;
@@ -11,6 +12,7 @@ public class PacketHeader {
 
   long end; // End byte of packet
 
+  /** Reads the packet header including startcode and forward pointer. */
   public void read(NutDataInputStream in, long startcode) throws IOException {
     this.startcode = startcode;
     forwardPtr = in.readVarLong();

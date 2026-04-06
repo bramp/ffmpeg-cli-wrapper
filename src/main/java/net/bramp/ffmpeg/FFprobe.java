@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Wrapper around FFprobe
+ * Wrapper around FFprobe.
  *
  * @author bramp
  */
@@ -50,6 +50,49 @@ public class FFprobe extends FFcommon {
     return probe(mediaPath, null);
   }
 
+  public FFmpegProbeResult probe(String mediaPath, @Nullable String userAgent) throws IOException {
+    return probe(this.builder().setInput(mediaPath).setUserAgent(userAgent));
+  }
+
+  public FFmpegProbeResult probe(FFprobeBuilder builder) throws IOException {
+    checkNotNull(builder);
+    return probe(builder.build());
+  }
+
+  public FFmpegProbeResult probe(
+      String mediaPath, @Nullable String userAgent, @Nullable String... extraArgs)
+      throws IOException {
+    return probe(
+        this.builder().setInput(mediaPath).setUserAgent(userAgent).addExtraArgs(extraArgs).build());
+  }
+
+  // TODO Add Probe Inputstream
+  /** Probes media using the supplied arguments and returns the result. */
+  public FFmpegProbeResult probe(List<String> args) throws IOException {
+    checkIfFFprobe();
+
+    Process p = runFunc.run(path(args));
+    try {
+      Reader reader = wrapInReader(p);
+      if (LOG.isDebugEnabled()) {
+        reader = new LoggingFilterReader(reader, LOG);
+      }
+
+      FFmpegProbeResult result = gson.fromJson(reader, FFmpegProbeResult.class);
+
+      throwOnError(p, result);
+
+      if (result == null) {
+        throw new IllegalStateException("Gson returned null, which shouldn't happen :(");
+      }
+
+      return result;
+
+    } finally {
+      p.destroy();
+    }
+  }
+
   /**
    * Returns true if the binary we are using is the true ffprobe. This is to avoid conflict with
    * avprobe (from the libav project), that some symlink to ffprobe.
@@ -78,48 +121,6 @@ public class FFprobe extends FFcommon {
   public void run(List<String> args) throws IOException {
     checkIfFFprobe();
     super.run(args);
-  }
-
-  public FFmpegProbeResult probe(String mediaPath, @Nullable String userAgent) throws IOException {
-    return probe(this.builder().setInput(mediaPath).setUserAgent(userAgent));
-  }
-
-  public FFmpegProbeResult probe(FFprobeBuilder builder) throws IOException {
-    checkNotNull(builder);
-    return probe(builder.build());
-  }
-
-  public FFmpegProbeResult probe(
-      String mediaPath, @Nullable String userAgent, @Nullable String... extraArgs)
-      throws IOException {
-    return probe(
-        this.builder().setInput(mediaPath).setUserAgent(userAgent).addExtraArgs(extraArgs).build());
-  }
-
-  // TODO Add Probe Inputstream
-  public FFmpegProbeResult probe(List<String> args) throws IOException {
-    checkIfFFprobe();
-
-    Process p = runFunc.run(path(args));
-    try {
-      Reader reader = wrapInReader(p);
-      if (LOG.isDebugEnabled()) {
-        reader = new LoggingFilterReader(reader, LOG);
-      }
-
-      FFmpegProbeResult result = gson.fromJson(reader, FFmpegProbeResult.class);
-
-      throwOnError(p, result);
-
-      if (result == null) {
-        throw new IllegalStateException("Gson returned null, which shouldn't happen :(");
-      }
-
-      return result;
-
-    } finally {
-      p.destroy();
-    }
   }
 
   @CheckReturnValue

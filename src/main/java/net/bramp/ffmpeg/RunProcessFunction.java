@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Simple function that creates a Process with the arguments, and returns a BufferedReader reading
- * stdout
+ * stdout.
  *
  * @author bramp
  */

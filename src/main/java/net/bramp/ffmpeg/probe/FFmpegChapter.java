@@ -1,10 +1,6 @@
 package net.bramp.ffmpeg.probe;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
-@SuppressFBWarnings(
-    value = {"UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"},
-    justification = "POJO objects where the fields are populated by gson")
+/** Represents a chapter entry in an FFprobe result. */
 public class FFmpegChapter {
   public long id;
   public String time_base;

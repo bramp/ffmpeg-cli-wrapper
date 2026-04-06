@@ -1,6 +1,9 @@
 package net.bramp.ffmpeg;
 
-import static java.util.concurrent.TimeUnit.*;
+import static java.util.concurrent.TimeUnit.HOURS;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 
 import com.google.common.base.CharMatcher;
@@ -18,7 +21,7 @@ import net.bramp.ffmpeg.probe.FFmpegFrameOrPacket;
 import net.bramp.ffmpeg.probe.FFmpegStream;
 import org.apache.commons.lang3.math.Fraction;
 
-/** Helper class with commonly used methods */
+/** Helper class with commonly used methods. */
 public final class FFmpegUtils {
 
   static final Gson gson = FFmpegUtils.setupGson();
@@ -128,7 +131,7 @@ public final class FFmpegUtils {
   }
 
   /**
-   * Converts a string representation of bitrate to a long of bits per second
+   * Converts a string representation of bitrate to a long of bits per second.
    *
    * @param bitrate in the form of 12.3kbits/s
    * @return the bitrate in bits per second or -1 if bitrate is 'N/A'

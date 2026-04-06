@@ -1,15 +1,11 @@
 package net.bramp.ffmpeg.probe;
 
 import com.google.common.collect.ImmutableList;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/** TODO Make this immutable */
-@SuppressFBWarnings(
-    value = {"UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"},
-    justification = "POJO objects where the fields are populated by gson")
+/** TODO Make this immutable. */
 public class FFmpegProbeResult {
   public FFmpegError error;
   public FFmpegFormat format;
@@ -28,20 +24,28 @@ public class FFmpegProbeResult {
     return error != null;
   }
 
+  /** Returns the format information from the probe result. */
   public FFmpegFormat getFormat() {
     return format;
   }
 
+  /** Returns the list of streams in the probe result. */
   public List<FFmpegStream> getStreams() {
-    if (streams == null) return Collections.emptyList();
+    if (streams == null) {
+      return Collections.emptyList();
+    }
     return ImmutableList.copyOf(streams);
   }
 
+  /** Returns the list of chapters in the probe result. */
   public List<FFmpegChapter> getChapters() {
-    if (chapters == null) return Collections.emptyList();
+    if (chapters == null) {
+      return Collections.emptyList();
+    }
     return ImmutableList.copyOf(chapters);
   }
 
+  /** Returns the list of packets from the probe result. */
   public List<FFmpegPacket> getPackets() {
     if (packets == null) {
       if (packets_and_frames != null) {
@@ -60,6 +64,7 @@ public class FFmpegProbeResult {
     return ImmutableList.copyOf(packets);
   }
 
+  /** Returns the list of frames in the probe result. */
   public List<FFmpegFrame> getFrames() {
     if (frames == null) {
       if (packets_and_frames != null) {

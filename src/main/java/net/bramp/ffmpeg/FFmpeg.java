@@ -16,14 +16,20 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
-import net.bramp.ffmpeg.info.*;
+import net.bramp.ffmpeg.info.ChannelLayout;
+import net.bramp.ffmpeg.info.Codec;
+import net.bramp.ffmpeg.info.Filter;
+import net.bramp.ffmpeg.info.FilterPattern;
+import net.bramp.ffmpeg.info.Format;
+import net.bramp.ffmpeg.info.InfoParser;
+import net.bramp.ffmpeg.info.PixelFormat;
 import net.bramp.ffmpeg.progress.ProgressListener;
 import net.bramp.ffmpeg.progress.ProgressParser;
 import net.bramp.ffmpeg.progress.TcpProgressParser;
 import org.apache.commons.lang3.math.Fraction;
 
 /**
- * Wrapper around FFmpeg
+ * Wrapper around FFmpeg.
  *
  * @author bramp
  */
@@ -69,21 +75,24 @@ public class FFmpeg extends FFcommon {
       Pattern.compile("^([.I][.O][.H][.P][.B]) (\\S{2,})\\s+(\\d+)\\s+(\\d+)$");
   static final Pattern FILTERS_REGEX =
       Pattern.compile(
-          "^\\s*(?<timelinesupport>[T.])(?<slicethreading>[S.])(?<commandsupport>[C.])\\s(?<name>[A-Za-z0-9_]+)\\s+(?<inputpattern>[AVN|]+)->(?<outputpattern>[AVN|]+)\\s+(?<description>.*)$");
+          "^\\s*(?<timelinesupport>[T.])(?<slicethreading>[S.])"
+              + "(?<commandsupport>[C.])\\s(?<name>[A-Za-z0-9_]+)"
+              + "\\s+(?<inputpattern>[AVN|]+)->(?<outputpattern>[AVN|]+)"
+              + "\\s+(?<description>.*)$");
 
-  /** Supported codecs */
+  /** Supported codecs. */
   List<Codec> codecs = null;
 
-  /** Supported formats */
+  /** Supported formats. */
   List<Format> formats = null;
 
-  /** Supported pixel formats */
+  /** Supported pixel formats. */
   private List<PixelFormat> pixelFormats = null;
 
-  /** Supported filters */
+  /** Supported filters. */
   private List<Filter> filters = null;
 
-  /** Supported channel layouts */
+  /** Supported channel layouts. */
   private List<ChannelLayout> channelLayouts = null;
 
   public FFmpeg() throws IOException {
@@ -128,6 +137,7 @@ public class FFmpeg extends FFcommon {
     }
   }
 
+  /** Returns the list of supported codecs. */
   public synchronized @Nonnull List<Codec> codecs() throws IOException {
     checkIfFFmpeg();
 
@@ -140,7 +150,9 @@ public class FFmpeg extends FFcommon {
         String line;
         while ((line = r.readLine()) != null) {
           Matcher m = CODECS_REGEX.matcher(line);
-          if (!m.matches()) continue;
+          if (!m.matches()) {
+            continue;
+          }
 
           codecs.add(new Codec(m.group(2), m.group(3), m.group(1)));
         }
@@ -155,6 +167,7 @@ public class FFmpeg extends FFcommon {
     return codecs;
   }
 
+  /** Returns the list of supported filters. */
   public synchronized @Nonnull List<Filter> filters() throws IOException {
     checkIfFFmpeg();
 
@@ -167,7 +180,9 @@ public class FFmpeg extends FFcommon {
         String line;
         while ((line = r.readLine()) != null) {
           Matcher m = FILTERS_REGEX.matcher(line);
-          if (!m.matches()) continue;
+          if (!m.matches()) {
+            continue;
+          }
 
           // (?<inputpattern>[AVN|]+)->(?<outputpattern>[AVN|]+)\s+(?<description>.*)$
 
@@ -192,6 +207,7 @@ public class FFmpeg extends FFcommon {
     return this.filters;
   }
 
+  /** Returns the list of supported formats. */
   public synchronized @Nonnull List<Format> formats() throws IOException {
     checkIfFFmpeg();
 
@@ -204,7 +220,9 @@ public class FFmpeg extends FFcommon {
         String line;
         while ((line = r.readLine()) != null) {
           Matcher m = FORMATS_REGEX.matcher(line);
-          if (!m.matches()) continue;
+          if (!m.matches()) {
+            continue;
+          }
 
           formats.add(new Format(m.group(2), m.group(3), m.group(1)));
         }
@@ -218,6 +236,7 @@ public class FFmpeg extends FFcommon {
     return formats;
   }
 
+  /** Returns the list of supported pixel formats. */
   public synchronized List<PixelFormat> pixelFormats() throws IOException {
     checkIfFFmpeg();
 
@@ -230,7 +249,9 @@ public class FFmpeg extends FFcommon {
         String line;
         while ((line = r.readLine()) != null) {
           Matcher m = PIXEL_FORMATS_REGEX.matcher(line);
-          if (!m.matches()) continue;
+          if (!m.matches()) {
+            continue;
+          }
           String flags = m.group(1);
 
           pixelFormats.add(
@@ -248,6 +269,7 @@ public class FFmpeg extends FFcommon {
     return pixelFormats;
   }
 
+  /** Returns the list of supported channel layouts. */
   public synchronized List<ChannelLayout> channelLayouts() throws IOException {
     checkIfFFmpeg();
 
@@ -282,10 +304,18 @@ public class FFmpeg extends FFcommon {
     super.run(args);
   }
 
+  /** Runs ffmpeg with the supplied builder. */
   public void run(FFmpegBuilder builder) throws IOException {
     run(builder, null);
   }
 
+  /**
+   * Runs ffmpeg with the supplied builder and an optional progress listener.
+   *
+   * @param builder the ffmpeg builder
+   * @param listener optional progress listener
+   * @throws IOException if an I/O error occurs
+   */
   public void run(FFmpegBuilder builder, @Nullable ProgressListener listener) throws IOException {
     checkNotNull(builder);
 

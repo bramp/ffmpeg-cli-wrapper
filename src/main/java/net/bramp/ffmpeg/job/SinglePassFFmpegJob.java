@@ -9,14 +9,17 @@ import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.progress.ProgressListener;
 
+/** An FFmpeg job that performs a single encoding pass. */
 public class SinglePassFFmpegJob extends FFmpegJob {
 
   public final FFmpegBuilder builder;
 
+  /** Constructs a new single-pass FFmpeg job. */
   public SinglePassFFmpegJob(FFmpeg ffmpeg, FFmpegBuilder builder) {
     this(ffmpeg, builder, null);
   }
 
+  /** Creates a new single-pass FFmpeg job with the given progress listener. */
   public SinglePassFFmpegJob(
       FFmpeg ffmpeg, FFmpegBuilder builder, @Nullable ProgressListener listener) {
     super(ffmpeg, listener);

@@ -3,6 +3,7 @@ package net.bramp.ffmpeg.info;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/** Represents an FFmpeg pixel format with its properties and capabilities. */
 public class PixelFormat {
   private final String name;
   private final int numberOfComponents;
@@ -14,6 +15,7 @@ public class PixelFormat {
   private final boolean palettedFormat;
   private final boolean bitstreamFormat;
 
+  /** Constructs a new PixelFormat with the given properties. */
   public PixelFormat(String name, int numberOfComponents, int bitsPerPixel, String flags) {
     this.name = name;
     this.numberOfComponents = numberOfComponents;

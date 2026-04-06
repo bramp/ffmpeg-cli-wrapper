@@ -5,6 +5,7 @@ import javax.annotation.CheckReturnValue;
 import net.bramp.ffmpeg.options.EncodingOptions;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
+/** Abstract base class for building FFmpeg input arguments. */
 public abstract class AbstractFFmpegInputBuilder<T extends AbstractFFmpegInputBuilder<T>>
     extends AbstractFFmpegStreamBuilder<T> {
   private final FFmpegProbeResult probeResult;

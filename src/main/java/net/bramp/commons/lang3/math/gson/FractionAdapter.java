@@ -9,19 +9,19 @@ import java.io.IOException;
 import org.apache.commons.lang3.math.Fraction;
 
 /**
- * GSON TypeAdapter for Apache Commons Math Fraction Object
+ * GSON TypeAdapter for Apache Commons Math Fraction Object.
  *
  * @author bramp
  */
 @Immutable
 public class FractionAdapter extends TypeAdapter<Fraction> {
 
-  /** If set, 0/0 returns this value, instead of throwing a ArithmeticException */
+  /** If set, 0/0 returns this value, instead of throwing a ArithmeticException. */
   @SuppressWarnings(
       "Immutable") // TODO Remove when https://github.com/google/error-prone/issues/512 is fixed
   private final Fraction zeroByZero;
 
-  /** If set, N/0 returns this value, instead of throwing a ArithmeticException */
+  /** If set, N/0 returns this value, instead of throwing a ArithmeticException. */
   @SuppressWarnings(
       "Immutable") // TODO Remove when https://github.com/google/error-prone/issues/512 is fixed
   private final Fraction divideByZero;

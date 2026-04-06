@@ -3,13 +3,19 @@ package net.bramp.ffmpeg.info;
 import com.google.common.base.Splitter;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+/** Parses FFmpeg informational output such as codecs, formats, and channel layouts. */
 public final class InfoParser {
   private InfoParser() {
     throw new AssertionError("No instances for you!");
   }
 
+  /** Parses channel layout information from ffmpeg output. */
   public static List<ChannelLayout> parseLayouts(BufferedReader r) throws IOException {
     Map<String, IndividualChannel> individualChannelLookup = new HashMap<>();
     List<ChannelLayout> channelLayouts = new ArrayList<>();

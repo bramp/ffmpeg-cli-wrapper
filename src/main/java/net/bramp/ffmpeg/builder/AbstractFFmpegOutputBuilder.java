@@ -1,6 +1,7 @@
 package net.bramp.ffmpeg.builder;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
 import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 
 import com.google.common.base.Preconditions;
@@ -17,7 +18,7 @@ import net.bramp.ffmpeg.options.MainEncodingOptions;
 import net.bramp.ffmpeg.options.VideoEncodingOptions;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
-/** Builds a representation of a single output/encoding setting */
+/** Builds a representation of a single output/encoding setting. */
 @SuppressWarnings({"DeprecatedIsStillUsed", "unchecked"})
 public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutputBuilder<T>>
     extends AbstractFFmpegStreamBuilder<T> {
@@ -25,57 +26,79 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
   static final Pattern trailingZero = Pattern.compile("\\.0*$");
 
   /**
-   * @deprecated Use {@link #getConstantRateFactor()} instead
+   * The constant rate factor (CRF).
+   *
+   * @deprecated Use {@link #getConstantRateFactor()} instead.
    */
   @Deprecated public Double constantRateFactor;
 
   /**
-   * @deprecated Use {@link #getAudioSampleFormat()} instead
+   * The audio sample format.
+   *
+   * @deprecated Use {@link #getAudioSampleFormat()} instead.
    */
   @Deprecated public String audio_sample_format;
 
   /**
-   * @deprecated Use {@link #getAudioBitRate()} instead
+   * The audio bit rate.
+   *
+   * @deprecated Use {@link #getAudioBitRate()} instead.
    */
   @Deprecated public long audio_bit_rate;
 
   /**
-   * @deprecated Use {@link #getAudioQuality()} instead
+   * The audio quality.
+   *
+   * @deprecated Use {@link #getAudioQuality()} instead.
    */
   @Deprecated public Double audio_quality;
 
   /**
-   * @deprecated Use {@link #getVideoBitStreamFilter()} instead
+   * The audio bitstream filter.
+   *
+   * @deprecated Use {@link #getVideoBitStreamFilter()} instead.
    */
   @Deprecated public String audio_bit_stream_filter;
 
   /**
-   * @deprecated Use {@link #getAudioFilter()} instead
+   * The audio filter string.
+   *
+   * @deprecated Use {@link #getAudioFilter()} instead.
    */
   @Deprecated public String audio_filter;
 
   /**
-   * @deprecated Use {@link #getVideoBitRate()} instead
+   * The video bit rate.
+   *
+   * @deprecated Use {@link #getVideoBitRate()} instead.
    */
   @Deprecated public long video_bit_rate;
 
   /**
-   * @deprecated Use {@link #getVideoQuality()} instead
+   * The video quality.
+   *
+   * @deprecated Use {@link #getVideoQuality()} instead.
    */
   @Deprecated public Double video_quality;
 
   /**
-   * @deprecated Use {@link #getVideoPreset()} instead
+   * The video encoding preset.
+   *
+   * @deprecated Use {@link #getVideoPreset()} instead.
    */
   @Deprecated public String video_preset;
 
   /**
-   * @deprecated Use {@link #getVideoFilter()} instead
+   * The video filter string.
+   *
+   * @deprecated Use {@link #getVideoFilter()} instead.
    */
   @Deprecated public String video_filter;
 
   /**
-   * @deprecated Use {@link #getVideoBitStreamFilter()} instead
+   * The video bitstream filter.
+   *
+   * @deprecated Use {@link #getVideoBitStreamFilter()} instead.
    */
   @Deprecated public String video_bit_stream_filter;
 
@@ -99,12 +122,14 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
     super(parent, uri);
   }
 
+  /** Sets the constant rate factor (CRF) for encoding quality. */
   public T setConstantRateFactor(double factor) {
     checkArgument(factor >= 0, "constant rate factor must be greater or equal to zero");
     this.constantRateFactor = factor;
     return (T) this;
   }
 
+  /** Sets the video bit rate in bits per second. */
   public T setVideoBitRate(long bit_rate) {
     checkArgument(bit_rate > 0, "bit rate must be positive");
     this.video_enabled = true;
@@ -112,6 +137,7 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
     return (T) this;
   }
 
+  /** Sets the video quality factor. */
   public T setVideoQuality(double quality) {
     checkArgument(quality > 0, "quality must be positive");
     this.video_enabled = true;
@@ -150,7 +176,7 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
   }
 
   /**
-   * Sets Video Filter
+   * Sets Video Filter.
    *
    * <p>TODO Build a fluent Filter builder
    *
@@ -200,7 +226,7 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
   }
 
   /**
-   * Sets the Audio bit rate
+   * Sets the Audio bit rate.
    *
    * @param bit_rate Audio bitrate in bits per second.
    * @return this
@@ -212,6 +238,7 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
     return (T) this;
   }
 
+  /** Sets the audio quality factor. */
   public T setAudioQuality(double quality) {
     checkArgument(quality > 0, "quality must be positive");
     this.audio_enabled = true;
@@ -219,12 +246,14 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
     return (T) this;
   }
 
+  /** Sets the audio bitstream filter. */
   public T setAudioBitStreamFilter(String filter) {
     this.audio_enabled = true;
     this.audio_bit_stream_filter = checkNotEmpty(filter, "filter must not be empty");
     return (T) this;
   }
 
+  /** Sets a complex filtergraph. */
   public T setComplexFilter(String filter) {
     this.complexFilter = checkNotEmpty(filter, "filter must not be empty");
 
@@ -232,7 +261,7 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
   }
 
   /**
-   * Sets Audio Filter
+   * Sets Audio Filter.
    *
    * <p>TODO Build a fluent Filter builder
    *
@@ -289,7 +318,7 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
   }
 
   /**
-   * Builds the arguments
+   * Builds the arguments.
    *
    * @param parent The parent FFmpegBuilder
    * @param pass The particular pass. For one-pass this value will be zero, for multi-pass, it will

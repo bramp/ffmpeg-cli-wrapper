@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Builds a ffmpeg command line
+ * Builds a ffmpeg command line.
  *
  * @author bramp
  */
@@ -34,7 +34,7 @@ public class FFmpegBuilder {
 
   /**
    * Log level options: <a href="https://ffmpeg.org/ffmpeg.html#Generic-options">ffmpeg
-   * documentation</a>
+   * documentation</a>.
    */
   public enum Verbosity {
     QUIET,
@@ -124,23 +124,26 @@ public class FFmpegBuilder {
     return this;
   }
 
+  /** Returns the pass log file prefix. */
   public String getPassPrefix() {
     return this.pass_prefix;
   }
 
+  /** Sets the logging verbosity level. */
   public FFmpegBuilder setVerbosity(Verbosity verbosity) {
     checkNotNull(verbosity);
     this.verbosity = verbosity;
     return this;
   }
 
+  /** Sets the HTTP user agent string. */
   public FFmpegBuilder setUserAgent(String userAgent) {
     this.user_agent = checkNotNull(userAgent);
     return this;
   }
 
   /**
-   * Makes ffmpeg read the first input at the native frame read
+   * Makes ffmpeg read the first input at the native frame read.
    *
    * @return this
    * @deprecated Use {@link AbstractFFmpegInputBuilder#readAtNativeFrameRate()} instead
@@ -151,6 +154,7 @@ public class FFmpegBuilder {
     return this;
   }
 
+  /** Adds an input from a previously probed result. */
   public FFmpegFileInputBuilder addInput(FFmpegProbeResult result) {
     checkNotNull(result);
     String filename = checkNotNull(result.getFormat()).getFilename();
@@ -158,6 +162,7 @@ public class FFmpegBuilder {
     return this.doAddInput(new FFmpegFileInputBuilder(this, filename, result));
   }
 
+  /** Adds an input by filename or URL. */
   public FFmpegFileInputBuilder addInput(String filename) {
     checkNotNull(filename);
 
@@ -208,6 +213,7 @@ public class FFmpegBuilder {
     return addInput(path);
   }
 
+  /** Sets the input using an input builder, replacing any previous inputs. */
   public <T extends AbstractFFmpegInputBuilder<T>> FFmpegBuilder setInput(T input) {
     checkNotNull(input);
 
@@ -217,6 +223,7 @@ public class FFmpegBuilder {
     return this;
   }
 
+  /** Sets the number of threads to use for processing. */
   public FFmpegBuilder setThreads(int threads) {
     checkArgument(threads > 0, "threads must be greater than zero");
     this.threads = threads;
@@ -224,9 +231,9 @@ public class FFmpegBuilder {
   }
 
   /**
-   * Sets the format for the first input stream
+   * Sets the format for the first input stream.
    *
-   * @param format, the format of this input stream, not null
+   * @param format the format of this input stream, not null
    * @return this
    * @deprecated Specify this option on an input stream using {@link
    *     AbstractFFmpegStreamBuilder#setFormat(String)}
@@ -238,7 +245,7 @@ public class FFmpegBuilder {
   }
 
   /**
-   * Sets the start offset for the first input stream
+   * Sets the start offset for the first input stream.
    *
    * @param duration the amount of the offset, measured in terms of the unit
    * @param units the unit that the duration is measured in, not null
@@ -356,6 +363,27 @@ public class FFmpegBuilder {
   }
 
   /**
+   * Adds an existing FFmpegOutputBuilder. This is similar to calling the other addOuput methods but
+   * instead allows an existing FFmpegOutputBuilder to be used, and reused.
+   *
+   * <pre>
+   * <code>List&lt;String&gt; args = new FFmpegBuilder()
+   *   .addOutput(new FFmpegOutputBuilder()
+   *     .setFilename(&quot;output.flv&quot;)
+   *     .setVideoCodec(&quot;flv&quot;)
+   *   )
+   *   .build();</code>
+   * </pre>
+   *
+   * @param output FFmpegOutputBuilder to add
+   * @return this
+   */
+  public FFmpegBuilder addOutput(FFmpegOutputBuilder output) {
+    outputs.add(output);
+    return this;
+  }
+
+  /**
    * Adds new HLS(Http Live Streaming) output file. <br>
    *
    * <pre>
@@ -382,28 +410,7 @@ public class FFmpegBuilder {
   }
 
   /**
-   * Adds an existing FFmpegOutputBuilder. This is similar to calling the other addOuput methods but
-   * instead allows an existing FFmpegOutputBuilder to be used, and reused.
-   *
-   * <pre>
-   * <code>List&lt;String&gt; args = new FFmpegBuilder()
-   *   .addOutput(new FFmpegOutputBuilder()
-   *     .setFilename(&quot;output.flv&quot;)
-   *     .setVideoCodec(&quot;flv&quot;)
-   *   )
-   *   .build();</code>
-   * </pre>
-   *
-   * @param output FFmpegOutputBuilder to add
-   * @return this
-   */
-  public FFmpegBuilder addOutput(FFmpegOutputBuilder output) {
-    outputs.add(output);
-    return this;
-  }
-
-  /**
-   * Create new output (to stdout)
+   * Create new output (to stdout).
    *
    * @return A new {@link FFmpegOutputBuilder}
    */
@@ -411,6 +418,7 @@ public class FFmpegBuilder {
     return addOutput("-");
   }
 
+  /** Builds and returns the list of command-line arguments for ffmpeg. */
   @CheckReturnValue
   public List<String> build() {
     ImmutableList.Builder<String> args = new ImmutableList.Builder<>();
@@ -431,7 +439,8 @@ public class FFmpegBuilder {
 
     if (startOffset != null) {
       log.warn(
-          "Using FFmpegBuilder#setStartOffset is deprecated. Specify it on the inputStream or outputStream instead");
+          "Using FFmpegBuilder#setStartOffset is deprecated."
+              + " Specify it on the inputStream or outputStream instead");
       args.add("-ss", FFmpegUtils.toTimecode(startOffset, TimeUnit.MILLISECONDS));
     }
 
@@ -441,13 +450,15 @@ public class FFmpegBuilder {
 
     if (format != null) {
       log.warn(
-          "Using FFmpegBuilder#setFormat is deprecated. Specify it on the inputStream or outputStream instead");
+          "Using FFmpegBuilder#setFormat is deprecated."
+              + " Specify it on the inputStream or outputStream instead");
       args.add("-f", format);
     }
 
     if (read_at_native_frame_rate) {
       log.warn(
-          "Using FFmpegBuilder#readAtNativeFrameRate is deprecated. Specify it on the inputStream instead");
+          "Using FFmpegBuilder#readAtNativeFrameRate is deprecated."
+              + " Specify it on the inputStream instead");
       args.add("-re");
     }
 
@@ -479,7 +490,8 @@ public class FFmpegBuilder {
 
     if (!Strings.isNullOrEmpty(complexFilter)) {
       log.warn(
-          "Using FFmpegBuilder#setComplexFilter is deprecated. Specify it on the outputStream instead");
+          "Using FFmpegBuilder#setComplexFilter is deprecated."
+              + " Specify it on the outputStream instead");
       args.add("-filter_complex", complexFilter);
     }
 

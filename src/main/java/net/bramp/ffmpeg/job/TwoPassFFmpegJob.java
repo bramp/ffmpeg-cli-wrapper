@@ -15,15 +15,18 @@ import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.progress.ProgressListener;
 
+/** An FFmpeg job that performs two encoding passes for improved quality. */
 public class TwoPassFFmpegJob extends FFmpegJob {
 
   final String passlogPrefix;
   final FFmpegBuilder builder;
 
+  /** Constructs a new two-pass FFmpeg job. */
   public TwoPassFFmpegJob(FFmpeg ffmpeg, FFmpegBuilder builder) {
     this(ffmpeg, builder, null);
   }
 
+  /** Creates a new two-pass FFmpeg job with the given progress listener. */
   public TwoPassFFmpegJob(
       FFmpeg ffmpeg, FFmpegBuilder builder, @Nullable ProgressListener listener) {
     super(ffmpeg, listener);

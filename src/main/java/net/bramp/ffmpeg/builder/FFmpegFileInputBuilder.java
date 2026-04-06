@@ -3,6 +3,7 @@ package net.bramp.ffmpeg.builder;
 import com.google.common.collect.ImmutableList;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
+/** Builder for FFmpeg file-based input arguments. */
 public class FFmpegFileInputBuilder extends AbstractFFmpegInputBuilder<FFmpegFileInputBuilder> {
   public FFmpegFileInputBuilder(FFmpegBuilder parent, String filename) {
     super(parent, filename);

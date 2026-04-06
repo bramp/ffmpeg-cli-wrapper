@@ -4,56 +4,75 @@ import java.beans.ConstructorProperties;
 import org.apache.commons.lang3.math.Fraction;
 
 /**
- * Encoding options for video
+ * Encoding options for video.
  *
  * @author bramp
  */
 public class VideoEncodingOptions {
   /**
-   * @deprecated Use {@link #isEnabled()} instead
+   * Whether encoding is enabled.
+   *
+   * @deprecated Use {@link #isEnabled()} instead.
    */
   @Deprecated public final boolean enabled;
 
   /**
-   * @deprecated Use {@link #getCodec()} instead
+   * The codec name.
+   *
+   * @deprecated Use {@link #getCodec()} instead.
    */
   @Deprecated public final String codec;
 
   /**
-   * @deprecated Use {@link #getFrameRate()} instead
+   * The video frame rate.
+   *
+   * @deprecated Use {@link #getFrameRate()} instead.
    */
   @Deprecated public final Fraction frame_rate;
 
   /**
-   * @deprecated Use {@link #getWidth()} instead
+   * The video width in pixels.
+   *
+   * @deprecated Use {@link #getWidth()} instead.
    */
   @Deprecated public final int width;
 
   /**
-   * @deprecated Use {@link #getHeight()} instead
+   * The video height in pixels.
+   *
+   * @deprecated Use {@link #getHeight()} instead.
    */
   @Deprecated public final int height;
 
   /**
-   * @deprecated Use {@link #getBitRate()} instead
+   * The bit rate.
+   *
+   * @deprecated Use {@link #getBitRate()} instead.
    */
   @Deprecated public final long bit_rate;
 
   /**
-   * @deprecated Use {@link #getFrames()} instead
+   * The number of video frames to encode.
+   *
+   * @deprecated Use {@link #getFrames()} instead.
    */
   @Deprecated public final Integer frames;
 
   /**
-   * @deprecated Use {@link #getFilter()} instead
+   * The video filter string.
+   *
+   * @deprecated Use {@link #getFilter()} instead.
    */
   @Deprecated public final String filter;
 
   /**
-   * @deprecated Use {@link #getPreset()} instead
+   * The encoding preset.
+   *
+   * @deprecated Use {@link #getPreset()} instead.
    */
   @Deprecated public final String preset;
 
+  /** Constructs video encoding options with the specified parameters. */
   @ConstructorProperties({
     "enabled",
     "codec",

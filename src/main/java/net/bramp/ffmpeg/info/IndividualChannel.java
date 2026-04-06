@@ -3,6 +3,7 @@ package net.bramp.ffmpeg.info;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/** Represents an individual audio channel with a name and description. */
 public class IndividualChannel implements ChannelLayout {
   private final String name;
   private final String description;

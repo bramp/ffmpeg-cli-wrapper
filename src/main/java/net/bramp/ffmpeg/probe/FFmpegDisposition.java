@@ -2,13 +2,9 @@ package net.bramp.ffmpeg.probe;
 
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.bramp.ffmpeg.adapter.BooleanTypeAdapter;
 
-/** Represents the AV_DISPOSITION_* fields */
-@SuppressFBWarnings(
-    value = {"UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"},
-    justification = "POJO objects where the fields are populated by gson")
+/** Represents the AV_DISPOSITION_* fields. */
 public class FFmpegDisposition {
   @SerializedName("default")
   @JsonAdapter(BooleanTypeAdapter.class)

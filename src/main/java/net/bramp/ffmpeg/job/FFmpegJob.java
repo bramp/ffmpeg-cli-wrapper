@@ -14,6 +14,7 @@ import net.bramp.ffmpeg.progress.ProgressListener;
  */
 public abstract class FFmpegJob implements Runnable {
 
+  /** Enum representing the execution state of an FFmpeg job. */
   public enum State {
     WAITING,
     RUNNING,

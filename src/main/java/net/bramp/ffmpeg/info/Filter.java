@@ -3,28 +3,30 @@ package net.bramp.ffmpeg.info;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/** Represents an FFmpeg filter with its capabilities and input/output patterns. */
 public class Filter {
-  /** Is timeline editing supported */
+  /** Is timeline editing supported. */
   private final boolean timelineSupported;
 
-  /** Is slice based multi-threading supported */
+  /** Is slice based multi-threading supported. */
   private final boolean sliceThreading;
 
-  /** Are there command line options */
+  /** Are there command line options. */
   private final boolean commandSupport;
 
-  /** The filters name */
+  /** The filters name. */
   private final String name;
 
-  /** The input filter pattern */
+  /** The input filter pattern. */
   private final FilterPattern inputPattern;
 
-  /** The output filter pattern */
+  /** The output filter pattern. */
   private final FilterPattern outputPattern;
 
-  /** A short description of the filter */
+  /** A short description of the filter. */
   private final String description;
 
+  /** Constructs a new Filter with the given properties. */
   public Filter(
       boolean timelineSupported,
       boolean sliceThreading,

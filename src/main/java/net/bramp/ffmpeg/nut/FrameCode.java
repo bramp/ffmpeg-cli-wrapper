@@ -2,6 +2,7 @@ package net.bramp.ffmpeg.nut;
 
 import com.google.common.base.MoreObjects;
 
+/** Represents a frame code table entry in the NUT multimedia container format. */
 public class FrameCode {
 
   long flags;

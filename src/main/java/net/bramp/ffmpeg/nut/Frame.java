@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.apache.commons.lang3.math.Fraction;
 
-/** A video or audio frame */
+/** A video or audio frame. */
 public class Frame {
   // TODO Change this to a enum
   static final long FLAG_KEY = 1 << 0;
@@ -72,6 +72,7 @@ public class Frame {
     return data;
   }
 
+  /** Reads a frame from the NUT stream using the given frame code. */
   public void read(NutReader nut, NutDataInputStream in, int code) throws IOException {
     if (code == 'N') {
       throw new IOException("Illegal frame code: " + code);

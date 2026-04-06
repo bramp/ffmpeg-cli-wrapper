@@ -1,5 +1,6 @@
 package net.bramp.ffmpeg.nut;
 
+/** Listener interface for receiving events from a NUT format reader. */
 public interface NutReaderListener {
 
   /**

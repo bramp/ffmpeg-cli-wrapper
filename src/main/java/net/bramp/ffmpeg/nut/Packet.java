@@ -5,10 +5,12 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/** Represents a packet in the NUT multimedia container format. */
 public class Packet {
 
   static final Logger LOG = LoggerFactory.getLogger(Packet.class);
 
+  /** Defines the startcode values used to identify NUT packet types. */
   public enum Startcode {
     MAIN(0x7A561F5F04ADL + (((long) ('N' << 8) + 'M') << 48)),
     STREAM(0x11405BF2F9DBL + (((long) ('N' << 8) + 'S') << 48)),
@@ -45,10 +47,12 @@ public class Packet {
       return null;
     }
 
+    /** Returns whether the given value could be a valid NUT start code. */
     public static boolean isPossibleStartcode(long startcode) {
       return (startcode & 0xFFL) == 'N';
     }
 
+    /** Returns a human-readable string representation of the given start code. */
     public static String toString(long startcode) {
       Startcode c = of(startcode);
       if (c != null) {
@@ -65,6 +69,7 @@ public class Packet {
     // Default implementation does nothing
   }
 
+  /** Reads a complete packet including header, body, and footer. */
   public void read(NutDataInputStream in, long startcode) throws IOException {
     header.read(in, startcode);
     readBody(in);
@@ -72,6 +77,7 @@ public class Packet {
     footer.read(in);
   }
 
+  /** Skips forward in the stream to the start of the packet footer. */
   public void seekToPacketFooter(NutDataInputStream in) throws IOException {
     long current = in.offset();
     if (current > header.end) {

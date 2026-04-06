@@ -2,6 +2,7 @@ package net.bramp.ffmpeg.builder;
 
 import com.google.common.base.Ascii;
 
+/** Enum representing FFmpeg strict standards compliance levels. */
 public enum Strict {
   VERY, // strictly conform to an older more strict version of the specifications or reference
   // software

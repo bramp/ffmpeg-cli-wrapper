@@ -14,7 +14,7 @@ import org.modelmapper.config.Configuration;
 import org.modelmapper.convention.NameTokenizers;
 
 /**
- * Copies values from one type of object to another
+ * Copies values from one type of object to another.
  *
  * @author bramp
  */
@@ -54,7 +54,7 @@ public class Mapper {
     return mapper;
   }
 
-  /** Simple wrapper object, to inject the word "audio" in the property name */
+  /** Simple wrapper object, to inject the word "audio" in the property name. */
   static class AudioWrapper {
     public final AudioEncodingOptions audio;
 
@@ -63,7 +63,7 @@ public class Mapper {
     }
   }
 
-  /** Simple wrapper object, to inject the word "video" in the property name */
+  /** Simple wrapper object, to inject the word "video" in the property name. */
   static class VideoWrapper {
     public final VideoEncodingOptions video;
 
@@ -87,6 +87,7 @@ public class Mapper {
     mapper.map(new VideoWrapper(opts), dest);
   }
 
+  /** Maps all encoding options to the given stream builder. */
   public static <T extends AbstractFFmpegStreamBuilder<?>> void map(EncodingOptions opts, T dest) {
     map(opts.getMain(), dest);
 

@@ -1,22 +1,28 @@
 package net.bramp.ffmpeg.info;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import net.bramp.ffmpeg.shared.CodecType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/** Represents the input or output stream pattern of an FFmpeg filter. */
 public class FilterPattern {
   /**
-   * Indicates whether this pattern represents a source or a sink and therefore has no other options
+   * Indicates whether this pattern represents a source or a sink and therefore has no other
+   * options.
    */
   private final boolean sinkOrSource;
 
-  /** Indicates whether this pattern accepts a variable number of streams */
+  /** Indicates whether this pattern accepts a variable number of streams. */
   private final boolean variableStreams;
 
-  /** Contains a pattern matching the stream types supported */
+  /** Contains a pattern matching the stream types supported. */
   private final List<CodecType> streams;
 
+  /** Parses a filter pattern string describing the supported stream types. */
   public FilterPattern(String pattern) {
     this.sinkOrSource = pattern.contains("|");
     this.variableStreams = pattern.contains("N");

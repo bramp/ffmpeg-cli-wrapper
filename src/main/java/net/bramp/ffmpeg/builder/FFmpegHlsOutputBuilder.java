@@ -1,6 +1,7 @@
 package net.bramp.ffmpeg.builder;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static net.bramp.ffmpeg.FFmpegUtils.millisToSeconds;
 import static net.bramp.ffmpeg.Preconditions.checkNotEmpty;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.CheckReturnValue;
 
+/** Builder for FFmpeg HLS (HTTP Live Streaming) output arguments. */
 public class FFmpegHlsOutputBuilder extends AbstractFFmpegOutputBuilder<FFmpegHlsOutputBuilder> {
 
   public Long hls_time;

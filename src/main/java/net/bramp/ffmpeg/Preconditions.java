@@ -11,6 +11,7 @@ import java.net.URI;
 import java.util.List;
 import javax.annotation.Nullable;
 
+/** Utility class for validating preconditions on FFmpeg arguments. */
 public final class Preconditions {
 
   private static final List<String> rtps = ImmutableList.of("rtsp", "rtp", "rtmp");

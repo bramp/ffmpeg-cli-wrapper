@@ -4,6 +4,7 @@ import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/** Represents a standard audio channel layout composed of individual channels. */
 public class StandardChannelLayout implements ChannelLayout {
   private final String name;
   private final List<IndividualChannel> decomposition;

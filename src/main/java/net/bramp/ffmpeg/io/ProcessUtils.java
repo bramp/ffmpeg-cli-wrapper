@@ -14,7 +14,7 @@ public final class ProcessUtils {
   }
 
   /**
-   * Waits until a process finishes or a timeout occurs
+   * Waits until a process finishes or a timeout occurs.
    *
    * @param p process
    * @param timeout timeout in given unit

@@ -61,7 +61,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
 
   final FFmpegBuilder parent;
 
-  /** Output filename or uri. Only one may be set */
+  /** Output filename or uri. Only one may be set. */
   public String filename;
 
   public URI uri;
@@ -245,23 +245,27 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     return uri;
   }
 
+  /** Sets the output format. */
   public T setFormat(String format) {
     this.format = checkNotEmpty(format, "format must not be empty");
     return getThis();
   }
 
+  /** Sets the video codec. */
   public T setVideoCodec(String codec) {
     this.video_enabled = true;
     this.video_codec = checkNotEmpty(codec, "codec must not be empty");
     return getThis();
   }
 
+  /** Sets whether to copy initial non-keyframes. */
   public T setVideoCopyInkf(boolean copyinkf) {
     this.video_enabled = true;
     this.video_copyinkf = copyinkf;
     return getThis();
   }
 
+  /** Sets the MOV muxer flags. */
   public T setVideoMovFlags(String movflags) {
     this.video_enabled = true;
     this.video_movflags = checkNotEmpty(movflags, "movflags must not be empty");
@@ -269,7 +273,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   }
 
   /**
-   * Sets the video's frame rate
+   * Sets the video's frame rate.
    *
    * @param frame_rate Frames per second
    * @return this
@@ -296,6 +300,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     return setVideoFrameRate(Fraction.getFraction(frames, per));
   }
 
+  /** Sets the video frame rate. */
   public T setVideoFrameRate(double frame_rate) {
     return setVideoFrameRate(Fraction.getFraction(frame_rate));
   }
@@ -316,6 +321,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     return widthOrHeight > 0 || widthOrHeight == -1;
   }
 
+  /** Sets the video width in pixels. */
   public T setVideoWidth(int width) {
     checkArgument(isValidSize(width), "Width must be -1 or greater than zero");
 
@@ -324,6 +330,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     return getThis();
   }
 
+  /** Sets the video height in pixels. */
   public T setVideoHeight(int height) {
     checkArgument(isValidSize(height), "Height must be -1 or greater than zero");
 
@@ -332,6 +339,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     return getThis();
   }
 
+  /** Sets the video resolution by width and height in pixels. */
   public T setVideoResolution(int width, int height) {
     checkArgument(
         isValidSize(width) && isValidSize(height),
@@ -357,6 +365,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     return getThis();
   }
 
+  /** Sets the video pixel format. */
   public T setVideoPixelFormat(String format) {
     this.video_enabled = true;
     this.video_pixel_format = checkNotEmpty(format, "format must not be empty");
@@ -411,24 +420,28 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     return getThis();
   }
 
+  /** Adds a stream mapping by input index. */
   public T addMap(int inputIndex) {
     checkArgument(inputIndex >= 0, "inputIndex must be greater or equal to zero");
     this.maps.add(String.valueOf(inputIndex));
     return getThis();
   }
 
+  /** Adds a stream mapping by input index and stream specifier. */
   public T addMap(int inputIndex, StreamSpecifier spec) {
     checkArgument(inputIndex >= 0, "inputIndex must be greater or equal to zero");
     this.maps.add(inputIndex + ":" + spec.spec());
     return getThis();
   }
 
+  /** Sets the audio codec. */
   public T setAudioCodec(String codec) {
     this.audio_enabled = true;
     this.audio_codec = checkNotEmpty(codec, "codec must not be empty");
     return getThis();
   }
 
+  /** Sets the subtitle codec. */
   public T setSubtitleCodec(String codec) {
     this.subtitle_enabled = true;
     this.subtitle_codec = checkNotEmpty(codec, "codec must not be empty");
@@ -436,7 +449,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   }
 
   /**
-   * Sets the number of audio channels
+   * Sets the number of audio channels.
    *
    * @param channels Number of channels
    * @return this
@@ -473,7 +486,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   }
 
   /**
-   * Target output file size (in bytes)
+   * Target output file size (in bytes).
    *
    * @param targetSize The target size in bytes
    * @return this
@@ -520,7 +533,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   }
 
   /**
-   * When doing multi-pass we add a little extra padding, to ensure we reach our target
+   * When doing multi-pass we add a little extra padding, to ensure we reach our target.
    *
    * @param bitrate bit rate
    * @return this
@@ -576,7 +589,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   }
 
   /**
-   * Finished with this output
+   * Finished with this output.
    *
    * @return the parent FFmpegBuilder
    */
@@ -600,7 +613,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   }
 
   /**
-   * Builds the arguments
+   * Builds the arguments.
    *
    * @param parent The parent FFmpegBuilder
    * @param pass The particular pass. For one-pass this value will be zero, for multi-pass, it will

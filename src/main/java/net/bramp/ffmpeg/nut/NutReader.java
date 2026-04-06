@@ -75,7 +75,7 @@ public class NutReader {
   }
 
   /**
-   * Demux the inputstream
+   * Demux the inputstream.
    *
    * @throws IOException If a I/O error occurs
    */

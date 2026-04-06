@@ -9,20 +9,27 @@ import java.beans.ConstructorProperties;
  */
 public class MainEncodingOptions {
   /**
-   * @deprecated Use {@link #getFormat()} instead
+   * The output format.
+   *
+   * @deprecated Use {@link #getFormat()} instead.
    */
   @Deprecated public final String format;
 
   /**
-   * @deprecated Use {@link #getStartOffset()} instead
+   * The start offset in microseconds.
+   *
+   * @deprecated Use {@link #getStartOffset()} instead.
    */
   @Deprecated public final Long startOffset;
 
   /**
-   * @deprecated Use {@link #getDuration()} instead
+   * The duration in microseconds.
+   *
+   * @deprecated Use {@link #getDuration()} instead.
    */
   @Deprecated public final Long duration;
 
+  /** Constructs main encoding options with the specified format, offset, and duration. */
   @ConstructorProperties({"format", "startOffset", "duration"})
   public MainEncodingOptions(String format, Long startOffset, Long duration) {
     this.format = format;

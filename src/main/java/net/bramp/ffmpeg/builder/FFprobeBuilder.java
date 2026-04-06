@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.CheckReturnValue;
 
-/** Builds a ffprobe command line */
+/** Builds a ffprobe command line. */
 public class FFprobeBuilder {
   private boolean showFormat = true;
   private boolean showStreams = true;
@@ -49,25 +49,30 @@ public class FFprobeBuilder {
     return this;
   }
 
+  /** Sets the HTTP user agent string. */
   public FFprobeBuilder setUserAgent(String userAgent) {
     this.userAgent = userAgent;
     return this;
   }
 
+  /** Sets the input file or URL to probe. */
   public FFprobeBuilder setInput(String filename) {
     checkNotNull(filename);
     this.input = filename;
     return this;
   }
 
+  /** Sets the input file to probe. */
   public FFprobeBuilder setInput(File file) {
     return setInput(checkNotNull(file).getPath());
   }
 
+  /** Sets the input path to probe. */
   public FFprobeBuilder setInput(Path path) {
     return setInput(checkNotNull(path).toString());
   }
 
+  /** Adds extra command-line arguments to the ffprobe command. */
   public FFprobeBuilder addExtraArgs(String... values) {
     checkArgument(values != null, "extraArgs can not be null");
     checkArgument(values.length > 0, "one or more values must be supplied");
@@ -79,6 +84,7 @@ public class FFprobeBuilder {
     return this;
   }
 
+  /** Builds the FFprobe command-line arguments. */
   @CheckReturnValue
   public List<String> build() {
     ImmutableList.Builder<String> args = new ImmutableList.Builder<>();
@@ -93,11 +99,21 @@ public class FFprobeBuilder {
 
     args.addAll(extraArgs);
 
-    if (showFormat) args.add("-show_format");
-    if (showStreams) args.add("-show_streams");
-    if (showChapters) args.add("-show_chapters");
-    if (showPackets) args.add("-show_packets");
-    if (showFrames) args.add("-show_frames");
+    if (showFormat) {
+      args.add("-show_format");
+    }
+    if (showStreams) {
+      args.add("-show_streams");
+    }
+    if (showChapters) {
+      args.add("-show_chapters");
+    }
+    if (showPackets) {
+      args.add("-show_packets");
+    }
+    if (showFrames) {
+      args.add("-show_frames");
+    }
 
     args.add(input);
 

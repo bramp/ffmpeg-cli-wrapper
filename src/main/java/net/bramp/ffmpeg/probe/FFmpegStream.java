@@ -2,16 +2,13 @@ package net.bramp.ffmpeg.probe;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import net.bramp.ffmpeg.shared.CodecType;
 import org.apache.commons.lang3.math.Fraction;
 
-@SuppressFBWarnings(
-    value = {"UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"},
-    justification = "POJO objects where the fields are populated by gson")
+/** Represents a media stream from an FFprobe result. */
 public class FFmpegStream {
   public int index;
   public String codec_name;
@@ -241,6 +238,7 @@ public class FFmpegStream {
     return ImmutableMap.copyOf(tags);
   }
 
+  /** Returns the list of side data associated with this stream. */
   public List<SideData> getSideDataList() {
     if (side_data_list == null) {
       return Collections.emptyList();
@@ -249,6 +247,7 @@ public class FFmpegStream {
     return ImmutableList.copyOf(side_data_list);
   }
 
+  /** Represents side data associated with an FFprobe stream. */
   public static class SideData {
     public String side_data_type;
     public String displaymatrix;

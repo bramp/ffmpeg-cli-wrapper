@@ -10,15 +10,18 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 
+/** Parses FFmpeg progress output over a UDP socket connection. */
 public class UdpProgressParser extends AbstractSocketProgressParser {
 
   final DatagramSocket socket;
   final URI address;
 
+  /** Constructs a UDP progress parser listening on a random available port. */
   public UdpProgressParser(ProgressListener listener) throws SocketException, URISyntaxException {
     this(listener, 0, InetAddress.getLoopbackAddress());
   }
 
+  /** Creates a new UDP progress parser bound to the given port and address. */
   public UdpProgressParser(ProgressListener listener, int port, InetAddress addr)
       throws SocketException, URISyntaxException {
 

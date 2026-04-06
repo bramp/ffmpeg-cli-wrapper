@@ -20,6 +20,7 @@ public class NutDataInputStream implements DataInput {
   long startCrcRange;
   long endCrcRange;
 
+  /** Constructs a new NutDataInputStream wrapping the given input stream. */
   public NutDataInputStream(InputStream in) {
     checkNotNull(in);
     this.count = new CountingInputStream(in);
@@ -37,7 +38,7 @@ public class NutDataInputStream implements DataInput {
     return crc.getValue();
   }
 
-  // Read a simple var int up to 32 bits
+  /** Reads a variable-length encoded integer up to 32 bits. */
   public int readVarInt() throws IOException {
     boolean more;
     int result = 0;
@@ -52,7 +53,7 @@ public class NutDataInputStream implements DataInput {
     return result;
   }
 
-  // Read a simple var int up to 64 bits
+  /** Reads a variable-length encoded integer up to 64 bits. */
   public long readVarLong() throws IOException {
     boolean more;
     long result = 0;
@@ -67,7 +68,7 @@ public class NutDataInputStream implements DataInput {
     return result;
   }
 
-  // Read a signed var int
+  /** Reads a signed variable-length encoded integer. */
   public long readSignedVarInt() throws IOException {
     long temp = readVarLong() + 1;
     if ((temp & 1) == 1) {
@@ -76,7 +77,7 @@ public class NutDataInputStream implements DataInput {
     return temp >> 1;
   }
 
-  // Read a array with a varint prefixed length
+  /** Reads a byte array prefixed with a variable-length encoded length. */
   public byte[] readVarArray() throws IOException {
     int len = (int) readVarLong();
     byte[] result = new byte[len];
@@ -84,7 +85,7 @@ public class NutDataInputStream implements DataInput {
     return result;
   }
 
-  // Returns the start code, OR frame_code if the code doesn't start with 'N'
+  /** Returns the start code, or the frame code if it does not start with 'N'. */
   public long readStartCode() throws IOException {
     byte frameCode = in.readByte();
     if (frameCode != 'N') {

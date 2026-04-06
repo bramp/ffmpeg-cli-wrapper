@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Information about supported Codecs
+ * Information about supported Codecs.
  *
  * @author bramp
  */
@@ -16,40 +16,42 @@ public class Codec {
   private final String name;
   private final String longName;
 
-  /** Can I decode with this codec */
+  /** Can I decode with this codec. */
   private final boolean canDecode;
 
-  /** Can I encode with this codec */
+  /** Can I encode with this codec. */
   private final boolean canEncode;
 
-  /** What type of codec is this */
+  /** What type of codec is this. */
   private final CodecType type;
 
-  /** Intra frame only codec */
+  /** Intra frame only codec. */
   final boolean intraFrameOnly;
 
-  /** Codec supports lossy compression */
+  /** Codec supports lossy compression. */
   final boolean lossyCompression;
 
-  /** Codeco supports lessless compression */
+  /** Codeco supports lessless compression. */
   final boolean losslessCompression;
 
   /**
+   * Creates a new Codec.
+   *
    * @param name short codec name
    * @param longName long codec name
    * @param flags is expected to be in the following format:
    *     <pre>
-   * D..... = Decoding supported
-   * .E.... = Encoding supported
-   * ..V... = Video codec
-   * ..A... = Audio codec
-   * ..S... = Subtitle codec
-   * ..D... = Data codec
-   * ..T... = Attachment codec
-   * ...I.. = Intra frame-only codec
-   * ....L. = Lossy compression
-   * .....S = Lossless compression
-   * </pre>
+   *     D..... = Decoding supported
+   *     .E.... = Encoding supported
+   *     ..V... = Video codec
+   *     ..A... = Audio codec
+   *     ..S... = Subtitle codec
+   *     ..D... = Data codec
+   *     ..T... = Attachment codec
+   *     ...I.. = Intra frame-only codec
+   *     ....L. = Lossy compression
+   *     .....S = Lossless compression
+   *     </pre>
    */
   public Codec(String name, String longName, String flags) {
     this.name = Preconditions.checkNotNull(name).trim();

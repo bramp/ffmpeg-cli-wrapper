@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 import javax.annotation.CheckReturnValue;
 
+/** Abstract base class for socket-based FFmpeg progress parsers. */
 public abstract class AbstractSocketProgressParser implements ProgressParser {
 
   final StreamProgressParser parser;

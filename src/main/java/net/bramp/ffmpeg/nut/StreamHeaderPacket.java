@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.lang3.math.Fraction;
 
+/** Represents a stream header packet in the NUT multimedia container format. */
 public class StreamHeaderPacket extends Packet {
 
   public static final int VIDEO = 0;

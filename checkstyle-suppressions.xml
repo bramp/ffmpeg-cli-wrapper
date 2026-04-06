@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<suppressions>
+    <!-- Suppress all checks on test files for now. Can be tightened later. -->
+    <suppress files="src[\\/]test[\\/]" checks=".*"/>
+
+    <!-- Class names like FFmpeg, FFprobe, FFcommon, CRC32InputStream are established public API -->
+    <suppress checks="AbbreviationAsWordInName"
+              files="FF|CRC32"/>
+
+    <!-- Probe/builder/options/progress fields use snake_case to match FFmpeg's JSON API -->
+    <suppress checks="MemberName"
+              files="(probe|builder|options|progress)[\\/]"/>
+    <suppress checks="ParameterName"
+              files="(probe|builder|options|progress)[\\/]"/>
+
+    <!-- NUT format parser uses spec-matching names for readability -->
+    <suppress checks="MemberName|ParameterName|LocalVariableName|AbbreviationAsWordInName"
+              files="nut[\\/]"/>
+</suppressions>
