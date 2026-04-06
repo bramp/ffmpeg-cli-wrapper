@@ -23,6 +23,9 @@ jobs:
       - name: Check formatting (Google Java Style)
         run: mvn --batch-mode fmt:check
 
+      - name: Check style (Google Java Style)
+        run: mvn --batch-mode checkstyle:check
+
   test:
     runs-on: ubuntu-latest
     strategy:

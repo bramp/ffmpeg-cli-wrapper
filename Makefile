@@ -7,6 +7,7 @@ help:
 	@echo "  make compile        - Run clean compile on all supported JDKs ($(JDK_VERSIONS))"
 	@echo "  make format         - Auto-format code (Google Java Style)"
 	@echo "  make check-format   - Check code formatting (Google Java Style)"
+	@echo "  make check-style    - Run checkstyle (Google Java Style)"
 	@echo "  make examples       - Regenerate EXAMPLES.md and README.md from test source code"
 	@echo "  make check-examples - Verify EXAMPLES.md and README.md are up to date"
 	@echo "  make version        - Show current project version"
@@ -72,6 +73,10 @@ format:
 .PHONY: check-format
 check-format:
 	mvn fmt:check
+
+.PHONY: check-style
+check-style:
+	mvn checkstyle:check
 
 .PHONY: examples
 examples:
