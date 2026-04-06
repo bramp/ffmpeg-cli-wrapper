@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.bramp.ffmpeg</groupId>
     <artifactId>ffmpeg</artifactId>
-    <version>0.9.1</version>
+    <version>0.9.2</version>
 
     <name>FFmpeg Wrapper</name>
     <description>Simple Java wrapper around FFmpeg command-line interface</description>
