@@ -77,6 +77,7 @@ public class Progress {
   /** Current status, can be one of "continue", or "end". */
   public Status status = null;
 
+  /** Constructs a default empty progress instance. */
   public Progress() {
     // Nothing
   }

@@ -34,11 +34,13 @@ public class NutReader {
   final NutDataInputStream in;
   final NutReaderListener listener;
 
+  /** Constructs a new NutReader for the given input stream and listener. */
   public NutReader(InputStream in, NutReaderListener listener) {
     this.in = new NutDataInputStream(in);
     this.listener = checkNotNull(listener);
   }
 
+  /** Returns whether the given startcode is a known NUT packet startcode. */
   public static boolean isKnownStartcode(long startcode) {
     return Startcode.of(startcode) != null;
   }

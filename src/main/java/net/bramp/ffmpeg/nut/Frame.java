@@ -32,6 +32,7 @@ public class Frame {
   Map<String, Object> sideData;
   Map<String, Object> metaData;
 
+  /** Reads metadata key-value pairs from the NUT data input stream. */
   protected Map<String, Object> readMetaData(NutDataInputStream in) throws IOException {
     Map<String, Object> data = new TreeMap<String, Object>();
     long count = in.readVarLong();
@@ -93,8 +94,6 @@ public class Frame {
 
     int stream_id;
     long coded_pts;
-    int header_idx = fc.headerIdx;
-    int frame_res = fc.reservedCount;
 
     if ((flags & FLAG_STREAM_ID) == FLAG_STREAM_ID) {
       stream_id = in.readVarInt();
@@ -130,6 +129,7 @@ public class Frame {
     if ((flags & FLAG_MATCH_TIME) == FLAG_MATCH_TIME) {
       fc.matchTimeDelta = in.readSignedVarInt();
     }
+    int header_idx = fc.headerIdx;
     if ((flags & FLAG_HEADER_IDX) == FLAG_HEADER_IDX) {
       header_idx = in.readVarInt();
       if (header_idx >= nut.header.elision.size()) {
@@ -137,6 +137,7 @@ public class Frame {
             "Illegal header index " + header_idx + " must be < " + nut.header.elision.size());
       }
     }
+    int frame_res = fc.reservedCount;
     if ((flags & FLAG_RESERVED) == FLAG_RESERVED) {
       frame_res = in.readVarInt();
     }

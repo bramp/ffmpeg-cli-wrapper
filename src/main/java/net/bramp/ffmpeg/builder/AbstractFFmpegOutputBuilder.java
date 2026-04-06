@@ -110,14 +110,17 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
 
   protected String complexFilter;
 
+  /** Constructs a default output builder. */
   public AbstractFFmpegOutputBuilder() {
     super();
   }
 
+  /** Constructs an output builder with the given parent and filename. */
   protected AbstractFFmpegOutputBuilder(FFmpegBuilder parent, String filename) {
     super(parent, filename);
   }
 
+  /** Constructs an output builder with the given parent and URI. */
   protected AbstractFFmpegOutputBuilder(FFmpegBuilder parent, URI uri) {
     super(parent, uri);
   }
@@ -145,6 +148,7 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
     return (T) this;
   }
 
+  /** Sets the video bit stream filter. */
   public T setVideoBitStreamFilter(String filter) {
     this.video_bit_stream_filter = checkNotEmpty(filter, "filter must not be empty");
     return (T) this;

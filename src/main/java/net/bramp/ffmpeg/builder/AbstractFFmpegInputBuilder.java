@@ -18,16 +18,19 @@ public abstract class AbstractFFmpegInputBuilder<T extends AbstractFFmpegInputBu
    */
   private int streamLoop;
 
+  /** Constructs an input builder with the given parent and filename. */
   protected AbstractFFmpegInputBuilder(FFmpegBuilder parent, String filename) {
     this(parent, null, filename);
   }
 
+  /** Constructs an input builder with the given parent, probe result, and filename. */
   protected AbstractFFmpegInputBuilder(
       FFmpegBuilder parent, FFmpegProbeResult probeResult, String filename) {
     super(parent, filename);
     this.probeResult = probeResult;
   }
 
+  /** Enables reading input at native frame rate. */
   public T readAtNativeFrameRate() {
     this.readAtNativeFrameRate = true;
     return getThis();

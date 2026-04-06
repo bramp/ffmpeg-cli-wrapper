@@ -30,35 +30,43 @@ public class FFprobe extends FFcommon {
 
   static final Gson gson = FFmpegUtils.getGson();
 
+  /** Constructs an FFprobe instance using the default path. */
   public FFprobe() throws IOException {
     this(DEFAULT_PATH, new RunProcessFunction());
   }
 
+  /** Constructs an FFprobe instance using the default path and the specified process function. */
   public FFprobe(@Nonnull ProcessFunction runFunction) throws IOException {
     this(DEFAULT_PATH, runFunction);
   }
 
+  /** Constructs an FFprobe instance using the specified path. */
   public FFprobe(@Nonnull String path) throws IOException {
     this(path, new RunProcessFunction());
   }
 
+  /** Constructs an FFprobe instance using the specified path and process function. */
   public FFprobe(@Nonnull String path, @Nonnull ProcessFunction runFunction) {
     super(path, runFunction);
   }
 
+  /** Probes the specified media file and returns the result. */
   public FFmpegProbeResult probe(String mediaPath) throws IOException {
     return probe(mediaPath, null);
   }
 
+  /** Probes the specified media file with an optional user agent. */
   public FFmpegProbeResult probe(String mediaPath, @Nullable String userAgent) throws IOException {
     return probe(this.builder().setInput(mediaPath).setUserAgent(userAgent));
   }
 
+  /** Probes media using the supplied FFprobeBuilder. */
   public FFmpegProbeResult probe(FFprobeBuilder builder) throws IOException {
     checkNotNull(builder);
     return probe(builder.build());
   }
 
+  /** Probes media with an optional user agent and extra arguments. */
   public FFmpegProbeResult probe(
       String mediaPath, @Nullable String userAgent, @Nullable String... extraArgs)
       throws IOException {
@@ -123,6 +131,7 @@ public class FFprobe extends FFcommon {
     super.run(args);
   }
 
+  /** Returns a new FFprobeBuilder instance. */
   @CheckReturnValue
   public FFprobeBuilder builder() {
     return new FFprobeBuilder();

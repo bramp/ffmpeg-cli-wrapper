@@ -72,16 +72,19 @@ public class Mapper {
     }
   }
 
+  /** Maps main encoding options to the given stream builder. */
   public static <T extends AbstractFFmpegStreamBuilder<?>> void map(
       MainEncodingOptions opts, T dest) {
     mapper.map(opts, dest);
   }
 
+  /** Maps audio encoding options to the given stream builder. */
   public static <T extends AbstractFFmpegStreamBuilder<?>> void map(
       AudioEncodingOptions opts, T dest) {
     mapper.map(new AudioWrapper(opts), dest);
   }
 
+  /** Maps video encoding options to the given stream builder. */
   public static <T extends AbstractFFmpegStreamBuilder<?>> void map(
       VideoEncodingOptions opts, T dest) {
     mapper.map(new VideoWrapper(opts), dest);

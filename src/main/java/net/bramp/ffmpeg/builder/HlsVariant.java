@@ -16,6 +16,7 @@ public class HlsVariant {
   private final List<String> streams = new ArrayList<>();
   private String name;
 
+  /** Constructs an empty HLS variant. */
   public HlsVariant() {}
 
   /**

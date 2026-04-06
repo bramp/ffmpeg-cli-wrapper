@@ -27,10 +27,12 @@ public abstract class FFmpegJob implements Runnable {
 
   State state = State.WAITING;
 
+  /** Constructs a new FFmpeg job with the given FFmpeg instance. */
   public FFmpegJob(FFmpeg ffmpeg) {
     this(ffmpeg, null);
   }
 
+  /** Constructs a new FFmpeg job with the given FFmpeg instance and progress listener. */
   public FFmpegJob(FFmpeg ffmpeg, @Nullable ProgressListener listener) {
     this.ffmpeg = checkNotNull(ffmpeg);
     this.listener = listener;

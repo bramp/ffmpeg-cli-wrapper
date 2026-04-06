@@ -17,11 +17,13 @@ public class LoggingFilterReader extends FilterReader {
   final Logger logger;
   final StringBuilder buffer = new StringBuilder();
 
+  /** Constructs a new LoggingFilterReader that logs lines read from the given reader. */
   public LoggingFilterReader(Reader in, Logger logger) {
     super(in);
     this.logger = logger;
   }
 
+  /** Logs the contents of the buffer and resets it. */
   protected void log() {
     if (buffer.length() > 0) {
       // TODO Change from debug, to a user defined level

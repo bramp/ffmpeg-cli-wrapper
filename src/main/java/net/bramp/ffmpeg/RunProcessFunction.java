@@ -37,11 +37,13 @@ public class RunProcessFunction implements ProcessFunction {
     return builder.start();
   }
 
+  /** Sets the working directory for the process using a path string. */
   public RunProcessFunction setWorkingDirectory(String workingDirectory) {
     this.workingDirectory = new File(workingDirectory);
     return this;
   }
 
+  /** Sets the working directory for the process using a File object. */
   public RunProcessFunction setWorkingDirectory(File workingDirectory) {
     this.workingDirectory = workingDirectory;
     return this;

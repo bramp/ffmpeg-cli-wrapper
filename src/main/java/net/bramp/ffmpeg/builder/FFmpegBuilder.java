@@ -83,42 +83,51 @@ public class FFmpegBuilder {
   String videoFilter;
   String complexFilter;
 
+  /** Sets the strict standards compliance level. */
   public FFmpegBuilder setStrict(Strict strict) {
     this.strict = checkNotNull(strict);
     return this;
   }
 
+  /** Sets whether to overwrite output files without asking. */
   public FFmpegBuilder overrideOutputFiles(boolean override) {
     this.override = override;
     return this;
   }
 
+  /** Returns whether output files will be overwritten. */
   public boolean getOverrideOutputFiles() {
     return this.override;
   }
 
+  /** Sets the pass number for multi-pass encoding. */
   public FFmpegBuilder setPass(int pass) {
     this.pass = pass;
     return this;
   }
 
+  /** Sets the directory for storing pass log files. */
   public FFmpegBuilder setPassDirectory(String directory) {
     this.pass_directory = checkNotNull(directory);
     return this;
   }
 
+  /** Sets the directory for storing pass log files. */
   public FFmpegBuilder setPassDirectory(File directory) {
     return setPassDirectory(checkNotNull(directory).getPath());
   }
 
+  /** Sets the directory for storing pass log files. */
   public FFmpegBuilder setPassDirectory(Path directory) {
     return setPassDirectory(checkNotNull(directory).toString());
   }
 
+  /** Returns the pass log file directory. */
   public String getPassDirectory() {
     return this.pass_directory;
   }
 
+  /** Sets the pass log file prefix. */
   public FFmpegBuilder setPassPrefix(String prefix) {
     this.pass_prefix = checkNotNull(prefix);
     return this;
@@ -169,18 +178,22 @@ public class FFmpegBuilder {
     return this.doAddInput(new FFmpegFileInputBuilder(this, filename));
   }
 
+  /** Adds an input by file. */
   public FFmpegFileInputBuilder addInput(File file) {
     return addInput(checkNotNull(file).getPath());
   }
 
+  /** Adds an input by path. */
   public FFmpegFileInputBuilder addInput(Path path) {
     return addInput(checkNotNull(path).toString());
   }
 
+  /** Adds a pre-built input builder and finalizes it. */
   public <T extends AbstractFFmpegInputBuilder<T>> FFmpegBuilder addInput(T input) {
     return this.doAddInput(input).done();
   }
 
+  /** Adds an input builder to the list and returns it for further configuration. */
   protected <T extends AbstractFFmpegInputBuilder<T>> T doAddInput(T input) {
     checkNotNull(input);
 
@@ -188,26 +201,31 @@ public class FFmpegBuilder {
     return input;
   }
 
+  /** Clears all previously added inputs. */
   protected void clearInputs() {
     inputs.clear();
     inputProbes.clear();
   }
 
+  /** Clears existing inputs and sets the input from a probed result. */
   public FFmpegFileInputBuilder setInput(FFmpegProbeResult result) {
     clearInputs();
     return addInput(result);
   }
 
+  /** Clears existing inputs and sets the input by filename or URL. */
   public FFmpegFileInputBuilder setInput(String filename) {
     clearInputs();
     return addInput(filename);
   }
 
+  /** Clears existing inputs and sets the input by file. */
   public FFmpegFileInputBuilder setInput(File file) {
     clearInputs();
     return addInput(file);
   }
 
+  /** Clears existing inputs and sets the input by path. */
   public FFmpegFileInputBuilder setInput(Path path) {
     clearInputs();
     return addInput(path);
@@ -262,6 +280,7 @@ public class FFmpegBuilder {
     return this;
   }
 
+  /** Sets the URI for progress reporting. */
   public FFmpegBuilder addProgress(URI uri) {
     this.progress = checkNotNull(uri);
     return this;
@@ -342,10 +361,12 @@ public class FFmpegBuilder {
     return output;
   }
 
+  /** Adds a new output file. */
   public FFmpegOutputBuilder addOutput(File file) {
     return addOutput(checkNotNull(file).getPath());
   }
 
+  /** Adds a new output file. */
   public FFmpegOutputBuilder addOutput(Path path) {
     return addOutput(checkNotNull(path).toString());
   }
@@ -401,10 +422,12 @@ public class FFmpegBuilder {
     return output;
   }
 
+  /** Adds a new HLS output file. */
   public FFmpegHlsOutputBuilder addHlsOutput(File file) {
     return addHlsOutput(checkNotNull(file).getPath());
   }
 
+  /** Adds a new HLS output file. */
   public FFmpegHlsOutputBuilder addHlsOutput(Path path) {
     return addHlsOutput(checkNotNull(path).toString());
   }

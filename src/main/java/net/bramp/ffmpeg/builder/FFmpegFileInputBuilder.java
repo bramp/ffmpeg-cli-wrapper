@@ -5,10 +5,12 @@ import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 /** Builder for FFmpeg file-based input arguments. */
 public class FFmpegFileInputBuilder extends AbstractFFmpegInputBuilder<FFmpegFileInputBuilder> {
+  /** Constructs a file input builder with the given filename. */
   public FFmpegFileInputBuilder(FFmpegBuilder parent, String filename) {
     super(parent, filename);
   }
 
+  /** Constructs a file input builder with the given filename and probe result. */
   public FFmpegFileInputBuilder(FFmpegBuilder parent, String filename, FFmpegProbeResult result) {
     super(parent, result, filename);
   }

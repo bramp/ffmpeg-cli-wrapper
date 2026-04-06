@@ -13,10 +13,12 @@ public class CRC32InputStream extends FilterInputStream {
 
   final CRC32 crc = new CRC32();
 
+  /** Constructs a CRC32InputStream wrapping the given input stream. */
   public CRC32InputStream(InputStream in) {
     super(in);
   }
 
+  /** Resets the CRC32 checksum to its initial value. */
   public void resetCrc() {
     crc.reset();
   }

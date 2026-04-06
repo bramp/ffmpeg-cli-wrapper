@@ -28,11 +28,13 @@ public class NutDataInputStream implements DataInput {
     this.in = new DataInputStream(crc);
   }
 
+  /** Resets the CRC32 checksum for a new calculation range. */
   public void resetCRC() {
     startCrcRange = count.getCount();
     crc.resetCrc();
   }
 
+  /** Returns the current CRC32 checksum value. */
   public long getCRC() {
     endCrcRange = count.getCount();
     return crc.getValue();
@@ -106,6 +108,7 @@ public class NutDataInputStream implements DataInput {
         + ((buffer[7] & 255) << 0));
   }
 
+  /** Returns the current byte offset in the input stream. */
   public long offset() {
     return count.getCount();
   }

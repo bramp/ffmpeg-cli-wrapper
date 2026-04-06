@@ -8,6 +8,7 @@ public class IndividualChannel implements ChannelLayout {
   private final String name;
   private final String description;
 
+  /** Constructs a new individual channel with the given name and description. */
   public IndividualChannel(String name, String description) {
     this.name = name;
     this.description = description;

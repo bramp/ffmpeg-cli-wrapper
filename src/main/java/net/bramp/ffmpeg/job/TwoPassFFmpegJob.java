@@ -42,6 +42,7 @@ public class TwoPassFFmpegJob extends FFmpegJob {
     List<String> unused = this.builder.setPass(1).build();
   }
 
+  /** Deletes the pass log files created during multi-pass encoding. */
   protected void deletePassLog() throws IOException {
     final Path cwd = Paths.get(builder.getPassDirectory());
     try (DirectoryStream<Path> stream = Files.newDirectoryStream(cwd, passlogPrefix + "*.log*")) {

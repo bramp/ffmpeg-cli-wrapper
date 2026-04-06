@@ -106,52 +106,63 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
 
   public boolean throwWarnings = true; // TODO Either delete this, or apply it consistently
 
+  /** Constructs a stream builder with no parent. */
   protected AbstractFFmpegStreamBuilder() {
     this.parent = null;
   }
 
+  /** Constructs a stream builder with the given parent and output filename. */
   protected AbstractFFmpegStreamBuilder(FFmpegBuilder parent, String filename) {
     this.parent = checkNotNull(parent);
     this.filename = checkNotEmpty(filename, "filename must not be empty");
   }
 
+  /** Constructs a stream builder with the given parent and output URI. */
   protected AbstractFFmpegStreamBuilder(FFmpegBuilder parent, URI uri) {
     this.parent = checkNotNull(parent);
     this.uri = checkValidStream(uri);
   }
 
+  /** Returns this instance for fluent API chaining. */
   protected abstract T getThis();
 
+  /** Applies the given encoding options to this builder. */
   public T useOptions(EncodingOptions opts) {
     Mapper.map(opts, this);
     return getThis();
   }
 
+  /** Applies the given main encoding options to this builder. */
   public T useOptions(MainEncodingOptions opts) {
     Mapper.map(opts, this);
     return getThis();
   }
 
+  /** Applies the given audio encoding options to this builder. */
   public T useOptions(AudioEncodingOptions opts) {
     Mapper.map(opts, this);
     return getThis();
   }
 
+  /** Applies the given video encoding options to this builder. */
   public T useOptions(VideoEncodingOptions opts) {
     Mapper.map(opts, this);
     return getThis();
   }
 
+  /** Disables video output. */
   public T disableVideo() {
     this.video_enabled = false;
     return getThis();
   }
 
+  /** Disables audio output. */
   public T disableAudio() {
     this.audio_enabled = false;
     return getThis();
   }
 
+  /** Disables subtitle output. */
   public T disableSubtitle() {
     this.subtitle_enabled = false;
     return getThis();
@@ -207,6 +218,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     return getThis();
   }
 
+  /** Sets the output filename. */
   public T setFilename(String filename) {
     this.filename = checkNotEmpty(filename, "filename must not be empty");
     return getThis();
@@ -232,10 +244,12 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     return setFilename(checkNotNull(path).toString());
   }
 
+  /** Returns the output filename. */
   public String getFilename() {
     return filename;
   }
 
+  /** Sets the output URI. */
   public T setUri(URI uri) {
     this.uri = checkValidStream(uri);
     return getThis();
@@ -317,6 +331,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     return getThis();
   }
 
+  /** Checks if the given width or height value is valid. */
   protected static boolean isValidSize(int widthOrHeight) {
     return widthOrHeight > 0 || widthOrHeight == -1;
   }
@@ -527,6 +542,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     return getThis();
   }
 
+  /** Sets the strict mode for standards compliance. */
   public T setStrict(Strict strict) {
     this.strict = checkNotNull(strict);
     return getThis();
@@ -607,6 +623,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
    */
   public abstract EncodingOptions buildOptions();
 
+  /** Builds the command-line arguments for the given pass using the parent builder. */
   protected List<String> build(int pass) {
     Preconditions.checkState(parent != null, "Can not build without parent being set");
     return build(parent, pass);
@@ -659,8 +676,10 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     return args.build();
   }
 
+  /** Adds source and target specific arguments for the given pass. */
   protected abstract void addSourceTarget(int pass, ImmutableList.Builder<String> args);
 
+  /** Adds global flags such as format, preset, and time options to the arguments. */
   protected void addGlobalFlags(FFmpegBuilder parent, ImmutableList.Builder<String> args) {
     if (strict != Strict.NORMAL) {
       args.add("-strict", strict.toString());
@@ -689,6 +708,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     args.addAll(meta_tags);
   }
 
+  /** Adds audio-related flags such as codec, channels, and sample rate to the arguments. */
   protected void addAudioFlags(ImmutableList.Builder<String> args) {
     if (!Strings.isNullOrEmpty(audio_codec)) {
       args.add("-acodec", audio_codec);
@@ -707,6 +727,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     }
   }
 
+  /** Adds video-related flags such as codec, frame rate, and resolution to the arguments. */
   protected void addVideoFlags(FFmpegBuilder parent, ImmutableList.Builder<String> args) {
     if (video_frames != null) {
       args.add("-vframes", video_frames.toString());
@@ -745,6 +766,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     }
   }
 
+  /** Adds format-related arguments such as stream mappings. */
   protected void addFormatArgs(ImmutableList.Builder<String> args) {
     for (String map : maps) {
       args.add("-map", map);

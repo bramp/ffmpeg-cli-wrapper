@@ -9,6 +9,7 @@ public class StandardChannelLayout implements ChannelLayout {
   private final String name;
   private final List<IndividualChannel> decomposition;
 
+  /** Constructs a new standard channel layout with the given name and channel decomposition. */
   public StandardChannelLayout(String name, List<IndividualChannel> decomposition) {
     this.name = name;
     this.decomposition = decomposition;

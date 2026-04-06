@@ -21,6 +21,7 @@ public class MainHeaderPacket extends Packet {
   final List<FrameCode> frameCodes = new ArrayList<>();
   final List<byte[]> elision = new ArrayList<>();
 
+  /** Constructs a new empty main header packet. */
   public MainHeaderPacket() {}
 
   @Override
@@ -61,7 +62,7 @@ public class MainHeaderPacket extends Packet {
     long count;
 
     for (int i = 0; i < 256; ) {
-      long flags = in.readVarLong();
+      final long flags = in.readVarLong();
       long fields = in.readVarLong();
       if (fields > 0) {
         pts = in.readSignedVarInt();

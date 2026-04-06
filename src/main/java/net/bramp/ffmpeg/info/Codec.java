@@ -177,10 +177,12 @@ public class Codec {
     return intraFrameOnly;
   }
 
+  /** Returns whether this codec supports lossy compression. */
   public boolean supportsLossyCompression() {
     return lossyCompression;
   }
 
+  /** Returns whether this codec supports lossless compression. */
   public boolean supportsLosslessCompression() {
     return losslessCompression;
   }

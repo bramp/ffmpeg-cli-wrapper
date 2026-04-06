@@ -55,10 +55,12 @@ public class PixelFormat {
     return numberOfComponents;
   }
 
+  /** Returns whether this pixel format supports encoding. */
   public boolean canEncode() {
     return canEncode;
   }
 
+  /** Returns whether this pixel format supports decoding. */
   public boolean canDecode() {
     return canDecode;
   }

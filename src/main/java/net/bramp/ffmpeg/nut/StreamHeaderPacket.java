@@ -34,6 +34,7 @@ public class StreamHeaderPacket extends Packet {
   Fraction sampleRate = Fraction.ZERO;
   int channels;
 
+  /** Converts a fourcc byte array to its string representation. */
   protected static String fourccToString(byte[] fourcc) {
     return new String(fourcc, StandardCharsets.ISO_8859_1);
   }

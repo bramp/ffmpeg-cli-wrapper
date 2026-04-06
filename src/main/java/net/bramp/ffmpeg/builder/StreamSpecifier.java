@@ -12,6 +12,7 @@ public class StreamSpecifier {
     this.spec = spec;
   }
 
+  /** Returns the stream specifier string. */
   public String spec() {
     return spec;
   }

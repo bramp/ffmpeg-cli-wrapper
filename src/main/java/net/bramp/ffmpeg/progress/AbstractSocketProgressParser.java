@@ -17,6 +17,7 @@ public abstract class AbstractSocketProgressParser implements ProgressParser {
 
   Thread thread; // Thread for handling incoming connections
 
+  /** Constructs a new socket progress parser with the given listener. */
   public AbstractSocketProgressParser(ProgressListener listener) {
     this.parser = new StreamProgressParser(listener);
   }
@@ -45,9 +46,11 @@ public abstract class AbstractSocketProgressParser implements ProgressParser {
         null /* fragment */);
   }
 
+  /** Returns the name for the background thread handling connections. */
   @CheckReturnValue
   protected abstract String getThreadName();
 
+  /** Returns the runnable that handles incoming progress data. */
   protected abstract Runnable getRunnable(CountDownLatch startSignal);
 
   /**

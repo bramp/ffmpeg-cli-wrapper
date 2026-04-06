@@ -20,6 +20,7 @@ public class FFmpegProbeResult {
     return error;
   }
 
+  /** Returns whether the probe result contains an error. */
   public boolean hasError() {
     return error != null;
   }

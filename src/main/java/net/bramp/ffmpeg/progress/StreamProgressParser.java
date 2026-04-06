@@ -14,6 +14,7 @@ public class StreamProgressParser {
 
   final ProgressListener listener;
 
+  /** Constructs a new stream progress parser with the given listener. */
   public StreamProgressParser(ProgressListener listener) {
     this.listener = checkNotNull(listener);
   }

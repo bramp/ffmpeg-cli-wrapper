@@ -24,10 +24,12 @@ public class Packet {
       this.startcode = startcode;
     }
 
+    /** Returns the numeric startcode value. */
     public long value() {
       return startcode;
     }
 
+    /** Returns whether this startcode equals the given numeric code. */
     public boolean equalsCode(long startcode) {
       return this.startcode == startcode;
     }
@@ -65,6 +67,7 @@ public class Packet {
   public final PacketHeader header = new PacketHeader();
   public final PacketFooter footer = new PacketFooter();
 
+  /** Reads the body of the packet from the input stream. */
   protected void readBody(NutDataInputStream in) throws IOException {
     // Default implementation does nothing
   }

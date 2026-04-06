@@ -26,6 +26,7 @@ public class FractionAdapter extends TypeAdapter<Fraction> {
       "Immutable") // TODO Remove when https://github.com/google/error-prone/issues/512 is fixed
   private final Fraction divideByZero;
 
+  /** Constructs a FractionAdapter with default zero values for edge cases. */
   public FractionAdapter() {
     this(Fraction.ZERO, Fraction.ZERO);
   }

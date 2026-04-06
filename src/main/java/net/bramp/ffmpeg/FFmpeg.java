@@ -95,18 +95,22 @@ public class FFmpeg extends FFcommon {
   /** Supported channel layouts. */
   private List<ChannelLayout> channelLayouts = null;
 
+  /** Constructs an FFmpeg instance using the default path. */
   public FFmpeg() throws IOException {
     this(DEFAULT_PATH, new RunProcessFunction());
   }
 
+  /** Constructs an FFmpeg instance using the default path and the specified process function. */
   public FFmpeg(@Nonnull ProcessFunction runFunction) throws IOException {
     this(DEFAULT_PATH, runFunction);
   }
 
+  /** Constructs an FFmpeg instance using the specified path. */
   public FFmpeg(@Nonnull String path) throws IOException {
     this(path, new RunProcessFunction());
   }
 
+  /** Constructs an FFmpeg instance using the specified path and process function. */
   @SuppressWarnings("this-escape")
   public FFmpeg(@Nonnull String path, @Nonnull ProcessFunction runFunction) throws IOException {
     super(path, runFunction);
@@ -287,6 +291,7 @@ public class FFmpeg extends FFcommon {
     return this.channelLayouts;
   }
 
+  /** Creates a progress parser for the given listener. */
   protected ProgressParser createProgressParser(ProgressListener listener) throws IOException {
     // TODO In future create the best kind for this OS, unix socket, named pipe, or TCP.
     try {
@@ -331,6 +336,7 @@ public class FFmpeg extends FFcommon {
     }
   }
 
+  /** Returns a new FFmpegBuilder instance. */
   @CheckReturnValue
   public FFmpegBuilder builder() {
     return new FFmpegBuilder();

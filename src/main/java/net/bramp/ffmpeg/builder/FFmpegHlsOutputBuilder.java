@@ -26,6 +26,7 @@ public class FFmpegHlsOutputBuilder extends AbstractFFmpegOutputBuilder<FFmpegHl
 
   private final List<HlsVariant> variants = new ArrayList<>();
 
+  /** Constructs a new HLS output builder with the given filename. */
   protected FFmpegHlsOutputBuilder(FFmpegBuilder parent, String filename) {
     super(parent, filename);
     this.format = "hls";

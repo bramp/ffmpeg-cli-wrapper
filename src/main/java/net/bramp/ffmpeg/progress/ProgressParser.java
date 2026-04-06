@@ -7,8 +7,10 @@ import java.net.URI;
 /** Parses the FFmpeg progress fields. */
 public interface ProgressParser extends Closeable {
 
+  /** Starts the progress parser. */
   void start() throws IOException;
 
+  /** Stops the progress parser. */
   void stop() throws IOException;
 
   /**

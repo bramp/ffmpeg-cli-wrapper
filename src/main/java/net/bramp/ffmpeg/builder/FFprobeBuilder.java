@@ -24,26 +24,31 @@ public class FFprobeBuilder {
 
   private final List<String> extraArgs = new ArrayList<>();
 
+  /** Sets whether to show format information. */
   public FFprobeBuilder setShowFormat(boolean showFormat) {
     this.showFormat = showFormat;
     return this;
   }
 
+  /** Sets whether to show stream information. */
   public FFprobeBuilder setShowStreams(boolean showStreams) {
     this.showStreams = showStreams;
     return this;
   }
 
+  /** Sets whether to show chapter information. */
   public FFprobeBuilder setShowChapters(boolean showChapters) {
     this.showChapters = showChapters;
     return this;
   }
 
+  /** Sets whether to show frame information. */
   public FFprobeBuilder setShowFrames(boolean showFrames) {
     this.showFrames = showFrames;
     return this;
   }
 
+  /** Sets whether to show packet information. */
   public FFprobeBuilder setShowPackets(boolean showPackets) {
     this.showPackets = showPackets;
     return this;
