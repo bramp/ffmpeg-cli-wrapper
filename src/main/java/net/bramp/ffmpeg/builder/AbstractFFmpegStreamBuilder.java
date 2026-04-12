@@ -93,7 +93,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
 
   public boolean subtitle_enabled = true;
   public String subtitle_preset;
-  private String subtitleCodec;
+  private String subtitle_codec;
 
   public String preset;
   public String presetFilename;
@@ -459,7 +459,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   /** Sets the subtitle codec. */
   public T setSubtitleCodec(String codec) {
     this.subtitle_enabled = true;
-    this.subtitleCodec = checkNotEmpty(codec, "codec must not be empty");
+    this.subtitle_codec = checkNotEmpty(codec, "codec must not be empty");
     return getThis();
   }
 
@@ -657,8 +657,8 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     }
 
     if (subtitle_enabled) {
-      if (!Strings.isNullOrEmpty(subtitleCodec)) {
-        args.add("-scodec", subtitleCodec);
+      if (!Strings.isNullOrEmpty(subtitle_codec)) {
+        args.add("-scodec", subtitle_codec);
       }
       if (!Strings.isNullOrEmpty(subtitle_preset)) {
         args.add("-spre", subtitle_preset);

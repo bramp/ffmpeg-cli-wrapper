@@ -56,22 +56,22 @@ public class FFmpegBuilder {
   // Global Settings
   boolean override = true;
   int pass = 0;
-  String passDirectory = "";
-  String passPrefix;
+  String pass_directory = "";
+  String pass_prefix;
   Verbosity verbosity = Verbosity.ERROR;
   URI progress;
-  String userAgent;
+  String user_agent;
   Integer qscale;
 
   int threads;
   // Input settings
   String format;
   Long startOffset; // in millis
-  boolean readAtNativeFrameRate = false;
+  boolean read_at_native_frame_rate = false;
   final List<AbstractFFmpegInputBuilder<?>> inputs = new ArrayList<>();
   final Map<String, FFmpegProbeResult> inputProbes = new TreeMap<>();
 
-  final List<String> extraArgs = new ArrayList<>();
+  final List<String> extra_args = new ArrayList<>();
 
   // Output
   final List<AbstractFFmpegOutputBuilder<?>> outputs = new ArrayList<>();
@@ -108,7 +108,7 @@ public class FFmpegBuilder {
 
   /** Sets the directory for storing pass log files. */
   public FFmpegBuilder setPassDirectory(String directory) {
-    this.passDirectory = checkNotNull(directory);
+    this.pass_directory = checkNotNull(directory);
     return this;
   }
 
@@ -124,18 +124,18 @@ public class FFmpegBuilder {
 
   /** Returns the pass log file directory. */
   public String getPassDirectory() {
-    return this.passDirectory;
+    return this.pass_directory;
   }
 
   /** Sets the pass log file prefix. */
   public FFmpegBuilder setPassPrefix(String prefix) {
-    this.passPrefix = checkNotNull(prefix);
+    this.pass_prefix = checkNotNull(prefix);
     return this;
   }
 
   /** Returns the pass log file prefix. */
   public String getPassPrefix() {
-    return this.passPrefix;
+    return this.pass_prefix;
   }
 
   /** Sets the logging verbosity level. */
@@ -147,7 +147,7 @@ public class FFmpegBuilder {
 
   /** Sets the HTTP user agent string. */
   public FFmpegBuilder setUserAgent(String userAgent) {
-    this.userAgent = checkNotNull(userAgent);
+    this.user_agent = checkNotNull(userAgent);
     return this;
   }
 
@@ -159,7 +159,7 @@ public class FFmpegBuilder {
    */
   @Deprecated
   public FFmpegBuilder readAtNativeFrameRate() {
-    this.readAtNativeFrameRate = true;
+    this.read_at_native_frame_rate = true;
     return this;
   }
 
@@ -344,7 +344,7 @@ public class FFmpegBuilder {
     checkNotEmpty(values[0], "first extra arg may not be empty");
 
     for (String value : values) {
-      extraArgs.add(checkNotNull(value));
+      extra_args.add(checkNotNull(value));
     }
     return this;
   }
@@ -456,8 +456,8 @@ public class FFmpegBuilder {
     args.add(override ? "-y" : "-n");
     args.add("-v", this.verbosity.toString());
 
-    if (userAgent != null) {
-      args.add("-user_agent", userAgent);
+    if (user_agent != null) {
+      args.add("-user_agent", user_agent);
     }
 
     if (startOffset != null) {
@@ -478,7 +478,7 @@ public class FFmpegBuilder {
       args.add("-f", format);
     }
 
-    if (readAtNativeFrameRate) {
+    if (read_at_native_frame_rate) {
       log.warn(
           "Using FFmpegBuilder#readAtNativeFrameRate is deprecated."
               + " Specify it on the inputStream instead");
@@ -489,7 +489,7 @@ public class FFmpegBuilder {
       args.add("-progress", progress.toString());
     }
 
-    args.addAll(extraArgs);
+    args.addAll(extra_args);
 
     for (AbstractFFmpegInputBuilder<?> input : this.inputs) {
       args.addAll(input.build(this, pass));
@@ -498,8 +498,8 @@ public class FFmpegBuilder {
     if (pass > 0) {
       args.add("-pass", Integer.toString(pass));
 
-      if (passPrefix != null) {
-        args.add("-passlogfile", Paths.get(passDirectory, passPrefix).toString());
+      if (pass_prefix != null) {
+        args.add("-passlogfile", Paths.get(pass_directory, pass_prefix).toString());
       }
     }
 

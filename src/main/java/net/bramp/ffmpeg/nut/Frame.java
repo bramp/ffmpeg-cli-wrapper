@@ -111,16 +111,16 @@ public class Frame {
       coded_pts = in.readVarLong();
       if (coded_pts < (1 << stream.header.msbPtsShift)) {
         long mask = (1L << stream.header.msbPtsShift) - 1;
-        long delta = stream.lastPts - mask / 2;
+        long delta = stream.last_pts - mask / 2;
         pts = ((coded_pts - delta) & mask) + delta;
       } else {
         pts = coded_pts - (1L << stream.header.msbPtsShift);
       }
     } else {
       // TODO: Test this code path
-      pts = stream.lastPts + fc.ptsDelta;
+      pts = stream.last_pts + fc.ptsDelta;
     }
-    stream.lastPts = pts;
+    stream.last_pts = pts;
 
     if ((flags & FLAG_SIZE_MSB) == FLAG_SIZE_MSB) {
       int data_size_msb = in.readVarInt();
