@@ -37,7 +37,7 @@ jobs:
       # This ensures the agent can build, test, and lint without needing network access
       # to those hosts at runtime.
       - name: Pre-download Maven dependencies
-        run: mvn --batch-mode dependency:go-offline -Dgpg.skip
+        run: mvn --batch-mode dependency:go-offline dependency:resolve-plugins -Dgpg.skip
 
       - name: Pre-download Maven plugin dependencies
         run: mvn --batch-mode fmt:check checkstyle:check --fail-never -Dgpg.skip
