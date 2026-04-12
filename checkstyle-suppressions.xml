@@ -24,7 +24,4 @@
     <suppress checks="MemberName|ParameterName|LocalVariableName|AbbreviationAsWordInName|GoogleNonConstantFieldName"
               files="nut[\\/]"/>
 
-    <!-- Existing TODO comments predate the TodoComment style check -->
-    <suppress checks="TodoComment"
-              files="src[\\/]main[\\/]"/>
 </suppressions>
