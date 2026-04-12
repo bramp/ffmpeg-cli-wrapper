@@ -26,5 +26,5 @@
 
     <!-- Existing TODO comments predate the TodoComment style check -->
     <suppress checks="TodoComment"
-              files=".*\.java"/>
+              files="src[\\/]main[\\/]"/>
 </suppressions>
