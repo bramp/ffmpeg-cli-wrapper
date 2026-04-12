@@ -16,10 +16,6 @@
     <suppress checks="ParameterName"
               files="(probe|builder|options|progress)[\\/]"/>
 
-    <!-- Pre-existing Javadoc style issues in builder/codec enums -->
-    <suppress checks="SummaryJavadoc"
-              files="builder[\\/]"/>
-
     <!-- NUT format parser uses spec-matching names for readability -->
     <suppress checks="MemberName|ParameterName|LocalVariableName|AbbreviationAsWordInName|GoogleNonConstantFieldName"
               files="nut[\\/]"/>
