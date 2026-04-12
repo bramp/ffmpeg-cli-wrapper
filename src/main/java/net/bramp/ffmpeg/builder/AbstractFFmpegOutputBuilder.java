@@ -288,7 +288,7 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
   @CheckReturnValue
   @Override
   public EncodingOptions buildOptions() {
-    // TODO When/if modelmapper supports @ConstructorProperties, we map this
+    // TODO: When/if modelmapper supports @ConstructorProperties, we map this
     // object, instead of doing new XXX(...)
     // https://github.com/jhalterman/modelmapper/issues/44
     return new EncodingOptions(
@@ -351,13 +351,13 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
 
       checkState(input != null, "Target size must be used with setInput(FFmpegProbeResult)");
 
-      // TODO factor in start time and/or number of frames
+      // TODO: factor in start time and/or number of frames
 
       double durationInSeconds = input.format.duration;
       long totalBitRate =
           (long) Math.floor((targetSize * 8) / durationInSeconds) - pass_padding_bitrate;
 
-      // TODO Calculate audioBitRate
+      // TODO: Calculate audioBitRate
 
       if (video_enabled && video_bit_rate == 0) {
         // Video (and possibly audio)

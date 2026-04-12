@@ -25,7 +25,7 @@ public class FFmpegStream {
 
   public int has_b_frames;
 
-  public String sample_aspect_ratio; // TODO Change to a Ratio/Fraction object
+  public String sample_aspect_ratio; // TODO: Change to a Ratio/Fraction object
   public String display_aspect_ratio;
 
   public String pix_fmt;

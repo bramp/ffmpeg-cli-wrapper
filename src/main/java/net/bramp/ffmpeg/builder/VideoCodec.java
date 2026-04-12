@@ -299,10 +299,10 @@ public class VideoCodec {
   /** HuffYUV MT. */
   public static final String HYMT = "hymt";
 
-  /** id Quake II CIN video (decoders: idcinvideo). */
+  /** Id Quake II CIN video (decoders: idcinvideo). */
   public static final String IDCIN = "idcin";
 
-  /** iCEDraw text. */
+  /** ICEDraw text. */
   public static final String IDF = "idf";
 
   /** IFF ACBM/ANIM/DEEP/ILBM/PBM/RGB8/RGBN (decoders: iff). */
@@ -548,19 +548,19 @@ public class VideoCodec {
   /** RemotelyAnywhere Screen Capture. */
   public static final String RASC = "rasc";
 
-  /** raw video. */
+  /** Raw video. */
   public static final String RAWVIDEO = "rawvideo";
 
   /** RL2 video. */
   public static final String RL2 = "rl2";
 
-  /** id RoQ video (decoders: roqvideo) (encoders: roqvideo). */
+  /** Id RoQ video (decoders: roqvideo) (encoders: roqvideo). */
   public static final String ROQ = "roq";
 
   /** QuickTime video (RPZA). */
   public static final String RPZA = "rpza";
 
-  /** innoHeim/Rsupport Screen Capture Codec. */
+  /** InnoHeim/Rsupport Screen Capture Codec. */
   public static final String RSCC = "rscc";
 
   /** RTV1 (RivaTuner Video). */
@@ -731,7 +731,7 @@ public class VideoCodec {
   /** Sierra VMD video. */
   public static final String VMDVIDEO = "vmdvideo";
 
-  /** vMix Video. */
+  /** VMix Video. */
   public static final String VMIX = "vmix";
 
   /** VMware Screen Codec / VMware Video. */
@@ -809,7 +809,7 @@ public class VideoCodec {
   /** Wing Commander IV / Xxan. */
   public static final String XAN_WC4 = "xan_wc4";
 
-  /** eXtended BINary text. */
+  /** EXtended BINary text. */
   public static final String XBIN = "xbin";
 
   /** XBM (X BitMap) image. */

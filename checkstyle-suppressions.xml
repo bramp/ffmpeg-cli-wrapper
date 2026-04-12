@@ -11,12 +11,13 @@
               files="FF|CRC32"/>
 
     <!-- Probe/builder/options/progress fields use snake_case to match FFmpeg's JSON API -->
-    <suppress checks="MemberName"
+    <suppress checks="MemberName|GoogleNonConstantFieldName"
               files="(probe|builder|options|progress)[\\/]"/>
     <suppress checks="ParameterName"
               files="(probe|builder|options|progress)[\\/]"/>
 
     <!-- NUT format parser uses spec-matching names for readability -->
-    <suppress checks="MemberName|ParameterName|LocalVariableName|AbbreviationAsWordInName"
+    <suppress checks="MemberName|ParameterName|LocalVariableName|AbbreviationAsWordInName|GoogleNonConstantFieldName"
               files="nut[\\/]"/>
+
 </suppressions>

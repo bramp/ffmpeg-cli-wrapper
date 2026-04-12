@@ -49,7 +49,7 @@ public class NutDataInputStream implements DataInput {
       more = (b & 0x80) == 0x80;
       result = 128 * result + (b & 0x7F);
 
-      // TODO Check for int overflow
+      // TODO: Check for int overflow
     } while (more);
 
     return result;
@@ -64,7 +64,7 @@ public class NutDataInputStream implements DataInput {
       more = (b & 0x80) == 0x80;
       result = 128 * result + (b & 0x7F);
 
-      // TODO Check for long overflow
+      // TODO: Check for long overflow
     } while (more);
 
     return result;

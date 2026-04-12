@@ -213,10 +213,10 @@ public class AudioCodec {
   /** Monkey's Audio. */
   public static final String APE = "ape";
 
-  /** aptX (Audio Processing Technology for Bluetooth). */
+  /** AptX (Audio Processing Technology for Bluetooth). */
   public static final String APTX = "aptx";
 
-  /** aptX HD (Audio Processing Technology for Bluetooth). */
+  /** AptX HD (Audio Processing Technology for Bluetooth). */
   public static final String APTX_HD = "aptx_hd";
 
   /** ATRAC1 (Adaptive TRansform Acoustic Coding). */
@@ -260,7 +260,7 @@ public class AudioCodec {
   /** Constrained Energy Lapped Transform (CELT). */
   public static final String CELT = "celt";
 
-  /** codec2 (very low bitrate speech codec). */
+  /** Codec2 (very low bitrate speech codec). */
   public static final String CODEC2 = "codec2";
 
   /** RFC 3389 Comfort Noise. */
@@ -344,7 +344,7 @@ public class AudioCodec {
   /** IAC (Indeo Audio Coder). */
   public static final String IAC = "iac";
 
-  /** iLBC (Internet Low Bitrate Codec). */
+  /** ILBC (Internet Low Bitrate Codec). */
   public static final String ILBC = "ilbc";
 
   /** IMC (Intel Music Coder). */

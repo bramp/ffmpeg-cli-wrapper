@@ -13,7 +13,7 @@ public class FFmpegFormat {
   public String format_long_name;
   public double start_time;
 
-  // TODO Change this to java.time.Duration
+  // TODO: Change this to java.time.Duration
   /** Duration in seconds. */
   public double duration;
 

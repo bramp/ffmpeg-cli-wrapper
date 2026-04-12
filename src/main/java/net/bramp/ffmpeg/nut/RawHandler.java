@@ -38,12 +38,12 @@ public class RawHandler {
     // streamHeader.width, streamHeader.height, 1);
     // Raster raster = new Raster(sample, buffer, new Point(0,0));
 
-    int type = BufferedImage.TYPE_INT_ARGB; // TODO Use the type defined in the stream header.
+    int type = BufferedImage.TYPE_INT_ARGB; // TODO: Use the type defined in the stream header.
     BufferedImage img = new BufferedImage(header.width, header.height, type);
 
-    // TODO Avoid this conversion.
+    // TODO: Avoid this conversion.
     int[] data = bytesToInts(frame.data);
-    int stride = header.width; // TODO Check this is true
+    int stride = header.width; // TODO: Check this is true
     img.setRGB(0, 0, header.width, header.height, data, 0, stride);
 
     return img;

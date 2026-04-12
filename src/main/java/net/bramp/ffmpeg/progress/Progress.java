@@ -11,7 +11,7 @@ import org.apache.commons.lang3.math.Fraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO Change to be immutable
+// TODO: Change to be immutable
 /** Represents progress data reported by FFmpeg during encoding. */
 public class Progress {
   static final Logger LOG = LoggerFactory.getLogger(Progress.class);
@@ -62,7 +62,7 @@ public class Progress {
   /** Output file size (in bytes). */
   public long total_size = 0;
 
-  // TODO Change this to a java.time.Duration
+  // TODO: Change this to a java.time.Duration
   /** Output time (in nanoseconds). */
   public long out_time_ns = 0;
 
@@ -184,13 +184,13 @@ public class Progress {
         return false;
 
       case "progress":
-        // TODO After "end" stream is closed
+        // TODO: After "end" stream is closed
         status = Status.of(value);
         return true; // The status field is always last in the record
 
       default:
         if (key.startsWith("stream_")) {
-          // TODO handle stream_0_0_q=0.0:
+          // TODO: handle stream_0_0_q=0.0:
           // stream_%d_%d_q= file_index, index, quality
           // stream_%d_%d_psnr_%c=%2.2f, file_index, index, type{Y, U, V}, quality // Enable with
           // AV_CODEC_FLAG_PSNR

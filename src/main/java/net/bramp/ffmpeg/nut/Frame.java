@@ -10,7 +10,7 @@ import org.apache.commons.lang3.math.Fraction;
 
 /** A video or audio frame. */
 public class Frame {
-  // TODO Change this to a enum
+  // TODO: Change this to a enum
   static final long FLAG_KEY = 1 << 0;
   static final long FLAG_EOR = 1 << 1;
   static final long FLAG_CODED_PTS = 1 << 3;
@@ -47,7 +47,7 @@ public class Frame {
       } else if (type == -2) {
         String k = new String(in.readVarArray(), StandardCharsets.UTF_8);
         String v = new String(in.readVarArray(), StandardCharsets.UTF_8);
-        value = k + "=" + v; // TODO Change this some how
+        value = k + "=" + v; // TODO: Change this some how
 
       } else if (type == -3) {
         value = in.readSignedVarInt();
@@ -57,7 +57,7 @@ public class Frame {
          * t (v coded universal timestamp) tmp v id= tmp % time_base_count value= (tmp /
          * time_base_count) * timeBase[id]
          */
-        value = in.readVarLong(); // TODO Convert to timestamp
+        value = in.readVarLong(); // TODO: Convert to timestamp
 
       } else if (type < -4) {
         long denominator = -type - 4;
@@ -117,7 +117,7 @@ public class Frame {
         pts = coded_pts - (1L << stream.header.msbPtsShift);
       }
     } else {
-      // TODO Test this code path
+      // TODO: Test this code path
       pts = stream.last_pts + fc.ptsDelta;
     }
     stream.last_pts = pts;
@@ -149,7 +149,7 @@ public class Frame {
     if ((flags & FLAG_CHECKSUM) == FLAG_CHECKSUM) {
       @SuppressWarnings("unused")
       long checksum = in.readInt();
-      // TODO Test checksum
+      // TODO: Test checksum
     }
 
     if (size > 4096) {
@@ -158,7 +158,7 @@ public class Frame {
 
     // Now data
     if ((flags & FLAG_SM_DATA) == FLAG_SM_DATA) {
-      // TODO Test this path.
+      // TODO: Test this path.
 
       if (nut.header.version < 4) {
         throw new IOException("Frame SM Data not allowed in version 4 or less");
@@ -178,7 +178,7 @@ public class Frame {
       metaData = null;
     }
 
-    // TODO Use some kind of byte pool
+    // TODO: Use some kind of byte pool
     data = new byte[size];
 
     byte[] elision = nut.header.elision.get(header_idx);

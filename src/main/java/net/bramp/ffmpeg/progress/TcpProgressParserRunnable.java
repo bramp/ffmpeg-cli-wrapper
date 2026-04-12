@@ -41,7 +41,7 @@ class TcpProgressParserRunnable implements Runnable {
 
       } catch (IOException e) {
         // We have no good way to report this back to the user... yet
-        // TODO Report to the user that this failed in some way
+        // TODO: Report to the user that this failed in some way
       }
     }
   }

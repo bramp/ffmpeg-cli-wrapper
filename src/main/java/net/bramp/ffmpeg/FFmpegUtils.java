@@ -63,7 +63,7 @@ public final class FFmpegUtils {
       duration = Math.abs(duration);
     }
 
-    long nanoseconds = units.toNanos(duration); // TODO This will clip at Long.MAX_VALUE
+    long nanoseconds = units.toNanos(duration); // TODO: This will clip at Long.MAX_VALUE
     long seconds = units.toSeconds(duration);
     long ns = nanoseconds - SECONDS.toNanos(seconds);
 

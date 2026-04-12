@@ -293,7 +293,7 @@ public class FFmpeg extends FFcommon {
 
   /** Creates a progress parser for the given listener. */
   protected ProgressParser createProgressParser(ProgressListener listener) throws IOException {
-    // TODO In future create the best kind for this OS, unix socket, named pipe, or TCP.
+    // TODO: In future create the best kind for this OS, unix socket, named pipe, or TCP.
     try {
       // Default to TCP because it is supported across all OSes, and is better than UDP because it
       // provides good properties such as in-order packets, reliability, error checking, etc.

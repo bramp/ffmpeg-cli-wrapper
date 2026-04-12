@@ -58,7 +58,7 @@ public class FFmpegHlsOutputBuilder extends AbstractFFmpegOutputBuilder<FFmpegHl
   }
 
   /**
-   * hls_segment_filename Examples <br>
+   * Sets the HLS segment filename ({@code hls_segment_filename}). Examples: <br>
    * <br>
    * "file%03d.ts" segment files: file000.ts, file001.ts, file002.ts, etc.
    *

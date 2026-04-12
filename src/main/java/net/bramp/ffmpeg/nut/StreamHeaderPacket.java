@@ -14,7 +14,7 @@ public class StreamHeaderPacket extends Packet {
   public static final int USER_DATA = 3;
 
   int id;
-  long type; // One of VIDEO/AUDIO/SUBTITLE/USER_DATA // TODO Convert to enum.
+  long type; // One of VIDEO/AUDIO/SUBTITLE/USER_DATA // TODO: Convert to enum.
   byte[] fourcc;
   int timeBaseId;
   int msbPtsShift;
@@ -47,7 +47,7 @@ public class StreamHeaderPacket extends Packet {
     fourcc = in.readVarArray();
 
     if (fourcc.length != 2 && fourcc.length != 4) {
-      // TODO In future fourcc could be a different size, but for sanity checking lets leave this
+      // TODO: In future fourcc could be a different size, but for sanity checking lets leave this
       // check in.
       throw new IOException("Unexpected fourcc length: " + fourcc.length);
     }

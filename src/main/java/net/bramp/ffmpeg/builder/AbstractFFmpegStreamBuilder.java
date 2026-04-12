@@ -104,7 +104,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   public long targetSize = 0; // in bytes
   public long pass_padding_bitrate = 1024; // in bits per second
 
-  public boolean throwWarnings = true; // TODO Either delete this, or apply it consistently
+  public boolean throwWarnings = true; // TODO: Either delete this, or apply it consistently
 
   /** Constructs a stream builder with no parent. */
   protected AbstractFFmpegStreamBuilder() {
@@ -759,7 +759,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
       args.add("-s", String.format("%dx%d", video_width, video_height));
     }
 
-    // TODO What if width is set but heigh isn't. We don't seem to do anything
+    // TODO: What if width is set but heigh isn't. We don't seem to do anything
 
     if (video_frame_rate != null) {
       args.add("-r", video_frame_rate.toString());

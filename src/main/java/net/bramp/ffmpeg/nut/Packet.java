@@ -86,7 +86,7 @@ public class Packet {
     if (current > header.end) {
       throw new IOException("Can not seek backwards at:" + current + " end:" + header.end);
     }
-    // TODO Fix this to not cast longs to ints
+    // TODO: Fix this to not cast longs to ints
     in.skipBytes((int) (header.end - current));
   }
 
