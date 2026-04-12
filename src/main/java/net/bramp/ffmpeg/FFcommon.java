@@ -72,7 +72,7 @@ abstract class FFcommon {
   protected void throwOnError(Process p) throws IOException {
     try {
       if (ProcessUtils.waitForWithTimeout(p, 1, TimeUnit.SECONDS) != 0) {
-        // TODO Parse the error
+        // TODO: Parse the error
         throw new IOException(path + " returned non-zero exit status. Check stdout.");
       }
     } catch (TimeoutException e) {
@@ -83,7 +83,7 @@ abstract class FFcommon {
   protected void throwOnError(Process p, FFmpegProbeResult result) throws IOException {
     try {
       if (ProcessUtils.waitForWithTimeout(p, 1, TimeUnit.SECONDS) != 0) {
-        // TODO Parse the error
+        // TODO: Parse the error
         final FFmpegError ffmpegError = null == result ? null : result.getError();
         throw new FFmpegException(
             path + " returned non-zero exit status. Check stdout.", ffmpegError);
@@ -143,7 +143,7 @@ abstract class FFcommon {
     assert (p != null);
 
     try {
-      // TODO Move the copy onto a thread, so that FFmpegProgressListener can be on this thread.
+      // TODO: Move the copy onto a thread, so that FFmpegProgressListener can be on this thread.
 
       // Now block reading ffmpeg's stdout. We are effectively throwing away the output.
       CharStreams.copy(wrapInReader(p), processOutputStream);

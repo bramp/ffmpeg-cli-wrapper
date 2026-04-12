@@ -8,7 +8,7 @@ public class Stream {
   final StreamHeaderPacket header;
 
   final Fraction timeBase;
-  long last_pts = 0;
+  long lastPts = 0;
 
   /** Constructs a new stream from the given main header and stream header. */
   public Stream(MainHeaderPacket header, StreamHeaderPacket streamHeader) throws IOException {

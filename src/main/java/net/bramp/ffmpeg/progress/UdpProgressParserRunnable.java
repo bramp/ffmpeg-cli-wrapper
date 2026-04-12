@@ -33,7 +33,7 @@ class UdpProgressParserRunnable implements Runnable {
       startSignal.countDown();
 
       try {
-        // TODO This doesn't handle the case of a progress being split across two packets
+        // TODO: This doesn't handle the case of a progress being split across two packets
         socket.receive(packet);
 
         if (packet.getLength() == 0) {
@@ -49,7 +49,7 @@ class UdpProgressParserRunnable implements Runnable {
 
       } catch (IOException e) {
         // We have no good way to report this back to the user... yet
-        // TODO Report to the user that this failed in some way
+        // TODO: Report to the user that this failed in some way
       }
     }
   }

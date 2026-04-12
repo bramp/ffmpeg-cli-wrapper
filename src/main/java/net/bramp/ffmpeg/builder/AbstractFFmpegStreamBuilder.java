@@ -93,7 +93,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
 
   public boolean subtitle_enabled = true;
   public String subtitle_preset;
-  private String subtitle_codec;
+  private String subtitleCodec;
 
   public String preset;
   public String presetFilename;
@@ -104,7 +104,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   public long targetSize = 0; // in bytes
   public long pass_padding_bitrate = 1024; // in bits per second
 
-  public boolean throwWarnings = true; // TODO Either delete this, or apply it consistently
+  public boolean throwWarnings = true; // TODO: Either delete this, or apply it consistently
 
   /** Constructs a stream builder with no parent. */
   protected AbstractFFmpegStreamBuilder() {
@@ -459,7 +459,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
   /** Sets the subtitle codec. */
   public T setSubtitleCodec(String codec) {
     this.subtitle_enabled = true;
-    this.subtitle_codec = checkNotEmpty(codec, "codec must not be empty");
+    this.subtitleCodec = checkNotEmpty(codec, "codec must not be empty");
     return getThis();
   }
 
@@ -657,8 +657,8 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
     }
 
     if (subtitle_enabled) {
-      if (!Strings.isNullOrEmpty(subtitle_codec)) {
-        args.add("-scodec", subtitle_codec);
+      if (!Strings.isNullOrEmpty(subtitleCodec)) {
+        args.add("-scodec", subtitleCodec);
       }
       if (!Strings.isNullOrEmpty(subtitle_preset)) {
         args.add("-spre", subtitle_preset);
@@ -759,7 +759,7 @@ public abstract class AbstractFFmpegStreamBuilder<T extends AbstractFFmpegStream
       args.add("-s", String.format("%dx%d", video_width, video_height));
     }
 
-    // TODO What if width is set but heigh isn't. We don't seem to do anything
+    // TODO: What if width is set but heigh isn't. We don't seem to do anything
 
     if (video_frame_rate != null) {
       args.add("-r", video_frame_rate.toString());

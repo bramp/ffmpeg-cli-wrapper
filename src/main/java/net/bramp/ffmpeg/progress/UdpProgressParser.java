@@ -31,7 +31,7 @@ public class UdpProgressParser extends AbstractSocketProgressParser {
     this.address = createUri("udp", socket.getLocalAddress(), socket.getLocalPort());
 
     this.socket.setBroadcast(false);
-    // this.socket.setSoTimeout(); // TODO Setup timeouts
+    // this.socket.setSoTimeout(); // TODO: Setup timeouts
   }
 
   @Override

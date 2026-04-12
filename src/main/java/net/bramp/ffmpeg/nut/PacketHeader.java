@@ -20,7 +20,7 @@ public class PacketHeader {
       long expected = in.getCRC();
       checksum = in.readInt();
       if (checksum != expected) {
-        // TODO This code path has never been tested.
+        // TODO: This code path has never been tested.
         throw new IOException(
             String.format("invalid header checksum %X want %X", expected, checksum));
       }

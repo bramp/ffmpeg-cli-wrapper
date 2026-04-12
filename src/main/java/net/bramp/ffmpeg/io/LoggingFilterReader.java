@@ -26,7 +26,7 @@ public class LoggingFilterReader extends FilterReader {
   /** Logs the contents of the buffer and resets it. */
   protected void log() {
     if (buffer.length() > 0) {
-      // TODO Change from debug, to a user defined level
+      // TODO: Change from debug, to a user defined level
       logger.debug(buffer.toString());
       buffer.setLength(0);
     }

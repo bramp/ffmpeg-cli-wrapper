@@ -18,12 +18,12 @@ public class FractionAdapter extends TypeAdapter<Fraction> {
 
   /** If set, 0/0 returns this value, instead of throwing a ArithmeticException. */
   @SuppressWarnings(
-      "Immutable") // TODO Remove when https://github.com/google/error-prone/issues/512 is fixed
+      "Immutable") // TODO: Remove when https://github.com/google/error-prone/issues/512 is fixed
   private final Fraction zeroByZero;
 
   /** If set, N/0 returns this value, instead of throwing a ArithmeticException. */
   @SuppressWarnings(
-      "Immutable") // TODO Remove when https://github.com/google/error-prone/issues/512 is fixed
+      "Immutable") // TODO: Remove when https://github.com/google/error-prone/issues/512 is fixed
   private final Fraction divideByZero;
 
   /** Constructs a FractionAdapter with default zero values for edge cases. */
