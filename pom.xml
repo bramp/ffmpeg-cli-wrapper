@@ -292,7 +292,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>13.4.0</version>
+                            <version>13.4.2</version>
                         </dependency>
                     </dependencies>
                     <configuration>
@@ -561,7 +561,7 @@
                     <dependency>
                         <groupId>org.glassfish.grizzly</groupId>
                         <artifactId>grizzly-http-server</artifactId>
-                        <version>5.0.0</version>
+                        <version>5.0.1</version>
                     </dependency>
                 </dependencies>
             </dependencyManagement>
