@@ -21,8 +21,8 @@ public class FFmpegStreamSideDataAdapter implements JsonDeserializer<FFmpegStrea
     }
     try {
       Object sideData =
-          Class.forName(FFmpegStream.SideData.class.getName()).getConstructor().newInstance();
-      Field[] fields = Class.forName(FFmpegStream.SideData.class.getName()).getFields();
+          FFmpegStream.SideData.class.getConstructor().newInstance();
+      Field[] fields = FFmpegStream.SideData.class.getFields();
       for (Field field : fields) {
         String fieldName = field.getName();
         AnnotatedType annotatedType = field.getAnnotatedType();
