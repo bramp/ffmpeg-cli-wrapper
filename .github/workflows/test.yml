@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Format Check
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up JDK 21
         uses: actions/setup-java@v5
@@ -36,7 +36,7 @@ jobs:
     name: Test JDK ${{ matrix.java-version }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up FFmpeg
         uses: Wandalen/wretry.action@v3.8.0

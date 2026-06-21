@@ -18,7 +18,7 @@ jobs:
     name: JDK ${{ matrix.java-version }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up FFmpeg
         uses: FedericoCarboni/setup-ffmpeg@v3
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: publish
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up JDK 21
         uses: actions/setup-java@v5
@@ -84,7 +84,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up JDK 21
         uses: actions/setup-java@v5
