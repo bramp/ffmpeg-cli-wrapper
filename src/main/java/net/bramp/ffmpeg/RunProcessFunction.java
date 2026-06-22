@@ -1,6 +1,5 @@
 package net.bramp.ffmpeg;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import java.io.File;
 import java.io.IOException;
@@ -25,8 +24,8 @@ public class RunProcessFunction implements ProcessFunction {
     Preconditions.checkNotNull(args, "Arguments must not be null");
     Preconditions.checkArgument(!args.isEmpty(), "No arguments specified");
 
-    if (LOG.isInfoEnabled()) {
-      LOG.info("{}", Joiner.on(" ").join(args));
+    for (String arg : args) {
+      Preconditions.checkArgument(!isUnsafeArg(arg), "Unsafe protocol specifier in argument");
     }
 
     ProcessBuilder builder = new ProcessBuilder(args);
@@ -35,6 +34,11 @@ public class RunProcessFunction implements ProcessFunction {
     }
     builder.redirectErrorStream(true);
     return builder.start();
+  }
+
+  private static boolean isUnsafeArg(String arg) {
+    return arg.regionMatches(true, 0, "data://", 0, 7)
+        || arg.regionMatches(true, 0, "gopher://", 0, 9);
   }
 
   /** Sets the working directory for the process using a path string. */
