@@ -73,8 +73,7 @@ public class UdpProgressParserTest extends AbstractProgressParserTest {
   }
 
   @Test
-  public void testMalformedProgressPackets()
-      throws IOException, InterruptedException {
+  public void testMalformedProgressPackets() throws IOException, InterruptedException {
     parser.start();
 
     final InetAddress addr = InetAddress.getByName(uri.getHost());

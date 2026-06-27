@@ -70,8 +70,7 @@ public class TcpProgressParserTest extends AbstractProgressParserTest {
   }
 
   @Test
-  public void testMalformedProgressPackets()
-      throws IOException, InterruptedException {
+  public void testMalformedProgressPackets() throws IOException, InterruptedException {
     parser.start();
 
     Socket client = new Socket(uri.getHost(), uri.getPort());

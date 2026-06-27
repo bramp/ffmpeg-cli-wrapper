@@ -208,7 +208,7 @@ public class Progress {
         } catch (NumberFormatException e) {
           logger.warn("Failed to parse speed: {}", value);
           speed = -1;
-      }
+        }
         return false;
 
       case "progress":
