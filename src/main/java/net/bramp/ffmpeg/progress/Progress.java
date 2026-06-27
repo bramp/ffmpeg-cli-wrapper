@@ -85,7 +85,7 @@ public class Progress {
   /** Constructs a progress instance with the specified values. */
   public Progress(
       long frame,
-      float fps,
+      Fraction fps,
       long bitrate,
       long total_size,
       long out_time_ns,
@@ -94,7 +94,7 @@ public class Progress {
       float speed,
       Status status) {
     this.frame = frame;
-    this.fps = Fraction.getFraction(fps);
+    this.fps = fps;
     this.bitrate = bitrate;
     this.total_size = total_size;
     this.out_time_ns = out_time_ns;
