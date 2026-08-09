@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 // TODO: Change to be immutable
 /** Represents progress data reported by FFmpeg during encoding. */
 public class Progress {
-  static final Logger LOG = LoggerFactory.getLogger(Progress.class);
+  static final Logger logger = LoggerFactory.getLogger(Progress.class);
 
   /** Enum representing the status of FFmpeg progress updates. */
   public enum Status {
@@ -85,7 +85,7 @@ public class Progress {
   /** Constructs a progress instance with the specified values. */
   public Progress(
       long frame,
-      float fps,
+      Fraction fps,
       long bitrate,
       long total_size,
       long out_time_ns,
@@ -94,7 +94,7 @@ public class Progress {
       float speed,
       Status status) {
     this.frame = frame;
-    this.fps = Fraction.getFraction(fps);
+    this.fps = fps;
     this.bitrate = bitrate;
     this.total_size = total_size;
     this.out_time_ns = out_time_ns;
@@ -108,7 +108,7 @@ public class Progress {
    * Parses values from the line, into this object.
    *
    * <p>The value options are defined in ffmpeg.c's print_report function
-   * https://github.com/FFmpeg/FFmpeg/blob/master/ffmpeg.c
+   * https://github.com/FFmpeg/FFmpeg/blob/master/fftools/ffmpeg.c
    *
    * @param line A single line of output from ffmpeg
    * @return true if the record is finished
@@ -130,26 +130,38 @@ public class Progress {
 
     switch (key) {
       case "frame":
-        frame = Long.parseLong(value);
+        try {
+          frame = Long.parseLong(value);
+        } catch (NumberFormatException e) {
+          logger.warn("Failed to parse frame: {}", value);
+          frame = -1;
+        }
         return false;
 
       case "fps":
-        fps = Fraction.getFraction(value);
+        try {
+          fps = Fraction.getFraction(value);
+        } catch (NumberFormatException e) {
+          logger.warn("Failed to parse fps: {}", value);
+          fps = null;
+        }
         return false;
 
       case "bitrate":
-        if (value.equals("N/A")) {
-          bitrate = -1;
-        } else {
+        try {
           bitrate = FFmpegUtils.parseBitrate(value);
+        } catch (IllegalArgumentException e) {
+          logger.warn("Failed to parse bitrate: {}", value);
+          bitrate = -1;
         }
         return false;
 
       case "total_size":
-        if (value.equals("N/A")) {
-          total_size = -1;
-        } else {
+        try {
           total_size = Long.parseLong(value);
+        } catch (NumberFormatException e) {
+          logger.warn("Failed to parse total_size: {}", value);
+          total_size = -1;
         }
         return false;
 
@@ -164,28 +176,48 @@ public class Progress {
         return false;
 
       case "out_time":
-        out_time_ns = fromTimecode(value);
+        try {
+          out_time_ns = fromTimecode(value);
+        } catch (IllegalArgumentException e) {
+          logger.warn("Failed to parse out_time: {}", value);
+          out_time_ns = -1;
+        }
         return false;
 
       case "dup_frames":
-        dup_frames = Long.parseLong(value);
+        try {
+          dup_frames = Long.parseLong(value);
+        } catch (NumberFormatException e) {
+          logger.warn("Failed to parse dup_frames: {}", value);
+          dup_frames = -1;
+        }
         return false;
 
       case "drop_frames":
-        drop_frames = Long.parseLong(value);
+        try {
+          drop_frames = Long.parseLong(value);
+        } catch (NumberFormatException e) {
+          logger.warn("Failed to parse drop_frames: {}", value);
+          drop_frames = -1;
+        }
         return false;
 
       case "speed":
-        if (value.equals("N/A")) {
-          speed = -1;
-        } else {
+        try {
           speed = Float.parseFloat(value.replace("x", ""));
+        } catch (NumberFormatException e) {
+          logger.warn("Failed to parse speed: {}", value);
+          speed = -1;
         }
         return false;
 
       case "progress":
         // TODO: After "end" stream is closed
-        status = Status.of(value);
+        try {
+          status = Status.of(value);
+        } catch (IllegalArgumentException e) {
+          logger.warn("Failed to parse progress status: {}", value);
+        }
         return true; // The status field is always last in the record
 
       default:
@@ -196,7 +228,7 @@ public class Progress {
           // AV_CODEC_FLAG_PSNR
           // stream_%d_%d_psnr_all
         } else {
-          LOG.warn("skipping unhandled key: {} = {}", key, value);
+          logger.warn("Skipping unhandled key: {} = {}", key, value);
         }
 
         return false; // Either way, not supported
