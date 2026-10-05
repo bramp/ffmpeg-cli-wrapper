@@ -36,4 +36,16 @@ public class StreamProgressParserTest {
 
     assertThat(listener.progesses, equalTo(Progresses.naProgresses));
   }
+
+  @Test
+  public void testMalformedProgressPackets() throws IOException {
+    listener.reset();
+
+    StreamProgressParser parser = new StreamProgressParser(listener);
+
+    InputStream inputStream = combineResource(Progresses.malformedProgressFile);
+    parser.processStream(inputStream);
+
+    assertThat(listener.progesses, equalTo(Progresses.malformedProgresses));
+  }
 }

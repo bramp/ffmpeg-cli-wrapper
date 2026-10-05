@@ -24,7 +24,7 @@ public class TcpProgressParserTest extends AbstractProgressParserTest {
   }
 
   @Test
-  public void testNormal() throws IOException, InterruptedException, URISyntaxException {
+  public void testNormal() throws IOException, InterruptedException {
     parser.start();
 
     Socket client = new Socket(uri.getHost(), uri.getPort());
@@ -47,7 +47,7 @@ public class TcpProgressParserTest extends AbstractProgressParserTest {
   }
 
   @Test
-  public void testNaProgressPackets() throws IOException, InterruptedException, URISyntaxException {
+  public void testNaProgressPackets() throws IOException, InterruptedException {
     parser.start();
 
     Socket client = new Socket(uri.getHost(), uri.getPort());
@@ -67,6 +67,29 @@ public class TcpProgressParserTest extends AbstractProgressParserTest {
 
     assertThat(bytes, greaterThan(0L));
     assertThat(progesses, equalTo(Progresses.naProgresses));
+  }
+
+  @Test
+  public void testMalformedProgressPackets() throws IOException, InterruptedException {
+    parser.start();
+
+    Socket client = new Socket(uri.getHost(), uri.getPort());
+    assertTrue("Socket is connected", client.isConnected());
+
+    InputStream inputStream = combineResource(Progresses.malformedProgressFile);
+    OutputStream outputStream = client.getOutputStream();
+
+    long bytes = ByteStreams.copy(inputStream, outputStream);
+
+    // HACK, but give the TcpProgressParser thread time to actually handle the connection/data
+    // before the client is closed, and the parser is stopped.
+    Thread.sleep(100);
+
+    client.close();
+    parser.stop();
+
+    assertThat(bytes, greaterThan(0L));
+    assertThat(progesses, equalTo(Progresses.malformedProgresses));
   }
 
   @Test
