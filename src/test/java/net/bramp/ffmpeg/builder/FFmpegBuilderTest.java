@@ -455,10 +455,14 @@ public class FFmpegBuilderTest {
   @Test
   public void testVbr() {
     List<String> args =
-        new FFmpegBuilder().setInput("input").done().setVBR(2).addOutput("output").done().build();
+        new FFmpegBuilder().setInput("input").done().setVbr(2).addOutput("output").done().build();
 
     assertEquals(
         args, ImmutableList.of("-y", "-v", "error", "-i", "input", "-qscale:a", "2", "output"));
+
+    List<String> legacyArgs =
+        new FFmpegBuilder().setInput("input").done().setVBR(2).addOutput("output").done().build();
+    assertEquals(args, legacyArgs);
   }
 
   @Test(expected = IllegalArgumentException.class)

@@ -174,9 +174,19 @@ public abstract class AbstractFFmpegOutputBuilder<T extends AbstractFFmpegOutput
    * @param bFrames number of b-frames
    * @return this
    */
-  public T setBFrames(int bFrames) {
+  public T setBframes(int bFrames) {
     this.bFrames = bFrames;
     return (T) this;
+  }
+
+  /**
+   * Sets the number of b-frames using the original method name.
+   *
+   * @param bFrames number of b-frames
+   * @return this
+   */
+  public T setBFrames(int bFrames) {
+    return setBframes(bFrames);
   }
 
   /**

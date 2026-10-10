@@ -88,6 +88,8 @@ public class FFprobeTest {
         "ffprobe version 3.0.2 Copyright (c) 2007-2016 the FFmpeg developers", ffprobe.version());
     assertEquals(
         "ffprobe version 3.0.2 Copyright (c) 2007-2016 the FFmpeg developers", ffprobe.version());
+    assertTrue(ffprobe.isFfprobe());
+    assertTrue(ffprobe.isFFprobe());
 
     verify(runFunc, times(1)).run(argThatHasItem("-version"));
   }
@@ -629,6 +631,7 @@ public class FFprobeTest {
     assertEquals(1280, stream.getWidth());
     assertEquals(720, stream.getHeight());
     assertEquals(0, stream.getHasBFrames());
+    assertEquals(stream.getHasBFrames(), stream.getHasBframes());
     assertEquals("1:1", stream.getSampleAspectRatio());
     assertEquals("16:9", stream.getDisplayAspectRatio());
     assertEquals("yuv420p", stream.getPixFmt());
@@ -639,6 +642,7 @@ public class FFprobeTest {
     assertEquals("4", stream.getNalLengthSize());
     assertEquals("0x1", stream.getId());
     assertEquals(Fraction.getFraction(25, 1), stream.getRFrameRate());
+    assertEquals(stream.getRFrameRate(), stream.getRframeRate());
     assertEquals(Fraction.getFraction(25, 1), stream.getAvgFrameRate());
     assertEquals(Fraction.getFraction(1, 12800), stream.getTimeBase());
     assertEquals(0, stream.getStartPts());
