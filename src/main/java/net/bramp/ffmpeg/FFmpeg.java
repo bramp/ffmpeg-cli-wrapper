@@ -70,7 +70,7 @@ public class FFmpeg extends FFcommon {
 
   static final Pattern CODECS_REGEX =
       Pattern.compile("^ ([.D][.E][VASD][.I][.L][.S]) (\\S{2,})\\s+(.*)$");
-  static final Pattern FORMATS_REGEX = Pattern.compile("^ ([ D][ E]) (\\S+)\\s+(.*)$");
+  static final Pattern FORMATS_REGEX = Pattern.compile("^ ([ D][ E])[ d]? (\\S+)\\s+(.*)$");
   static final Pattern PIXEL_FORMATS_REGEX =
       Pattern.compile("^([.I][.O][.H][.P][.B]) (\\S{2,})\\s+(\\d+)\\s+(\\d+)$");
   static final Pattern FILTERS_REGEX =

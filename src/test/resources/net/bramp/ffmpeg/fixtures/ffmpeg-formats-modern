@@ -1,0 +1,19 @@
+File formats:
+ D.. = Demuxing supported
+ .E. = Muxing supported
+ ..d = Is a device
+ ---
+
+ D   aac             raw ADTS AAC (Advanced Audio Coding)
+  E  adts            ADTS AAC (Advanced Audio Coding)
+ DE  matroska,webm   Matroska / WebM
+ D d avfoundation    AVFoundation input device
+  Ed audiotoolbox    AudioToolbox output device
+ DEd alsa            ALSA audio output
+
+unrelated text
+ X   invalid         Unexpected demux capability
+ DX  invalid         Unexpected mux capability
+ DEx invalid         Unexpected device capability
+ DE
+ DEd
