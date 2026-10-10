@@ -18,6 +18,7 @@ import net.bramp.ffmpeg.fixtures.Formats;
 import net.bramp.ffmpeg.fixtures.PixelFormats;
 import net.bramp.ffmpeg.fixtures.Samples;
 import net.bramp.ffmpeg.info.Filter;
+import net.bramp.ffmpeg.info.Format;
 import net.bramp.ffmpeg.lang.NewProcessAnswer;
 import org.junit.Before;
 import org.junit.Test;
@@ -118,6 +119,26 @@ public class FFmpegTest {
     // Run twice, the second should be cached
     assertEquals(Formats.FORMATS, ffmpeg.formats());
     assertEquals(Formats.FORMATS, ffmpeg.formats());
+
+    verify(runFunc, times(1)).run(argThatHasItem("-formats"));
+  }
+
+  @Test
+  public void testFormatsModern() throws IOException {
+    when(runFunc.run(argThatHasItem("-formats")))
+        .thenAnswer(new NewProcessAnswer("ffmpeg-formats-modern"));
+    List<Format> expected =
+        Lists.newArrayList(
+            new Format("aac", "raw ADTS AAC (Advanced Audio Coding)", "D "),
+            new Format("adts", "ADTS AAC (Advanced Audio Coding)", " E"),
+            new Format("matroska,webm", "Matroska / WebM", "DE"),
+            new Format("avfoundation", "AVFoundation input device", "D "),
+            new Format("audiotoolbox", "AudioToolbox output device", " E"),
+            new Format("alsa", "ALSA audio output", "DE"));
+
+    // Run twice, the second should be cached
+    assertEquals(expected, ffmpeg.formats());
+    assertEquals(expected, ffmpeg.formats());
 
     verify(runFunc, times(1)).run(argThatHasItem("-formats"));
   }
