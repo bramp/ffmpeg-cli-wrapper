@@ -327,10 +327,20 @@ public class FFmpegBuilder {
    * @param quality the quality between 0 and 9. Where 0 is best.
    * @return FFmpegBuilder
    */
-  public FFmpegBuilder setVBR(Integer quality) {
+  public FFmpegBuilder setVbr(Integer quality) {
     Preconditions.checkArgument(quality > 0 && quality < 9, "vbr must be between 0 and 9");
     this.qscale = quality;
     return this;
+  }
+
+  /**
+   * Sets the VBR quality using the original method name.
+   *
+   * @param quality the quality between 0 and 9. Where 0 is best.
+   * @return this
+   */
+  public FFmpegBuilder setVBR(Integer quality) {
+    return setVbr(quality);
   }
 
   /**

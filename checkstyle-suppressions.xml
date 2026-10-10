@@ -16,6 +16,24 @@
     <suppress checks="ParameterName"
               files="(probe|builder|options|progress)[\\/]"/>
 
+    <!-- Retain existing public method names while providing Google-style alternatives. -->
+    <suppress checks="GoogleMethodName" files="FFmpegStream\.java"
+              message="Method name 'getHasBFrames'.*"/>
+    <suppress checks="GoogleMethodName" files="FFmpegStream\.java"
+              message="Method name 'getRFrameRate'.*"/>
+    <suppress checks="GoogleMethodName" files="FFmpegBuilder\.java"
+              message="Method name 'setVBR'.*"/>
+    <suppress checks="GoogleMethodName" files="AbstractFFmpegOutputBuilder\.java"
+              message="Method name 'setBFrames'.*"/>
+    <suppress files="FFmpeg\.java" checks="GoogleMethodName"
+              message="Method name 'isFFmpeg'.*"/>
+    <suppress files="FFprobe\.java" checks="GoogleMethodName"
+              message="Method name 'isFFprobe'.*"/>
+    <suppress files="NutDataInputStream\.java" checks="GoogleMethodName"
+              message="Method name 'resetCRC'.*"/>
+    <suppress files="NutDataInputStream\.java" checks="GoogleMethodName"
+              message="Method name 'getCRC'.*"/>
+
     <!-- NUT format parser uses spec-matching names for readability -->
     <suppress checks="MemberName|ParameterName|LocalVariableName|AbbreviationAsWordInName|GoogleNonConstantFieldName"
               files="nut[\\/]"/>

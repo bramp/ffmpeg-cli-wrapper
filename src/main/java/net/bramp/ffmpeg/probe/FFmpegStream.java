@@ -110,8 +110,13 @@ public class FFmpegStream {
     return height;
   }
 
-  public int getHasBFrames() {
+  public int getHasBframes() {
     return has_b_frames;
+  }
+
+  /** Returns the number of B-frames, preserving the original method name. */
+  public int getHasBFrames() {
+    return getHasBframes();
   }
 
   public String getSampleAspectRatio() {
@@ -150,8 +155,13 @@ public class FFmpegStream {
     return id;
   }
 
-  public Fraction getRFrameRate() {
+  public Fraction getRframeRate() {
     return r_frame_rate;
+  }
+
+  /** Returns the real frame rate, preserving the original method name. */
+  public Fraction getRFrameRate() {
+    return getRframeRate();
   }
 
   public Fraction getAvgFrameRate() {

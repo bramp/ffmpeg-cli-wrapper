@@ -2,6 +2,7 @@ package net.bramp.ffmpeg;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
@@ -60,6 +61,8 @@ public class FFmpegTest {
   public void testVersion() throws Exception {
     assertEquals("ffmpeg version 0.10.9-7:0.10.9-1~raring1", ffmpeg.version());
     assertEquals("ffmpeg version 0.10.9-7:0.10.9-1~raring1", ffmpeg.version());
+    assertTrue(ffmpeg.isFfmpeg());
+    assertTrue(ffmpeg.isFFmpeg());
 
     verify(runFunc, times(1)).run(argThatHasItem("-version"));
   }

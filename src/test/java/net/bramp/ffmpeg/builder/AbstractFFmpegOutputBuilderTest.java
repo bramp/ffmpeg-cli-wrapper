@@ -92,7 +92,9 @@ public abstract class AbstractFFmpegOutputBuilderTest extends AbstractFFmpegStre
   @Test
   public void testSetBFrames() {
     List<String> command = getBuilder().setBFrames(2).build(0);
+    List<String> styledCommand = getBuilder().setBframes(2).build(0);
 
     assertThat(removeCommon(command), is(ImmutableList.of("-bf", "2")));
+    assertThat(removeCommon(styledCommand), is(ImmutableList.of("-bf", "2")));
   }
 }
