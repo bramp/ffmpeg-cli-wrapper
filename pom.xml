@@ -91,7 +91,7 @@
             <dependency>
                 <groupId>org.modelmapper</groupId>
                 <artifactId>modelmapper</artifactId>
-                <version>3.2.6</version>
+                <version>3.2.7</version>
             </dependency>
 
             <!-- Test Scope -->
