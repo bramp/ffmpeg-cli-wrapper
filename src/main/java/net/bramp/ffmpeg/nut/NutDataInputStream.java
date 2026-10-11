@@ -29,25 +29,15 @@ public class NutDataInputStream implements DataInput {
   }
 
   /** Resets the CRC32 checksum for a new calculation range. */
-  public void resetCrc() {
+  public void resetCRC() {
     startCrcRange = count.getCount();
     crc.resetCrc();
   }
 
-  /** Resets the CRC32 checksum using the original method name. */
-  public void resetCRC() {
-    resetCrc();
-  }
-
   /** Returns the current CRC32 checksum value. */
-  public long getCrc() {
+  public long getCRC() {
     endCrcRange = count.getCount();
     return crc.getValue();
-  }
-
-  /** Returns the CRC32 checksum using the original method name. */
-  public long getCRC() {
-    return getCrc();
   }
 
   /** Reads a variable-length encoded integer up to 32 bits. */

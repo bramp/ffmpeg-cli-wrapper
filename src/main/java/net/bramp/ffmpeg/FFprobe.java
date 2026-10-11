@@ -108,13 +108,8 @@ public class FFprobe extends FFcommon {
    * @return true iff this is the official ffprobe binary.
    * @throws IOException If a I/O error occurs while executing ffprobe.
    */
-  public boolean isFfprobe() throws IOException {
-    return version().startsWith("ffprobe");
-  }
-
-  /** Returns whether this is ffprobe, preserving the original method name. */
   public boolean isFFprobe() throws IOException {
-    return isFfprobe();
+    return version().startsWith("ffprobe");
   }
 
   /**

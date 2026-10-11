@@ -16,7 +16,7 @@
     <suppress checks="ParameterName"
               files="(probe|builder|options|progress)[\\/]"/>
 
-    <!-- Retain existing public method names while providing Google-style alternatives. -->
+    <!-- Keep established public method names exempt from Google's naming rule. -->
     <suppress checks="GoogleMethodName" files="FFmpegStream\.java"
               message="Method name 'getHasBFrames'.*"/>
     <suppress checks="GoogleMethodName" files="FFmpegStream\.java"

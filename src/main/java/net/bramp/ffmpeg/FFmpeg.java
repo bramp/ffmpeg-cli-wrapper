@@ -124,13 +124,8 @@ public class FFmpeg extends FFcommon {
    * @return true iff this is the official ffmpeg binary.
    * @throws IOException If a I/O error occurs while executing ffmpeg.
    */
-  public boolean isFfmpeg() throws IOException {
-    return version().startsWith("ffmpeg");
-  }
-
-  /** Returns whether this is ffmpeg, preserving the original method name. */
   public boolean isFFmpeg() throws IOException {
-    return isFfmpeg();
+    return version().startsWith("ffmpeg");
   }
 
   /**
