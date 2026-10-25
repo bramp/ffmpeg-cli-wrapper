@@ -77,7 +77,7 @@ public class FFprobe extends FFcommon {
   // TODO: Add Probe Inputstream
   /** Probes media using the supplied arguments and returns the result. */
   public FFmpegProbeResult probe(List<String> args) throws IOException {
-    checkIfFFprobe();
+    checkIfFfprobe();
 
     Process p = runFunc.run(path(args));
     try {
@@ -118,7 +118,7 @@ public class FFprobe extends FFcommon {
    * @throws IllegalArgumentException if this is not the official ffprobe binary.
    * @throws IOException If a I/O error occurs while executing ffprobe.
    */
-  private void checkIfFFprobe() throws IllegalArgumentException, IOException {
+  private void checkIfFfprobe() throws IllegalArgumentException, IOException {
     if (!isFFprobe()) {
       throw new IllegalArgumentException(
           "This binary '" + path + "' is not a supported version of ffprobe");
@@ -127,7 +127,7 @@ public class FFprobe extends FFcommon {
 
   @Override
   public void run(List<String> args) throws IOException {
-    checkIfFFprobe();
+    checkIfFfprobe();
     super.run(args);
   }
 

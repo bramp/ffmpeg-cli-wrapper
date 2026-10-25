@@ -88,6 +88,7 @@ public class FFprobeTest {
         "ffprobe version 3.0.2 Copyright (c) 2007-2016 the FFmpeg developers", ffprobe.version());
     assertEquals(
         "ffprobe version 3.0.2 Copyright (c) 2007-2016 the FFmpeg developers", ffprobe.version());
+    assertTrue(ffprobe.isFFprobe());
 
     verify(runFunc, times(1)).run(argThatHasItem("-version"));
   }
