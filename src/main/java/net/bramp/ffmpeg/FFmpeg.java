@@ -134,7 +134,7 @@ public class FFmpeg extends FFcommon {
    * @throws IllegalArgumentException if this is not the official ffmpeg binary.
    * @throws IOException If a I/O error occurs while executing ffmpeg.
    */
-  private void checkIfFFmpeg() throws IllegalArgumentException, IOException {
+  private void checkIfFfmpeg() throws IllegalArgumentException, IOException {
     if (!isFFmpeg()) {
       throw new IllegalArgumentException(
           "This binary '" + path + "' is not a supported version of ffmpeg");
@@ -143,7 +143,7 @@ public class FFmpeg extends FFcommon {
 
   /** Returns the list of supported codecs. */
   public synchronized @Nonnull List<Codec> codecs() throws IOException {
-    checkIfFFmpeg();
+    checkIfFfmpeg();
 
     if (this.codecs == null) {
       codecs = new ArrayList<>();
@@ -173,7 +173,7 @@ public class FFmpeg extends FFcommon {
 
   /** Returns the list of supported filters. */
   public synchronized @Nonnull List<Filter> filters() throws IOException {
-    checkIfFFmpeg();
+    checkIfFfmpeg();
 
     if (this.filters == null) {
       filters = new ArrayList<>();
@@ -213,7 +213,7 @@ public class FFmpeg extends FFcommon {
 
   /** Returns the list of supported formats. */
   public synchronized @Nonnull List<Format> formats() throws IOException {
-    checkIfFFmpeg();
+    checkIfFfmpeg();
 
     if (this.formats == null) {
       formats = new ArrayList<>();
@@ -242,7 +242,7 @@ public class FFmpeg extends FFcommon {
 
   /** Returns the list of supported pixel formats. */
   public synchronized List<PixelFormat> pixelFormats() throws IOException {
-    checkIfFFmpeg();
+    checkIfFfmpeg();
 
     if (this.pixelFormats == null) {
       pixelFormats = new ArrayList<>();
@@ -275,7 +275,7 @@ public class FFmpeg extends FFcommon {
 
   /** Returns the list of supported channel layouts. */
   public synchronized List<ChannelLayout> channelLayouts() throws IOException {
-    checkIfFFmpeg();
+    checkIfFfmpeg();
 
     if (this.channelLayouts == null) {
       Process p = runFunc.run(ImmutableList.of(path, "-layouts"));
@@ -305,7 +305,7 @@ public class FFmpeg extends FFcommon {
 
   @Override
   public void run(List<String> args) throws IOException {
-    checkIfFFmpeg();
+    checkIfFfmpeg();
     super.run(args);
   }
 
